@@ -5,12 +5,12 @@ estimators, may cause some plots on sample data to change. Changes should usuall
 be small, and generally should result in more accurate density estimation. Revert
 to the old behavior by setting `density = density_unbounded()`.
 
-* `stat_slabinterval()` now uses `density_auto()` as its default density
-  estimator, which defaults (when `trim = TRUE`) to a bounded density estimator
-  that also estimates the bounds of the data. This will cause existing charts 
-  using densities to change slightly. This change should be worth it, as it
-  should drastically improve the accuracy of density estimates on bounded data, 
-  and should have little noticeable impact on densities on unbounded data.
+* `stat_slabinterval()` now uses `density_bounded()` as its default density
+  estimator, which uses a bounded density estimator that also estimates the 
+  bounds of the data. This will cause existing charts using densities to change
+  slightly. This change should be worth it, as it should drastically improve the
+  accuracy of density estimates on bounded data, and should have little
+  noticeable impact on densities on unbounded data.
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
   `bounder_cdf()`, `bounder_cooke()`) for more on bounds estimation.

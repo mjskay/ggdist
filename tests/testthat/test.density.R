@@ -10,15 +10,6 @@ drop_call = function(x) {
   x[!names(x) %in% c("call", "data.name")]
 }
 
-
-test_that("density_auto works", {
-  x = 1:10
-
-  expect_equal(density_auto(adjust = 0.5)(x), density_auto(x, adjust = 0.5))
-  expect_equal(drop_call(density_auto(x, trim = TRUE)), drop_call(density_bounded(x)))
-  expect_equal(drop_call(density_auto(x, trim = FALSE)), drop_call(density_unbounded(x)))
-})
-
 test_that("density_bounded works", {
   x = 1:1000
 

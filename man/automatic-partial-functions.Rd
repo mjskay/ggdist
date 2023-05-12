@@ -17,8 +17,8 @@ Functions supporting automatic partial application include:
 \code{\link[=mode_hdi]{mode_hdi()}}, etc.
 \item The \code{smooth_} family, such as \code{\link[=smooth_bounded]{smooth_bounded()}}, \code{\link[=smooth_unbounded]{smooth_unbounded()}},
 \code{\link[=smooth_discrete]{smooth_discrete()}}, and \code{\link[=smooth_bar]{smooth_bar()}}.
-\item The \code{density_} family, such as \code{\link[=density_auto]{density_auto()}}, \code{\link[=density_bounded]{density_bounded()}} and
-\code{\link[=density_unbounded]{density_unbounded()}}.
+\item The \code{density_} family, such as \code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}} and
+\code{\link[=density_histogram]{density_histogram()}}.
 \item The \link{align} family.
 \item The \link{breaks} family.
 \item The \link{bandwidth} family.
@@ -45,10 +45,10 @@ x = rnorm(100)
 # the first required argument, `x`, of the density_ family is the vector
 # to calculate a kernel density estimate from. If it is not provided, the
 # function is partially applied and returned as-is
-density_auto()
+density_unbounded()
 
 # we could create a new function that uses half the default bandwidth
-density_half_bw = density_auto(adjust = 0.5)
+density_half_bw = density_unbounded(adjust = 0.5)
 density_half_bw
 
 # we can overwrite partially-applied arguments

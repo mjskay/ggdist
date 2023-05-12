@@ -67,7 +67,7 @@ compute_limits_slabinterval = function(
 #' @param trans scale transformation
 #' @param trim/adjust see stat_slabinterval
 #' @noRd
-compute_limits_sample = function(x, trans, trim, adjust, ..., density = "auto") {
+compute_limits_sample = function(x, trans, trim, adjust, ..., density = "bounded") {
   density = match_function(density, "density_")
 
   # determine limits of data based on the density estimator
@@ -327,16 +327,14 @@ compute_interval_slabinterval = function(
 #'    following this format, including [density_unbounded()] and
 #'    [density_bounded()]. This format is also compatible with [stats::density()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
-#'    e.g. `"bounded"` for `[density_bounded()]` or `"histogram"` for [density_histogram()].
-#'    Defaults to `"auto"`, i.e. [density_auto()], which uses [density_bounded()]
-#'    if `trim` is `TRUE` and [density_unbounded()] if `trim` is `FALSE`.
+#'    e.g. `"bounded"` for `[density_bounded()]`, `"unbounded"` for `[density_unbounded()]`,
+#'    or `"histogram"` for [density_histogram()].
+#'    Defaults to `"bounded"`, i.e. [density_bounded()], which estimates the bounds from
+#'    the data and then uses a bounded density estimator based on the reflection metohd.
 #' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data
-#' is adjusted by multiplying it by this value. See e.g. [density_auto()] for more information.
-#' @param trim For sample data, should the density estimate be trimmed? How the estimate is
-#' trimmed depends on the density estimator; see the `density` parameter. In the default
-#' configuration (`density = "auto"`), `trim = TRUE` will use a bounded density estimator
-#' ([density_bounded()]) and estimate the bounds from the data, and `trim = FALSE` will
-#' use an unbounded density estimator ([density_unbounded()]). Default `TRUE`.
+#' is adjusted by multiplying it by this value. See e.g. [density_bounded()] for more information.
+#' @param trim For sample data, should the density estimate be trimmed to the range of the
+#' data? Passed on to the density estimator; see the `density` parameter. Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
@@ -487,7 +485,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 
   default_params = defaults(list(
     p_limits = c(NA, NA),
-    density = "auto",
+    density = "bounded",
     adjust = 1,
     trim = TRUE,
     expand = FALSE,

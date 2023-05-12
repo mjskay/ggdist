@@ -5,70 +5,6 @@
 
 
 
-#' Automatic density estimator
-#'
-#' Density estimator that picks [density_bounded()] or [density_unbounded()]
-#' depending on `trim`.
-#' Supports [automatic partial function application][automatic-partial-functions].
-#'
-#' @inheritParams density_unbounded
-#' @param trim Should the density estimate be trimmed?
-#' If `TRUE`, uses `density_bounded(trim = TRUE)`, estimating the bounds by default (see the
-#' `bounds` argument to [density_bounded()]). If `FALSE`, uses `density_unbounded(trim = FALSE)`,
-#' setting the bounds at `3 * bandwidth` from the endpoints of the data.
-#' @param ... Additional arguments passed to [density_bounded()] or [density_unbounded()].
-#' @template returns-density
-#' @family density estimators
-#' @examples
-#' library(distributional)
-#' library(dplyr)
-#' library(ggplot2)
-#'
-#' set.seed(123)
-#' x = rbeta(5000, 1, 3)
-#'
-#' # here we'll use the same data as above, but pick either density_bounded()
-#' # or density_unbounded() (which is equivalent to stats::density()). Notice
-#' # how the bounded density (green) is biased near the boundary of the support,
-#' # while the unbounded density is not.
-#' data.frame(x) %>%
-#'   ggplot() +
-#'   stat_slab(
-#'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
-#'     alpha = 0.25
-#'   ) +
-#'   stat_slab(aes(x), density = "auto", trim = TRUE, fill = NA, color = "#d95f02", alpha = 0.5) +
-#'   stat_slab(aes(x), density = "auto", trim = FALSE, fill = NA, color = "#1b9e77", alpha = 0.5) +
-#'   scale_thickness_shared() +
-#'   theme_ggdist()
-#' @importFrom rlang as_label enexpr get_expr
-#' @export
-density_auto = function(
-  x, weights = NULL,
-  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
-  trim = FALSE,
-  na.rm = FALSE,
-  ...
-) {
-  if (missing(x)) return(partial_self("density_auto"))
-
-  x_label = as_label(enexpr(x))
-  x = check_na(x, na.rm)
-
-  density = if (trim) density_bounded else density_unbounded
-  d = density(
-    x, weights = weights,
-    n = n, bandwidth = bandwidth, adjust = adjust, kernel = kernel,
-    trim = trim,
-    ...
-  )
-
-  d$data.name = x_label
-  d$call = as.call(lapply(match.call(), get_expr))
-  d
-}
-
-
 #' Unbounded density estimator
 #'
 #' Unbounded density estimator using [stats::density()].
@@ -255,7 +191,7 @@ density_unbounded = function(
 density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
-  trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
+  trim = FALSE, bounds = c(NA, NA), bounder = "cdf",
   adapt = 1,
   na.rm = FALSE,
   ...,
@@ -490,7 +426,7 @@ density_histogram = function(
 #' is the Sheather-Jones direct plug-in estimator, i.e. `bw.SJ(..., method = "dpi")`.
 #'
 #' @returns A single number giving the bandwidth
-#' @seealso [density_bounded()], [density_unbounded()], [density_auto()].
+#' @seealso [density_bounded()], [density_unbounded()].
 #' @name bandwidth
 #' @importFrom stats bw.nrd0
 #' @export

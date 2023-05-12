@@ -11,7 +11,7 @@ density_bounded(
   bandwidth = "dpi",
   adjust = 1,
   kernel = "gaussian",
-  trim = TRUE,
+  trim = FALSE,
   bounds = c(NA, NA),
   bounder = "cdf",
   adapt = 1,
@@ -159,7 +159,6 @@ methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/117
 }
 \seealso{
 Other density estimators: 
-\code{\link{density_auto}()},
 \code{\link{density_histogram}()},
 \code{\link{density_unbounded}()}
 }

@@ -57,5 +57,5 @@ in \pkg{stats}. See, for example, \code{\link[=bw.SJ]{bw.SJ()}}.
 is the Sheather-Jones direct plug-in estimator, i.e. \code{bw.SJ(..., method = "dpi")}.
 }
 \seealso{
-\code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}, \code{\link[=density_auto]{density_auto()}}.
+\code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}.
 }

@@ -13,7 +13,7 @@ stat_cdfinterval(
   normalize = "none",
   expand = TRUE,
   p_limits = c(NA, NA),
-  density = "auto",
+  density = "bounded",
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
@@ -132,19 +132,17 @@ corresponding densities). \pkg{ggdist} provides a family of functions
 following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
 \code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
 \item A string giving the suffix of a function name that starts with \code{"density_"};
-e.g. \code{"bounded"} for \verb{[density_bounded()]} or \code{"histogram"} for \code{\link[=density_histogram]{density_histogram()}}.
-Defaults to \code{"auto"}, i.e. \code{\link[=density_auto]{density_auto()}}, which uses \code{\link[=density_bounded]{density_bounded()}}
-if \code{trim} is \code{TRUE} and \code{\link[=density_unbounded]{density_unbounded()}} if \code{trim} is \code{FALSE}.
+e.g. \code{"bounded"} for \verb{[density_bounded()]}, \code{"unbounded"} for \verb{[density_unbounded()]},
+or \code{"histogram"} for \code{\link[=density_histogram]{density_histogram()}}.
+Defaults to \code{"bounded"}, i.e. \code{\link[=density_bounded]{density_bounded()}}, which estimates the bounds from
+the data and then uses a bounded density estimator based on the reflection metohd.
 }}
 
 \item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See e.g. \code{\link[=density_auto]{density_auto()}} for more information.}
+is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bounded]{density_bounded()}} for more information.}
 
-\item{trim}{For sample data, should the density estimate be trimmed? How the estimate is
-trimmed depends on the density estimator; see the \code{density} parameter. In the default
-configuration (\code{density = "auto"}), \code{trim = TRUE} will use a bounded density estimator
-(\code{\link[=density_bounded]{density_bounded()}}) and estimate the bounds from the data, and \code{trim = FALSE} will
-use an unbounded density estimator (\code{\link[=density_unbounded]{density_unbounded()}}). Default \code{TRUE}.}
+\item{trim}{For sample data, should the density estimate be trimmed to the range of the
+data? Passed on to the density estimator; see the \code{density} parameter. Default \code{TRUE}.}
 
 \item{breaks}{Determines the breakpoints defining bins. Similar to (but not
 exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:

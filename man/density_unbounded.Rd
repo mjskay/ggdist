@@ -118,7 +118,6 @@ data.frame(x) \%>\%
 }
 \seealso{
 Other density estimators: 
-\code{\link{density_auto}()},
 \code{\link{density_bounded}()},
 \code{\link{density_histogram}()}
 }
