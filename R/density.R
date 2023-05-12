@@ -95,7 +95,7 @@ density_auto = function(
 #' bandwidths, then groups these bandwidths into `adapt` groups, then calculates
 #' and sums the densities from each group. You can set this to a very large number
 #' (e.g. `Inf`) for a fully adaptive approach, but this will be very slow; typically
-#' something around 5--10 yields nearly identical results.
+#' something around 100 yields nearly identical results.
 #' @param na.rm Should missing (`NA`) values in `x` be removed?
 #' @param ... Additional arguments (ignored).
 #' @param range_only If `TRUE`, the range of the output of this density estimator
@@ -578,11 +578,12 @@ bandwidth_dpi = function(x, ...) {
 
     ### one possibility:
     # # use k-means clustering to create bandwidth groups
-    #bw_clusters = kmeans(bw_local, quantile(bw_local, ppoints(adapt)))
-    #bw_group = bw_clusters$cluster
-    #bws = bw_clusters$centers
+    # bw_clusters = Ckmeans.1d.dp::Ckmeans.1d.dp(bw_local, adapt)
+    # bw_group = bw_clusters$cluster
+    # bws = bw_clusters$centers
 
     ### simpler, cut the range of local bandwidths into equally-sized pieces
+    ### doesn't work as well though...
     quantiles = quantile(bw_local, seq.int(0, 1, length.out = adapt + 1), names = FALSE)
     bw_group = as.numeric(factor(cut(bw_local, quantiles, labels = FALSE, include.lowest = TRUE)))
     bws = tapply(bw_local, bw_group, mean)

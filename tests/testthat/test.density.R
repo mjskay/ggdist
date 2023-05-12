@@ -62,3 +62,33 @@ test_that("density_bounded(range_only = TRUE) works", {
     list(x = c(0.75, 2.25), y = c(NA_real_, NA_real_))
   )
 })
+
+
+# bandwidth ---------------------------------------------------------------
+
+test_that("bandwidth estimators work", {
+  x = 1:1000
+
+  expect_equal(bandwidth_nrd()(x), bw.nrd(x))
+  expect_equal(bandwidth_ucv()(x), bw.ucv(x))
+  expect_equal(bandwidth_bcv()(x), bw.bcv(x))
+  expect_equal(bandwidth_SJ()(x), bw.SJ(x))
+  expect_equal(bandwidth_dpi()(x), bw.SJ(x, method = "dpi"))
+})
+
+
+# adaptive density estimator ----------------------------------------------
+
+test_that("adaptive density estimator works", {
+  x = qlnorm(ppoints(1000), 1/2, 1)
+
+  # red (adaptive) KDE should do better near the mode
+  vdiffr::expect_doppelganger("adaptive KDE (red) better matches mode",
+    ggplot() +
+      stat_slab(aes(xdist = dist_lognormal(1/2, 1)), fill = NA, color = "gray50") +
+      stat_slab(aes(x), density = density_bounded(adapt = 1, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "blue", linetype = "11") +
+      stat_slab(aes(x), density = density_bounded(adapt = 100, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "red", linetype = "11") +
+      scale_thickness_shared() +
+      coord_cartesian(xlim = c(0, 10))
+  )
+})

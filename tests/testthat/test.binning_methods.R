@@ -3,9 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-suppressPackageStartupMessages({
+suppressWarnings(suppressPackageStartupMessages({
   library(dplyr)
-})
+}))
 
 
 

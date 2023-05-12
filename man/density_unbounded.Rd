@@ -49,7 +49,7 @@ adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
 bandwidths, then groups these bandwidths into \code{adapt} groups, then calculates
 and sums the densities from each group. You can set this to a very large number
 (e.g. \code{Inf}) for a fully adaptive approach, but this will be very slow; typically
-something around 5--10 yields nearly identical results.}
+something around 100 yields nearly identical results.}
 
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
