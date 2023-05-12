@@ -27,7 +27,7 @@
 ^figures-source$
 ^vignettes/.*_cache$
 ^revdep$
-^man/figures/README$
+^man/figures$
 ^man-roxygen$
 ^\.github$
 ^CRAN-SUBMISSION$
