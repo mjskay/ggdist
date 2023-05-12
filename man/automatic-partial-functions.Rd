@@ -19,6 +19,9 @@ Functions supporting automatic partial application include:
 \code{\link[=smooth_discrete]{smooth_discrete()}}, and \code{\link[=smooth_bar]{smooth_bar()}}.
 \item The \code{density_} family, such as \code{\link[=density_auto]{density_auto()}}, \code{\link[=density_bounded]{density_bounded()}} and
 \code{\link[=density_unbounded]{density_unbounded()}}.
+\item The \link{align} family.
+\item The \link{breaks} family.
+\item The \link{bandwidth} family.
 }
 
 Partial application makes it easier to supply custom parameters to these

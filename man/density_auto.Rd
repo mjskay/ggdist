@@ -27,8 +27,8 @@ density_auto(
 \itemize{
 \item a numeric: the bandwidth, as the standard deviation of the kernel
 \item a function: a function taking \code{x} (the sample) and returning the bandwidth
-\item a string: the suffix of the name of a function starting with \code{"bw."} that
-will be used to determine the bandwidth. See \code{\link[=bw.nrd0]{bw.nrd0()}} for a list.
+\item a string: the suffix of the name of a function starting with \code{"bandwidth_"} that
+will be used to determine the bandwidth. See \link{bandwidth} for a list.
 }}
 
 \item{adjust}{numeric: the bandwidth for the density estimator is multiplied

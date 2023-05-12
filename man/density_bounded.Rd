@@ -14,7 +14,7 @@ density_bounded(
   trim = TRUE,
   bounds = c(NA, NA),
   bounder = "cdf",
-  clusters = 1,
+  adapt = 1,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -31,8 +31,8 @@ density_bounded(
 \itemize{
 \item a numeric: the bandwidth, as the standard deviation of the kernel
 \item a function: a function taking \code{x} (the sample) and returning the bandwidth
-\item a string: the suffix of the name of a function starting with \code{"bw."} that
-will be used to determine the bandwidth. See \code{\link[=bw.nrd0]{bw.nrd0()}} for a list.
+\item a string: the suffix of the name of a function starting with \code{"bandwidth_"} that
+will be used to determine the bandwidth. See \link{bandwidth} for a list.
 }}
 
 \item{adjust}{numeric: the bandwidth for the density estimator is multiplied
@@ -60,14 +60,14 @@ See \code{\link[=bounder_cooke]{bounder_cooke()}}.
 \item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}). See \code{\link[=bounder_range]{bounder_range()}}.
 }}
 
-\item{clusters}{(experimental) Positive integer. If \code{clusters > 1}, uses
+\item{adapt}{(\strong{very experimental}) The name and interpretation of this argument
+are subject to change without notice. Positive integer. If \code{adapt > 1}, uses
 an adaptive approach to calculate the density. First, uses the
 adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
-bandwidths, then clusters these bandwidths into \code{clusters} clusters with
-similar bandwidths, then calculates and sums the densities from each cluster.
-You can set this to a very large number (e.g. \code{Inf}) for a fully adaptive
-approach, but this will be very slow; typically something around 5--10 yields
-nearly identical results.}
+bandwidths, then groups these bandwidths into \code{adapt} groups, then calculates
+and sums the densities from each group. You can set this to a very large number
+(e.g. \code{Inf}) for a fully adaptive approach, but this will be very slow; typically
+something around 5--10 yields nearly identical results.}
 
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 

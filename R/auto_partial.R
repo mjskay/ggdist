@@ -27,6 +27,12 @@
 #' - The `density_` family, such as [density_auto()], [density_bounded()] and
 #'   [density_unbounded()].
 #'
+#' - The [align] family.
+#'
+#' - The [breaks] family.
+#'
+#' - The [bandwidth] family.
+#'
 #' Partial application makes it easier to supply custom parameters to these
 #' functions when using them inside other functions, such as geoms and stats.
 #' For example, smoothers for [geom_dots()] can be supplied in one of three

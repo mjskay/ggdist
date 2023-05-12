@@ -80,22 +80,22 @@ density_auto = function(
 #' @param bandwidth bandwidth of the density estimator. One of:
 #'   - a numeric: the bandwidth, as the standard deviation of the kernel
 #'   - a function: a function taking `x` (the sample) and returning the bandwidth
-#'   - a string: the suffix of the name of a function starting with `"bw."` that
-#'     will be used to determine the bandwidth. See [bw.nrd0()] for a list.
+#'   - a string: the suffix of the name of a function starting with `"bandwidth_"` that
+#'     will be used to determine the bandwidth. See [bandwidth] for a list.
 #' @param adjust numeric: the bandwidth for the density estimator is multiplied
 #' by this value. See [stats::density()].
 #' @param kernel string: the smoothing kernel to be used. This must partially
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
-#' @param clusters (experimental) Positive integer. If `clusters > 1`, uses
+#' @param adapt (**very experimental**) The name and interpretation of this argument
+#' are subject to change without notice. Positive integer. If `adapt > 1`, uses
 #' an adaptive approach to calculate the density. First, uses the
 #' adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
-#' bandwidths, then clusters these bandwidths into `clusters` clusters with
-#' similar bandwidths, then calculates and sums the densities from each cluster.
-#' You can set this to a very large number (e.g. `Inf`) for a fully adaptive
-#' approach, but this will be very slow; typically something around 5--10 yields
-#' nearly identical results.
+#' bandwidths, then groups these bandwidths into `adapt` groups, then calculates
+#' and sums the densities from each group. You can set this to a very large number
+#' (e.g. `Inf`) for a fully adaptive approach, but this will be very slow; typically
+#' something around 5--10 yields nearly identical results.
 #' @param na.rm Should missing (`NA`) values in `x` be removed?
 #' @param ... Additional arguments (ignored).
 #' @param range_only If `TRUE`, the range of the output of this density estimator
@@ -141,7 +141,7 @@ density_unbounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
   trim = FALSE,
-  clusters = 1,
+  adapt = 1,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -170,7 +170,7 @@ density_unbounded = function(
     x, weights = weights,
     n = n, bw = bw, kernel = kernel,
     cut = cut,
-    clusters = clusters
+    adapt = adapt
   )
 
   d$data.name = x_label
@@ -256,7 +256,7 @@ density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
   trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
-  clusters = 1,
+  adapt = 1,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -316,7 +316,7 @@ density_bounded = function(
     x, weights = weights,
     n = n_unbounded, bw = bw, kernel = kernel,
     from = from, to = to,
-    clusters = clusters
+    adapt = adapt
   )
 
   # reflect tails back into middle, if needed
@@ -472,6 +472,73 @@ density_histogram = function(
 }
 
 
+# bandwidth estimators ----------------------------------------------------
+
+#' Bandwidth estimators
+#'
+#' Bandwidth estimators for densities, used in the `bandwidth` argument
+#' to density functions (e.g. [density_bounded()], [density_unbounded()]).
+#' Supports [automatic partial function application][automatic-partial-functions].
+#'
+#' @inheritDotParams stats::bw.SJ
+#' @param x A numeric vector giving a sample.
+#' @details
+#' These are loose wrappers around the corresponding `bw.`-prefixed functions
+#' in \pkg{stats}. See, for example, [bw.SJ()].
+#'
+#' [bandwidth_dpi()] is the Sheather-Jones direct plug-in estimator, i.e.
+#' `bw.SJ(x, method = "dpi")`.
+#'
+#' @returns A single number giving the bandwidth
+#' @seealso [density_bounded()], [density_unbounded()], [density_auto()].
+#' @name bandwidth
+#' @importFrom stats bw.nrd0
+#' @export
+bandwidth_nrd0 = function(x) {
+  if (missing(x)) return(partial_self("bandwidth_nrd0"))
+  bw.nrd0(x)
+}
+
+#' @rdname bandwidth
+#' @importFrom stats bw.nrd
+#' @export
+bandwidth_nrd = function(x) {
+  if (missing(x)) return(partial_self("bandwidth_nrd"))
+  bw.nrd(x)
+}
+
+#' @rdname bandwidth
+#' @importFrom stats bw.ucv
+#' @export
+bandwidth_ucv = function(x, ...) {
+  if (missing(x)) return(partial_self("bandwidth_ucv"))
+  bw.ucv(x, ...)
+}
+
+#' @rdname bandwidth
+#' @importFrom stats bw.bcv
+#' @export
+bandwidth_bcv = function(x, ...) {
+  if (missing(x)) return(partial_self("bandwidth_bcv"))
+  bw.bcv(x, ...)
+}
+
+#' @rdname bandwidth
+#' @importFrom stats bw.SJ
+#' @export
+bandwidth_SJ = function(x, ...) {
+  if (missing(x)) return(partial_self("bandwidth_SJ"))
+  bw.SJ(x, ...)
+}
+
+#' @rdname bandwidth
+#' @export
+bandwidth_dpi = function(x, ...) {
+  if (missing(x)) return(partial_self("bandwidth_dpi"))
+  bw.SJ(x, method = "dpi", ...)
+}
+
+
 # adaptive density estimator ----------------------------------------------
 
 #' Internal function for calculating adaptive densities
@@ -482,13 +549,13 @@ density_histogram = function(
   x, weights = NULL,
   n = 512,
   bw = bw.nrd0(x),
-  clusters = 5,
+  adapt = 1,
   kernel = "gaussian",
   cut = 3,
   from = min(x) - cut*bw,
   to = max(x) + cut*bw
 ) {
-  if (clusters == 1) {
+  if (adapt == 1) {
     # quick exit: just return the non-adaptive density
     return(density(
       x, weights = weights,
@@ -502,7 +569,7 @@ density_histogram = function(
   bw_local = get_local_bandwidth(x, bw, kernel, n)
 
   # cluster points by their bandwidths
-  if (clusters >= length(x)) {
+  if (adapt >= length(x)) {
     # one point per group
     bw_group = seq_along(x)
     bws = bw_local
@@ -511,15 +578,14 @@ density_histogram = function(
 
     ### one possibility:
     # # use k-means clustering to create bandwidth groups
-    #bw_clusters = kmeans(bw_local, quantile(bw_local, ppoints(clusters)))
+    #bw_clusters = kmeans(bw_local, quantile(bw_local, ppoints(adapt)))
     #bw_group = bw_clusters$cluster
     #bws = bw_clusters$centers
 
-    ### simpler, just cut the range of local bandwidths into equal pieces
-    bw_group = as.numeric(factor(cut(bw_local, clusters, labels = FALSE)))
+    ### simpler, cut the range of local bandwidths into equally-sized pieces
+    quantiles = quantile(bw_local, seq.int(0, 1, length.out = adapt + 1), names = FALSE)
+    bw_group = as.numeric(factor(cut(bw_local, quantiles, labels = FALSE, include.lowest = TRUE)))
     bws = tapply(bw_local, bw_group, mean)
-
-    ### another option would be to cut with quantiles to get equal-sized groups
   }
 
   # calculate densities in each cluster
@@ -564,7 +630,7 @@ get_local_bandwidth = function(x, bandwidth, kernel, n) {
 
 get_bandwidth = function(x, bandwidth) {
   if (!is.numeric(bandwidth)) {
-    bandwidth = match_function(bandwidth, prefix = "bw.")(x)
+    bandwidth = match_function(bandwidth, prefix = "bandwidth_")(x)
   }
   bandwidth
 }
