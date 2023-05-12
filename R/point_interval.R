@@ -98,6 +98,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' default, `"bounded"`, uses the bounded density estimator of [density_bounded()], which
 #' itself estimates the bounds of the distribution, and tends to work well on both bounded
 #' and unbounded data.
+#' @param n For [hdi()], the number of quantiles to use to estimate the highest-density
+#' intervals.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
@@ -405,16 +407,16 @@ ul = function(x, .width = .95, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95, .prob, na.rm = FALSE, density = "bounded", ...) {
+hdi = function(x, .width = .95, na.rm = FALSE, ..., n = 4096, density = density_bounded(trim = TRUE), .prob) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  hdi_(x, .width = .width, na.rm = na.rm, density = density)
+  hdi_(x, .width = .width, na.rm = na.rm, ..., n = n, density = density)
 }
 hdi_ = function(x, ...) {
   UseMethod("hdi_")
 }
 #' @importFrom stats density
 #' @export
-hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...) {
+hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE)) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -434,7 +436,7 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...
 # based on hdr.dist_default from {distributional}
 # https://github.com/mitchelloharawild/distributional/blob/50e29554456d99e9b7671ba6110bebe5961683d2/R/default.R#L137
 #' @importFrom stats approx
-.hdi_numeric = function(x, .width = 0.95, n = 4096, density = "bounded", ...) {
+.hdi_numeric = function(x, .width = 0.95, ..., n = 4096, density = density_bounded(trim = TRUE)) {
   density = match_function(density, "density_")
 
   dist_x = quantile(x, ppoints(n, a = 0.5))
@@ -469,7 +471,7 @@ hdi_.rvar = function(x, ...) {
 }
 #' @importFrom distributional hdr support
 #' @export
-hdi_.distribution = function(x, .width = .95, ...) {
+hdi_.distribution = function(x, .width = .95, ..., n = 4096, density = density_bounded(trim = TRUE)) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distribution objects is not implemented")
   }
@@ -482,8 +484,11 @@ hdi_.distribution = function(x, .width = .95, ...) {
   if (isTRUE(.width == 1)) {
     return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
   }
+  if (distr_is_sample(x)) {
+    return(hdi_.numeric(distr_get_sample(x), .width = .95, n = n, density = density, ...))
+  }
 
-  hilos = hdr(x, .width * 100, ...)
+  hilos = hdr(x, .width * 100, n = n, ...)
   matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
 }
 
@@ -496,7 +501,7 @@ Mode = function(x, na.rm = FALSE, ...) {
 }
 #' @export
 #' @rdname point_interval
-Mode.default = function(x, na.rm = FALSE, density = "bounded", ...) {
+Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE)) {
   if (na.rm) {
     x = x[!is.na(x)]
   }

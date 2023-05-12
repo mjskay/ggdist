@@ -94,11 +94,19 @@ ll(x, .width = 0.95, na.rm = FALSE)
 
 ul(x, .width = 0.95, na.rm = FALSE)
 
-hdi(x, .width = 0.95, .prob, na.rm = FALSE, density = "bounded", ...)
+hdi(
+  x,
+  .width = 0.95,
+  na.rm = FALSE,
+  ...,
+  n = 4096,
+  density = density_bounded(trim = TRUE),
+  .prob
+)
 
 Mode(x, na.rm = FALSE, ...)
 
-\method{Mode}{default}(x, na.rm = FALSE, density = "bounded", ...)
+\method{Mode}{default}(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE))
 
 \method{Mode}{rvar}(x, na.rm = FALSE, ...)
 
@@ -177,6 +185,9 @@ names used in \pkg{ggdist} and \pkg{tidybayes}.}
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
+
+\item{n}{For \code{\link[=hdi]{hdi()}}, the number of quantiles to use to estimate the highest-density
+intervals.}
 
 \item{density}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the kernel density estimator to use, either as
 a function (e.g. \code{\link{density_bounded}}, \code{\link{density_unbounded}}) or as a string giving the
