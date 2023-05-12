@@ -87,7 +87,7 @@ ABC =
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
-```{r data_plot}
+```{r data_plot, fig.width = med_width, fig.height = med_height/1.5}
 ABC %>%
   ggplot(aes(x = response, y = condition)) +
   geom_point(alpha = 0.5) +

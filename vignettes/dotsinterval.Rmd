@@ -857,7 +857,7 @@ color aesthetics).
 Another potentially useful application of post-stat aesthetic computation is to
 apply thresholds on a dotplot, coloring points on one side of a line differently:
 
-```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
+```{r dist_dots_shape_color, fig.width = med_width, fig.height = med_height}
 ab_df = tibble(
   ab = c("a", "b"),
   mean = c(5, 7),
@@ -885,7 +885,7 @@ side of a cutoff when coloring dots within dotplots. Thus it can be useful to us
 `"weave"` or `"swarm"` layouts, which tend to position dots closer to their true
 `x` positions, rather than at bin centers:
 
-```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
+```{r dist_dots_weave, fig.width = med_width, fig.height = med_height}
 ab_df %>%
   ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = after_stat(x < 6))) +
   stat_dots(position = "dodge", color = NA, layout = "weave") +
@@ -945,7 +945,7 @@ First, we'll demo varying the `side` aesthetic to create two dotplots that are
 `"top"` or `"bottom"` if two categories are assigned to `side`". We also adjust 
 the `scale` so that the dots don't overlap:
 
-```{r gentoo_raw}
+```{r gentoo_raw, fig.width = med_width, fig.height = med_height}
 gentoo = penguins %>%
   filter(species == "Gentoo", !is.na(sex))
 
@@ -972,7 +972,7 @@ m
 Then we can overlay a fit line as a `stat_lineribbon()` (see `vignette("lineribbon")`)
 on top of the mirrored dotplots to create a *logit dotplot*:
 
-```{r logit_dotplot}
+```{r logit_dotplot, fig.width = med_width, fig.height = med_height/1.5}
 # construct a prediction grid for the fit line
 prediction_grid = with(gentoo, 
   data.frame(body_mass_g = seq(min(body_mass_g), max(body_mass_g), length.out = 100))
