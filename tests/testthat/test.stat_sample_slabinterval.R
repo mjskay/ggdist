@@ -106,15 +106,17 @@ test_that("scale transformation works", {
 
 
   p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
-    ggplot(aes(y = "a", x = x)) +
-    scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+    ggplot(aes(y = 0, x = x)) +
+    scale_x_log10(breaks = 10^seq(-2,2), limits = 10^c(-2,2))
 
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
-    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 15, .width = .5, trim = FALSE)
+    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 100, .width = .5, scale = 1, slab_color = "black") +
+      geom_point()
   )
 
   vdiffr::expect_doppelganger("cdfintervalh log scale transform",
-    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 15, .width = .5, trim = FALSE)
+    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 100, .width = .5, scale = 1, slab_color = "black") +
+      geom_point()
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",

@@ -53,8 +53,8 @@ Supports \link[=automatic-partial-functions]{automatic partial function applicat
 These are loose wrappers around the corresponding \code{bw.}-prefixed functions
 in \pkg{stats}. See, for example, \code{\link[=bw.SJ]{bw.SJ()}}.
 
-\code{\link[=bandwidth_dpi]{bandwidth_dpi()}} is the Sheather-Jones direct plug-in estimator, i.e.
-\code{bw.SJ(x, method = "dpi")}.
+\code{\link[=bandwidth_dpi]{bandwidth_dpi()}}, which is the default bandwidth estimator in \pkg{ggdist},
+is the Sheather-Jones direct plug-in estimator, i.e. \code{bw.SJ(..., method = "dpi")}.
 }
 \seealso{
 \code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}, \code{\link[=density_auto]{density_auto()}}.

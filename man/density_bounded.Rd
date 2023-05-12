@@ -8,7 +8,7 @@ density_bounded(
   x,
   weights = NULL,
   n = 512,
-  bandwidth = "nrd0",
+  bandwidth = "dpi",
   adjust = 1,
   kernel = "gaussian",
   trim = TRUE,

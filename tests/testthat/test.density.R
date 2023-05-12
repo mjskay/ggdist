@@ -43,7 +43,7 @@ test_that("density_unbounded works", {
   expect_equal(density_unbounded(adjust = 0.5)(x), density_unbounded(x, adjust = 0.5))
   expect_equal(drop_call(density_unbounded(1:3)), drop_call(density_unbounded(c(1:3, NA), na.rm = TRUE)))
 
-  ref = density(x)
+  ref = density(x, bw = bw.SJ(x, method = "dpi"))
   ref$cdf = ecdf(x)(ref$x)
   expect_equal(drop_call(density_unbounded(x)), drop_call(ref))
 

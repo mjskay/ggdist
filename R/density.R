@@ -45,7 +45,7 @@
 #' @export
 density_auto = function(
   x, weights = NULL,
-  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = FALSE,
   na.rm = FALSE,
   ...
@@ -139,7 +139,7 @@ density_auto = function(
 #' @export
 density_unbounded = function(
   x, weights = NULL,
-  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = FALSE,
   adapt = 1,
   na.rm = FALSE,
@@ -254,7 +254,7 @@ density_unbounded = function(
 #' @export
 density_bounded = function(
   x, weights = NULL,
-  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
   adapt = 1,
   na.rm = FALSE,
@@ -486,8 +486,8 @@ density_histogram = function(
 #' These are loose wrappers around the corresponding `bw.`-prefixed functions
 #' in \pkg{stats}. See, for example, [bw.SJ()].
 #'
-#' [bandwidth_dpi()] is the Sheather-Jones direct plug-in estimator, i.e.
-#' `bw.SJ(x, method = "dpi")`.
+#' [bandwidth_dpi()], which is the default bandwidth estimator in \pkg{ggdist},
+#' is the Sheather-Jones direct plug-in estimator, i.e. `bw.SJ(..., method = "dpi")`.
 #'
 #' @returns A single number giving the bandwidth
 #' @seealso [density_bounded()], [density_unbounded()], [density_auto()].

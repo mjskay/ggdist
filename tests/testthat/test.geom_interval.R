@@ -90,9 +90,11 @@ test_that("multimodal intervals work with stat_interval", {
     df %>%
       ggplot(aes(x = x, y = "a", group = g)) +
       # stat_slab(position = "dodge") +  # for verification
+      # stat_slab(aes(x = NULL, xdist = d), data = data.frame(d = dist_mixture(dist_exponential(1), dist_normal(5), weights = c(0.5, 0.5)) + c(0, 0.5), g = c("a","b")), position = "dodge", fill = NA, color = "green", alpha = 0.5) +  # for verification
       stat_interval(point_interval = mean_hdi, position = "dodge", .width = c(.5, .95)) +
       stat_pointinterval(point_interval = mode_hdi, position = "dodge", .width = .5) +
-      scale_color_brewer()
+      scale_color_brewer() +
+      scale_thickness_shared()
   )
 
   vdiffr::expect_doppelganger("multimodal intervals (stat, dodged)",
