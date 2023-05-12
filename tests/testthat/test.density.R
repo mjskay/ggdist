@@ -69,6 +69,7 @@ test_that("density_bounded(range_only = TRUE) works", {
 test_that("bandwidth estimators work", {
   x = 1:1000
 
+  expect_equal(bandwidth_nrd0()(x), bw.nrd0(x))
   expect_equal(bandwidth_nrd()(x), bw.nrd(x))
   expect_equal(bandwidth_ucv()(x), bw.ucv(x))
   expect_equal(bandwidth_bcv()(x), bw.bcv(x))
@@ -94,5 +95,17 @@ test_that("adaptive density estimator works", {
       stat_slab(aes(x), density = density_bounded(adapt = 100, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "red", linetype = "11") +
       scale_thickness_shared() +
       coord_cartesian(xlim = c(0, 10))
+  )
+
+
+  x = qlnorm(ppoints(100), 1/2, 1)
+
+  vdiffr::expect_doppelganger("adapt = n better matches mode",
+    ggplot() +
+    stat_slab(aes(xdist = distributional::dist_lognormal(1/2, 1)), fill = NA, color = "gray50") +
+    stat_slab(aes(x), density = density_bounded(adapt = 1, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "blue", linetype = "11") +
+    stat_slab(aes(x), density = density_bounded(adapt = 100, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "red", linetype = "11") +
+    scale_thickness_shared() +
+    coord_cartesian(xlim = c(0, 10))
   )
 })
