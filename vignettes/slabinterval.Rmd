@@ -387,15 +387,7 @@ plot_grid(ncol = 3, align = "hv",
 )
 ```
 
-Note how the above chart was drawn vertically instead of horizontally: all slabinterval geoms automatically detect their orientation based on the input data. For example, if you use a factor on one axis (say the `x` axis below), the geom will be drawn along the other axis:
-
-```{r halfeyeh, fig.width = small_height, fig.height = small_height}
-df %>%
-  ggplot(aes(x = group, y = value)) +
-  stat_halfeye() +
-  ggtitle("stat_halfeye()")
-```
-
+Note how the above chart was drawn vertically instead of horizontally: all slabinterval geoms automatically detect their orientation based on the input data. For example, because we used a factor on the `x` axis above, the geoms were be drawn along the other axis (the `y` axis).
 If automatic detection of the desired axis fails, you can specify it manually; e.g. with `stat_halfeye(orientation = 'vertical')` or `stat_halfeye(orientation = 'horizontal')`.
 
 The `side` parameter works for horizontal geoms as well. `"top"` and `"right"` are considered synonyms, as are `"bottom"` and `"left"`; either form works with both horizontal and vertical versions of the geoms:
@@ -430,16 +422,16 @@ Dodging works whether geoms are horizontal or vertical.
 
 The same set of (half-)eye plot stats designed for sample data described above can be used on analytical distributions or distribution vectors by using the `xdist`/`ydist` aesthetics instead of `x`/`y`. These stats accept specifications for distributions in one of two ways:
 
-**Using distribution names as character vectors**: this format uses aesthetics as follows:
-
-* `xdist`, `ydist`, or `dist`: the name of the distribution, following R's naming scheme. This is a string which should have `"p"`, `"q"`, and `"d"` functions defined for it: e.g., "norm" is a valid distribution name because the `pnorm()`, `qnorm()`, and `dnorm()` functions define the CDF, quantile function, and density function of the Normal distribution.
-* `args` or `arg1`, ... `arg9`: arguments for the distribution. If you use `args`, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using `arg1`, ... `arg9`.
-
 **Using distribution vectors from the [distributional](https://pkg.mitchelloharawild.com/distributional/) package or `posterior::rvar()` objects**: this format uses aesthetics as follows:
 
 * `xdist`, `ydist`, or `dist`: a distribution vector or `posterior::rvar()` produced by functions such as `distributional::dist_normal()`, `distributional::dist_beta()`, `posterior::rvar_rng()`, etc.
 
-For example, here are a variety of normal distributions describing the same data from the previous example:
+**Using distribution names as character vectors**: this is an older, **soft-deprecated** format included for backwards-compatibility, but generally not recommended in new code. This format uses aesthetics as follows:
+
+* `xdist`, `ydist`, or `dist`: the name of the distribution, following R's naming scheme. This is a string which should have `"p"`, `"q"`, and `"d"` functions defined for it: e.g., "norm" is a valid distribution name because the `pnorm()`, `qnorm()`, and `dnorm()` functions define the CDF, quantile function, and density function of the Normal distribution.
+* `args` or `arg1`, ..., `arg9`: arguments for the distribution. If you use `args`, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using `arg1`, ..., `arg9`.
+
+For example, here are a variety of normal distributions describing the same data from the previous section:
 
 ```{r dist_data}
 dist_df = tribble(
@@ -452,16 +444,7 @@ dist_df = tribble(
 )
 ```
 
-We can visualize these distributions directly using `stat_eye()` and the character vector input style to the `ydist`, `arg1`, and `arg2` aesthetics:
-
-```{r dist_eye_dodge}
-dist_df %>%
-  ggplot(aes(x = group, ydist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
-  stat_eye(position = "dodge") +
-  ggtitle("stat_eye(position = 'dodge')", 'aes(ydist = "norm", arg1 = mean, arg2 = sd)')
-```
-
-Or we can use the `distributional::dist_normal()` function to construct a vector of normal distributions. This syntax is often more compact and expressive than the character-vector format above:
+We can use the `distributional::dist_normal()` function to construct a vector of normal distributions from these means and standard deviations, and map it to the `ydist` aesthetic, which sets the distributions drawn along the `y` axis:
 
 ```{r dist_eye_dodge_distributional}
 dist_df %>%
@@ -470,7 +453,7 @@ dist_df %>%
   ggtitle("stat_eye(position = 'dodge')", "aes(ydist = dist_normal(mean, sd))")
 ```
 
-This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
+Distributional vectors, combined with the `xdist` and `ydist` aesthetics, make it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
 
 ```{r beta_stacked}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
@@ -499,18 +482,18 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   )
 ```
 
-The approach of using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student's t distribution and a Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. `ggdist` includes an implementation of the scaled and shifted Student's t distribution (`dstudent_t()`, `pstudent_t()`, etc) as it is often needed for visualizing frequentist confidence distributions (see `vignette("freq-uncertainty-vis")`) and Bayesian priors:
+Distributional vectors also make it easy to visualize different distribution types simultaneously. For example, if we wished to compare a Student's t distribution and a Normal distribution, we can combine them into a single vector of distributions and plot them (these two distributions are particularly useful as they are often needed for visualizing frequentist confidence distributions---see `vignette("freq-uncertainty-vis")`---and Bayesian priors):
 
 ```{r norm_vs_t, fig.width = small_height, fig.height = small_height}
-tribble(
-  ~ dist,      ~ args,
-  "norm",      list(0, 1),
-  "student_t", list(3, 0, 1)
+tibble(
+  dist = c(dist_normal(0,1), dist_student_t(3, 0, 1))
 ) %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   stat_halfeye() +
-  ggtitle("stat_halfeye()", "aes(xdist = dist, args = args)")
+  ggtitle("stat_halfeye()", "aes(xdist = dist)")
 ```
+
+The `format()` function in `aes(y = format(dist))` generates a string containing a human-readable name for the distribution for labeling purposes.
 
 ### Visualizing priors
 
@@ -614,9 +597,9 @@ their curves.
 
 The `stat_slabinterval()` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
 
-```{r dist_halfeyeh_log_scale, fig.width = small_height, fig.height = small_height/1.5}
-data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) %>%
-  ggplot(aes(xdist = dist, arg1 = logmean, arg2 = logsd)) +
+```{r dist_halfeyeh_log_scale, fig.width = small_height, fig.height = small_height/1.75}
+data.frame(dist = dist_lognormal(log(10), 2*log(10))) %>%
+  ggplot(aes(xdist = dist)) +
   stat_halfeye() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 ```
@@ -727,19 +710,7 @@ df %>%
   ggtitle("stat_ccdfinterval(position = 'dodge')") 
 ```
 
-The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use `ggplot2::expand_limits()` to ensure the bar is drawn down to 0:
-
-```{r ccdf_dodge}
-df %>%
-  ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfinterval(position = "dodge") +
-  expand_limits(y = 0) +
-  # plus coord_cartesian so there is no space between bars and axis
-  coord_cartesian(expand = FALSE) +
-  ggtitle("stat_ccdfinterval(position = 'dodge')")
-```
-
-You can also adjust the position of the slab relative to the position of the interval using the `justification` parameter:
+The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use `ggplot2::expand_limits()` to ensure the bar is drawn down to 0. Let's also adjust the position of the slab relative to the position of the interval using the `justification` parameter:
 
 ```{r ccdf_justification}
 df %>%
@@ -752,7 +723,7 @@ df %>%
 
 The `side` parameter also works in the same way it does with `stat_eye()`. Here we'll demonstrate it horizontally:
 
-```{r ccdf_side, fig.width = med_width, fig.height = med_height}
+```{r ccdf_side, fig.width = med_width, fig.height = med_height/1.5}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   expand_limits(x = 0) +
@@ -760,7 +731,8 @@ p = df %>%
 
 plot_grid(ncol = 3, align = "hv", 
   # side = "left" would give the same result
-  p + stat_ccdfinterval(side = "bottom") + ggtitle("stat_ccdfinterval()") + labs(subtitle = "side = 'bottom'"),
+  p + stat_ccdfinterval(side = "bottom") + labs(subtitle = "side = 'bottom'") +
+    ggtitle("stat_ccdfinterval()"),
   p + stat_ccdfinterval(side = "both") + labs(subtitle = "side = 'both'"),
   # side = "right" would give the same result
   p + stat_ccdfinterval(side = "top") + labs(subtitle = "side = 'top'")
@@ -928,14 +900,12 @@ The ability to map arbitrary variables onto fill or outline colors within a slab
 Taking the earlier example of visualizing priors, we can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
 
 ```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
-priors = tribble(
-  ~ dist,      ~ args,
-  "norm",      list(0, 1),
-  "student_t", list(3, 0, 1)
+priors = tibble(
+  dist = c(dist_normal(0, 1), dist_student_t(3, 0, 1))
 ) 
 
 priors %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   stat_halfeye(aes(fill = after_stat(abs(x) < 1.5))) +
   ggtitle("stat_halfeye()", "aes(fill = after_stat(abs(x) < 1.5)))") +
   # we'll use a nicer palette than the default for highlighting:
@@ -946,7 +916,7 @@ We could also combine these aesthetics arbitrarily. Here is a (probably not very
 
 ```{r norm_vs_t_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   stat_eye(aes(slab_alpha = after_stat(f), fill = after_stat(x > 1)), fill_type = "gradient") +
   ggtitle(
     "stat_eye(fill_type = 'gradient')", 
@@ -962,7 +932,7 @@ We can also take advantage of the fact that all slabinterval stats also supply `
 
 ```{r correll_gradient, fig.width = small_width, fig.height = small_height/2}
 priors %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   stat_gradientinterval(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))),
     fill_type = "gradient"
   ) +
@@ -977,7 +947,7 @@ We could also do a mashup of faded-tail gradients with violin plots by starting 
 
 ```{r helske_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   stat_eye(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
   scale_slab_alpha_continuous(guide = "none") +
   ggtitle(
@@ -1190,9 +1160,9 @@ within the 95% interval, and use it to create raindrop plots.
 Barrowman and Myers apply this technique with a 95% raindrop superimposed on
 a 99% raindrop, which we can replicate:
 
-```{r raindrop, fig.width = med_width, fig.height = small_height}
+```{r raindrop, fig.width = med_width, fig.height = small_height/1.5}
 priors %>%
-  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  ggplot(aes(y = format(dist), xdist = dist)) +
   # must also use normalize = "groups" because min(log(pdf)) will be different for each dist
   stat_slab(
     aes(thickness = after_stat(ifelse(.width <= 0.99, log(pdf), NA))), 
@@ -1327,7 +1297,7 @@ geometries separately.
 
 For example, the following uses a separate specification of a `stat_slab()` and a `stat_pointinterval()` instead of a combined `stat_slabinterval()` in order to use `position_dodge()` on the intervals but not the slabs:
 
-```{r slab_and_pointinterval, fig.width = med_width, fig.height = small_height}
+```{r slab_and_pointinterval, fig.width = med_width, fig.height = small_height/1.5}
 df %>%
   ggplot(aes(fill = group, color = group, x = value)) +
   stat_slab(alpha = .3) +
