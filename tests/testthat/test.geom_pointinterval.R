@@ -33,18 +33,12 @@ test_that("horizontal grouped pointintervals work", {
       stat_pointinterval(.width = c(.66, .95))
   )
 
-  vdiffr::expect_doppelganger("grouped pointintervals (h, stat, mode_hdi)",
+  vdiffr::expect_doppelganger("grouped pointintervals (h, reverse order)",
     RankCorr_u_tau %>%
-      ggplot(aes(y = factor(i), x = u_tau)) +
-      stat_pointinterval(.width = c(.66, .95), point_interval = mode_hdi)
+      median_qi(.width = c(.66, .95)) %>%
+      ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+      geom_pointinterval()
   )
-
-  reverse_plot = RankCorr_u_tau %>%
-    mode_hdi(.width = c(.66, .95)) %>%
-    ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
-    geom_pointinterval()
-
-  vdiffr::expect_doppelganger("grouped pointintervals (h, reverse order)", reverse_plot)
 
   vdiffr::expect_doppelganger("grouped pointintervals (h, stat, reverse order)",
     RankCorr_u_tau %>%

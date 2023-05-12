@@ -10,6 +10,7 @@ library(tidyr)
 
 test_that("one-parameter eye plots work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
 
   set.seed(123)
@@ -36,6 +37,7 @@ test_that("one-parameter eye plots work", {
 
 test_that("two-parameter eye plots work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
 
   set.seed(123)
@@ -68,6 +70,7 @@ test_that("two-parameter eye plots work", {
 
 test_that("dodged eye plots work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
 
   set.seed(123)

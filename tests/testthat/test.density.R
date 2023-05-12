@@ -80,6 +80,10 @@ test_that("bandwidth estimators work", {
 # adaptive density estimator ----------------------------------------------
 
 test_that("adaptive density estimator works", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
+
+
   x = qlnorm(ppoints(1000), 1/2, 1)
 
   # red (adaptive) KDE should do better near the mode

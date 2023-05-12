@@ -3,9 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-library(distributional)
-
+suppressWarnings(suppressPackageStartupMessages({
+  library(dplyr)
+  library(distributional)
+}))
 
 
 test_that("distribution eye plots work with the args aesthetic", {
@@ -291,14 +292,6 @@ test_that("scale transformation works", {
   )
 
 
-  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%
-    ggplot(aes(xdist = x, y = 0))
-
-  vdiffr::expect_doppelganger("transformed scale with dist_sample",
-    p_log_dist + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
-  )
-
-
   p_log_wrap = data.frame(x = dist_wrap("lnorm")) %>%
     ggplot(aes(xdist = x, y = 0))
 
@@ -306,13 +299,6 @@ test_that("scale transformation works", {
     p_log_wrap + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
   )
 
-
-  p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
-    ggplot(aes(x = x, y = 0))
-
-  vdiffr::expect_doppelganger("transformed scale with sample data on x",
-    p_log_samp + stat_dist_halfeye(n = 20, point_interval = mode_hdi) + scale_x_log10()
-  )
 
   p_rev = data.frame(dist = "lnorm") %>%
     ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
@@ -339,6 +325,28 @@ test_that("scale transformation works", {
     p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
 })
+
+
+test_that("scale transformation works on dist_sample", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
+
+
+  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%
+    ggplot(aes(xdist = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale with dist_sample",
+    p_log_dist + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
+  )
+
+  p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
+    ggplot(aes(x = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale with sample data on x",
+    p_log_samp + stat_dist_halfeye(n = 20, point_interval = mode_hdi) + scale_x_log10()
+  )
+})
+
 
 test_that("scale transformation sets appropriate axis limits", {
   p = data.frame(x = dist_lognormal(10, 0.5)) %>%
@@ -456,6 +464,11 @@ test_that("distributional objects work", {
   vdiffr::expect_doppelganger("dist objects in stat_dist_ccdfinterval",
     p + stat_dist_ccdfinterval(n = 15)
   )
+})
+
+test_that("dist_sample objects work", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
   vdiffr::expect_doppelganger("dist_sample",
     tibble(
@@ -1017,6 +1030,7 @@ test_that("point_interval works", {
 test_that("rvars work", {
   skip_if_no_vdiffr()
   skip_if_not_installed("posterior")
+  skip_if_sensitive_to_density()
 
 
   set.seed(1234)

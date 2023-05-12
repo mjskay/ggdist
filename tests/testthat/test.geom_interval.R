@@ -89,16 +89,16 @@ test_that("multimodal intervals work with stat_interval", {
   vdiffr::expect_doppelganger("multimodal intervals (h, stat, dodged)",
     df %>%
       ggplot(aes(x = x, y = "a", group = g)) +
-      stat_slab(position = "dodge", n = 15) +
-      stat_interval(point_interval = mean_hdi, position = "dodge") +
+      # stat_slab(position = "dodge") +  # for verification
+      stat_interval(point_interval = mean_hdi, position = "dodge", .width = c(.5, .95)) +
       stat_pointinterval(point_interval = mode_hdi, position = "dodge", .width = .5) +
       scale_color_brewer()
   )
 
-  stat_interval_plot_multimodal_dodged = df %>%
-    ggplot(aes(y = x, x = "a", group = g)) +
-    stat_interval(point_interval = mean_hdi, position = "dodge") +
-    scale_color_brewer()
-
-  vdiffr::expect_doppelganger("multimodal intervals (stat, dodged)", stat_interval_plot_multimodal_dodged)
+  vdiffr::expect_doppelganger("multimodal intervals (stat, dodged)",
+    df %>%
+      ggplot(aes(y = x, x = "a", group = g)) +
+      stat_interval(point_interval = mean_hdi, position = "dodge") +
+      scale_color_brewer()
+  )
 })

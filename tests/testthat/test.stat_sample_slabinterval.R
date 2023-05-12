@@ -57,7 +57,7 @@ test_that("fill_type = 'gradient' works", {
 
 })
 
-test_that("histinterval and slab work", {
+test_that("histinterval outline works", {
   skip_if_no_vdiffr()
 
 
@@ -79,6 +79,21 @@ test_that("histinterval and slab work", {
   vdiffr::expect_doppelganger("histinterval with outlines bw bars",
     p + stat_histinterval(aes(x = dist, y = x), slab_color = "black", outline_bars = TRUE)
   )
+})
+
+test_that("slab outline works", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
+
+
+  set.seed(1234)
+  p = tribble(
+    ~dist,  ~x,
+    "norm", rnorm(100),
+    "t",    rt(100, 3)
+  ) %>%
+    unnest(x) %>%
+    ggplot()
 
   vdiffr::expect_doppelganger("slab with outline",
     p + stat_slab(aes(x = dist, y = x), n = 20, slab_color = "black")
@@ -94,10 +109,6 @@ test_that("scale transformation works", {
     ggplot(aes(y = "a", x = x)) +
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
-  vdiffr::expect_doppelganger("halfeyeh log scale transform",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
-  )
-
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
     p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 15, .width = .5, trim = FALSE)
   )
@@ -112,8 +123,23 @@ test_that("scale transformation works", {
 
 })
 
+test_that("scale transformation works on halfeye", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
+
+
+  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
+    ggplot(aes(y = "a", x = x)) +
+    scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+
+  vdiffr::expect_doppelganger("halfeyeh log scale transform",
+    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
+  )
+})
+
 test_that("pdf and cdf aesthetics work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
 
   p = data.frame(
@@ -131,10 +157,10 @@ test_that("constant distributions work", {
   skip_if_no_vdiffr()
 
 
+  # constant dist when n != 1
   p = data.frame(
-    x = c("constant = 1", "normal(2,1)"),
-    # sd of 0 will generate constant dist
-    y = qnorm(ppoints(100), mean = c(1, 2), sd = c(0, 1))
+    x = c("constant = 1", "constant = 2", "constant = 3"),
+    y = rep(c(0,1,2), times = 10)
   ) %>%
     ggplot(aes(x = x, y = y))
 
@@ -176,7 +202,7 @@ test_that("side and justification can vary", {
         justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1),
         scale = case_when(cyl == 4 ~ 0.5, cyl == 6 ~ 1, cyl == 8 ~ 0.5)
       )) +
-      stat_sample_slabinterval(orientation = "horizontal", normalize = "groups", n = 15)
+      stat_histinterval(orientation = "horizontal", normalize = "groups", n = 15)
   )
 })
 
@@ -186,13 +212,25 @@ test_that("n is calculated correctly", {
   set.seed(1234)
   df = data.frame(
     g = c("a","a","a","b","c"),
-    x = rnorm(120, c(1,1,1,2,3))
+    x = rnorm(15, c(1,1,1,2,3))
   )
 
-  vdiffr::expect_doppelganger("pdf*n for different-sized groups",
+  ld = layer_data(
     df %>%
       ggplot(aes(x = x, y = g, thickness = after_stat(pdf*n), fill = after_stat(n))) +
-      stat_sample_slabinterval(n = 15)
+      stat_sample_slabinterval(n = 2)
+  )
+
+  expect_equal(
+    ld[ld$datatype == "slab", c("y","group","n")],
+    data.frame(y = c(1,1,2,2,3,3), group = c(1,1,2,2,3,3), n = c(9,9,3,3,3,3)),
+    ignore_attr = c("row.names", "class")
+  )
+
+  expect_equal(
+    ld[ld$datatype == "interval", c("y","group","n")],
+    data.frame(y = c(1,1,2,2,3,3), group = c(1,1,2,2,3,3), n = NA_real_),
+    ignore_attr = c("row.names", "class")
   )
 })
 
@@ -222,6 +260,7 @@ test_that("NAs are handled correctly", {
 
 test_that("trim and expand work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
   set.seed(1234)
   df = data.frame(
