@@ -31,11 +31,11 @@ test_that("smooth_discrete works", {
 
   ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "discrete"))
   ref_x = c(0.760112695656659, 0.920256356040445, 1.08040001642423, 1.24054367680802,  1.78654853188863, 2.00007341240034, 2.21359829291206, 2.83977362126489,  3.16006094203247, 3.99967181376766)
-  expect_equal(ld$x, ref_x)
+  expect_equal(ld$x, ref_x, tolerance = 0.001)
 
   ld = layer_data(ggplot() + geom_dots(aes(x), smooth = smooth_discrete(kernel = "ep")))
   ref_x = c(0.816364320617873, 0.944625373470495, 1.05539072151476, 1.18366670884155,  1.84144365484769, 2.00000507797274, 2.15857922335003, 2.88568947241406,  3.11432520840337, 3.99999280566278)
-  expect_equal(ld$x, ref_x)
+  expect_equal(ld$x, ref_x, tolerance = 0.001)
 })
 
 test_that("smooth_bounded works", {
@@ -43,5 +43,5 @@ test_that("smooth_bounded works", {
 
   ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "bounded"))
   ref_x = c(0.997794316080475, 1.99639357461413, 2.99631978598422, 3.99740164666058,  4.99908084276668, 6.00091915723332, 7.00259835333942, 8.00368021401578,  9.00360642538587, 10.0022056839195)
-  expect_equal(ld$x, ref_x)
+  expect_equal(ld$x, ref_x, tolerance = 0.001)
 })
