@@ -247,13 +247,13 @@ test_that("NAs are handled correctly", {
 
   expect_warning(
     vdiffr::expect_doppelganger("NAs with na.rm = FALSE",
-      p + stat_halfeye(na.rm = FALSE, n = 15)
+      p + stat_cdfinterval(na.rm = FALSE, n = 5)
     ),
     "Removed 1 rows"
   )
 
   vdiffr::expect_doppelganger("NAs with na.rm = TRUE",
-    p + stat_halfeye(na.rm = TRUE, n = 15)
+    p + stat_cdfinterval(na.rm = TRUE, n = 5)
   )
 })
 
