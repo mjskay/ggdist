@@ -24,6 +24,7 @@ jobs:
           - {os: ubuntu-latest, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: 'oldrel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
+          - {os: ubuntu-latest, r: '4.1', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: '4.0', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: '3.6', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: '3.5', suffix: '', not_cran: 'true', vignettes: 'NULL'}
