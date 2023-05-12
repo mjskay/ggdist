@@ -1,25 +1,29 @@
 # ggdist 3.2.1.9000
 
-New features and enhancements:
+Breaking changes: The following changes, mostly due to new default density 
+estimators, may cause some plots on sample data to change. Changes should usually
+be small, and generally should result in more accurate density estimation. Revert
+to the old behavior by setting `density = density_unbounded()`.
 
 * `stat_slabinterval()` now uses `density_auto()` as its default density
   estimator, which defaults (when `trim = TRUE`) to a bounded density estimator
   that also estimates the bounds of the data. This will cause existing charts 
   using densities to change slightly. This change should be worth it, as it
   should drastically improve the accuracy of density estimates on bounded data, 
-  and should have little noticeable impact on densities on unbounded data. 
-  Existing code with `trim = FALSE` will not be affected. To switch to the
-  old behavior, pass `density = "unbounded"`.
+  and should have little noticeable impact on densities on unbounded data.
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
   `bounder_cdf()`, `bounder_cooke()`) for more on bounds estimation.
+* Improved `Mode()` and `hdi()` estimators based on bounded density estimator.
+
+New features and enhancements:
+
+* Improved `hdci()` estimator using quantile estimation.
 * Histograms are now implemented using `density_histogram()`, a histogram
   density estimator. Finer-grained control of bin positions is now possible
   using the `breaks` argument (including the new `breaks_fixed()` for manually-specified
   bin widths) and the `align` argument (including the new `align_boundary()` and
   `align_center()` for choosing how to align bin positions to reference points). (#118)
-* Improved `Mode()` and `hdi()` estimators based on bounded density estimator.
-* Improved `hdci()` estimator using quantile estimation.
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
   created with `geom_slabinterval()` or `stat_slabinterval()`. See example
   in `vignette("slabinterval")`. (#58, #124)
