@@ -120,7 +120,7 @@ test_that("scale transformation works", {
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",
-    p_log + stat_histinterval(point_interval = median_qi, n = 10, .width = .5)
+    p_log + stat_histinterval(point_interval = median_qi, .width = .5)
   )
 
 })
@@ -132,9 +132,9 @@ test_that("scale transformation works on halfeye", {
 
   p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
     ggplot(aes(y = "a", x = x)) +
-    scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+    scale_x_log10(breaks = 10^seq(-1,1))
 
-  vdiffr::expect_doppelganger("halfeyeh log scale transform",
+  vdiffr::expect_doppelganger("halfeyeh log scale transform tri kernel",
     p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
   )
 })

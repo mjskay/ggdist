@@ -336,7 +336,10 @@ test_that("scale transformation works on dist_sample", {
     ggplot(aes(xdist = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with dist_sample",
-    p_log_dist + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
+    p_log_dist +
+      stat_dist_halfeye(n = 20, point_interval = mode_hdci) +
+      scale_x_log10() +
+      geom_point(aes(x =x), data =  data.frame(x=range(qlnorm(ppoints(200)))))
   )
 
   p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
