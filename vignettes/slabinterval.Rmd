@@ -983,8 +983,7 @@ dist_df %>%
   coord_cartesian(expand = FALSE)
 ```
 
-Thanks to a tweet from [Jessica Hullman](https://twitter.com/JessicaHullman/status/1366945872630714368?s=20) 
-that inspired the idea.
+Thanks to a Jessica Hullman for suggesting the Tukey paper that inspired this idea.
 
 ### Densities filled according to intervals
 
