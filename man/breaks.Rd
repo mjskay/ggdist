@@ -6,7 +6,7 @@
 \alias{breaks_Sturges}
 \alias{breaks_Scott}
 \alias{breaks_FD}
-\title{Breaks (bin) selection algorithms for histograms}
+\title{Break (bin) selection algorithms for histograms}
 \usage{
 breaks_fixed(x, weights = NULL, width = 1)
 

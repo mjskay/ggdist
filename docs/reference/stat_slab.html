@@ -32,7 +32,7 @@ stat_slabinterval(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -101,14 +101,15 @@ creating slab (ridge) plots.</p>
 <span>  geom <span class="op">=</span> <span class="st">"slab"</span>,</span>
 <span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  slab_type <span class="op">=</span> <span class="st">"pdf"</span>,</span>
 <span>  p_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  density <span class="op">=</span> <span class="st">"unbounded"</span>,</span>
+<span>  density <span class="op">=</span> <span class="st">"bounded"</span>,</span>
 <span>  adjust <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  breaks <span class="op">=</span> <span class="st">"Sturges"</span>,</span>
+<span>  align <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  outline_bars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  slab_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">501</span>,</span>
 <span>  orientation <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -176,7 +177,7 @@ like in <code><a href="stat_gradientinterval.html">stat_gradientinterval()</a></
 large numbers of unique fill colors, but requires R &gt;= 4.1 and is not yet supported on all graphics devices.
 As of this writing, the <code><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png()</a></code> graphics device with <code>type = "cairo"</code>, the <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">svg()</a></code> device, the <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code>
 device, and the <code><a href="https://ragg.r-lib.org/reference/agg_png.html" class="external-link">ragg::agg_png()</a></code> devices are known to support this option. On R &lt; 4.1, this option
-will fall back to <code>fill_type = "segment"</code> with a message.</p></li>
+will fall back to <code>fill_type = "segments"</code> with a message.</p></li>
 <li><p><code>"auto"</code>: attempts to use <code>fill_type = "gradient"</code> if support for it can be auto-detected. On R &gt;= 4.2,
 support for gradients can be auto-detected on some graphics devices; if support is not detected, this
 option will fall back to <code>fill_type = "segments"</code> (in case of a false negative, <code>fill_type = "gradient"</code>
@@ -187,11 +188,6 @@ if you are using a graphics device that support gradients.</p></li>
 
 
 </dl></dd>
-
-
-<dt>slab_type</dt>
-<dd><p>The type of slab function to calculate: probability density (or mass) function (<code>"pdf"</code>),
-cumulative distribution function (<code>"cdf"</code>), or complementary CDF (<code>"ccdf"</code>).</p></dd>
 
 
 <dt>p_limits</dt>
@@ -212,18 +208,21 @@ corresponding densities). <span class="pkg">ggdist</span> provides a family of f
 following this format, including <code><a href="density_unbounded.html">density_unbounded()</a></code> and
 <code><a href="density_bounded.html">density_bounded()</a></code>. This format is also compatible with <code><a href="https://rdrr.io/r/stats/density.html" class="external-link">stats::density()</a></code>.</p></li>
 <li><p>A string giving the suffix of a function name that starts with <code>"density_"</code>;
-e.g. <code>"bounded"</code> for <code>[density_bounded()]</code>.</p></li>
+e.g. <code>"bounded"</code> for <code>[density_bounded()]</code>, <code>"unbounded"</code> for <code>[density_unbounded()]</code>,
+or <code>"histogram"</code> for <code><a href="density_histogram.html">density_histogram()</a></code>.
+Defaults to <code>"bounded"</code>, i.e. <code><a href="density_bounded.html">density_bounded()</a></code>, which estimates the bounds from
+the data and then uses a bounded density estimator based on the reflection method.</p></li>
 </ul></dd>
 
 
 <dt>adjust</dt>
-<dd><p>If <code>slab_type</code> is <code>"pdf"</code>, bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See <code><a href="https://rdrr.io/r/stats/density.html" class="external-link">density()</a></code> for more information.</p></dd>
+<dd><p>Passed to <code>density</code>: the bandwidth for the density estimator for sample data
+is adjusted by multiplying it by this value. See e.g. <code><a href="density_bounded.html">density_bounded()</a></code> for more information.</p></dd>
 
 
 <dt>trim</dt>
 <dd><p>For sample data, should the density estimate be trimmed to the range of the
-input data? Default <code>TRUE</code>.</p></dd>
+data? Passed on to the density estimator; see the <code>density</code> parameter. Default <code>TRUE</code>.</p></dd>
 
 
 <dt>expand</dt>
@@ -232,16 +231,47 @@ Can be length two to control expansion to the lower and upper limit respectively
 
 
 <dt>breaks</dt>
-<dd><p>If <code>slab_type</code> is <code>"histogram"</code>, the <code>breaks</code> parameter that is passed to
-<code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist()</a></code> to determine where to put breaks in the histogram (for sample data).</p></dd>
+<dd><p>Determines the breakpoints defining bins. Similar to (but not
+exactly the same as) the <code>breaks</code> argument to <code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>. One of:</p><ul><li><p>A scalar (length-1) numeric giving the number of bins</p></li>
+<li><p>A vector numeric giving the breakpoints between histogram bins</p></li>
+<li><p>A function taking <code>x</code> and <code>weights</code> and returning either the
+number of bins or a vector of breakpoints</p></li>
+<li><p>A string giving the suffix of a function that starts with
+<code>"breaks_"</code>. <span class="pkg">ggdist</span> provides weighted implementations of the
+<code>"Sturges"</code>, <code>"Scott"</code>, and <code>"FD"</code> break-finding algorithms from
+<code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>, as well as <code><a href="breaks.html">breaks_fixed()</a></code> for manually setting
+the bin width. See <a href="breaks.html">breaks</a>.</p></li>
+</ul><p>For example, <code>breaks = "Sturges"</code> will use the <code><a href="breaks.html">breaks_Sturges()</a></code> algorithm,
+<code>breaks = 9</code> will create 9 bins, and <code>breaks = breaks_fixed(width = 1)</code> will
+set the bin width to <code>1</code>.</p></dd>
+
+
+<dt>align</dt>
+<dd><p>Determines how to align the breakpoints defining bins. One of:</p><ul><li><p>A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+The offset must be between <code>0</code> and the bin width.</p></li>
+<li><p>A function taking a sorted vector of <code>breaks</code> (bin edges) and returning
+an offset to subtract from the breaks.</p></li>
+<li><p>A string giving the suffix of a function that starts with
+<code>"align_"</code> used to determine the alignment, such as <code><a href="align.html">align_none()</a></code>,
+<code><a href="align.html">align_boundary()</a></code>, or <code><a href="align.html">align_center()</a></code>.</p></li>
+</ul><p>For example, <code>align = "none"</code> will provide no alignment, <code>align = align_center(at = 0)</code>
+will center a bin on <code>0</code>, and <code>align = align_boundary(at = 0)</code> will align a bin
+edge on <code>0</code>.</p></dd>
 
 
 <dt>outline_bars</dt>
-<dd><p>For sample data (if <code>slab_type</code> is <code>"histogram"</code>) and for discrete analytical
+<dd><p>For sample data (if <code>density</code> is <code>"histogram"</code>) and for discrete analytical
 distributions (whose slabs are drawn as histograms), determines
 if outlines in between the bars are drawn when the <code>slab_color</code> aesthetic is used. If <code>FALSE</code>
 (the default), the outline is drawn only along the tops of the bars; if <code>TRUE</code>, outlines in between
-bars are also drawn.</p></dd>
+bars are also drawn. See <code><a href="density_histogram.html">density_histogram()</a></code>.</p></dd>
+
+
+<dt>slab_type</dt>
+<dd><p>(deprecated) The type of slab function to calculate: probability density (or mass) function (<code>"pdf"</code>),
+cumulative distribution function (<code>"cdf"</code>), or complementary CDF (<code>"ccdf"</code>). Instead of using <code>slab_type</code> to
+change <code>f</code> and then mapping <code>f</code> onto an aesthetic, it is now recommended to simply map the corresponding
+computed variable (e.g. <code>pdf</code>, <code>cdf</code>, or  <code>1 - cdf</code>) directly onto the desired aesthetic.</p></dd>
 
 
 <dt>limits</dt>
@@ -343,10 +373,12 @@ for the PDF at the lower and upper ends of the interval.</p></li>
 If <code>options("ggdist.experimental.slab_data_in_intervals")</code> is <code>TRUE</code>:
 For intervals, the CDF at the point summary; intervals also have <code>cdf_min</code> and <code>cdf_max</code>
 for the CDF at the lower and upper ends of the interval.</p></li>
-<li><p><code>f</code>: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by <code>slab_type</code>.</p></li>
 <li><p><code>n</code>: For slabs, the number of data points summarized into that slab. If the slab was created from
 an analytical distribution via the <code>xdist</code>, <code>ydist</code>, or <code>dist</code> aesthetic, <code>n</code> will be <code>Inf</code>.</p></li>
+<li><p><code>f</code>: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by <code>slab_type</code>. Instead of using <code>slab_type</code> to change <code>f</code> and then mapping <code>f</code> onto an
+aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. <code>pdf</code>, <code>cdf</code>, or
+<code>1 - cdf</code>) directly onto the desired aesthetic.</p></li>
 </ul></div>
     <div id="aesthetics">
     <h2>Aesthetics</h2>
@@ -444,7 +476,8 @@ See <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code> for th
 <code><a href="stat_halfeye.html">stat_halfeye</a>()</code>,
 <code><a href="stat_histinterval.html">stat_histinterval</a>()</code>,
 <code><a href="stat_interval.html">stat_interval</a>()</code>,
-<code><a href="stat_pointinterval.html">stat_pointinterval</a>()</code></p></div>
+<code><a href="stat_pointinterval.html">stat_pointinterval</a>()</code>,
+<code><a href="stat_spike.html">stat_spike</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">

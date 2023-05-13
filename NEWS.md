@@ -1,4 +1,4 @@
-# ggdist 3.2.1.9000
+# ggdist 3.3.0
 
 Breaking changes: The following changes, mostly due to new default density 
 estimators, may cause some plots on sample data to change. Changes should usually

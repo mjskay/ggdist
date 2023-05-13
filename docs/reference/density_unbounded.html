@@ -24,7 +24,7 @@ Supports automatic partial function application."><meta property="og:image" cont
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -84,10 +84,14 @@ Supports <a href="automatic-partial-functions.html">automatic partial function a
 <span>  <span class="va">x</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">512</span>,</span>
-<span>  bandwidth <span class="op">=</span> <span class="st">"nrd0"</span>,</span>
+<span>  bandwidth <span class="op">=</span> <span class="st">"dpi"</span>,</span>
 <span>  adjust <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  kernel <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
-<span>  trim <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  trim <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  adapt <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  range_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,8 +112,8 @@ Supports <a href="automatic-partial-functions.html">automatic partial function a
 <dt>bandwidth</dt>
 <dd><p>bandwidth of the density estimator. One of:</p><ul><li><p>a numeric: the bandwidth, as the standard deviation of the kernel</p></li>
 <li><p>a function: a function taking <code>x</code> (the sample) and returning the bandwidth</p></li>
-<li><p>a string: the suffix of the name of a function starting with <code>"bw."</code> that
-will be used to determine the bandwidth. See <code><a href="https://rdrr.io/r/stats/bandwidth.html" class="external-link">bw.nrd0()</a></code> for a list.</p></li>
+<li><p>a string: the suffix of the name of a function starting with <code>"bandwidth_"</code> that
+will be used to determine the bandwidth. See <a href="bandwidth.html">bandwidth</a> for a list.</p></li>
 </ul></dd>
 
 
@@ -127,31 +131,59 @@ match one of <code>"gaussian"</code>, <code>"rectangular"</code>, <code>"triangu
 <dt>trim</dt>
 <dd><p>Should the density estimate be trimmed to the bounds of the data?</p></dd>
 
+
+<dt>adapt</dt>
+<dd><p>(<strong>very experimental</strong>) The name and interpretation of this argument
+are subject to change without notice. Positive integer. If <code>adapt &gt; 1</code>, uses
+an adaptive approach to calculate the density. First, uses the
+adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
+bandwidths, then groups these bandwidths into <code>adapt</code> groups, then calculates
+and sums the densities from each group. You can set this to a very large number
+(e.g. <code>Inf</code>) for a fully adaptive approach, but this will be very slow; typically
+something around 100 yields nearly identical results.</p></dd>
+
+
+<dt>na.rm</dt>
+<dd><p>Should missing (<code>NA</code>) values in <code>x</code> be removed?</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments (ignored).</p></dd>
+
+
+<dt>range_only</dt>
+<dd><p>If <code>TRUE</code>, the range of the output of this density estimator
+is computed and is returned in the <code>$x</code> element of the result, and <code>c(NA, NA)</code>
+is returned in <code>$y</code>. This gives a faster way to determine the range of the output
+than <code>density_XXX(n = 2)</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
 <p>An object of class <code>"density"</code>, mimicking the output format of
-<code>stats:density()</code>, with the following components:</p><ul><li><p><code>x</code>: The grid of points at which the density was estimated.</p></li>
+<code><a href="https://rdrr.io/r/stats/density.html" class="external-link">stats::density()</a></code>, with the following components:</p><ul><li><p><code>x</code>: The grid of points at which the density was estimated.</p></li>
 <li><p><code>y</code>: The estimated density values.</p></li>
 <li><p><code>bw</code>: The bandwidth.</p></li>
 <li><p><code>n</code>: The sample size of the <code>x</code> input argument.</p></li>
 <li><p><code>call</code>: The call used to produce the result, as a quoted expression.</p></li>
 <li><p><code>data.name</code>: The deparsed name of the <code>x</code> input argument.</p></li>
 <li><p><code>has.na</code>: Always <code>FALSE</code> (for compatibility).</p></li>
-</ul><p>This allows existing methods (like <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>) to work if desired.
+<li><p><code>cdf</code>: Values of the (possibly weighted) empirical cumulative distribution
+function at <code>x</code>. See <code><a href="weighted_ecdf.html">weighted_ecdf()</a></code>.</p></li>
+</ul><p>This allows existing methods for density objects, like <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, to work if desired.
 This output format (and in particular, the <code>x</code> and <code>y</code> components) is also
 the format expected by the <code>density</code> argument of the <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code></p>
 
 
-<p>and the <code>smooth_</code> family of functions.</p>
+<p>and the <code><a href="smooth_density.html">smooth_</a></code> family of functions.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other density estimators: 
-<code><a href="density_auto.html">density_auto</a>()</code>,
-<code><a href="density_bounded.html">density_bounded</a>()</code></p></div>
+<code><a href="density_bounded.html">density_bounded</a>()</code>,
+<code><a href="density_histogram.html">density_histogram</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">
@@ -170,15 +202,15 @@ the format expected by the <code>density</code> argument of the <code><a href="s
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	density_unbounded(x = x)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (5000 obs.);	Bandwidth 'bw' = 0.03141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (5000 obs.);	Bandwidth 'bw' = 0.01647</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        x                  y            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-0.09421   Min.   :0.0000648  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 0.18969   1st Qu.:0.1113278  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.47358   Median :0.5863921  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.47358   Mean   :0.8797226  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.75747   3rd Qu.:1.5699993  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.04137   Max.   :2.6131888  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        x                  y           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-0.04939   Min.   :0.000098  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 0.21210   1st Qu.:0.181676  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.47358   Median :0.674336  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.47358   Mean   :0.955131  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.73506   3rd Qu.:1.616192  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 0.99655   Max.   :2.774063  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... thus, while designed for use with the `density` argument of</span></span></span>
 <span class="r-in"><span><span class="co"># stat_slabinterval(), output from density_unbounded() can also be used with</span></span></span>

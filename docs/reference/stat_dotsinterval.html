@@ -29,7 +29,7 @@ ensures the plot fits within the available space. They can also ensure dots do n
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -404,10 +404,12 @@ for the PDF at the lower and upper ends of the interval.</p></li>
 If <code>options("ggdist.experimental.slab_data_in_intervals")</code> is <code>TRUE</code>:
 For intervals, the CDF at the point summary; intervals also have <code>cdf_min</code> and <code>cdf_max</code>
 for the CDF at the lower and upper ends of the interval.</p></li>
-<li><p><code>f</code>: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by <code>slab_type</code>.</p></li>
 <li><p><code>n</code>: For slabs, the number of data points summarized into that slab. If the slab was created from
 an analytical distribution via the <code>xdist</code>, <code>ydist</code>, or <code>dist</code> aesthetic, <code>n</code> will be <code>Inf</code>.</p></li>
+<li><p><code>f</code>: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by <code>slab_type</code>. Instead of using <code>slab_type</code> to change <code>f</code> and then mapping <code>f</code> onto an
+aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. <code>pdf</code>, <code>cdf</code>, or
+<code>1 - cdf</code>) directly onto the desired aesthetic.</p></li>
 </ul></div>
     <div id="aesthetics">
     <h2>Aesthetics</h2>

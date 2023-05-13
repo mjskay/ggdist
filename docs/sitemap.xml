@@ -31,10 +31,28 @@
     <loc>http://mjskay.github.io/ggdist/news/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/align.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/automatic-partial-functions.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/bandwidth.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/bounder_cdf.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/bounder_cooke.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/bounder_range.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/breaks.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/curve_interval.html</loc>
@@ -43,10 +61,10 @@
     <loc>http://mjskay.github.io/ggdist/reference/cut_cdf_qi.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/density_auto.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/density_bounded.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/density_bounded.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/density_histogram.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/density_unbounded.html</loc>
@@ -74,6 +92,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_slabinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_spike.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_swarm.html</loc>
@@ -181,6 +202,9 @@
     <loc>http://mjskay.github.io/ggdist/reference/stat_slabinterval.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_spike.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/student_t.html</loc>
   </url>
   <url>
@@ -188,6 +212,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/tidy-format-translators.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/weighted_ecdf.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/weighted_quantile.html</loc>

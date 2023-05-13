@@ -28,7 +28,7 @@ geom_slabinterval(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -179,7 +179,7 @@ like in <code><a href="stat_gradientinterval.html">stat_gradientinterval()</a></
 large numbers of unique fill colors, but requires R &gt;= 4.1 and is not yet supported on all graphics devices.
 As of this writing, the <code><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png()</a></code> graphics device with <code>type = "cairo"</code>, the <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">svg()</a></code> device, the <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code>
 device, and the <code><a href="https://ragg.r-lib.org/reference/agg_png.html" class="external-link">ragg::agg_png()</a></code> devices are known to support this option. On R &lt; 4.1, this option
-will fall back to <code>fill_type = "segment"</code> with a message.</p></li>
+will fall back to <code>fill_type = "segments"</code> with a message.</p></li>
 <li><p><code>"auto"</code>: attempts to use <code>fill_type = "gradient"</code> if support for it can be auto-detected. On R &gt;= 4.2,
 support for gradients can be auto-detected on some graphics devices; if support is not detected, this
 option will fall back to <code>fill_type = "segments"</code> (in case of a false negative, <code>fill_type = "gradient"</code>
@@ -296,7 +296,8 @@ use on sample data or analytical distributions.
 See <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> for the geometry this shortcut is based on.</p>
 <p>Other slabinterval geoms: 
 <code><a href="geom_interval.html">geom_interval</a>()</code>,
-<code><a href="geom_pointinterval.html">geom_pointinterval</a>()</code></p></div>
+<code><a href="geom_pointinterval.html">geom_pointinterval</a>()</code>,
+<code><a href="geom_spike.html">geom_spike</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">

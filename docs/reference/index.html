@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -153,6 +153,11 @@
           <p><code><a href="stat_histinterval.html">stat_histinterval()</a></code> </p>
         </td>
         <td><p>Histogram + interval plot (shortcut stat)</p></td>
+      </tr><tr><td><a href="stat_spike.html"><img src="icons/stat_spike.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="stat_spike.html">stat_spike()</a></code> </p>
+        </td>
+        <td><p>Spike plot (ggplot2 stat)</p></td>
       </tr><tr><td><a href="stat_dotsinterval.html"><img src="icons/stat_dotsinterval.png" width="30" height="30" alt=""></a></td>
         <td>
           <p><code><a href="stat_dotsinterval.html">stat_dotsinterval()</a></code> </p>
@@ -197,6 +202,11 @@
           <p><code><a href="geom_slab.html">geom_slab()</a></code> </p>
         </td>
         <td><p>Slab (ridge) plot (shortcut geom)</p></td>
+      </tr><tr><td><a href="geom_spike.html"><img src="icons/geom_spike.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="geom_spike.html">geom_spike()</a></code> </p>
+        </td>
+        <td><p>Spike plot (ggplot2 geom)</p></td>
       </tr><tr><td><a href="geom_dotsinterval.html"><img src="icons/geom_dotsinterval.png" width="30" height="30" alt=""></a></td>
         <td>
           <p><code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code> </p>
@@ -328,11 +338,6 @@
         </th>
       </tr></tbody><tbody><tr><td></td>
         <td>
-          <p><code><a href="density_auto.html">density_auto()</a></code> </p>
-        </td>
-        <td><p>Automatic density estimator</p></td>
-      </tr><tr><td></td>
-        <td>
           <p><code><a href="density_bounded.html">density_bounded()</a></code> </p>
         </td>
         <td><p>Bounded density estimator using the reflection method</p></td>
@@ -341,6 +346,53 @@
           <p><code><a href="density_unbounded.html">density_unbounded()</a></code> </p>
         </td>
         <td><p>Unbounded density estimator</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="density_histogram.html">density_histogram()</a></code> </p>
+        </td>
+        <td><p>Histogram density estimator</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="bandwidth-estimators">Bandwidth estimators <a href="#bandwidth-estimators" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Bandwidth estimators for use with <code><a href="../reference/density_unbounded.html">density_unbounded()</a></code> and <code><a href="../reference/density_bounded.html">density_bounded()</a></code>.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="bandwidth.html">bandwidth_nrd0()</a></code> <code><a href="bandwidth.html">bandwidth_nrd()</a></code> <code><a href="bandwidth.html">bandwidth_ucv()</a></code> <code><a href="bandwidth.html">bandwidth_bcv()</a></code> <code><a href="bandwidth.html">bandwidth_SJ()</a></code> <code><a href="bandwidth.html">bandwidth_dpi()</a></code> </p>
+        </td>
+        <td><p>Bandwidth estimators</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="distribution-bounds-estimators">Distribution bounds estimators <a href="#distribution-bounds-estimators" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Distribution bounds estimators for use with <code><a href="../reference/density_bounded.html">density_bounded()</a></code>.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="bounder_cdf.html">bounder_cdf()</a></code> </p>
+        </td>
+        <td><p>Estimate bounds of a distribution using the CDF of its order statistics</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="bounder_cooke.html">bounder_cooke()</a></code> </p>
+        </td>
+        <td><p>Estimate bounds of a distribution using Cooke's method</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="bounder_range.html">bounder_range()</a></code> </p>
+        </td>
+        <td><p>Estimate bounds of a distribution using the range of the sample</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="histogram-layout-algorithms">Histogram layout algorithms <a href="#histogram-layout-algorithms" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Algorithms for bin selection and alignment for use with <code><a href="../reference/density_histogram.html">density_histogram()</a></code>.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="breaks.html">breaks_fixed()</a></code> <code><a href="breaks.html">breaks_Sturges()</a></code> <code><a href="breaks.html">breaks_Scott()</a></code> <code><a href="breaks.html">breaks_FD()</a></code> </p>
+        </td>
+        <td><p>Break (bin) selection algorithms for histograms</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="align.html">align_none()</a></code> <code><a href="align.html">align_boundary()</a></code> <code><a href="align.html">align_center()</a></code> </p>
+        </td>
+        <td><p>Break (bin) alignment methods</p></td>
       </tr></tbody><tbody><tr><th colspan="3">
           <h2 id="automatic-partial-functions">Automatic partial functions <a href="#automatic-partial-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Overview of automatic partial function application (currying) used by several ggdist function families</p>
@@ -360,14 +412,19 @@
         </td>
         <td><p>Probability expressions in ggdist aesthetics</p></td>
       </tr></tbody><tbody><tr><th colspan="3">
-          <h2 id="weighted-quantiles">Weighted quantiles <a href="#weighted-quantiles" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Weighted generalization of <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> used internally by several algorithms.</p>
+          <h2 id="weighted-quantiles-and-cdfs">Weighted quantiles and CDFs <a href="#weighted-quantiles-and-cdfs" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Weighted generalizations of <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> and <code><a href="https://rdrr.io/r/stats/ecdf.html" class="external-link">ecdf()</a></code> used internally by several algorithms.</p>
         </th>
       </tr></tbody><tbody><tr><td></td>
         <td>
           <p><code><a href="weighted_quantile.html">weighted_quantile()</a></code> <code><a href="weighted_quantile.html">weighted_quantile_fun()</a></code> </p>
         </td>
         <td><p>Weighted sample quantiles</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="weighted_ecdf.html">weighted_ecdf()</a></code> </p>
+        </td>
+        <td><p>Weighted empirical cumulative distribution function</p></td>
       </tr></tbody><tbody><tr><th colspan="3">
           <h2 id="compatibility-with-other-packages">Compatibility with other packages <a href="#compatibility-with-other-packages" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Functions to convert the ggdist naming scheme (for <code><a href="../reference/point_interval.html">point_interval()</a></code>) to and from other packages’ naming schemes.</p>

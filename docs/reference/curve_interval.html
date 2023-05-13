@@ -24,7 +24,7 @@ interval summaries using a curve boxplot-inspired approach."><meta property="og:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -85,9 +85,39 @@ interval summaries using a curve boxplot-inspired approach.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  .along <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  .width <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mhd"</span>, <span class="st">"mbd"</span>, <span class="st">"bd"</span>, <span class="st">"bd-mbd"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">curve_interval</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .along <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .width <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mhd"</span>, <span class="st">"mbd"</span>, <span class="st">"bd"</span>, <span class="st">"bd-mbd"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for rvar</span></span>
+<span><span class="fu">curve_interval</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .along <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .width <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mhd"</span>, <span class="st">"mbd"</span>, <span class="st">"bd"</span>, <span class="st">"bd-mbd"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">curve_interval</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .along <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .width <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mhd"</span>, <span class="st">"mbd"</span>, <span class="st">"bd"</span>, <span class="st">"bd-mbd"</span><span class="op">)</span>,</span>
 <span>  .simple_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">".chain"</span>, <span class="st">".iteration"</span>, <span class="st">".draw"</span>, <span class="st">".row"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,8 +125,12 @@ interval summaries using a curve boxplot-inspired approach.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.data</dt>
-<dd><p>Data frame (or grouped data frame as returned by <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>)
-that contains draws to summarize.</p></dd>
+<dd><p>One of:</p><ul><li><p>A data frame (or grouped data frame as returned by <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>)
+that contains draws to summarize.</p></li>
+<li><p>A <a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar</a> vector.</p></li>
+<li><p>A matrix; in which case the first dimension should be draws and the second
+dimension values of the curve.</p></li>
+</ul></dd>
 
 
 <dt>...</dt>
@@ -104,7 +138,8 @@ that contains draws to summarize.</p></dd>
 <code>.data</code>, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in <code>.exclude</code> (by default
 <code>".chain"</code>, <code>".iteration"</code>, <code>".draw"</code>, and <code>".row"</code>) will be summarized.
-This can be list columns.</p></dd>
+This can be numeric columns, list columns containing numeric vectors, or
+<code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code>s.</p></dd>
 
 
 <dt>.along</dt>
@@ -115,13 +150,24 @@ respect to these variables, conditional on all other grouping variables in the d
 for <code>.along</code>, which will generate the most conservative intervals. However, if you want to calculate
 intervals for some function <code>y = f(x)</code> conditional on some other variable(s) (say, conditional on a
 factor <code>g</code>), you would group by <code>g</code>, then use <code>.along = x</code> to calculate intervals jointly over <code>x</code>
-conditional on <code>g</code>.</p></dd>
+conditional on <code>g</code>. To avoid selecting any variables as input values to the function describing the
+curve, use <code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>; this will produce conditional intervals only (the result in this case should
+be very similar to <code><a href="point_interval.html">median_qi()</a></code>). Currently only supported when <code>.data</code> is a data frame.</p></dd>
 
 
 <dt>.width</dt>
 <dd><p>vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with
 a different probability interval (and value of the corresponding <code>.width</code> column).</p></dd>
+
+
+<dt>na.rm</dt>
+<dd><p>logical value indicating whether <code>NA</code> values should be stripped before the computation proceeds.
+If <code>FALSE</code> (the default), the presence of <code>NA</code> values in the columns to be summarized will generally
+result in an error. If <code>TRUE</code>, <code>NA</code> values will be removed in the calculation of intervals so long
+as <code>.interval</code> is <code>"mhd"</code>; other methods do not currently support <code>na.rm</code>. Be cautious in applying
+this parameter: in general, it is unclear what a joint interval should be when any of the values
+are missing!</p></dd>
 
 
 <dt>.interval</dt>
@@ -138,20 +184,8 @@ Available methods are:</p><ul><li><p><code>"mhd"</code>: mean halfspace depth (F
 <dt>.simple_names</dt>
 <dd><p>When <code>TRUE</code> and only a single column / vector is to be summarized, use the
 name <code>.lower</code> for the lower end of the interval and <code>.upper</code> for the
-upper end. If <code>.data</code> is a vector and this is <code>TRUE</code>, this will also set the column name
-of the point summary to <code>.value</code>. When <code>FALSE</code> and <code>.data</code> is a data frame,
-names the lower and upper intervals for each column <code>x</code> <code>x.lower</code> and <code>x.upper</code>.
-When <code>FALSE</code> and <code>.data</code> is a vector, uses the naming scheme <code>y</code>, <code>ymin</code>
-and <code>ymax</code> (for use with ggplot).</p></dd>
-
-
-<dt>na.rm</dt>
-<dd><p>logical value indicating whether <code>NA</code> values should be stripped before the computation proceeds.
-If <code>FALSE</code> (the default), the presence of <code>NA</code> values in the columns to be summarized will generally
-result in an error. If <code>TRUE</code>, <code>NA</code> values will be removed in the calculation of intervals so long
-as <code>.interval</code> is <code>"mhd"</code>; other methods do not currently support <code>na.rm</code>. Be cautious in applying
-this parameter: in general, it is unclear what a joint interval should be when any of the values
-are missing!</p></dd>
+upper end. When <code>FALSE</code> and <code>.data</code> is a data frame,
+names the lower and upper intervals for each column <code>x</code> <code>x.lower</code> and <code>x.upper</code>.</p></dd>
 
 
 <dt>.exclude</dt>

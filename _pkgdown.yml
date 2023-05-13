@@ -114,9 +114,27 @@ reference:
   desc: Density functions used by `stat_slabinterval()` and by the density
     smoothers for dotplot layout.
   contents:
-  - density_auto
   - density_bounded
   - density_unbounded
+  - density_histogram
+
+- title: Bandwidth estimators
+  desc: Bandwidth estimators for use with `density_unbounded()` and `density_bounded()`.
+  contents:
+  - bandwidth
+
+- title: Distribution bounds estimators
+  desc: Distribution bounds estimators for use with `density_bounded()`.
+  contents:
+  - bounder_cdf
+  - bounder_cooke
+  - bounder_range
+
+- title: Histogram layout algorithms
+  desc: Algorithms for bin selection and alignment for use with `density_histogram()`.
+  contents:
+  - breaks
+  - align
 
 - title: Automatic partial functions
   desc: Overview of automatic partial function application (currying) used by
@@ -131,10 +149,11 @@ reference:
   - Pr_
   - p_
 
-- title: Weighted quantiles
-  desc: Weighted generalization of `quantile()` used internally by several algorithms.
+- title: Weighted quantiles and CDFs
+  desc: Weighted generalizations of `quantile()` and `ecdf()` used internally by several algorithms.
   contents:
   - weighted_quantile
+  - weighted_ecdf
 
 - title: Compatibility with other packages
   desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to

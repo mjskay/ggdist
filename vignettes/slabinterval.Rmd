@@ -1203,12 +1203,15 @@ ridges_df %>%
 ```
 
 Depending on if it makes sense for your data (for example, if the scale is unbounded),
-you may also wish to adjust the `trim` parameter, which by default restricts the density
-estimator to 0 outside of the range of the data. Setting `trim` to `FALSE` will
-ensure the densities smoothly go down to 0. Combining this with `expand = TRUE`
+you may also wish to adjust the `density` and `trim` parameters. The default `density`, 
+`density_bounded()`, estimates the bounds of the distribution, which is useful if your data 
+has natural boundaries (e.g., is restricted to be positive). But if you know the underlying 
+distribution is unbounded, you can set `density = "unbounded"`. You may also want to set
+`trim` to `FALSE` to ensure the densities smoothly go down to 0, rather than being cut off
+at the limits of the raw data. Combining both of these with `expand = TRUE`
 will make each slab expand itself to the limits of the `x` axis.
 
-We'll use `trim` and `expand` along with a combination of `fill` and `fill_ramp`
+We'll use `density`, `trim`, and `expand` along with a combination of `fill` and `fill_ramp`
 to give each group on the y axis a different color and to vary the fill along
 the `x` axis in a way that provides a "softer" form of region of practical equivalence:
 
@@ -1221,7 +1224,7 @@ ridges_df %>%
   )) +
   stat_slab(
     height = 2, color = "gray15", 
-    expand = TRUE, trim = FALSE, 
+    expand = TRUE, trim = FALSE, density = "unbounded",
     fill_type = "gradient", 
     show.legend = FALSE
   ) +

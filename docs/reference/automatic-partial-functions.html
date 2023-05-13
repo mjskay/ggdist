@@ -10,8 +10,11 @@ The point_interval() family, such as median_qi(), mean_qi(),
 mode_hdi(), etc.
 The smooth_ family, such as smooth_bounded(), smooth_unbounded(),
 smooth_discrete(), and smooth_bar().
-The density_ family, such as density_auto(), density_bounded() and
-density_unbounded().
+The density_ family, such as density_bounded(), density_unbounded() and
+density_histogram().
+The align family.
+The breaks family.
+The bandwidth family.
 
 
 Partial application makes it easier to supply custom parameters to these
@@ -49,7 +52,7 @@ density_ family of functions.'><meta property="og:image" content="http://mjskay.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -110,8 +113,11 @@ the idea across more clearly.</p>
 <code><a href="point_interval.html">mode_hdi()</a></code>, etc.</p></li>
 <li><p>The <code>smooth_</code> family, such as <code><a href="smooth_density.html">smooth_bounded()</a></code>, <code><a href="smooth_density.html">smooth_unbounded()</a></code>,
 <code><a href="smooth_discrete.html">smooth_discrete()</a></code>, and <code><a href="smooth_discrete.html">smooth_bar()</a></code>.</p></li>
-<li><p>The <code>density_</code> family, such as <code><a href="density_auto.html">density_auto()</a></code>, <code><a href="density_bounded.html">density_bounded()</a></code> and
-<code><a href="density_unbounded.html">density_unbounded()</a></code>.</p></li>
+<li><p>The <code>density_</code> family, such as <code><a href="density_bounded.html">density_bounded()</a></code>, <code><a href="density_unbounded.html">density_unbounded()</a></code> and
+<code><a href="density_histogram.html">density_histogram()</a></code>.</p></li>
+<li><p>The <a href="align.html">align</a> family.</p></li>
+<li><p>The <a href="breaks.html">breaks</a> family.</p></li>
+<li><p>The <a href="bandwidth.html">bandwidth</a> family.</p></li>
 </ul><p>Partial application makes it easier to supply custom parameters to these
 functions when using them inside other functions, such as geoms and stats.
 For example, smoothers for <code><a href="geom_dots.html">geom_dots()</a></code> can be supplied in one of three
@@ -133,38 +139,38 @@ ways:</p><ul><li><p>as a suffix: <code>geom_dots(smooth = "bounded")</code></p><
 <span class="r-in"><span><span class="co"># the first required argument, `x`, of the density_ family is the vector</span></span></span>
 <span class="r-in"><span><span class="co"># to calculate a kernel density estimate from. If it is not provided, the</span></span></span>
 <span class="r-in"><span><span class="co"># function is partially applied and returned as-is</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="density_auto.html">density_auto</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="density_unbounded.html">density_unbounded</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;partial_function&gt;: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   density_auto()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   density_unbounded()</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we could create a new function that uses half the default bandwidth</span></span></span>
-<span class="r-in"><span><span class="va">density_half_bw</span> <span class="op">=</span> <span class="fu"><a href="density_auto.html">density_auto</a></span><span class="op">(</span>adjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">density_half_bw</span> <span class="op">=</span> <span class="fu"><a href="density_unbounded.html">density_unbounded</a></span><span class="op">(</span>adjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">density_half_bw</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;partial_function&gt;: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   density_auto(adjust = 0.5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   density_unbounded(adjust = 0.5)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can overwrite partially-applied arguments</span></span></span>
 <span class="r-in"><span><span class="va">density_quarter_bw_trimmed</span> <span class="op">=</span> <span class="fu">density_half_bw</span><span class="op">(</span>adjust <span class="op">=</span> <span class="fl">0.25</span>, trim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">density_quarter_bw_trimmed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;partial_function&gt;: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   density_auto(adjust = 0.25, trim = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   density_unbounded(adjust = 0.25, trim = TRUE)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># when we eventually call the function and provide the required argument</span></span></span>
 <span class="r-in"><span><span class="co"># `x`, it is applied using the arguments we have "saved up" so far</span></span></span>
 <span class="r-in"><span><span class="fu">density_quarter_bw_trimmed</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	density_auto(x = x, adjust = 0.25, trim = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	density_unbounded(x = x, adjust = 0.25, trim = TRUE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (100 obs.);	Bandwidth 'bw' = 0.08997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (100 obs.);	Bandwidth 'bw' = 0.08864</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        x                 y          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.3457   Min.   :0.01034  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.1220   1st Qu.:0.07434  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.1016   Median :0.15031  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.1016   Mean   :0.20417  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 1.3253   3rd Qu.:0.33709  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.5490   Max.   :0.66811  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        x                 y           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.3457   Min.   :0.009921  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.1220   1st Qu.:0.062906  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.1016   Median :0.149478  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.1016   Mean   :0.201970  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 1.3253   3rd Qu.:0.337508  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.5490   Max.   :0.673160  </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

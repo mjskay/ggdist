@@ -27,7 +27,7 @@ brms models.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -86,7 +86,15 @@ brms models.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_dist</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
+<span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  dist_obj <span class="op">=</span> <span class="st">".dist_obj"</span>,</span>
+<span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for default</span></span>
 <span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -98,14 +106,34 @@ brms models.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
 <span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  dist_obj <span class="op">=</span> <span class="st">".dist_obj"</span>,</span>
+<span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lb <span class="op">=</span> <span class="st">"lb"</span>,</span>
+<span>  ub <span class="op">=</span> <span class="st">"ub"</span>,</span>
 <span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for character</span></span>
-<span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
+<span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  dist_obj <span class="op">=</span> <span class="st">".dist_obj"</span>,</span>
+<span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for factor</span></span>
-<span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
+<span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  dist_obj <span class="op">=</span> <span class="st">".dist_obj"</span>,</span>
+<span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for brmsprior</span></span>
 <span><span class="fu">parse_dist</span><span class="op">(</span></span>
@@ -114,6 +142,8 @@ brms models.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
 <span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  dist_obj <span class="op">=</span> <span class="st">".dist_obj"</span>,</span>
+<span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -139,6 +169,18 @@ containing distribution specifications.</p></dd>
 <dd><p>The name of the output column to contain the arguments to the distribution</p></dd>
 
 
+<dt>dist_obj</dt>
+<dd><p>The name of the output column to contain a <span class="pkg">distributional</span> object representing the distribution</p></dd>
+
+
+<dt>package</dt>
+<dd><p>The package or environment to search for distribution functions in.
+Passed to <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_wrap.html" class="external-link">distributional::dist_wrap()</a></code>. One of:</p><ul><li><p><code>NULL</code>: use the calling environment</p></li>
+<li><p>a string: use the environment for the package with the given name</p></li>
+<li><p>an <a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a>: use the given environment</p></li>
+</ul></dd>
+
+
 <dt>to_r_names</dt>
 <dd><p>If <code>TRUE</code> (the default), certain common aliases for distribution names are
 automatically translated into names that R can recognize (i.e., names which have functions starting
@@ -150,6 +192,20 @@ functions, etc. for that distribution), using the <code>r_dist_name</code> funct
 <dt>dist_col</dt>
 <dd><p>A bare (unquoted) column or column expression that resolves to a character vector
 of distribution specifications.</p></dd>
+
+
+<dt>lb</dt>
+<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
+the lower bound of the distribution, which if present will produce a truncated distribution using
+<code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_truncated.html" class="external-link">dist_truncated()</a></code>. Ignored if <code>lb</code> is <code>NULL</code> or if <code>object[[lb]]</code> is <code>NA</code> for the corresponding
+input row.</p></dd>
+
+
+<dt>ub</dt>
+<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
+the upper bound of the distribution, which if present will produce a truncated distribution using
+<code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_truncated.html" class="external-link">dist_truncated()</a></code>. Ignored if <code>ub</code> is <code>NULL</code> or if <code>object[[ub]]</code> is <code>NA</code> for the corresponding
+input row.</p></dd>
 
 
 <dt>dist_name</dt>
@@ -193,22 +249,22 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># parse dist can operate on strings directly...</span></span></span>
 <span class="r-in"><span><span class="fu">parse_dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .dist     .args     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> norm      <span style="color: #949494;">&lt;list [2]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> student_t <span style="color: #949494;">&lt;list [3]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .dist     .args               .dist_obj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dist&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> norm      <span style="color: #949494;">&lt;list [2]&gt;</span>         norm(0, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> student_t <span style="color: #949494;">&lt;list [3]&gt;</span> student_t(3, 0, 1)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... or on columns of a data frame, where it adds the</span></span></span>
 <span class="r-in"><span><span class="co"># parsed specs back on as columns</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">parse_dist</span><span class="op">(</span><span class="va">prior</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              prior     .dist   .args</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      normal(0,1)      norm    0, 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 student_t(3,0,1) student_t 3, 0, 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              prior     .dist   .args          .dist_obj</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      normal(0,1)      norm    0, 1         norm(0, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 student_t(3,0,1) student_t 3, 0, 1 student_t(3, 0, 1)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># parse_dist is particularly useful with the output of brms::prior(),</span></span></span>
-<span class="r-in"><span><span class="co"># which follow the same format as above</span></span></span>
+<span class="r-in"><span><span class="co"># which follows the same format as above</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

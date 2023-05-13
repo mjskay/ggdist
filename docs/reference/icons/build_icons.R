@@ -49,6 +49,8 @@ make_icon(stat_cdfinterval)
 make_icon(stat_gradientinterval, fill_type = "gradient")
 make_icon(stat_histinterval, data.frame(x = qnorm(ppoints(20))), aes(x = x), breaks = 10)
 
+# spike family
+make_icon(stat_spike, names = c("stat_spike", "geom_spike"), at = \(x) quantile(x, ppoints(7, a = 0)), x_expansion = 0.1)
 
 # dotsinterval family
 make_icon(stat_dotsinterval, quantiles = 20, names = c("geom_dotsinterval", "stat_dotsinterval"), x_expansion = 0.1)

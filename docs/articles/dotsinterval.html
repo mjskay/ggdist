@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2023-01-17</h4>
+            <h4 data-toc-skip class="date">2023-05-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/dotsinterval.Rmd" class="external-link"><code>vignettes/dotsinterval.Rmd</code></a></small>
       <div class="hidden name"><code>dotsinterval.Rmd</code></div>
@@ -946,7 +946,7 @@ reasonably-sized dataset.</p>
 <h2 id="logit-dotplots">Logit dotplots<a class="anchor" aria-label="anchor" href="#logit-dotplots"></a>
 </h2>
 <p>To demonstrate another useful plot type, the <em>logit dotplot</em>
-(courtesy <a href="https://www.barelysignificant.com/post/glm/" class="external-link">Ladislas
+(courtesy <a href="https://lnalborczyk.github.io/post/glm/" class="external-link">Ladislas
 Nalborczyk</a>), we’ll fit a logistic regression to some data on the sex
 and body mass of Gentoo penguins.</p>
 <p>First, we’ll demo varying the <code>side</code> aesthetic to create
@@ -997,7 +997,7 @@ dotplots to create a <em>logit dotplot</em>:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prediction_grid</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">.</span>, se.fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">.</span>, se.fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="co"># distribution describing uncertainty in log odds</span></span>
 <span>    log_odds <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">se.fit</span><span class="op">)</span>,</span>

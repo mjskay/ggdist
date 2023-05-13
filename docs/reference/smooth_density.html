@@ -26,7 +26,7 @@ Supports automatic partial function application.'><meta property="og:image" cont
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -84,9 +84,16 @@ Supports <a href="automatic-partial-functions.html">automatic partial function a
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">smooth_bounded</span><span class="op">(</span><span class="va">x</span>, density <span class="op">=</span> <span class="st">"bounded"</span>, bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">smooth_bounded</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  density <span class="op">=</span> <span class="st">"bounded"</span>,</span>
+<span>  bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  bounder <span class="op">=</span> <span class="st">"cooke"</span>,</span>
+<span>  trim <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">smooth_unbounded</span><span class="op">(</span><span class="va">x</span>, density <span class="op">=</span> <span class="st">"unbounded"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">smooth_unbounded</span><span class="op">(</span><span class="va">x</span>, density <span class="op">=</span> <span class="st">"unbounded"</span>, trim <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -108,8 +115,24 @@ e.g. <code>"bounded"</code> for <code>[density_bounded()]</code>.</p></li>
 
 <dt>bounds</dt>
 <dd><p>length-2 vector of min and max bounds. If a bound is <code>NA</code>, then
-that bound is replaced with <code>min(x)</code> or <code>max(x)</code>. Thus, the default,
-<code>c(NA, NA)</code>, means that the bounds used are <code>range(x)</code>.</p></dd>
+that bound is estimated from the data using the method specified by <code>bounder</code>.</p></dd>
+
+
+<dt>bounder</dt>
+<dd><p>Method to use to find missing (<code>NA</code>) <code>bounds</code>. A function that
+takes a numeric vector of values and returns a length-2 vector of the estimated
+lower and upper bound of the distribution. Can also be a string giving the
+suffix of the name of such a function that starts with <code>"bounder_"</code>. Useful
+values include:</p><ul><li><p><code>"cdf"</code>: Use the CDF of the the minimum and maximum order statistics of the
+sample to estimate the bounds. See <code><a href="bounder_cdf.html">bounder_cdf()</a></code>.</p></li>
+<li><p><code>"cooke"</code>: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
+See <code><a href="bounder_cooke.html">bounder_cooke()</a></code>.</p></li>
+<li><p><code>"range"</code>: Use the range of <code>x</code> (i.e the <code>min</code> or <code>max</code>). See <code><a href="bounder_range.html">bounder_range()</a></code>.</p></li>
+</ul></dd>
+
+
+<dt>trim</dt>
+<dd><p>Should the density estimate be trimmed to the bounds of the data?</p></dd>
 
 
 <dt>...</dt>

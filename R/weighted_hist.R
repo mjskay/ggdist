@@ -103,7 +103,7 @@ weighted_hist = function(
 
 # breaks algorithms -------------------------------------------------------
 
-#' Breaks (bin) selection algorithms for histograms
+#' Break (bin) selection algorithms for histograms
 #'
 #' Methods for determining breaks (bins) in histograms, as used in the `breaks`
 #' argument to [density_histogram()].

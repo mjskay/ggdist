@@ -24,7 +24,7 @@ designed for use with output from point_interval()."><meta property="og:image" c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -211,6 +211,12 @@ the appearance of their two sub-geometries: the <strong>line</strong> and the <s
 <li><p><code>xmax</code>: Right edge of the ribbon sub-geometry (if <code>orientation = "horizontal"</code>).</p></li>
 <li><p><code>ymin</code>: Lower edge of the ribbon sub-geometry (if <code>orientation = "vertical"</code>).</p></li>
 <li><p><code>ymax</code>: Upper edge of the ribbon sub-geometry (if <code>orientation = "vertical"</code>).</p></li>
+<li><p><code>order</code>: The order in which ribbons are drawn. Ribbons with the smallest mean value of <code>order</code>
+are drawn first (i.e., will be drawn below ribbons with larger mean values of <code>order</code>). If
+<code>order</code> is not supplied to <code>geom_lineribbon()</code>, <code>-abs(xmax - xmin)</code> or <code>-abs(ymax - ymax)</code>
+(depending on <code>orientation</code>) is used, having the effect of drawing the widest (on average)
+ribbons on the bottom. <code><a href="stat_lineribbon.html">stat_lineribbon()</a></code> uses <code>order = after_stat(level)</code> by default,
+causing the ribbons generated from the largest <code>.width</code> to be drawn on the bottom.</p></li>
 </ul><p><strong>Color aesthetics</strong></p>
 <ul><li><p><code>colour</code>: (or <code>color</code>) The color of the <strong>line</strong> sub-geometry.</p></li>
 <li><p><code>fill</code>: The fill color of the <strong>ribbon</strong> sub-geometry.</p></li>

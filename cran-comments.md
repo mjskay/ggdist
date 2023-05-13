@@ -1,16 +1,17 @@
 ## Submission comments
-This is a feature release with a few new features and some bugfixes (see NEWS.md).
+This addresses some failing tests on R-devel due to changes to density(), and also includes some other unrelated new features and bugfixes (see NEWS.md).
 
 ## Test environments
-* MacOS (Github), R-release 4.2.2
-* Windows 10 (local), R-release 4.2.2
-* Windows 10 (Github), R-release 4.2.2
-* Windows 10 (win-builder), R-devel
-* Windows 10 (win-builder), R-release 4.2.2
-* Windows 10 (win-builder), R-oldrel 4.1.3
+* MacOS (Github), R-release
+* Windows (local), R-release
+* Windows (Github), R-release
+* Windows (win-builder), R-devel
+* Windows (win-builder), R-release
+* Windows (win-builder), R-oldrel
 * Linux (Github), R-devel
-* Linux (Github), R-release 4.2.2
-* Linux (Github), R-oldrel 4.1.3
+* Linux (Github), R-release
+* Linux (Github), R-oldrel
+* Linux (Github), R 4.1
 * Linux (Github), R 4.0
 * Linux (Github), R 3.6
 * Linux (Github), R 3.5
@@ -20,7 +21,7 @@ This is a feature release with a few new features and some bugfixes (see NEWS.md
 
 ## revdepcheck results
 
-We checked 16 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 19 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
  * We failed to check 0 packages
