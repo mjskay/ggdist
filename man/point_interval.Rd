@@ -99,14 +99,14 @@ hdi(
   .width = 0.95,
   na.rm = FALSE,
   ...,
-  n = 4096,
   density = density_bounded(trim = TRUE),
+  n = 4096,
   .prob
 )
 
 Mode(x, na.rm = FALSE, ...)
 
-\method{Mode}{default}(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE))
+\method{Mode}{default}(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001)
 
 \method{Mode}{rvar}(x, na.rm = FALSE, ...)
 
@@ -186,15 +186,15 @@ names used in \pkg{ggdist} and \pkg{tidybayes}.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
 
-\item{n}{For \code{\link[=hdi]{hdi()}}, the number of quantiles to use to estimate the highest-density
-intervals.}
-
 \item{density}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the kernel density estimator to use, either as
 a function (e.g. \code{\link{density_bounded}}, \code{\link{density_unbounded}}) or as a string giving the
 suffix to a function that starts with \code{density_} (e.g. \code{"bounded"} or \code{"unbounded"}). The
 default, \code{"bounded"}, uses the bounded density estimator of \code{\link[=density_bounded]{density_bounded()}}, which
 itself estimates the bounds of the distribution, and tends to work well on both bounded
 and unbounded data.}
+
+\item{n}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the number of points to use to estimate highest-density
+intervals or modes.}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding

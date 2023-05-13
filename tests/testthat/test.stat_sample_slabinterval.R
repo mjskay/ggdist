@@ -134,7 +134,7 @@ test_that("scale transformation works on halfeye", {
     ggplot(aes(y = "a", x = x)) +
     scale_x_log10(breaks = 10^seq(-1,1))
 
-  vdiffr::expect_doppelganger("halfeyeh log scale transform tri kernel",
+  vdiffr::expect_doppelganger("halfeyeh log scale transform tri",
     p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
   )
 })

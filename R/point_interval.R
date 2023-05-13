@@ -98,8 +98,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' default, `"bounded"`, uses the bounded density estimator of [density_bounded()], which
 #' itself estimates the bounds of the distribution, and tends to work well on both bounded
 #' and unbounded data.
-#' @param n For [hdi()], the number of quantiles to use to estimate the highest-density
-#' intervals.
+#' @param n For [hdi()] and [Mode()], the number of points to use to estimate highest-density
+#' intervals or modes.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
@@ -407,16 +407,16 @@ ul = function(x, .width = .95, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95, na.rm = FALSE, ..., n = 4096, density = density_bounded(trim = TRUE), .prob) {
+hdi = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 4096, .prob) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  hdi_(x, .width = .width, na.rm = na.rm, ..., n = n, density = density)
+  hdi_(x, .width = .width, na.rm = na.rm, ..., density = density, n = n)
 }
 hdi_ = function(x, ...) {
   UseMethod("hdi_")
 }
 #' @importFrom stats density
 #' @export
-hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE)) {
+hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 4096) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -425,7 +425,7 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_b
   }
   x = check_na(x, na.rm)
 
-  intervals = .hdi_numeric(x, .width = .width, density = density)
+  intervals = .hdi_numeric(x, .width = .width, ..., density = density, n = n)
   if (nrow(intervals) == 1) {
     # if the result is unimodal, switch to hdci (which will be more accurate)
     intervals = hdci_.numeric(x, .width = .width)
@@ -436,7 +436,7 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_b
 # based on hdr.dist_default from {distributional}
 # https://github.com/mitchelloharawild/distributional/blob/50e29554456d99e9b7671ba6110bebe5961683d2/R/default.R#L137
 #' @importFrom stats approx
-.hdi_numeric = function(x, .width = 0.95, ..., n = 4096, density = density_bounded(trim = TRUE)) {
+.hdi_numeric = function(x, .width = 0.95, ..., density = density_bounded(trim = TRUE), n = 4096) {
   density = match_function(density, "density_")
 
   dist_x = quantile(x, ppoints(n, a = 0.5))
@@ -471,7 +471,7 @@ hdi_.rvar = function(x, ...) {
 }
 #' @importFrom distributional hdr support
 #' @export
-hdi_.distribution = function(x, .width = .95, ..., n = 4096, density = density_bounded(trim = TRUE)) {
+hdi_.distribution = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 4096) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distribution objects is not implemented")
   }
@@ -485,7 +485,7 @@ hdi_.distribution = function(x, .width = .95, ..., n = 4096, density = density_b
     return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
   }
   if (distr_is_sample(x)) {
-    return(hdi_.numeric(distr_get_sample(x), .width = .95, n = n, density = density, ...))
+    return(hdi_.numeric(distr_get_sample(x), .width = .width, na.rm = na.rm, ..., density = density, n = n))
   }
 
   hilos = hdr(x, .width * 100, n = n, ...)
@@ -501,7 +501,7 @@ Mode = function(x, na.rm = FALSE, ...) {
 }
 #' @export
 #' @rdname point_interval
-Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE)) {
+Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
@@ -516,7 +516,7 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
     ux[which.max(tabulate(match(x, ux)))]
   } else {
     # for the continuous case
-    d = density(x, n = 2001)
+    d = density(x, n = n)
     d$x[which.max(d$y)]
   }
 }
