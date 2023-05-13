@@ -32,7 +32,7 @@ Either a single number (giving the number of bins) or a vector
 giving the edges between bins.
 }
 \description{
-Methods for determing breaks (bins) in histograms, as used in the \code{breaks}
+Methods for determining breaks (bins) in histograms, as used in the \code{breaks}
 argument to \code{\link[=density_histogram]{density_histogram()}}.
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }

@@ -330,7 +330,7 @@ compute_interval_slabinterval = function(
 #'    e.g. `"bounded"` for `[density_bounded()]`, `"unbounded"` for `[density_unbounded()]`,
 #'    or `"histogram"` for [density_histogram()].
 #'    Defaults to `"bounded"`, i.e. [density_bounded()], which estimates the bounds from
-#'    the data and then uses a bounded density estimator based on the reflection metohd.
+#'    the data and then uses a bounded density estimator based on the reflection method.
 #' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data
 #' is adjusted by multiplying it by this value. See e.g. [density_bounded()] for more information.
 #' @param trim For sample data, should the density estimate be trimmed to the range of the

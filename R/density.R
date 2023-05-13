@@ -553,6 +553,8 @@ bandwidth_dpi = function(x, ...) {
 }
 
 get_local_bandwidth = function(x, bandwidth, kernel, n) {
+  # TODO: allow this to be done using a bounded KDE for density_bounded
+
   # evaluate pilot density at each x value
   d_pilot = density(x, bw = bandwidth, kernel = kernel, n = n)
   d_pilot_times_n = approx(d_pilot$x, d_pilot$y, xout = x)$y * length(x)

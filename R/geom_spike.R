@@ -17,7 +17,7 @@
 #' This geometry consists of a "spike" (vertical/horizontal line segment) and a
 #' "point" (at the end of the line segment). It uses the `thickness` aesthetic
 #' to determine where the endpoint of the line is, which allows it to be used
-#' with [geom_slabinterval()] geometries for labelling specific values of the
+#' with [geom_slabinterval()] geometries for labeling specific values of the
 #' thickness function.
 #' @inheritParams geom_slabinterval
 #' @return A [ggplot2::Geom] representing a spike geometry which can

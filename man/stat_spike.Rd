@@ -79,7 +79,7 @@ only be used with functions whose values are in [0,1], such as CDFs).
 \item \link{numeric} vector: points to evaluate the PDF and CDF of the distributions at.
 \item function or string: function (or name of a function) which,
 when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
-\link[posterior:rvar]{posterior::rvar}), returns a vector of values to evaluate the distribution functions at.
+\code{\link[posterior:rvar]{posterior::rvar()}}), returns a vector of values to evaluate the distribution functions at.
 \item a \link{list} where each element is any of the above (e.g. a \link{numeric}, function, or
 name of a function): the evaluation points determined by each element of the
 list are concatenated together. This means, e.g., \code{c(0, median, qi)} would add
@@ -106,7 +106,7 @@ following this format, including \code{\link[=density_unbounded]{density_unbound
 e.g. \code{"bounded"} for \verb{[density_bounded()]}, \code{"unbounded"} for \verb{[density_unbounded()]},
 or \code{"histogram"} for \code{\link[=density_histogram]{density_histogram()}}.
 Defaults to \code{"bounded"}, i.e. \code{\link[=density_bounded]{density_bounded()}}, which estimates the bounds from
-the data and then uses a bounded density estimator based on the reflection metohd.
+the data and then uses a bounded density estimator based on the reflection method.
 }}
 
 \item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data

@@ -110,7 +110,7 @@ allows you to position spikes and points along a slab.
 This geometry consists of a "spike" (vertical/horizontal line segment) and a
 "point" (at the end of the line segment). It uses the \code{thickness} aesthetic
 to determine where the endpoint of the line is, which allows it to be used
-with \code{\link[=geom_slabinterval]{geom_slabinterval()}} geometries for labelling specific values of the
+with \code{\link[=geom_slabinterval]{geom_slabinterval()}} geometries for labeling specific values of the
 thickness function.
 }
 \section{Aesthetics}{

@@ -17,7 +17,7 @@
 #'   - [numeric] vector: points to evaluate the PDF and CDF of the distributions at.
 #'   - function or string: function (or name of a function) which,
 #'     when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
-#'     [posterior::rvar]), returns a vector of values to evaluate the distribution functions at.
+#'     [posterior::rvar()]), returns a vector of values to evaluate the distribution functions at.
 #'   - a [list] where each element is any of the above (e.g. a [numeric], function, or
 #'     name of a function): the evaluation points determined by each element of the
 #'     list are concatenated together. This means, e.g., `c(0, median, qi)` would add

@@ -135,7 +135,7 @@ following this format, including \code{\link[=density_unbounded]{density_unbound
 e.g. \code{"bounded"} for \verb{[density_bounded()]}, \code{"unbounded"} for \verb{[density_unbounded()]},
 or \code{"histogram"} for \code{\link[=density_histogram]{density_histogram()}}.
 Defaults to \code{"bounded"}, i.e. \code{\link[=density_bounded]{density_bounded()}}, which estimates the bounds from
-the data and then uses a bounded density estimator based on the reflection metohd.
+the data and then uses a bounded density estimator based on the reflection method.
 }}
 
 \item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data

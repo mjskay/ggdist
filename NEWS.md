@@ -3,14 +3,17 @@
 Breaking changes: The following changes, mostly due to new default density 
 estimators, may cause some plots on sample data to change. Changes should usually
 be small, and generally should result in more accurate density estimation. Revert
-to the old behavior by setting `density = density_unbounded()`.
+to the old behavior by setting `density = density_unbounded(bandwidth = "nrd0")`.
 
 * `stat_slabinterval()` now uses `density_bounded()` as its default density
   estimator, which uses a bounded density estimator that also estimates the 
-  bounds of the data. This will cause existing charts using densities to change
-  slightly. This change should be worth it, as it should drastically improve the
-  accuracy of density estimates on bounded data, and should have little
-  noticeable impact on densities on unbounded data.
+  bounds of the data. The default bandwidth estimator is also now `bandwidth_dpi()`,
+  which is the Sheather-Jones direct plug-in estimator (the same as
+  `stats::bw.SJ(..., method = "dpi")`). These changes may cause existing charts
+  using densities to change; usually only slightly. These changes should be worth
+  it, as they should drastically improve the accuracy of density estimates, 
+  especially on bounded data, and should have little noticeable impact on densities 
+  on unbounded data.
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
   `bounder_cdf()`, `bounder_cooke()`) for more on bounds estimation.
@@ -28,7 +31,7 @@ New features and enhancements:
   created with `geom_slabinterval()` or `stat_slabinterval()`. See example
   in `vignette("slabinterval")`. (#58, #124)
 * `parse_dist()` now outputs *distributional* objects in a `.dist_obj` column in
-  addition to the character plus args-list format, and these objects respect truncation
+  addition to the name-plus-arguments (`.dist`+`.args`) format, and these objects respect truncation
   parameters from prior specifications. This makes it easier to  visualize standard
   deviation priors, for example, giving a better solution to #20.
 * `marginalize_lkjcorr()` adjusts the `.dist_obj` column output by `parse_dist()`
@@ -37,7 +40,10 @@ New features and enhancements:
   set the draw order of ribbons (#171). Enabled by this change, `stat_lineribbon()` 
   now sets `order = after_stat(level)` by default, making its draw order more correct
   by ensuring all ribbons of the same level are drawn together.
-* Some improved error messages using *cli*.
+* Some improved error messages using `cli`.
+* *Very* experimental adaptive KDE is available through the `adapt` parameter; 
+  note that it is unsupported and both the implementation and interface are 
+  highly likely to change.
 
 Deprecations:
 

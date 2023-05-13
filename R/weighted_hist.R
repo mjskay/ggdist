@@ -105,7 +105,7 @@ weighted_hist = function(
 
 #' Breaks (bin) selection algorithms for histograms
 #'
-#' Methods for determing breaks (bins) in histograms, as used in the `breaks`
+#' Methods for determining breaks (bins) in histograms, as used in the `breaks`
 #' argument to [density_histogram()].
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
