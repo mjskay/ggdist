@@ -3,8 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-library(tidyr)
+suppressWarnings(suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+}))
 
 
 
@@ -131,12 +133,19 @@ test_that("scale transformation works on halfeye", {
 
 
   p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
-    ggplot(aes(y = "a", x = x)) +
+    ggplot(aes(y = 0, x = x)) +
     scale_x_log10(breaks = 10^seq(-1,1))
 
-  vdiffr::expect_doppelganger("halfeyeh log scale transform tri",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
+  vdiffr::expect_doppelganger("halfeyeh log scale tri",
+    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5) +
+      geom_point(data = data.frame(x = 10^c(-1, 1)))
   )
+
+  vdiffr::expect_doppelganger("halfeyeh log scale tri no trim",
+    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), trim = FALSE, .width = .5) +
+      geom_point(data = data.frame(x = 10^c(-1, 1)))
+  )
+
 })
 
 test_that("pdf and cdf aesthetics work", {

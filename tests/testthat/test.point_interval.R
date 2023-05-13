@@ -544,6 +544,13 @@ test_that("Mode on dist_sample uses the numeric method", {
   expect_equal(Mode(x), Mode(x_values))
 })
 
+test_that("hdi on dist_sample uses the numeric method", {
+  x_values = dgamma(ppoints(100), 2, 2)
+  x = dist_sample(list(x_values))
+
+  expect_equal(hdi(x), hdi(x_values))
+})
+
 test_that("Mode on discrete distributions works", {
   x = c(dist_poisson(3.5), dist_binomial(10, 0.4))
 
