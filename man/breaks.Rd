@@ -56,34 +56,39 @@ x = rnorm(200, 1, 2)
 # Let's compare the different break-selection algorithms on this data:
 ggplot(data.frame(x), aes(x)) +
   stat_slab(
-    aes(y = "fixed at 0.5"),
+    aes(y = "breaks_fixed(width = 0.5)"),
     density = "histogram",
     breaks = breaks_fixed(width = 0.5),
     outline_bars = TRUE,
     color = "black",
   ) +
   stat_slab(
-    aes(y = "Sturges"),
+    aes(y = "breaks_Sturges()\nor 'Sturges'"),
     density = "histogram",
     breaks = "Sturges",
     outline_bars = TRUE,
     color = "black",
   ) +
   stat_slab(
-    aes(y = "Scott"),
+    aes(y = "breaks_Scott()\nor 'Scott'"),
     density = "histogram",
     breaks = "Scott",
     outline_bars = TRUE,
     color = "black",
   ) +
   stat_slab(
-    aes(y = "FD"),
+    aes(y = "breaks_FD()\nor 'FD'"),
     density = "histogram",
     breaks = "FD",
     outline_bars = TRUE,
     color = "black",
   ) +
-  geom_point(aes(y = 0.7), alpha = 0.5)
+  geom_point(aes(y = 0.7), alpha = 0.5) +
+  labs(
+    subtitle = "ggdist::stat_slab(density = 'histogram', ...)",
+    y = "breaks =",
+    x = NULL
+  )
 }
 \seealso{
 \code{\link[=density_histogram]{density_histogram()}}, \link{align}

@@ -55,7 +55,7 @@ x = rnorm(200, 1, 2)
 # Here is a comparison of the three alignment methods on such a histogram:
 ggplot(data.frame(x), aes(x)) +
   stat_slab(
-    aes(y = "none"),
+    aes(y = "align_none()\nor 'none'"),
     density = "histogram",
     breaks = breaks_fixed(width = 1),
     outline_bars = TRUE,
@@ -63,7 +63,7 @@ ggplot(data.frame(x), aes(x)) +
     color = "black",
   ) +
   stat_slab(
-    aes(y = "center at 0"),
+    aes(y = "align_center(at = 0)\nor 'center'"),
     density = "histogram",
     breaks = breaks_fixed(width = 1),
     align = align_center(at = 0),   # or align = "center"
@@ -71,14 +71,20 @@ ggplot(data.frame(x), aes(x)) +
     color = "black",
   ) +
   stat_slab(
-    aes(y = "boundary at 0"),
+    aes(y = "align_boundary(at = 0)\nor 'boundary'"),
     density = "histogram",
     breaks = breaks_fixed(width = 1),
     align = align_boundary(at = 0), # or align = "boundary"
     outline_bars = TRUE,
     color = "black",
   ) +
-  geom_point(aes(y = 0.7), alpha = 0.5)
+  geom_point(aes(y = 0.7), alpha = 0.5) +
+  labs(
+    subtitle = "ggdist::stat_slab(density = 'histogram', ...)",
+    y = "align =",
+    x = NULL
+  ) +
+  geom_vline(xintercept = 0, linetype = "22", color = "red")
 }
 \seealso{
 \code{\link[=density_histogram]{density_histogram()}}, \link{breaks}

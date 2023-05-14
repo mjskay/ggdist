@@ -137,34 +137,39 @@ weighted_hist = function(
 #' # Let's compare the different break-selection algorithms on this data:
 #' ggplot(data.frame(x), aes(x)) +
 #'   stat_slab(
-#'     aes(y = "fixed at 0.5"),
+#'     aes(y = "breaks_fixed(width = 0.5)"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 0.5),
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "Sturges"),
+#'     aes(y = "breaks_Sturges()\nor 'Sturges'"),
 #'     density = "histogram",
 #'     breaks = "Sturges",
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "Scott"),
+#'     aes(y = "breaks_Scott()\nor 'Scott'"),
 #'     density = "histogram",
 #'     breaks = "Scott",
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "FD"),
+#'     aes(y = "breaks_FD()\nor 'FD'"),
 #'     density = "histogram",
 #'     breaks = "FD",
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
-#'   geom_point(aes(y = 0.7), alpha = 0.5)
+#'   geom_point(aes(y = 0.7), alpha = 0.5) +
+#'   labs(
+#'     subtitle = "ggdist::stat_slab(density = 'histogram', ...)",
+#'     y = "breaks =",
+#'     x = NULL
+#'   )
 #' @name breaks
 #' @export
 breaks_fixed = function(x, weights = NULL, width = 1) {
@@ -277,7 +282,7 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #' # Here is a comparison of the three alignment methods on such a histogram:
 #' ggplot(data.frame(x), aes(x)) +
 #'   stat_slab(
-#'     aes(y = "none"),
+#'     aes(y = "align_none()\nor 'none'"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 1),
 #'     outline_bars = TRUE,
@@ -285,7 +290,7 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "center at 0"),
+#'     aes(y = "align_center(at = 0)\nor 'center'"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 1),
 #'     align = align_center(at = 0),   # or align = "center"
@@ -293,14 +298,20 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "boundary at 0"),
+#'     aes(y = "align_boundary(at = 0)\nor 'boundary'"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 1),
 #'     align = align_boundary(at = 0), # or align = "boundary"
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
-#'   geom_point(aes(y = 0.7), alpha = 0.5)
+#'   geom_point(aes(y = 0.7), alpha = 0.5) +
+#'   labs(
+#'     subtitle = "ggdist::stat_slab(density = 'histogram', ...)",
+#'     y = "align =",
+#'     x = NULL
+#'   ) +
+#'   geom_vline(xintercept = 0, linetype = "22", color = "red")
 #' @name align
 #' @export
 align_none = function(breaks) {
