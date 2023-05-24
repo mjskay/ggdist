@@ -1,3 +1,11 @@
+# ggdist 3.3.0.9000
+
+Bug fixes:
+
+* Ensure `scale_side_mirrored()` supports `start = "left"` and `start = "right"`
+* Ensure `geom_spike()` draws the point on the correct end of the line depending on `side`.
+
+
 # ggdist 3.3.0
 
 Breaking changes: The following changes, mostly due to new default density 

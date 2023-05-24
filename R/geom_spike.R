@@ -89,8 +89,16 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
   ))
 
   s_data[[xend]] = s_data[[x]]
-  s_data[[y]] = s_data[[ymin]]
-  s_data[[yend]] = s_data[[ymax]]
+  s_data[[y]] = case_when_side(s_data$side, orientation,
+    topright = s_data[[ymin]],
+    bottomleft = s_data[[ymax]],
+    both = s_data[[ymin]]
+  )
+  s_data[[yend]] = case_when_side(s_data$side, orientation,
+    topright = s_data[[ymax]],
+    bottomleft = s_data[[ymin]],
+    both = s_data[[ymax]]
+  )
 
   p_data = s_data
   p_data[[y]] = s_data[[yend]]
