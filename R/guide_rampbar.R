@@ -58,6 +58,21 @@
 #' @export
 guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "colour_ramp")) {
   guide = guide_colourbar(..., available_aes = available_aes)
+  if (inherits(guide, "GuideColourbar")) {
+    # If ggplot2 >3.4.2, guides are written ggproto, so here we inherit from
+    # the colourbar guide
+    new = ggproto(
+      "GuideRampbar", guide,
+      params = c(list(to = to), guide$params),
+      extract_decor = function(scale, aesthetic, nbin = 300,
+                               reverse = FALSE, to = "grey65", ...) {
+        bar = guide$extract_decor(scale, aesthetic, nbin, reverse, ...)
+        bar$colour = apply_colour_ramp(to, bar$colour)
+        bar
+      }
+    )
+    return(new)
+  }
   guide$to = to
   class(guide) = c("guide", "rampbar", "colorbar")
   guide
