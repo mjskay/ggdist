@@ -65,7 +65,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
       "GuideRampbar", guide,
       params = c(list(to = to), guide$params),
       extract_decor = function(scale, aesthetic, nbin = 300,
-                               reverse = FALSE, to = "grey65", ...) {
+                               reverse = FALSE, to = "gray65", ...) {
         bar = guide$extract_decor(scale, aesthetic, nbin, reverse, ...)
         bar$colour = apply_colour_ramp(to, bar$colour)
         bar
