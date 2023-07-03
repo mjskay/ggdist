@@ -258,7 +258,7 @@ test_that("NAs are handled correctly", {
     vdiffr::expect_doppelganger("NAs with na.rm = FALSE",
       p + stat_cdfinterval(na.rm = FALSE, n = 5)
     ),
-    "Removed 1 rows"
+    "Removed 1 row"
   )
 
   vdiffr::expect_doppelganger("NAs with na.rm = TRUE",

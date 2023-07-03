@@ -115,7 +115,7 @@ test_that("missing data is handled correctly", {
 
   expect_warning(vdiffr::expect_doppelganger("geom_pointinterval na.rm = FALSE",
     p + geom_pointinterval(na.rm = FALSE)
-  ), "Removed 1 rows containing\\s+missing values")
+  ), "Removed 1 row.+missing values")
 
   vdiffr::expect_doppelganger("geom_pointinterval na.rm = TRUE",
     p + geom_pointinterval(na.rm = TRUE)

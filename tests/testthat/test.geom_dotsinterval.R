@@ -176,7 +176,7 @@ test_that("stat_dist_dots works on NA data", {
 
   expect_warning(vdiffr::expect_doppelganger("stat_dist_dots with na.rm = FALSE",
     p + stat_dist_dots(na.rm = FALSE, quantiles = 20)
-  ), "Removed 1 rows containing")
+  ), "Removed 1 row")
 
   vdiffr::expect_doppelganger("stat_dist_dots with na.rm = TRUE",
     p + stat_dist_dots(na.rm = TRUE, quantiles = 20)

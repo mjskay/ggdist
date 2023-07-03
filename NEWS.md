@@ -4,6 +4,8 @@ Bug fixes:
 
 * Ensure `scale_side_mirrored()` supports `start = "left"` and `start = "right"`
 * Ensure `geom_spike()` draws the point on the correct end of the line depending on `side`.
+* Future-proof `guide_rampbar()` for ggplot2 > 3.4.2 (#186). Thanks to @teunbrand.
+* Future-proof some minor tests for ggplot2 > 3.4.2 (#187).
 
 
 # ggdist 3.3.0

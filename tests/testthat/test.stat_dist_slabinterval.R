@@ -1057,7 +1057,7 @@ test_that("missing distributions work", {
       layer_data(ggplot() + stat_slabinterval(aes(xdist = dist_missing()))),
       data.frame()
     ),
-    "Removed 1 rows containing\\s+missing values"
+    "Removed 1 row.+missing values"
   )
 })
 
@@ -1069,7 +1069,7 @@ test_that("missing rvars work", {
       layer_data(ggplot() + stat_slabinterval(aes(xdist = posterior::rvar(c(1,NA))))),
       data.frame()
     ),
-    "Removed 1 rows containing\\s+missing values"
+    "Removed 1 row.+missing values"
   )
 
   skip_if_not_installed("posterior", "1.3.1.9000")
@@ -1082,7 +1082,7 @@ test_that("missing rvars work", {
         ),
       data.frame()
     ),
-    "Removed 1 rows containing\\s+missing values"
+    "Removed 1 row.+missing values"
   )
 })
 
