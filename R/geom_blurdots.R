@@ -11,8 +11,8 @@ blur_alpha_0 = function(...) {
   blur_alpha_1(..., rescale = TRUE)
 }
 
-blur_alpha_1 = function(n, r, sd, min_alpha = 0.1, rescale = FALSE) {
-  x = seq(0, max(2*sd, r), length.out = n)
+blur_alpha_1 = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+  # x = seq(0, max(2*sd, r), length.out = n)
   dens = dnorm(x, 0, sd) / dnorm(0, 0, sd)
   weight = 1 - pnorm(x, r, max(sd - abs(r - sd), 0) / 2)
   f = weight + (1 - weight) * dens
@@ -20,43 +20,48 @@ blur_alpha_1 = function(n, r, sd, min_alpha = 0.1, rescale = FALSE) {
   f
 }
 
-blur_alpha_2 = function(n, r, sd) {
-  x = seq(0, max(2*sd, r), length.out = n)
+blur_alpha_2 = function(x, r, sd) {
+  # x = seq(0, max(2*sd, r), length.out = n)
   dens = dnorm(x, 0, sd) / dnorm(0, 0, sd)
   weight = 1 - pnorm(x, r, max(sd - abs(r - sd), 0))
   weight + (1 - weight) * dens
 }
 
-blur_alpha_3 = function(n, r, sd) {
+blur_alpha_3 = function(x, r, sd) {
   if (r >= 2*sd) {
-    rep(1, n)
+    rep(1, length(x))
   } else {
-    x = seq(0, max(2*sd, r), length.out = n)
+    # x = seq(0, max(2*sd, r), length.out = n)
     dens = dnorm(x, 0, sd) / dnorm(0, 0, sd)
     weight = 1 - pnorm(x, (2*sd - r) / 6 + r, (2*sd - r) / 6)
     weight + (1 - weight) * dens
   }
 }
 
-blur_alpha_4 = function(n, r, sd, min_alpha = 0.1) {
-  x = seq(0, max(2*sd, r), length.out = n)
+blur_alpha_4 = function(x, r, sd, min_alpha = 0.1) {
+  # x = seq(0, max(2*sd, r), length.out = n)
   dens = dnorm(x, 0, sd) / dnorm(0, 0, min(sd, r/2))
   weight = 1 - pnorm(x, r, max(sd - abs(r - sd), 0) / 2)
   pmax(weight + (1 - weight) * dens, min_alpha)
 }
 
-blur_dot = function(x = 0.5, y = 0.5, r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"), n = 20, fill = "black", col = NA, lwd = 1, lty = "solid", vp = NULL, blur_alpha = blur_alpha_1) {
-  # r = convertWidth(r, unitTo = "npc")
-  # sd = convertWidth(sd, unitTo = "npc")
+blur_alpha_5 = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+  pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
+}
+
+blur_dot = function(x = 0.5, y = 0.5, r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"), n = 30, fill = "black", col = NA, lwd = 1, lty = "solid", vp = NULL, blur_alpha = blur_alpha_5) {
+  r = convertWidth(r, unitTo = "points")
+  sd = convertWidth(sd, unitTo = "points")
 
   groupGrob(do.call(grobTree, .mapply(list(x, y, fill, sd, lwd, lty), NULL, FUN = function(x, y, fill, sd, lwd, lty) {
-    sd = unit(sd, "points")
     # circ = if (as.numeric(r) >= 2 * as.numeric(sd)) {
       # circleGrob(x = x, y = y, gp = gpar(fill = fill, col = NA), r = r)
     # } else {
-      grad_colors = alpha(fill, c(blur_alpha(n, as.numeric(r), as.numeric(sd)), 0))
-      grad = radialGradient(grad_colors, r2 = max(2*sd, r))
-      circ = rectGrob(x = x, y = y, gp = gpar(fill = grad, col = NA), height = 2*r, width = max(4*sd, 2*r))
+      blur_width = 2*sd + r #max(2*sd + r, r)
+      blur_x = seq(0, as.numeric(blur_width), length.out = n)
+      grad_colors = alpha(fill, c(blur_alpha(blur_x, as.numeric(r), as.numeric(sd)), 0))
+      grad = radialGradient(grad_colors, r2 = blur_width)
+      circ = rectGrob(x = x, y = y, gp = gpar(fill = grad, col = NA), height = 2*r, width = 2*blur_width)
     # }
     grobTree(
       circ,
