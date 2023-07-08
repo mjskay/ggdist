@@ -45,11 +45,26 @@ blur_alpha_4 = function(x, r, sd, min_alpha = 0.1) {
   pmax(weight + (1 - weight) * dens, min_alpha)
 }
 
-blur_alpha_5 = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+blur_alpha_gaussian = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
   pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
 }
 
-blur_dot = function(x = 0.5, y = 0.5, r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"), n = 30, fill = "black", col = NA, lwd = 1, lty = "solid", vp = NULL, blur_alpha = blur_alpha_5) {
+blur_alpha_gaussian_dot = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+  ifelse(x < r,
+    pnorm(r, 0, sd) - pnorm(-r, 0, sd),
+    pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
+  )
+}
+
+blur_alpha_interval = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+  ifelse(
+    x < r, 1, ifelse(
+    x < 2*sd, 0.5,
+    0
+  ))
+}
+
+blur_dot = function(x = 0.5, y = 0.5, r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"), n = 100, fill = "black", col = NA, lwd = 1, lty = "solid", vp = NULL, blur_alpha = blur_alpha_interval) {
   r = convertWidth(r, unitTo = "points")
   sd = convertWidth(sd, unitTo = "points")
 
