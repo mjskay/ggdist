@@ -45,18 +45,20 @@ blur_alpha_4 = function(x, r, sd, min_alpha = 0.1) {
   pmax(weight + (1 - weight) * dens, min_alpha)
 }
 
-blur_alpha_gaussian = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+blur_alpha_gaussian = function(x, r, sd) {
   pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
 }
 
-blur_alpha_gaussian_dot = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+blur_alpha_gaussian_dot = function(x, r, sd) {
+  interior_alpha = pnorm(r, 0, sd) - pnorm(-r, 0, sd)
   ifelse(x < r,
-    pnorm(r, 0, sd) - pnorm(-r, 0, sd),
-    pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
+    interior_alpha,
+    # pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
+    dnorm(x, 0, sd) / dnorm(r, 0, sd) * interior_alpha
   )
 }
 
-blur_alpha_interval = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
+blur_alpha_interval = function(x, r, sd) {
   ifelse(
     x < r, 1, ifelse(
     x < 2*sd, 0.5,
@@ -64,19 +66,35 @@ blur_alpha_interval = function(x, r, sd, min_alpha = 0.1, rescale = FALSE) {
   ))
 }
 
-blur_dot = function(x = 0.5, y = 0.5, r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"), n = 100, fill = "black", col = NA, lwd = 1, lty = "solid", vp = NULL, blur_alpha = blur_alpha_interval) {
-  r = convertWidth(r, unitTo = "points")
-  sd = convertWidth(sd, unitTo = "points")
+blur_dot = function(
+  x = 0.5, y = 0.5, axis = "x",
+  r = unit(0.5 ,"npc"), sd = unit(0.25, "npc"),
+  n = 100, fill = "black", col = NA,
+  lwd = 1, lty = "solid",
+  vp = NULL,
+  blur_alpha = blur_alpha_interval
+) {
+  # ensure r and sd are in the same units -- that way when we apply the blur function
+  # (which only takes numerics) everything will line up correctly
+  r = convertUnit(r, unitTo = "points", axisFrom = axis, typeFrom = "dimension")
+  sd = convertUnit(sd, unitTo = "points", axisFrom = axis, typeFrom = "dimension")
 
   groupGrob(do.call(grobTree, .mapply(list(x, y, fill, sd, lwd, lty), NULL, FUN = function(x, y, fill, sd, lwd, lty) {
     # circ = if (as.numeric(r) >= 2 * as.numeric(sd)) {
       # circleGrob(x = x, y = y, gp = gpar(fill = fill, col = NA), r = r)
     # } else {
-      blur_width = 2*sd + r #max(2*sd + r, r)
+      blur_width = 2*sd + r
       blur_x = seq(0, as.numeric(blur_width), length.out = n)
       grad_colors = alpha(fill, c(blur_alpha(blur_x, as.numeric(r), as.numeric(sd)), 0))
       grad = radialGradient(grad_colors, r2 = blur_width)
-      circ = rectGrob(x = x, y = y, gp = gpar(fill = grad, col = NA), height = 2*r, width = 2*blur_width)
+
+      h = 2*r
+      w = 2*blur_width
+      circ = rectGrob(
+        x = x, y = y, gp = gpar(fill = grad, col = NA),
+        height = if (axis == "x") h else w,
+        width = if (axis == "x") w else h
+      )
     # }
     grobTree(
       circ,

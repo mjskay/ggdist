@@ -141,7 +141,7 @@ makeContent.dots_grob = function(x) {
     # generate grob for this dotplot
     blur_dot(
       dot_positions$x, dot_positions$y,
-      r = unit(dot_pointsize / 2, "points"),
+      r = unit(dot_pointsize / 2, "points"), #TODO: add orientation stuff here
       sd = convertUnit(unit(d$sd, "native"), "points", axisFrom = x, axisTo = x, typeFrom = "dimension"),
       fill = alpha(d$fill, d$alpha),
       col = alpha(d$colour, d$alpha),
