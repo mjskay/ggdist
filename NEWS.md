@@ -6,7 +6,7 @@ Bug fixes:
 * Ensure `geom_spike()` draws the point on the correct end of the line depending on `side`.
 * Future-proof `guide_rampbar()` for ggplot2 > 3.4.2 (#186). Thanks to @teunbrand.
 * Future-proof some minor tests for ggplot2 > 3.4.2 (#187).
-* Allow the `size` aesthetic to be overriden for the `geom_dots()` legend.
+* Allow the `size` aesthetic to be overridden for the `geom_dots()` legend.
 
 
 # ggdist 3.3.0
