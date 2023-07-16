@@ -495,7 +495,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
       # what point calls "stroke" is what we call "linewidth", since "linewidth" is determined automatically
       s_key_data$stroke = s_key_data$linewidth
-      # TODO: allow size of points in the key to be modified
+      # TODO: allow size of points in the key to be modified (not clear how to do this
+      # without breaking the override for slab_size / slab_linewidth, so will just leave
+      # this for now and expect people to use geom_dots if they want good legends anyway...)
       s_key_data$size = 2
       draw_key_point(s_key_data, params, size)
     }
@@ -521,6 +523,7 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
   default_key_aes = defaults(aes(
     shape = 21,
     linewidth = 0.75,
+    size = 2,
     colour = "gray65"
   ), GeomSlabinterval$default_key_aes),
 
@@ -554,8 +557,7 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 
     # what point calls "stroke" is what we call "linewidth", since "linewidth" is determined automatically
     s_key_data$stroke = s_key_data$linewidth
-    # TODO: allow size of points in the key to be modified
-    s_key_data$size = 2
+    s_key_data$size = s_key_data$size %||% 2
     draw_key_point(s_key_data, params, size)
   }
 )

@@ -292,25 +292,25 @@ test_that("dot order is correct", {
 
   vdiffr::expect_doppelganger("bin dot order",
     p +
-      geom_dots(layout = "bin", size = 5) +
+      geom_dots(layout = "bin", linewidth = 5) +
       geom_vline(xintercept = 0)
   )
 
   vdiffr::expect_doppelganger("bin dot order, kept",
     p +
-      geom_dots(aes(order = g), layout = "bin", size = 5) +
+      geom_dots(aes(order = g), layout = "bin", linewidth = 5) +
       geom_vline(xintercept = 0)
   )
 
   vdiffr::expect_doppelganger("weave dot order",
     p +
-      geom_dots(layout = "weave", size = 5) +
+      geom_dots(layout = "weave", linewidth = 5) +
       geom_vline(xintercept = 0)
   )
 
   vdiffr::expect_doppelganger("swarm dot order",
     p +
-      geom_dots(layout = "swarm", size = 5) +
+      geom_dots(layout = "swarm", linewidth = 5) +
       geom_vline(xintercept = 0)
   )
 
