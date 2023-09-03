@@ -260,17 +260,20 @@ test_that("dotplot layouts work", {
       facet_grid(~ side)
   )
 
-  vdiffr::expect_doppelganger("swarm",
-    df %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(aes(side = side), layout = "swarm") +
-      facet_grid(~ side)
-  )
-
   vdiffr::expect_doppelganger("hex",
     df %>%
       ggplot(aes(x = mpg)) +
       geom_dots(aes(side = side), layout = "hex", stackratio = 0.92) +
+      facet_grid(~ side)
+  )
+
+
+  skip_if_not_installed("beeswarm")
+
+  vdiffr::expect_doppelganger("swarm",
+    df %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(aes(side = side), layout = "swarm") +
       facet_grid(~ side)
   )
 
@@ -279,7 +282,6 @@ test_that("dotplot layouts work", {
       ggplot(aes(y = mpg)) +
       geom_dots(layout = "swarm")
   )
-
 })
 
 test_that("dot order is correct", {
@@ -307,6 +309,9 @@ test_that("dot order is correct", {
       geom_dots(layout = "weave", linewidth = 5) +
       geom_vline(xintercept = 0)
   )
+
+
+  skip_if_not_installed("beeswarm")
 
   vdiffr::expect_doppelganger("swarm dot order",
     p +

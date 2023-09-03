@@ -159,14 +159,19 @@ test_that("bin layouts work", {
   )
   expect_equal(as.data.frame(bin_dots(c(1:3, 4.5, 5.1), 0, binwidth = 1.5, layout = "weave")), ref)
 
+  expect_error(bin_dots(1:5, 0, binwidth = 2, layout = "abc"))
+})
+
+
+test_that("swarm layout works", {
+  skip_if_not_installed("beeswarm")
+
   ref = data.frame(
     x = 1:5,
     y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
     bin = c(1, 1, 2, 3, 3)
   )
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
-
-  expect_error(bin_dots(1:5, 0, binwidth = 2, layout = "abc"))
 })
 
 
