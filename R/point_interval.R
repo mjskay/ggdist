@@ -439,12 +439,16 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_b
 .hdi_numeric = function(x, .width = 0.95, ..., density = density_bounded(trim = TRUE), n = 4096) {
   density = match_function(density, "density_")
 
-  dist_x = quantile(x, ppoints(n, a = 0.5))
+  dist_x = quantile(x, ppoints(n, a = 0.5), names = FALSE)
   # Remove duplicate values of dist_x from less continuous distributions
   dist_x = unique(dist_x)
+  if (length(dist_x) == 1) {
+    # distribution is a constant => quick exit
+    return(matrix(rep(dist_x, 2), ncol = 2))
+  }
   d = density(x, n = n)
   dist_y = approx(d$x, d$y, dist_x)$y
-  alpha = quantile(dist_y, probs = 1 - .width)
+  alpha = quantile(dist_y, probs = 1 - .width, names = FALSE)
 
   it = seq_len(length(dist_y) - 1)
   y_minus_alpha = dist_y - alpha

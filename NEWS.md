@@ -7,6 +7,7 @@ Bug fixes:
 * Future-proof `guide_rampbar()` for ggplot2 > 3.4.2 (#186). Thanks to @teunbrand.
 * Future-proof some minor tests for ggplot2 > 3.4.2 (#187).
 * Allow the `size` aesthetic to be overridden for the `geom_dots()` legend.
+* Ensure `hdi()` supports constants. (#194)
 
 
 # ggdist 3.3.0

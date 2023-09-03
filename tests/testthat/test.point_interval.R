@@ -699,3 +699,22 @@ test_that("100% intervals work on rvars", {
   expect_equal(median_ll(x, .width = 1), mutate(ref, .interval = "ll"))
   expect_equal(median_ul(x, .width = 1), mutate(ref, .interval = "ul"))
 })
+
+
+# constants --------------------------------------------------
+
+test_that("intervals work on constants", {
+  ref = matrix(c(1, 1), nrow = 1)
+
+  expect_equal(hdi(1), ref)
+  expect_equal(hdci(1), ref)
+  expect_equal(qi(1), ref)
+  expect_equal(hdi(c(1,1,1)), ref)
+  expect_equal(hdci(c(1,1,1)), ref)
+  expect_equal(qi(c(1,1,1)), ref)
+})
+
+test_that("Mode works on constants", {
+  expect_equal(Mode(1), 1)
+  expect_equal(Mode(c(1,1,1)), 1)
+})
