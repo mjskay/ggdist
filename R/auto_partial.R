@@ -97,6 +97,39 @@ partial_self = function(function_name = NULL) {
   partial_f
 }
 
+#' @importFrom rlang new_function expr is_missing
+auto_partial = function(f) {
+  f_body = body(f)
+  # must ensure the function body is a { ... } block, not a single expression,
+  # so we can splice it in later with !!!f_body
+  if (!inherits(f_body, "{")) f_body = expr({ !!f_body })
+  args = formals(f)
+
+  # find the required arguments
+  required_args = args[vapply(args, is_missing, FUN.VALUE = logical(1))]
+  required_arg_names = names(required_args)
+  required_arg_names = required_arg_names[required_arg_names != "..."]
+
+  # no required arguments => function will always fully evaluate when called
+  if (length(required_arg_names) == 0) return(f)
+
+  # build a logical expression testing to see if any required args are missing
+  any_required_args_missing = Reduce(
+    function(x, y) expr(!!x || !!y),
+    lapply(required_arg_names, function(arg_name) expr(missing(!!as.name(arg_name))))
+  )
+
+  new_function(
+    args,
+    expr({
+      if (!!any_required_args_missing) return(partial_self())
+
+      !!!f_body
+    }),
+    env = environment(f)
+  )
+}
+
 #' @importFrom rlang get_expr
 #' @export
 print.ggdist_partial_function = function(x, ...) {
