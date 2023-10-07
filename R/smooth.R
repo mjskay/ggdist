@@ -132,7 +132,8 @@ smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
 #' of the same length. Both `smooth_discrete()` and `smooth_bar()` use the
 #' [resolution()] of the data to apply smoothing around unique values in the
 #' dataset; `smooth_discrete()` uses a kernel density estimator and `smooth_bar()`
-#' places values in an evenly-spaced grid. Can be used with a dotplot
+#' places values in an evenly-spaced grid. `smooth_bar_fixed()` works similarly to `smooth_bar()`
+#' but it distributes the point along a fixed set of sub-columns. Can be used with a dotplot
 #' (e.g. [`geom_dots`]`(smooth = ...)`) to create "bar dotplots".
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
@@ -152,6 +153,12 @@ smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
 #'
 #' `smooth_bar()` generates an evenly-spaced grid of values spanning `+/- width/2`
 #' around each unique value in `x`.
+#'
+#' `smooth_bar_fixed()` tries to make a bar with a fixed number (`column_count`) of sub-columns.
+#' Unlike `smooth_bar()`, it also orders the points from bottom to top, which can be useful if
+#' points have different colors or shapes. The approached used is very sensitive to the size
+#' of the points and the range the points are spread over. You may have to fiddle with multiple
+#' parameters for the sub-columns to be well grouped and not have large gaps.
 #'
 #' @returns
 #' A numeric vector of `length(x)`, where each entry is a smoothed version of
@@ -179,6 +186,19 @@ smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
 #' # smooth_bar() is an alternative approach to rectangular layouts
 #' ggplot(data.frame(x), aes(x)) +
 #'   geom_dots(smooth = "bar")
+#'
+#' # smooth_bar_fixed() is a different approach to a rectangular layout with
+#' # fixed-width columns
+#' tibble(
+#'   condition = rep(LETTERS[1:2], each=100),
+#'   color = c(rbinom(100, 1, .5), rbinom(100, 1, .9)) |> factor()
+#' ) |>
+#' # order by color
+#' arrange(desc(color)) |>
+#' # plot discrete bars with colored points
+#' ggplot() +
+#'   aes(x = condition, fill = color, group = 1) +
+#'   geom_dots(color=NA, smooth = "bar_fixed")
 #'
 #' # adjust the shape by changing the kernel or the width. epanechnikov
 #' # works well with side = "both"
@@ -221,6 +241,21 @@ smooth_bar = function(x, width = 0.7, ...) {
   x_width = resolution(x, zero = FALSE) * width
   split(x, x) = lapply(split(x, x), function(x) {
     (ppoints(length(x), 0.5) - 0.5) * x_width + x[[1]]
+  })
+  x
+}
+
+#' @rdname smooth_discrete
+#' @export
+#' @param column_count (for `smooth_bar_fixed`) How many columns of points within each bar
+smooth_bar_fixed = function(x, column_count = 5, width = 0.7, ...) {
+  if (missing(x)) return(partial_self("smooth_bar_fixed"))
+  if (length(x) < 2) return(x)
+
+  x_width = resolution(x, zero = FALSE) * width
+  split(x, x) = lapply(split(x, x), function(x) {
+    column_offsets = ppoints(column_count, 0.5) - 0.5
+    column_offsets[(seq_along(x)-1) %% column_count + 1] * x_width + x[[1]]
   })
   x
 }

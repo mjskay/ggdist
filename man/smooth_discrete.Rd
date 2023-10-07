@@ -3,6 +3,7 @@
 \name{smooth_discrete}
 \alias{smooth_discrete}
 \alias{smooth_bar}
+\alias{smooth_bar_fixed}
 \title{Smooth dot positions in a dotplot of discrete values ("bar dotplots")}
 \usage{
 smooth_discrete(
@@ -14,6 +15,8 @@ smooth_discrete(
 )
 
 smooth_bar(x, width = 0.7, ...)
+
+smooth_bar_fixed(x, column_count = 5, width = 0.7, ...)
 }
 \arguments{
 \item{x}{a numeric vector}
@@ -27,6 +30,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
 \code{\link[=smooth_unbounded]{smooth_unbounded()}} and thereby to \code{\link[=density_unbounded]{density_unbounded()}}; \code{\link[=smooth_bar]{smooth_bar()}}
 ignores them.}
+
+\item{column_count}{(for \code{smooth_bar_fixed}) How many columns of points within each bar}
 }
 \value{
 A numeric vector of \code{length(x)}, where each entry is a smoothed version of
@@ -39,7 +44,8 @@ Smooths \code{x} values where \code{x} is presumed to be discrete, returning a n
 of the same length. Both \code{smooth_discrete()} and \code{smooth_bar()} use the
 \code{\link[=resolution]{resolution()}} of the data to apply smoothing around unique values in the
 dataset; \code{smooth_discrete()} uses a kernel density estimator and \code{smooth_bar()}
-places values in an evenly-spaced grid. Can be used with a dotplot
+places values in an evenly-spaced grid. \code{smooth_bar_fixed()} works similarly to \code{smooth_bar()}
+but it distributes the point along a fixed set of sub-columns. Can be used with a dotplot
 (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create "bar dotplots".
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
@@ -52,6 +58,12 @@ unique value. It calls down to \code{\link[=smooth_unbounded]{smooth_unbounded()
 
 \code{smooth_bar()} generates an evenly-spaced grid of values spanning \verb{+/- width/2}
 around each unique value in \code{x}.
+
+\code{smooth_bar_fixed()} tries to make a bar with a fixed number (\code{column_count}) of sub-columns.
+Unlike \code{smooth_bar()}, it also orders the points from bottom to top, which can be useful if
+points have different colors or shapes. The approached used is very sensitive to the size
+of the points and the range the points are spread over. You may have to fiddle with multiple
+parameters for the sub-columns to be well grouped and not have large gaps.
 }
 \examples{
 
@@ -72,6 +84,19 @@ ggplot(data.frame(x), aes(x)) +
 # smooth_bar() is an alternative approach to rectangular layouts
 ggplot(data.frame(x), aes(x)) +
   geom_dots(smooth = "bar")
+
+# smooth_bar_fixed() is a different approach to a rectangular layout with
+# fixed-width columns
+tibble(
+  condition = rep(LETTERS[1:2], each=100),
+  color = c(rbinom(100, 1, .5), rbinom(100, 1, .9)) |> factor()
+) |>
+# order by color
+arrange(desc(color)) |>
+# plot discrete bars with colored points
+ggplot() +
+  aes(x = condition, fill = color, group = 1) +
+  geom_dots(color=NA, smooth = "bar_fixed")
 
 # adjust the shape by changing the kernel or the width. epanechnikov
 # works well with side = "both"
