@@ -188,7 +188,12 @@ smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
 #'   geom_dots(smooth = "bar")
 #'
 #' # smooth_bar_fixed() is a different approach to a rectangular layout with
-#' # fixed-width columns
+#' # fixed-width columns and more consistent heights within each column
+#' ggplot(data.frame(x), aes(x)) +
+#'   geom_dots(smooth = "bar_fixed")
+#'
+#' # smooth_bar_fixed() places points within a column from bottom to top
+#' # depending on the order they appear in the data
 #' tibble(
 #'   condition = rep(LETTERS[1:2], each=100),
 #'   color = c(rbinom(100, 1, .5), rbinom(100, 1, .9)) |> factor()
@@ -247,8 +252,9 @@ smooth_bar = function(x, width = 0.7, ...) {
 
 #' @rdname smooth_discrete
 #' @export
-#' @param column_count (for `smooth_bar_fixed`) How many columns of points within each bar
-smooth_bar_fixed = function(x, column_count = 5, width = 0.7, ...) {
+#' @param column_count (for `smooth_bar_fixed`) How many columns of points within each bar.
+#' Adjusting this argument can impact the size of dots and their spacing.
+smooth_bar_fixed = function(x, column_count = 6, width = 0.7, ...) {
   if (missing(x)) return(partial_self("smooth_bar_fixed"))
   if (length(x) < 2) return(x)
 

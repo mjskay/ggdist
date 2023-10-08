@@ -16,7 +16,7 @@ smooth_discrete(
 
 smooth_bar(x, width = 0.7, ...)
 
-smooth_bar_fixed(x, column_count = 5, width = 0.7, ...)
+smooth_bar_fixed(x, column_count = 6, width = 0.7, ...)
 }
 \arguments{
 \item{x}{a numeric vector}
@@ -31,7 +31,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \code{\link[=smooth_unbounded]{smooth_unbounded()}} and thereby to \code{\link[=density_unbounded]{density_unbounded()}}; \code{\link[=smooth_bar]{smooth_bar()}}
 ignores them.}
 
-\item{column_count}{(for \code{smooth_bar_fixed}) How many columns of points within each bar}
+\item{column_count}{(for \code{smooth_bar_fixed}) How many columns of points within each bar.
+Adjusting this argument can impact the size of dots and their spacing.}
 }
 \value{
 A numeric vector of \code{length(x)}, where each entry is a smoothed version of
@@ -86,7 +87,12 @@ ggplot(data.frame(x), aes(x)) +
   geom_dots(smooth = "bar")
 
 # smooth_bar_fixed() is a different approach to a rectangular layout with
-# fixed-width columns
+# fixed-width columns and more consistent heights within each column
+ggplot(data.frame(x), aes(x)) +
+  geom_dots(smooth = "bar_fixed")
+
+# smooth_bar_fixed() places points within a column from bottom to top
+# depending on the order they appear in the data
 tibble(
   condition = rep(LETTERS[1:2], each=100),
   color = c(rbinom(100, 1, .5), rbinom(100, 1, .9)) |> factor()
