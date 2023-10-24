@@ -27,7 +27,6 @@ jobs:
           - {os: ubuntu-latest, r: '4.1', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: '4.0', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-latest, r: '3.6', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: '3.5', suffix: '', not_cran: 'true', vignettes: 'NULL'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
