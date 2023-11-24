@@ -198,6 +198,7 @@ bin_dots = function(x, y, binwidth,
 #' @param heightratio ratio of bin width to dot height
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
+#' @eval paste0("@param smooth ", GeomDots$get_param_docs()$smooth)
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
@@ -240,8 +241,9 @@ bin_dots = function(x, y, binwidth,
 #' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @importFrom stats optimize
 #' @export
-find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) {
+find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1, smooth = "none") {
   x = sort(x, na.last = TRUE)
+  smooth = match_function(smooth, prefix = "smooth_")
 
   # figure out a reasonable minimum number of bins based on histogram binning
   min_nbins = if (length(x) <= 1) {
@@ -249,8 +251,11 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
   } else{
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  bin_method = select_bin_method(x)
-  dot_heap_ = function(...) dot_heap(x, ..., maxheight = maxheight, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method)
+  bin_method = automatic_bin
+  dot_heap_ = function(...) dot_heap(x, ...,
+    maxheight = maxheight, heightratio = heightratio, stackratio = stackratio,
+    bin_method = bin_method, smooth = smooth
+  )
   min_h = dot_heap_(nbins = min_nbins)
 
   if (!min_h$is_valid) {
@@ -338,7 +343,10 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
 #' @param heightratio ratio between the bin width and the y spacing
 #' @return  a list of properties of this dot "heap"
 #' @noRd
-dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightratio = 1, stackratio = 1, bin_method = automatic_bin) {
+dot_heap = function(x,
+  nbins = NULL, binwidth = NULL, maxheight = Inf, heightratio = 1, stackratio = 1,
+  bin_method = automatic_bin, smooth = smooth_none
+) {
   xrange = range(x)
   xspread = xrange[[2]] - xrange[[1]]
   if (xspread == 0) xspread = 1

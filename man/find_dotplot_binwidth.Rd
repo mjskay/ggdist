@@ -4,7 +4,13 @@
 \alias{find_dotplot_binwidth}
 \title{Dynamically select a good bin width for a dotplot}
 \usage{
-find_dotplot_binwidth(x, maxheight, heightratio = 1, stackratio = 1)
+find_dotplot_binwidth(
+  x,
+  maxheight,
+  heightratio = 1,
+  stackratio = 1,
+  smooth = "none"
+)
 }
 \arguments{
 \item{x}{numeric vector of values}
@@ -15,6 +21,21 @@ find_dotplot_binwidth(x, maxheight, heightratio = 1, stackratio = 1)
 
 \item{stackratio}{ratio of dot height to vertical distance between dot
 centers}
+
+\item{smooth}{Smoother to apply to dot positions.
+One of:
+\itemize{
+\item A function that takes a numeric vector of dot positions and returns a
+smoothed version of that vector, such as \code{smooth_bounded()},
+\code{smooth_unbounded()}, smooth_discrete()\verb{, or }smooth_bar()`.
+\item A string indicating what smoother to use, as the suffix to a function
+name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
+\code{smooth_none()}, which simply returns the given vector without
+applying smoothing.
+}
+
+Smoothing is most effective when the smoother is matched to the support of
+the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
 }
 \value{
 A suitable bin width such that a dotplot created with this bin width
