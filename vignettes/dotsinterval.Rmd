@@ -707,17 +707,17 @@ abcd_df %>%
   )
 ```
 
-More regular bar-like shapes can be achieved by using `smooth = "bar"`, so long
+More regular bar-like shapes can be achieved by using `layout = "bar"`, so long
 as you override the default `ggplot2` behavior of grouping data by all discrete
 variables. This allows the layout to be calculated taking all groups into account:
 
 ```{r discrete_dots_bar, fig.width = small_width, fig.height = small_height}
 abcd_df %>%
-  ggplot(aes(x = x)) +
-  geom_dots(smooth = "bar", group = NA) +
+  ggplot(aes(x = x, fill = g, order = g)) +
+  geom_dots(layout = "bar", group = NA, color = NA) +
   scale_y_continuous(breaks = NULL) +
   labs(
-    title = 'geom_dots(smooth = "bar", group = NA)',
+    title = 'geom_dots(aes(fill = g), layout = "bar", group = NA)',
     subtitle = "on a large discrete sample"
   )
 ```
@@ -804,12 +804,12 @@ to color dots according to the interval containing them (we'll also use the
 
 ```{r dotsinterval_dist_1000_level_color}
 dist_df %>%
-  ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(level))) +
-  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave") +
-  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_color") +
+  ggplot(aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))) +
+  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave", slab_color = NA) +
+  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_fill") +
   ggtitle(
     "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
-    "aes(y = dist_name, xdist = dist, slab_color = after_stat(level))"
+    "aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))"
   )
 ```
 

@@ -35,6 +35,10 @@ the corresponding entry in \code{x}.
 If \code{x} is missing, returns a partial application of itself. See \link{automatic-partial-functions}.
 }
 \description{
+\strong{Note:} Better-looking bar dotplots are typically easier to achieve using
+\code{layout = "bar"} with the \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} familty instead of
+\code{smooth = "bar"} or \code{smooth = "discrete"}.
+
 Smooths \code{x} values where \code{x} is presumed to be discrete, returning a new \code{x}
 of the same length. Both \code{smooth_discrete()} and \code{smooth_bar()} use the
 \code{\link[=resolution]{resolution()}} of the data to apply smoothing around unique values in the
@@ -64,6 +68,13 @@ x = rpois(1000, 2)
 # distributions is very small
 ggplot(data.frame(x), aes(x)) +
   geom_dots()
+
+# NOTE: It is now recommended to use layout = "bar" instead of
+# smooth = "discrete" or smooth = "bar"; the latter are retained because
+# they can sometimes be useful in combination with other layouts for
+# more specialized (but finicky) applications.
+ggplot(data.frame(x), aes(x)) +
+  geom_dots(layout = "bar")
 
 # smooth_discrete() constructs wider bins of dots
 ggplot(data.frame(x), aes(x)) +

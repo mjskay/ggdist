@@ -66,7 +66,7 @@
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm"),
+  layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
   overlaps = "nudge"
@@ -90,7 +90,7 @@ bin_dots = function(x, y, binwidth,
   d = d[order(d[[x]]), ]
 
   # bin the dots
-  bin_method = select_bin_method(d[[x]])
+  bin_method = select_bin_method(d[[x]], layout)
   h = dot_heap(d[[x]], binwidth = binwidth, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method)
   d$bin = h$binning$bins
 
@@ -101,9 +101,11 @@ bin_dots = function(x, y, binwidth,
     both = 0
   )
   switch(layout,
-    bin =, hex = {
+    bin =, hex =, bar = {
       bin_midpoints = h$binning$bin_midpoints
-      if (overlaps == "nudge") bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
+      if (overlaps == "nudge" && layout != "bar") {
+        bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
+      }
       d[[x]] = bin_midpoints[h$binning$bins]
       # maintain original data order within each bin when finding y positions
       d = d[order(d$bin, d$order), ]
@@ -146,8 +148,8 @@ bin_dots = function(x, y, binwidth,
     }
   )
 
-  # determine y positions (for bin/weave) and also x offsets (for hex)
-  if (layout %in% c("bin", "weave", "hex")) {
+  # determine y positions (for bin/weave/bar) and also x offsets (for hex)
+  if (layout %in% c("bin", "weave", "hex", "bar")) {
     d = ddply_(d, "bin", function(bin_df) {
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
       row_offset = 0
@@ -158,9 +160,9 @@ bin_dots = function(x, y, binwidth,
         },
         both = {
           row_offset = (nrow(bin_df) - 1) / 2
-          if (layout %in% c("weave", "hex")) {
+          if (layout %in% c("weave", "hex", "bar")) {
             # weave and hex require rows to be aligned exactly so that x offsets
-            # can be applied within rows
+            # can be applied within rows; bar because it looks weird otherwise
             row_offset = round(row_offset)
           }
           y_offset = y_offset - h$y_spacing * row_offset
@@ -198,6 +200,7 @@ bin_dots = function(x, y, binwidth,
 #' @param heightratio ratio of bin width to dot height
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
+#' @eval rd_param_dots_layout()
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
@@ -240,7 +243,14 @@ bin_dots = function(x, y, binwidth,
 #' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @importFrom stats optimize
 #' @export
-find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) {
+find_dotplot_binwidth = function(
+  x,
+  maxheight,
+  heightratio = 1,
+  stackratio = 1,
+  layout = c("bin", "weave", "hex", "swarm", "bar")
+) {
+  match.arg(layout)
   x = sort(x, na.last = TRUE)
 
   # figure out a reasonable minimum number of bins based on histogram binning
@@ -249,13 +259,22 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
   } else{
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  bin_method = select_bin_method(x)
-  dot_heap_ = function(...) dot_heap(x, ..., maxheight = maxheight, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method)
+  bin_method = select_bin_method(x, layout)
+  dot_heap_ = function(...) dot_heap(
+    x, ...,
+    maxheight = maxheight, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method
+  )
   min_h = dot_heap_(nbins = min_nbins)
 
   if (!min_h$is_valid) {
-    # figure out a maximum number of bins based on data resolution
-    max_h = dot_heap_(binwidth = resolution(x))
+    # figure out a maximum number of bins based on data resolution (except
+    # for bars, which handle duplicate values differently, so must go by
+    # number of data points instead of unique data points)
+    max_h = if (layout == "bar") {
+      dot_heap_(nbins = length(x))
+    } else {
+      dot_heap_(binwidth = resolution(x))
+    }
 
     if (max_h$nbins <= min_h$nbins) {
       # even at data resolution there aren't enough bins, not much we can do...
@@ -299,12 +318,13 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
           h = dot_heap_(binwidth = binwidth)
           (h$max_bin_count * h$max_y_spacing - h$maxheight)^2
         },
-        candidate_binwidths
+        candidate_binwidths,
+        tol = sqrt(.Machine$double.eps)
       )$minimum
       new_h = dot_heap_(binwidth = binwidth)
 
       # approximate version of new_h$is_valid used here to tolerate approximation with optimize()
-      if (isTRUE(new_h$max_bin_count * new_h$max_y_spacing <= new_h$maxheight + .Machine$double.eps^0.25)) {
+      if (new_h$is_valid_approx) {
         h = new_h
       }
     }
@@ -313,7 +333,7 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
   }
 
   # check if the selected heap spec is valid....
-  if (!h$is_valid) {
+  if (!h$is_valid_approx) {
     # ... if it isn't, this means we've ended up with some bin that's too
     # tall, probably because we have discrete data --- we'll just
     # conservatively shrink things down so they fit by backing out a bin
@@ -339,8 +359,7 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
 #' @return  a list of properties of this dot "heap"
 #' @noRd
 dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightratio = 1, stackratio = 1, bin_method = automatic_bin) {
-  xrange = range(x)
-  xspread = xrange[[2]] - xrange[[1]]
+  xspread = diff(range(x))
   if (xspread == 0) xspread = 1
   if (is.null(binwidth)) {
     nbins = floor(nbins)
@@ -370,6 +389,7 @@ dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightrat
 
   # is this a "valid" heap of dots; i.e. is its tallest bin less than max height?
   is_valid = isTRUE(max_bin_count * max_y_spacing <= maxheight)
+  is_valid_approx = isTRUE(max_bin_count * max_y_spacing <= maxheight + .Machine$double.eps^0.25)
 
   as.list(environment())
 }
@@ -587,12 +607,14 @@ wilkinson_bin_from_center = function(x, width) {
 
 # dynamic binning method selection ----------------------------------------
 
-automatic_bin = function(x, width) {
-  select_bin_method(x)(x, width)[c("bins", "bin_midpoints")]
+automatic_bin = function(x, width, layout = "bin") {
+  select_bin_method(x, layout)(x, width)[c("bins", "bin_midpoints")]
 }
 
 # examines a vector x and determines an appropriate binning method based on its properties
-select_bin_method = function(x) {
+select_bin_method = function(x, layout = "bin") {
+  if (layout == "bar") return(bar_bin)
+
   diff_x = diff(x)
   if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
     # x is symmetric, used centered binning
@@ -600,6 +622,36 @@ select_bin_method = function(x) {
   } else {
     wilkinson_bin
   }
+}
+
+
+# bar layout --------------------------------------------------------------
+
+#' Bin dots into bars
+#' @param x data (original positions of dots)
+#' @param width width of the bins in data units
+#' @param bar_scale width of the bars as a proportion of the data resolution
+#' @noRd
+bar_bin = function(x, width, bar_scale = 0.9) {
+  if (length(x) < 2) return(x)
+
+  # determine the amount of space that each bar will take up
+  max_bar_width = resolution(x, zero = FALSE) * bar_scale
+  n_bins = max(floor(max_bar_width / width), 1)
+  actual_bar_width = n_bins * width
+
+  # determine new x positions
+  bin_positions = (ppoints(n_bins, a = 0.5) - 0.5) * actual_bar_width
+  split(x, x) = lapply(split(x, x), function(x) {
+    offset_to_center = max((n_bins - length(x)) / n_bins * actual_bar_width / 2, 0)
+    rep_len(bin_positions, length(x)) + x[[1]] + offset_to_center
+  })
+
+  bin_midpoints = unique(x)
+  list(
+    bins = match(x, bin_midpoints),
+    bin_midpoints = bin_midpoints
+  )
 }
 
 

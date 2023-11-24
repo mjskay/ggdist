@@ -329,6 +329,21 @@ test_that("overflow = compress works", {
   )
 })
 
+test_that("bar layout works", {
+  skip_if_no_vdiffr()
+
+  df = data.frame(
+    x = factor(c(rep(1:5, times = 5:1 * 11), 6, 6, 7)),
+    g = c("a","b")
+  )
+
+  vdiffr::expect_doppelganger("bar layout with order",
+    df %>%
+      ggplot(aes(x, fill = g, group = NA, order = g)) +
+      geom_dots(layout = "bar")
+  )
+})
+
 
 # NAs -------------------------------------------------------------------
 

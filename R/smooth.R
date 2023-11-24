@@ -128,6 +128,11 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 
 #' Smooth dot positions in a dotplot of discrete values ("bar dotplots")
 #'
+#' @description
+#' **Note:** Better-looking bar dotplots are typically easier to achieve using
+#' `layout = "bar"` with the [geom_dotsinterval()] familty instead of
+#' `smooth = "bar"` or `smooth = "discrete"`.
+#'
 #' Smooths `x` values where `x` is presumed to be discrete, returning a new `x`
 #' of the same length. Both `smooth_discrete()` and `smooth_bar()` use the
 #' [resolution()] of the data to apply smoothing around unique values in the
@@ -171,6 +176,13 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #' # distributions is very small
 #' ggplot(data.frame(x), aes(x)) +
 #'   geom_dots()
+#'
+#' # NOTE: It is now recommended to use layout = "bar" instead of
+#' # smooth = "discrete" or smooth = "bar"; the latter are retained because
+#' # they can sometimes be useful in combination with other layouts for
+#' # more specialized (but finicky) applications.
+#' ggplot(data.frame(x), aes(x)) +
+#'   geom_dots(layout = "bar")
 #'
 #' # smooth_discrete() constructs wider bins of dots
 #' ggplot(data.frame(x), aes(x)) +

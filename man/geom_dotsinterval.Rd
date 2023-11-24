@@ -112,10 +112,11 @@ less than 1 (something like \code{0.9} tends to work).
 \item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"bar"}: for discrete distributions, lays out duplicate values in rectangular bars.
 }}
 
 \item{overlaps}{How to handle overlapping dots or bins in the \code{"bin"},
-\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} layout).
+\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} or \code{"bar"} layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
