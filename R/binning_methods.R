@@ -633,8 +633,6 @@ select_bin_method = function(x, layout = "bin") {
 #' @param bar_scale width of the bars as a proportion of the data resolution
 #' @noRd
 bar_bin = function(x, width, bar_scale = 0.9) {
-  if (length(x) < 2) return(x)
-
   # determine the amount of space that each bar will take up
   max_bar_width = resolution(x, zero = FALSE) * bar_scale
   n_bins = max(floor(max_bar_width / width), 1)
