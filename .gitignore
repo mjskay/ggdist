@@ -4,7 +4,6 @@
 .Rhistory
 .RData
 .Rproj*
-ggdist.Rproj
 vignettes/ABC.rda
 vignettes/ABC.rds
 vignettes/*_cache/
