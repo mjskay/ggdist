@@ -12,7 +12,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  overlaps = "nudge", overflow = "keep",
+  overlaps = "nudge", overflow = "keep", smooth = "none",
   verbose = FALSE,
   orientation = "vertical"
 ) {
@@ -24,7 +24,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    overlaps = overlaps, overflow = overflow,
+    overlaps = overlaps, overflow = overflow, smooth = smooth,
     verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -44,6 +44,7 @@ makeContent.dots_grob = function(x) {
   layout = grob_$layout
   overlaps = grob_$overlaps
   overflow = grob_$overflow
+  smooth = grob_$smooth
 
   define_orientation_variables(orientation)
 
@@ -82,7 +83,7 @@ makeContent.dots_grob = function(x) {
     # find the best bin widths across all the dotplots we are going to draw
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
-      find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio)
+      find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio, smooth = smooth)
     })
 
     binwidth = min(binwidths, user_max_binwidth)
@@ -114,7 +115,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
-      overlaps = overlaps,
+      overlaps = overlaps, smooth = smooth,
       layout = layout, side = d$side[[1]], orientation = orientation
     )
 
@@ -130,7 +131,7 @@ makeContent.dots_grob = function(x) {
     # factor based on how big the circle glyph is as a ratio of font size
     # (font_size_ratio) plus need to account for stroke width
     lwd = d$linewidth * .stroke/2
-    lwd[is.na(lwd)] = 0
+    lwd[is.na(lwd) | is.na(d$colour)] = 0
     dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
       "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
     dot_fontsize = max(
@@ -161,7 +162,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
-  overlaps, overflow,
+  overlaps, overflow, smooth,
   verbose,
   ...
 ) {
@@ -223,6 +224,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     layout = layout,
     overlaps = overlaps,
     overflow = overflow,
+    smooth = smooth,
     verbose = verbose,
     orientation = orientation
   ))
@@ -470,9 +472,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
     # apply smooths --- must do this here in case resulting data exceeds boundaries of
     # original data, meaning scales must be adjusted
-    smooth = match_function(params$smooth %||% "none", prefix = "smooth_")
-    s_data = data[data$datatype == "slab", c("group", x, y)]
-    data[data$datatype == "slab", x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
+    # smooth = match_function(params$smooth %||% "none", prefix = "smooth_")
+    # s_data = data[data$datatype == "slab", c("group", x, y)]
+    # data[data$datatype == "slab", x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
 
     data
   },

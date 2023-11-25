@@ -14,34 +14,37 @@ test_that("smooths on scalars work", {
 })
 
 test_that("smooth_bar works", {
-  x = rep(1:4, times = 4:1)
+  skip_if_no_vdiffr()
 
-  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "bar"))
-  ref_x = c(
-    (ppoints(4, a = 0.5) - 0.5) * 0.7 + 1,
-    (ppoints(3, a = 0.5) - 0.5) * 0.7 + 2,
-    (ppoints(2, a = 0.5) - 0.5) * 0.7 + 3,
-    4
+  df = data.frame(
+    x = factor(c(rep(1:5, times = 5:1 * 11), 6, 6, 7)),
+    g = c("a","b")
   )
-  expect_equal(ld$x, ref_x)
+
+  vdiffr::expect_doppelganger("smooth_bar with order",
+    df %>%
+      ggplot(aes(x, fill = g, group = NA, order = g)) +
+      geom_dots(smooth = "bar")
+  )
 })
 
 test_that("smooth_discrete works", {
-  x = rep(1:4, times = 4:1)
+  skip_if_no_vdiffr()
 
-  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "discrete"))
-  ref_x = c(0.760112695656659, 0.920256356040445, 1.08040001642423, 1.24054367680802,  1.78654853188863, 2.00007341240034, 2.21359829291206, 2.83977362126489,  3.16006094203247, 3.99967181376766)
-  expect_equal(ld$x, ref_x, tolerance = 0.001)
+  df = data.frame(
+    x = factor(c(rep(1:5, times = 5:1 * 11), 6, 6, 7)),
+    g = c("a","b")
+  )
 
-  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = smooth_discrete(kernel = "ep")))
-  ref_x = c(0.816364320617873, 0.944625373470495, 1.05539072151476, 1.18366670884155,  1.84144365484769, 2.00000507797274, 2.15857922335003, 2.88568947241406,  3.11432520840337, 3.99999280566278)
-  expect_equal(ld$x, ref_x, tolerance = 0.001)
-})
+  vdiffr::expect_doppelganger("smooth_discrete gaussian",
+    df %>%
+      ggplot(aes(x, fill = g, group = NA, order = g)) +
+      geom_dots(smooth = "discrete")
+  )
 
-test_that("smooth_bounded works", {
-  x = 1:10
-
-  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "bounded"))
-  ref_x = c(0.997794316080475, 1.99639357461413, 2.99631978598422, 3.99740164666058,  4.99908084276668, 6.00091915723332, 7.00259835333942, 8.00368021401578,  9.00360642538587, 10.0022056839195)
-  expect_equal(ld$x, ref_x, tolerance = 0.001)
+  vdiffr::expect_doppelganger("smooth_discrete ep mirrored",
+    df %>%
+      ggplot(aes(x, fill = g, group = NA, order = g)) +
+      geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both")
+  )
 })

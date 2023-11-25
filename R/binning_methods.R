@@ -20,6 +20,7 @@
 #' @eval rd_param_dots_layout()
 #' @eval rd_param_dots_overlaps()
 #' @eval rd_param_slab_side()
+#' @eval rd_param_dots_smooth()
 #' @param orientation Whether the dots are laid out horizontally or vertically.
 #' Follows the naming scheme of [geom_slabinterval()]:
 #'
@@ -69,17 +70,21 @@ bin_dots = function(x, y, binwidth,
   layout = c("bin", "weave", "hex", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge"
+  overlaps = "nudge",
+  smooth = "none"
 ) {
   layout = match.arg(layout)
   side = match.arg(side)
   orientation = match.arg(orientation)
+  smooth = match_function(smooth, "smooth_")
 
   d = data.frame(x = x, y = y)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation
   define_orientation_variables(orientation)
+
+  d[[x]] = smooth(d[[x]], binwidth = binwidth)
 
   # Sort the x values, because they must be sorted for bin methods to maintain
   # the correct connection between input values and output bins.
@@ -198,7 +203,7 @@ bin_dots = function(x, y, binwidth,
 #' @param heightratio ratio of bin width to dot height
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
-#' @eval paste0("@param smooth ", GeomDots$get_param_docs()$smooth)
+#' @eval rd_param_dots_smooth()
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
@@ -259,8 +264,8 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1, 
   min_h = dot_heap_(nbins = min_nbins)
 
   if (!min_h$is_valid) {
-    # figure out a maximum number of bins based on data resolution
-    max_h = dot_heap_(binwidth = resolution(x))
+    # figure out a maximum number of bins
+    max_h = dot_heap_(nbins = length(x))
 
     if (max_h$nbins <= min_h$nbins) {
       # even at data resolution there aren't enough bins, not much we can do...
@@ -304,12 +309,13 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1, 
           h = dot_heap_(binwidth = binwidth)
           (h$max_bin_count * h$max_y_spacing - h$maxheight)^2
         },
-        candidate_binwidths
+        candidate_binwidths,
+        tol = sqrt(.Machine$double.eps)
       )$minimum
       new_h = dot_heap_(binwidth = binwidth)
 
       # approximate version of new_h$is_valid used here to tolerate approximation with optimize()
-      if (isTRUE(new_h$max_bin_count * new_h$max_y_spacing <= new_h$maxheight + .Machine$double.eps^0.25)) {
+      if (new_h$is_valid_approx) {
         h = new_h
       }
     }
@@ -318,7 +324,7 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1, 
   }
 
   # check if the selected heap spec is valid....
-  if (!h$is_valid) {
+  if (!h$is_valid_approx) {
     # ... if it isn't, this means we've ended up with some bin that's too
     # tall, probably because we have discrete data --- we'll just
     # conservatively shrink things down so they fit by backing out a bin
@@ -347,8 +353,7 @@ dot_heap = function(x,
   nbins = NULL, binwidth = NULL, maxheight = Inf, heightratio = 1, stackratio = 1,
   bin_method = automatic_bin, smooth = smooth_none
 ) {
-  xrange = range(x)
-  xspread = xrange[[2]] - xrange[[1]]
+  xspread = diff(range(x))
   if (xspread == 0) xspread = 1
   if (is.null(binwidth)) {
     nbins = floor(nbins)
@@ -356,6 +361,7 @@ dot_heap = function(x,
   } else {
     nbins = max(floor(xspread / binwidth), 1)
   }
+  x = sort(smooth(x, binwidth = binwidth))
   binning = bin_method(x, binwidth)
   bin_counts = tabulate(binning$bins)
   # max bin count is the max "effective" number of elements in a bin, which
@@ -378,6 +384,7 @@ dot_heap = function(x,
 
   # is this a "valid" heap of dots; i.e. is its tallest bin less than max height?
   is_valid = isTRUE(max_bin_count * max_y_spacing <= maxheight)
+  is_valid_approx = isTRUE(max_bin_count * max_y_spacing <= maxheight + .Machine$double.eps^0.25)
 
   as.list(environment())
 }

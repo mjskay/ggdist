@@ -161,3 +161,7 @@ rd_param_dots_layout = function() {
 rd_param_dots_overlaps = function() {
   paste0("@param overlaps ", GeomDotsinterval$get_param_docs()$overlaps)
 }
+
+rd_param_dots_smooth = function() {
+  paste0("@param smooth ", GeomDotsinterval$get_param_docs()$smooth)
+}

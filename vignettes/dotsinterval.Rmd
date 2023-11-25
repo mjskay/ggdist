@@ -698,7 +698,7 @@ rectangular shapes:
 
 ```{r discrete_dots_rect, fig.width = small_width, fig.height = small_height}
 abcd_df %>%
-  ggplot(aes(x = x)) +
+  ggplot(aes(x = x, group = NA)) +
   geom_dots(smooth = "discrete") +
   scale_y_continuous(breaks = NULL) +
   labs(
@@ -733,7 +733,7 @@ out `"epanechnikov"` (partial matching is allowed):
 
 ```{r discrete_dots_ep, fig.width = small_width, fig.height = small_height}
 abcd_df %>%
-  ggplot(aes(x = x)) +
+  ggplot(aes(x = x, group = NA)) +
   geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both") +
   scale_y_continuous(breaks = NULL) +
   labs(
@@ -804,9 +804,9 @@ to color dots according to the interval containing them (we'll also use the
 
 ```{r dotsinterval_dist_1000_level_color}
 dist_df %>%
-  ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(level))) +
-  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave") +
-  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_color") +
+  ggplot(aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))) +
+  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave", slab_color = NA) +
+  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_fill") +
   ggtitle(
     "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
     "aes(y = dist_name, xdist = dist, slab_color = after_stat(level))"

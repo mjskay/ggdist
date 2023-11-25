@@ -191,6 +191,7 @@ smooth_discrete = auto_partial(name = "smooth_discrete", function(
   x,
   kernel = c("rectangular", "gaussian", "epanechnikov", "triangular", "biweight", "cosine", "optcosine"),
   width = 0.7,
+  binwidth = 0,
   ...
 ) {
   if (length(x) < 2) return(x)
@@ -200,25 +201,34 @@ smooth_discrete = auto_partial(name = "smooth_discrete", function(
   kernel = match.arg(kernel)
   bw_mult = switch(kernel,
     gaussian = 0.16,
-    epanechnikov = 0.21,
+    epanechnikov = 0.22,
     rectangular = 0.26,
     triangular = 0.20,
     biweight = 0.19,
     cosine = 0.18,
-    optcosine = 0.20
+    optcosine = 0.21
   )
-  bandwidth = resolution(x, zero = FALSE) * bw_mult * width
+  bandwidth = max((resolution(x, zero = FALSE) * width - binwidth) * bw_mult, .Machine$double.eps)
   smooth_unbounded(x, kernel = kernel, bandwidth = bandwidth, ...)
 })
 
 #' @rdname smooth_discrete
 #' @export
-smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
+smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.9, binwidth = 1, ...) {
   if (length(x) < 2) return(x)
 
-  x_width = resolution(x, zero = FALSE) * width
+  # need binwidth to be a bit bigger than specified so that after the smooth is
+  # applied, values in adjacent bins are not considered to be in the same bin
+  # by other binning algorithms
+  binwidth = binwidth + .Machine$double.eps
+
+  available_width = resolution(x, zero = FALSE) * width
+  n_bins = max(floor(available_width / binwidth), 1)
+  used_width = n_bins * binwidth
+  bin_positions = (ppoints(n_bins, a = 0.5) - 0.5) * used_width
   split(x, x) = lapply(split(x, x), function(x) {
-    (ppoints(length(x), 0.5) - 0.5) * x_width + x[[1]]
+    offset_to_center = max((n_bins - length(x)) / n_bins * used_width / 2, 0)
+    rep_len(bin_positions, length(x)) + x[[1]] + offset_to_center
   })
   x
 })
