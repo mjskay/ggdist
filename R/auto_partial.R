@@ -138,10 +138,20 @@ auto_partial = function(f, name = NULL) {
     lapply(required_arg_names, function(arg_name) expr(missing(!!as.name(arg_name))))
   )
 
+  partial_self_f = if (identical(environment(f), environment(partial_self))) {
+    # when auto_partial is called from within the ggdist namespace, don't inline
+    # the partial self function
+    quote(partial_self)
+  } else {
+    # when auto_partial is called from within the ggdist namespace, we need to
+    # inline the partial_self function so that it is guaranteed to be found
+    partial_self
+  }
+
   new_function(
     args,
     expr({
-      if (!!any_required_args_missing) return(partial_self(!!name))
+      if (!!any_required_args_missing) return((!!partial_self)(!!name))
 
       !!!f_body
     }),

@@ -250,7 +250,7 @@ find_dotplot_binwidth = function(
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar")
 ) {
-  match.arg(layout)
+  layout = match.arg(layout)
   x = sort(x, na.last = TRUE)
 
   # figure out a reasonable minimum number of bins based on histogram binning
