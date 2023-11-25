@@ -6,6 +6,10 @@ New features and enhancements:
   transformations of densities more reliable (r-lib/scales#341).
 * New `layout = "bar"` for `geom_dotsinterval()` that provides better bar 
   dotplots (with thanks to @sharoz for feedback; #190).
+* Bandwidth estimators (including the default, `bandwidth_dpi()`) now fall back
+  to `bandwidth_nrd0()` when they fail, with a warning that suggests trying 
+  a dotplot or histogram (as these failures tend to happen on data that is not
+  a good candidate for a density plot in the first place) (#196).
 
 Bug fixes:
 

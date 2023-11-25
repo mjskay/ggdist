@@ -424,42 +424,42 @@ density_histogram = auto_partial(name = "density_histogram", function(
 #' @name bandwidth
 #' @importFrom stats bw.nrd0
 #' @export
-bandwidth_nrd0 = auto_partial(name = "bandwidth_nrd0", function(x) {
+bandwidth_nrd0 = auto_partial(name = "bandwidth_nrd0", function(x, ...) {
   bw.nrd0(x)
 })
 
 #' @rdname bandwidth
 #' @importFrom stats bw.nrd
 #' @export
-bandwidth_nrd = auto_partial(name = "bandwidth_nrd", function(x) {
-  bw.nrd(x)
+bandwidth_nrd = auto_partial(name = "bandwidth_nrd", function(x, ...) {
+  bw_fallback(bw.nrd, x, ..., f_name = "bandwidth_nrd")
 })
 
 #' @rdname bandwidth
 #' @importFrom stats bw.ucv
 #' @export
 bandwidth_ucv = auto_partial(name = "bandwidth_ucv", function(x, ...) {
-  bw.ucv(x, ...)
+  bw_fallback(bw.ucv, x, ..., f_name = "bandwidth_ucv")
 })
 
 #' @rdname bandwidth
 #' @importFrom stats bw.bcv
 #' @export
 bandwidth_bcv = auto_partial(name = "bandwidth_bcv", function(x, ...) {
-  bw.bcv(x, ...)
+  bw_fallback(bw.bcv, x, ..., f_name = "bandwidth_bcv")
 })
 
 #' @rdname bandwidth
 #' @importFrom stats bw.SJ
 #' @export
 bandwidth_SJ = auto_partial(name = "bandwidth_SJ", function(x, ...) {
-  bw.SJ(x, ...)
+  bw_fallback(bw.SJ, x, ..., f_name = "bandwidth_SJ")
 })
 
 #' @rdname bandwidth
 #' @export
 bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
-  bw.SJ(x, method = "dpi", ...)
+  bw_fallback(bw.SJ, x, method = "dpi", ..., f_name = "bandwidth_dpi")
 })
 
 
@@ -560,4 +560,29 @@ get_bandwidth = function(x, bandwidth) {
     bandwidth = match_function(bandwidth, prefix = "bandwidth_")(x)
   }
   bandwidth
+}
+
+#' run a bandwidth calculation, catching errors and providing a fallback
+#' @param bw a function used to calculate bandwidth
+#' @param x data to calculate bandwidth of
+#' @param ... additional arguments passed to bw
+#' @noRd
+bw_fallback = function(f, x, ..., f_name = deparse0(sys.call(-1L)[[1]])) {
+  tryCatch({
+    bw = f(x, ...)
+    if (bw <= 0) stop0("bandwidth is not positive")
+    bw
+  }, error = function(e) {
+    cli_warn(c(
+        "Bandwidth calculation failed in {.fun {f_name}}.",
+        "i" = "Falling back to {.fun bandwidth_nrd0}.",
+        "i" = "This often occurs when a sample contains many duplicates, which
+               suggests that a dotplot (e.g., {.fun geom_dots}) or histogram
+               (e.g., {.fun density_histogram}, {.code stat_slab(density = 'histogram')},
+               or {.fun stat_histinterval}) may better represent the data."
+      ),
+      parent = e
+    )
+    bandwidth_nrd0(x)
+  })
 }

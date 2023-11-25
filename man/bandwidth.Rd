@@ -10,9 +10,9 @@
 \alias{bandwidth_dpi}
 \title{Bandwidth estimators}
 \usage{
-bandwidth_nrd0(x)
+bandwidth_nrd0(x, ...)
 
-bandwidth_nrd(x)
+bandwidth_nrd(x, ...)
 
 bandwidth_ucv(x, ...)
 
