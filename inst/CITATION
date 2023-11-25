@@ -2,6 +2,16 @@ year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
+  bibtype = "Article",
+  author = c(person("Matthew", "Kay")),
+  title = "{ggdist}: Visualizations of Distributions and Uncertainty in the Grammar of Graphics",
+  journal = "IEEE Transactions on Visualization and Computer Graphics",
+  year = "2024",
+  pages = "1--11",
+  doi = "10.1109/TVCG.2023.3327195"
+)
+
+bibentry(
   bibtype = "Manual",
   title = paste("{ggdist}: Visualizations of Distributions and Uncertainty"),
   author = c(person("Matthew", "Kay")),
