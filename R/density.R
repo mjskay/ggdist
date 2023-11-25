@@ -73,7 +73,7 @@
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_unbounded = function(
+density_unbounded = auto_partial(name = "density_unbounded", function(
   x, weights = NULL,
   n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = FALSE,
@@ -82,8 +82,6 @@ density_unbounded = function(
   ...,
   range_only = FALSE
 ) {
-  if (missing(x)) return(partial_self("density_unbounded"))
-
   if (n < 1) cli_abort("{.fun ggdist::density_unbounded} must have an {.arg n} of at least 1")
 
   x_label = as_label(enexpr(x))
@@ -115,7 +113,7 @@ density_unbounded = function(
   d$call = as.call(lapply(match.call(), get_expr))
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
-}
+})
 
 
 #' Bounded density estimator using the reflection method
@@ -188,7 +186,7 @@ density_unbounded = function(
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_bounded = function(
+density_bounded = auto_partial(name = "density_bounded", function(
   x, weights = NULL,
   n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = FALSE, bounds = c(NA, NA), bounder = "cdf",
@@ -197,8 +195,6 @@ density_bounded = function(
   ...,
   range_only = FALSE
 ) {
-  if (missing(x)) return(partial_self("density_bounded"))
-
   if (n < 1) cli_abort("{.fun ggdist::density_bounded} must have an {.arg n} of at least 1")
 
   x_label = as_label(enexpr(x))
@@ -274,7 +270,7 @@ density_bounded = function(
   d$call = as.call(lapply(match.call(), get_expr))
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
-}
+})
 
 
 #' Histogram density estimator
@@ -350,7 +346,7 @@ density_bounded = function(
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_histogram = function(
+density_histogram = auto_partial(name = "density_histogram", function(
   x, weights = NULL,
   breaks = "Sturges",
   align = "none",
@@ -359,8 +355,6 @@ density_histogram = function(
   ...,
   range_only = FALSE
 ) {
-  if (missing(x)) return(partial_self("density_histogram"))
-
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
 
@@ -405,7 +399,7 @@ density_histogram = function(
     has.na = FALSE,
     cdf = cdf
   ), class = "density")
-}
+})
 
 
 # bandwidth estimators ----------------------------------------------------
@@ -430,49 +424,43 @@ density_histogram = function(
 #' @name bandwidth
 #' @importFrom stats bw.nrd0
 #' @export
-bandwidth_nrd0 = function(x) {
-  if (missing(x)) return(partial_self("bandwidth_nrd0"))
+bandwidth_nrd0 = auto_partial(name = "bandwidth_nrd0", function(x) {
   bw.nrd0(x)
-}
+})
 
 #' @rdname bandwidth
 #' @importFrom stats bw.nrd
 #' @export
-bandwidth_nrd = function(x) {
-  if (missing(x)) return(partial_self("bandwidth_nrd"))
+bandwidth_nrd = auto_partial(name = "bandwidth_nrd", function(x) {
   bw.nrd(x)
-}
+})
 
 #' @rdname bandwidth
 #' @importFrom stats bw.ucv
 #' @export
-bandwidth_ucv = function(x, ...) {
-  if (missing(x)) return(partial_self("bandwidth_ucv"))
+bandwidth_ucv = auto_partial(name = "bandwidth_ucv", function(x, ...) {
   bw.ucv(x, ...)
-}
+})
 
 #' @rdname bandwidth
 #' @importFrom stats bw.bcv
 #' @export
-bandwidth_bcv = function(x, ...) {
-  if (missing(x)) return(partial_self("bandwidth_bcv"))
+bandwidth_bcv = auto_partial(name = "bandwidth_bcv", function(x, ...) {
   bw.bcv(x, ...)
-}
+})
 
 #' @rdname bandwidth
 #' @importFrom stats bw.SJ
 #' @export
-bandwidth_SJ = function(x, ...) {
-  if (missing(x)) return(partial_self("bandwidth_SJ"))
+bandwidth_SJ = auto_partial(name = "bandwidth_SJ", function(x, ...) {
   bw.SJ(x, ...)
-}
+})
 
 #' @rdname bandwidth
 #' @export
-bandwidth_dpi = function(x, ...) {
-  if (missing(x)) return(partial_self("bandwidth_dpi"))
+bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
   bw.SJ(x, method = "dpi", ...)
-}
+})
 
 
 # adaptive density estimator ----------------------------------------------

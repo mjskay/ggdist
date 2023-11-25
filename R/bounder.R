@@ -59,9 +59,7 @@
 #' @seealso The `bounder` argument to [density_bounded()].
 #' @family bounds estimators
 #' @export
-bounder_cdf = function(x, p = 0.01) {
-  if (missing(x)) return(partial_self("bounder_cdf"))
-
+bounder_cdf = auto_partial(name = "bounder_cdf", function(x, p = 0.01) {
   # we use the distribution of the order statistic of a sample to estimate
   # where the first and last order statistics (i.e. the min and max) of this
   # distribution would be assuming the sample `x` is the distribution, then
@@ -86,7 +84,7 @@ bounder_cdf = function(x, p = 0.01) {
   p_sample = p^(1/length(x))
   `x_1_hat,x_n_hat` = quantile(x, c(1 - p_sample, p_sample), names = FALSE)
   2 * range(x) - `x_1_hat,x_n_hat`
-}
+})
 
 #' Estimate bounds of a distribution using Cooke's method
 #'
@@ -113,9 +111,7 @@ bounder_cdf = function(x, p = 0.01) {
 #' @seealso The `bounder` argument to [density_bounded()].
 #' @family bounds estimators
 #' @export
-bounder_cooke = function(x) {
-  if (missing(x)) return(partial_self("bounder_cooke"))
-
+bounder_cooke = auto_partial(name = "bounder_cooke", function(x) {
   x = sort(x)
   n = length(x)
 
@@ -155,7 +151,7 @@ bounder_cooke = function(x) {
     min(2 * x[1] - x_1_coefs %*% x[i], x[1]),
     max(2 * x[n] - x_1_coefs %*% x[rev_i], x[n])
   )
-}
+})
 
 #' Estimate bounds of a distribution using the range of the sample
 #'

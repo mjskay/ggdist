@@ -43,8 +43,11 @@
 #' - as a partially-applied function with options:
 #'   `geom_dots(smooth = smooth_bounded(kernel = "cosine"))`
 #'
-#' The `density` argument to [stat_slabinterval()] works similarly with the
-#' `density_` family of functions.
+#' Many other common arguments for \pkg{ggdist} functions work similarly; e.g.
+#' `density`, `align`, `breaks`, `bandwidth`, and `point_interval` arguments.
+#'
+#' Use the [auto_partial()] function to create new functions that support
+#' automatic partial application.
 #'
 #' @examples
 #' set.seed(1234)
@@ -67,7 +70,8 @@
 #' # `x`, it is applied using the arguments we have "saved up" so far
 #' density_quarter_bw_trimmed(x)
 #'
-#' @name automatic-partial-functions
+#' @name auto_partial
+#' @aliases automatic-partial-functions
 NULL
 
 
@@ -78,12 +82,12 @@ NULL
 #' Can be called multiple times
 #' @noRd
 #' @importFrom rlang as_quosure enquos eval_tidy expr get_expr
-partial_self = function(function_name = NULL) {
+partial_self = function(name = NULL) {
   f = sys.function(-1L)
   call = match.call(f, sys.call(-1L))
   f_quo = as_quosure(call[[1]], parent.frame(2L))
   default_args = lapply(call[-1], as_quosure, env = parent.frame(2L))
-  function_name = function_name %||% deparse0(get_expr(call[[1]]))
+  name = name %||% deparse0(get_expr(call[[1]]))
 
   partial_f = function(...) {
     new_args = enquos(...)
@@ -92,13 +96,28 @@ partial_self = function(function_name = NULL) {
   }
 
   attr(partial_f, "default_args") = default_args
-  attr(partial_f, "name") = function_name
+  attr(partial_f, "name") = name
   class(partial_f) = c("ggdist_partial_function", "function")
   partial_f
 }
 
-#' @importFrom rlang new_function expr is_missing
-auto_partial = function(f) {
+#' @rdname auto_partial
+#' @param f A function
+#' @param name A character string giving the name of the function, to be used
+#' when printing.
+#' @returns A modified version of `f` that will automatically be partially
+#' applied if all of its required arguments are not given.
+#' @export
+#' @importFrom rlang new_function expr
+#' @examples
+#' # create a custom automatically partially applied function
+#' f = auto_partial(function(x, y, z = 3) (x + y) * z)
+#' f()
+#' f(1)
+#' g = f(y = 2)(z = 4)
+#' g
+#' g(1)
+auto_partial = function(f, name = NULL) {
   f_body = body(f)
   # must ensure the function body is a { ... } block, not a single expression,
   # so we can splice it in later with !!!f_body
@@ -106,7 +125,7 @@ auto_partial = function(f) {
   args = formals(f)
 
   # find the required arguments
-  required_args = args[vapply(args, is_missing, FUN.VALUE = logical(1))]
+  required_args = args[vapply(args, rlang::is_missing, FUN.VALUE = logical(1))]
   required_arg_names = names(required_args)
   required_arg_names = required_arg_names[required_arg_names != "..."]
 
@@ -122,7 +141,7 @@ auto_partial = function(f) {
   new_function(
     args,
     expr({
-      if (!!any_required_args_missing) return(partial_self())
+      if (!!any_required_args_missing) return(partial_self(!!name))
 
       !!!f_body
     }),

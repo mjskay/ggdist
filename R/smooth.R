@@ -109,19 +109,19 @@ NULL
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), bounder = "cooke", trim = FALSE, ...) {
-  if (missing(x)) return(partial_self("smooth_bounded"))
-
+smooth_bounded = auto_partial(name = "smooth_bounded", function(
+  x, density = "bounded", bounds = c(NA, NA), bounder = "cooke", trim = FALSE, ...
+) {
   .smooth_density(x, density = density, bounds = bounds, bounder = bounder, trim = trim, ...)
-}
+})
 
 #' @rdname smooth_density
 #' @export
-smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
-  if (missing(x)) return(partial_self("smooth_unbounded"))
-
+smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
+  x, density = "unbounded", trim = FALSE, ...
+) {
   .smooth_density(x, density = density, trim = trim, ...)
-}
+})
 
 
 # discrete smooths --------------------------------------------------------
@@ -187,13 +187,12 @@ smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
 #'
 #'
 #' @export
-smooth_discrete = function(
+smooth_discrete = auto_partial(name = "smooth_discrete", function(
   x,
   kernel = c("rectangular", "gaussian", "epanechnikov", "triangular", "biweight", "cosine", "optcosine"),
   width = 0.7,
   ...
 ) {
-  if (missing(x)) return(partial_self("smooth_discrete"))
   if (length(x) < 2) return(x)
 
   # magic numbers below ensure that the range of the kernel with bandwidth = 1 is a
@@ -210,12 +209,11 @@ smooth_discrete = function(
   )
   bandwidth = resolution(x, zero = FALSE) * bw_mult * width
   smooth_unbounded(x, kernel = kernel, bandwidth = bandwidth, ...)
-}
+})
 
 #' @rdname smooth_discrete
 #' @export
-smooth_bar = function(x, width = 0.7, ...) {
-  if (missing(x)) return(partial_self("smooth_bar"))
+smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
   if (length(x) < 2) return(x)
 
   x_width = resolution(x, zero = FALSE) * width
@@ -223,7 +221,7 @@ smooth_bar = function(x, width = 0.7, ...) {
     (ppoints(length(x), 0.5) - 0.5) * x_width + x[[1]]
   })
   x
-}
+})
 
 #' Apply no smooth to a dotplot
 #'
@@ -243,8 +241,6 @@ smooth_bar = function(x, width = 0.7, ...) {
 #'
 #' @family dotplot smooths
 #' @export
-smooth_none = function(x, ...) {
-  if (missing(x)) return(partial_self("smooth_none"))
-
+smooth_none = auto_partial(name = "smooth_none", function(x, ...) {
   x
-}
+})

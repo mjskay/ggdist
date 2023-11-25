@@ -172,9 +172,9 @@ weighted_hist = function(
 #'   )
 #' @name breaks
 #' @export
-breaks_fixed = function(x, weights = NULL, width = 1) {
-  if (missing(x)) return(partial_self("breaks_fixed"))
-
+breaks_fixed = auto_partial(name = "breaks_fixed", function(
+  x, weights = NULL, width = 1
+) {
   if (length(x) == 1) return(c(x - width/2, x + width/2))
 
   # determine amount we need to expand range by to make it a multiple of width
@@ -182,23 +182,23 @@ breaks_fixed = function(x, weights = NULL, width = 1) {
   expand = ((-diff(x_range)) %% width) / 2
 
   seq.int(x_range[[1]] - expand, x_range[[2]] + expand, by = width)
-}
+})
 
 #' @rdname breaks
 #' @export
-breaks_Sturges = function(x, weights = NULL) {
-  if (missing(x)) return(partial_self("breaks_Sturges"))
-
+breaks_Sturges = auto_partial(name = "breaks_Sturges", function(
+  x, weights = NULL
+) {
   weights = weights %||% rep(1, length(x))
   n = max(length(x), sum(weights))
   ceiling(log2(n) + 1)
-}
+})
 
 #' @rdname breaks
 #' @export
-breaks_Scott = function(x, weights = NULL) {
-  if (missing(x)) return(partial_self("breaks_Scott"))
-
+breaks_Scott = auto_partial(name = "breaks_Scott", function(
+  x, weights = NULL
+) {
   weights = weights %||% rep(1, length(x))
   n = max(length(x), sum(weights))
   h = 3.5 * sqrt(weighted_var(x, weights)) * n^(-1/3)
@@ -207,13 +207,13 @@ breaks_Scott = function(x, weights = NULL) {
   } else {
     1L
   }
-}
+})
 
 #' @rdname breaks
 #' @export
-breaks_FD = function(x, weights = NULL, digits = 5) {
-  if (missing(x)) return(partial_self("breaks_FD"))
-
+breaks_FD = auto_partial(name = "breaks_FD", function(
+  x, weights = NULL, digits = 5
+) {
   weights = weights %||% rep(1, length(x))
   h = 2 * weighted_iqr(.x <- signif(x, digits = digits), weights)
 
@@ -240,7 +240,7 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
   } else {
     1L
   }
-}
+})
 
 
 # alignment algorithms ----------------------------------------------------
@@ -314,28 +314,22 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #'   geom_vline(xintercept = 0, linetype = "22", color = "red")
 #' @name align
 #' @export
-align_none = function(breaks) {
-  if (missing(breaks)) return(partial_self("align_none"))
-
+align_none = auto_partial(name = "align_none", function(breaks) {
   0
-}
+})
 
 #' @rdname align
 #' @export
-align_boundary = function(breaks, at = 0) {
-  if (missing(breaks)) return(partial_self("align_boundary"))
-
+align_boundary = auto_partial(name = "align_boundary", function(breaks, at = 0) {
   (breaks[[1]] - at) %% diff(breaks[1:2])
-}
+})
 
 #' @rdname align
 #' @export
-align_center = function(breaks, at = 0) {
-  if (missing(breaks)) return(partial_self("align_center"))
-
+align_center = auto_partial(name = "align_center", function(breaks, at = 0) {
   w = diff(breaks[1:2])
   (breaks[[1]] - at + w/2) %% w
-}
+})
 
 
 # helpers -----------------------------------------------------------------
