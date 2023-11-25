@@ -4,6 +4,8 @@ New features and enhancements:
 
 * Use derivatives supplied by transformations in *scales* >= 1.2.2 to make
   transformations of densities more reliable (r-lib/scales#341).
+* New `layout = "bar"` for `geom_dotsinterval()` that provides better bar 
+  dotplots (with thanks to @sharoz for feedback; #190).
 
 Bug fixes:
 
