@@ -92,11 +92,12 @@ if you are using a graphics device that support gradients.
 }}
 
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
+limits of \emph{theoretical} distributions (distributions from \emph{samples} ignore this parameter and determine
+their limits based on the limits of the sample). E.g., if this is \code{c(.001, .999)}, then a slab is drawn
 for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
 (respectively upper) limit is \code{NA}, then the lower (upper) limit will be the minimum (maximum) of the
 distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is not finite. E.g., if
-\code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
+\code{p_limits} is \code{c(NA, NA)}, on a gamma distribution the effective value of \code{p_limits} would be
 \code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
 it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
 

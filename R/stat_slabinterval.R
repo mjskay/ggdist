@@ -308,11 +308,12 @@ compute_interval_slabinterval = function(
 #' change `f` and then mapping `f` onto an aesthetic, it is now recommended to simply map the corresponding
 #' computed variable (e.g. `pdf`, `cdf`, or  `1 - cdf`) directly onto the desired aesthetic.
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
-#' limits of the slab. E.g., if this is `c(.001, .999)`, then a slab is drawn
+#' limits of *theoretical* distributions (distributions from *samples* ignore this parameter and determine
+#' their limits based on the limits of the sample). E.g., if this is `c(.001, .999)`, then a slab is drawn
 #' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`. If the lower
 #' (respectively upper) limit is `NA`, then the lower (upper) limit will be the minimum (maximum) of the
 #' distribution's support if it is finite, and `0.001` (`0.999`) if it is not finite. E.g., if
-#' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
+#' `p_limits` is `c(NA, NA)`, on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
 #' @param outline_bars For sample data (if `density` is `"histogram"`) and for discrete analytical
