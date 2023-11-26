@@ -68,6 +68,14 @@ test_that("bandwidth estimators work", {
   expect_equal(bandwidth_dpi()(x), bw.SJ(x, method = "dpi"))
 })
 
+test_that("bandwidth fallback works", {
+  x = c(rep(1, 10), 1.1)
+
+  expect_warning(expect_equal(bandwidth_nrd(x), bw.nrd0(x)), class = "ggdist_warn_bandwidth_fallback")
+  expect_warning(expect_equal(bandwidth_SJ(x), bw.nrd0(x)), class = "ggdist_warn_bandwidth_fallback")
+  expect_warning(expect_equal(bandwidth_dpi(x), bw.nrd0(x)), class = "ggdist_warn_bandwidth_fallback")
+})
+
 
 # adaptive density estimator ----------------------------------------------
 
