@@ -46,7 +46,6 @@ Suggests:
     patchwork,
     covr,
     rmarkdown,
-    png,
     fda,
     forcats,
     purrr (>= 0.2.3),
