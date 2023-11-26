@@ -12,33 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
   
-<style type="text/css">
-.kable-table table {
-  margin-left: 0;
-}
-img {
-  border: none;
-}
-</style>
-
-```{r chunk_options, include=FALSE}
-tiny_width = 5.5
-tiny_height = 3 + 2/3
-small_width = med_width = 6.75
-small_height = med_height = 4.5
-large_width = 8
-large_height = 5.25
-
-knitr::opts_chunk$set(
-  fig.width = small_width,
-  fig.height = small_height
-)
-if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
-  knitr::opts_chunk$set(
-    dev = "png",
-    dev.args = list(type = "cairo")
-  )
-}
+```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
@@ -407,7 +381,7 @@ When `side` is `"both"`, these layouts look like this:
 Thus, it is possible to create beeswarm plots by using `geom_dots()`
 with `side = "both"`:
 
-```{r beeswarm_bin}
+```{r beeswarm_bin, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
 
 abc_df = data.frame(
@@ -424,7 +398,7 @@ abc_df %>%
 `side = "both"` also tends to work well with the `"hex"` and `"swarm"` layouts for 
 more classic-looking "beeswarm" plots:
 
-```{r beeswarm_hex}
+```{r beeswarm_hex, fig.width = small_width, fig.height = small_height}
 abc_df %>%
   ggplot(aes(x = abc, y = value)) +
   geom_dots(side = "both", layout = "hex", stackratio = 0.92) +
@@ -433,7 +407,7 @@ abc_df %>%
 
 And with `"swarm"`:
 
-```{r beeswarm}
+```{r beeswarm, fig.width = small_width, fig.height = small_height}
 abc_df %>%
   ggplot(aes(x = abc, y = value)) +
   geom_dots(side = "both", layout = "swarm") +
@@ -448,7 +422,7 @@ which use the `"swarm"` and `"weave"` layouts respectively. These also use
 `side = "both"`, and are intended to make it easy to create good-looking beeswarm 
 plots *without* manually tweaking settings:
 
-```{r geom_weave}
+```{r geom_weave, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
 
 swarm_data = data.frame(
@@ -458,12 +432,12 @@ swarm_data = data.frame(
 
 swarm_plot = swarm_data %>%
   ggplot(aes(x = g, y = y)) +
-  geom_swarm(linewidth = 0) +
+  geom_swarm(linewidth = 0, alpha = 0.75) +
   labs(title = "geom_swarm()")
 
 weave_plot = swarm_data %>%
   ggplot(aes(x = g, y = y)) +
-  geom_weave(linewidth = 0) +
+  geom_weave(linewidth = 0, alpha = 0.75) +
   labs(title = "geom_weave()")
 
 swarm_plot + weave_plot
@@ -476,7 +450,7 @@ For example, we can vary the `fill` aesthetic to create two
 subgroups, and use `position = "dodge"` to dodge entire "swarms" at once so
 the subgroups do not overlap:
 
-```{r beeswarm_dodge}
+```{r beeswarm_dodge, fig.width = small_width, fig.height = small_height}
 set.seed(12345)
 
 abcc_df = data.frame(
@@ -487,7 +461,7 @@ abcc_df = data.frame(
 
 abcc_df %>%
   ggplot(aes(y = value, x = abc, fill = hi)) +
-  geom_weave(position = "dodge", linewidth = 0) +
+  geom_weave(position = "dodge", linewidth = 0, alpha = 0.75) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
     'geom_weave(position = "dodge")',
@@ -503,10 +477,10 @@ numbers from `0:24`, are supported) and using the `color` aesthetic.
 
 For example, we can vary `shape` and `color` simultaneously:
 
-```{r beeswarm_shape_color}
+```{r beeswarm_shape_color, fig.width = small_width, fig.height = small_height}
 abcc_df %>%
   ggplot(aes(y = value, x = abc, shape = abc, color = hi)) +
-  geom_weave(position = "dodge") +
+  geom_weave(position = "dodge", alpha = 0.75) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
     'geom_weave(position = "dodge")',
@@ -526,7 +500,7 @@ dots in data order within the layout but allow aesthetics to vary across them.
 
 For example:
 
-```{r beeswarm_shape_color_together}
+```{r beeswarm_shape_color_together, fig.width = small_width, fig.height = small_height}
 abcc_df %>%
   ggplot(aes(y = value, x = abc, fill = hi, group = NA)) +
   geom_dots(linewidth = 0) +
@@ -543,7 +517,7 @@ override this by passing a variable to the `order` aesthetic, which will set
 the sort order within bins. This can be used to create "stacked" dotplots by
 setting `order` to a discrete variable:
 
-```{r beeswarm_shape_color_together_stacked}
+```{r beeswarm_shape_color_together_stacked, fig.width = small_width, fig.height = small_height}
 abcc_df %>%
   ggplot(aes(y = value, x = abc, fill = hi, group = NA, order = hi)) +
   geom_dots(linewidth = 0) +
@@ -560,7 +534,7 @@ Continuous variables can also be varied within groups. Since continuous variable
 will not automatically set the `group` aesthetic, we can simply assign them to
 the desired aesthetic we want to vary:
 
-```{r beeswarm_shape_color_continuous}
+```{r beeswarm_shape_color_continuous, fig.width = small_width, fig.height = small_height}
 abcc_df %>%
   arrange(hi) %>%
   ggplot(aes(y = value, x = abc, shape = abc, color = value)) +
@@ -648,7 +622,7 @@ the bounds of the distribution. Otherwise, the dotplot will be smoothed incorrec
 For example, on a Beta(0.5, 0.5) distribution, which is bounded between 0 and 1,
 we should use `smooth = smooth_bounded(bounds = c(0, 1))`:
 
-```{r smooth_bounded_versus_unbounded}
+```{r smooth_bounded_versus_unbounded, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
 x = rbeta(2000, 0.5, 0.5)
 
@@ -761,7 +735,7 @@ accept specifications for distributions in one of two ways:
 
 For example, here are a variety of distributions:
 
-```{r dotsinterval_dist}
+```{r dotsinterval_dist, fig.width = small_width, fig.height = small_height}
 dist_df = tibble(
   dist = c(dist_normal(1,0.25), dist_beta(3,3), dist_gamma(5,5)),
   dist_name = format(dist)
@@ -782,7 +756,7 @@ referred to as a *quantile dotplot*, which can help people make better decisions
 This can be changed using the `quantiles` argument. For example, we can plot the same
 distributions again, now with 1000 quantiles:
 
-```{r dotsinterval_dist_1000}
+```{r dotsinterval_dist_1000, fig.width = small_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(y = dist_name, xdist = dist)) +
   stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci) +
@@ -802,7 +776,7 @@ and correspond to the smallest interval containing that dot. We can use these
 to color dots according to the interval containing them (we'll also use the
 `"weave"` layout since it maintains x positions better than the `"bin"` layout):
 
-```{r dotsinterval_dist_1000_level_color}
+```{r dotsinterval_dist_1000_level_color, fig.width = small_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))) +
   stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave", slab_color = NA) +
@@ -830,7 +804,7 @@ aesthetics.
 Thus, because it relies upon generated variables from the stat, you can use the
 `after_stat()` or `stage()` functions from `ggplot2` to map those variables. For example:
 
-```{r dotsinterval_dist_color}
+```{r dotsinterval_dist_color, fig.width = small_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(x))) +
   stat_dotsinterval(slab_shape = 19, quantiles = 500) +
@@ -857,7 +831,7 @@ color aesthetics).
 Another potentially useful application of post-stat aesthetic computation is to
 apply thresholds on a dotplot, coloring points on one side of a line differently:
 
-```{r dist_dots_shape_color, fig.width = med_width, fig.height = med_height}
+```{r dist_dots_shape_color, fig.width = small_width, fig.height = small_height}
 ab_df = tibble(
   ab = c("a", "b"),
   mean = c(5, 7),
@@ -885,7 +859,7 @@ side of a cutoff when coloring dots within dotplots. Thus it can be useful to us
 `"weave"` or `"swarm"` layouts, which tend to position dots closer to their true
 `x` positions, rather than at bin centers:
 
-```{r dist_dots_weave, fig.width = med_width, fig.height = med_height}
+```{r dist_dots_weave, fig.width = small_width, fig.height = small_height}
 ab_df %>%
   ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = after_stat(x < 6))) +
   stat_dots(position = "dodge", color = NA, layout = "weave") +
@@ -916,7 +890,7 @@ the total area of its corresponding dotplot).
 We'll use a subsample of of the data to show how it might look on a reasonably-sized
 dataset.
 
-```{r halfeye_dotplot}
+```{r halfeye_dotplot, fig.width = small_width, fig.height = small_height}
 set.seed(12345) # for reproducibility
 
 data.frame(

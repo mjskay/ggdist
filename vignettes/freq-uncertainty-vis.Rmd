@@ -11,34 +11,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
-<style type="text/css">
-.kable-table table {
-  margin-left: 0;
-}
-img {
-  border: none;
-}
-</style>
 
-```{r chunk_options, include=FALSE}
-tiny_width = 5.5
-tiny_height = 3 + 2/3
-small_width = med_width = 6.75
-small_height = med_height = 4.5
-large_width = 8
-large_height = 5.25
-
-knitr::opts_chunk$set(
-  fig.width = small_width,
-  fig.height = small_height
-)
-if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
-  knitr::opts_chunk$set(
-    dev = "png",
-    dev.args = list(type = "cairo")
-  )
-}
+```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
@@ -131,7 +105,7 @@ The `stat_slabinterval()` family of functions supports these objects.
 
 Putting everything together, we have:
 
-```{r halfeye}
+```{r halfeye, fig.width = tiny_width, fig.height = tiny_height}
 m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
@@ -154,7 +128,7 @@ With:
 
 Putting everything together, we have:
 
-```{r halfeye_with_data}
+```{r halfeye_with_data, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -170,7 +144,7 @@ ABC %>%
 
 Of course, this works with the entire `stat_slabinterval()` family. Here are gradient plots instead:
 
-```{r gradientinterval}
+```{r gradientinterval, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -187,7 +161,7 @@ discussion in the section on gradient plots in `vignette("slabinterval")`.
 
 Or complementary cumulative distribution function (CCDF) bar plots:
 
-```{r ccdfinterval}
+```{r ccdfinterval, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -199,7 +173,7 @@ ABC %>%
 
 We can also create quantile dotplots by using the `dots` family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a *frequency framing* approach to uncertainty communication that can be easier for people to interpret ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)):
 
-```{r dotplot}
+```{r dotplot, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -222,7 +196,7 @@ m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 
 Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_lineribbon()`:
 
-```{r lineribbon}
+```{r lineribbon, fig.width = tiny_width, fig.height = tiny_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
@@ -250,7 +224,7 @@ Here we'll "whiten" the fill color of each band according to its `level` (the `l
 variable is computed by `stat_lineribbon()` and is an ordered factor version of
 `.width`):
 
-```{r lineribbon_lightened}
+```{r lineribbon_lightened, fig.width = tiny_width, fig.height = tiny_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%

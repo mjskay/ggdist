@@ -12,33 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
   
-<style type="text/css">
-.kable-table table {
-  margin-left: 0;
-}
-img {
-  border: none;
-}
-</style>
-
-```{r chunk_options, include=FALSE}
-tiny_width = 5.5
-tiny_height = 3 + 2/3
-small_width = med_width = 6.75
-small_height = med_height = 4.5
-large_width = 8
-large_height = 5.25
-
-knitr::opts_chunk$set(
-  fig.width = small_width,
-  fig.height = small_height
-)
-if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
-  knitr::opts_chunk$set(
-    dev = "png",
-    dev.args = list(type = "cairo")
-  )
-}
+```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
@@ -203,18 +177,7 @@ df %>%
 To get a gradient that ramps down to the background color, you could also use
 the `fill_ramp` aesthetic provided by `ggdist` (see `help("scale_fill_ramp")`).
 It is necessary to invert the range (`range = c(1, 0)`) so that the gradient
-is dark in the middle (rather than the outside):
-
-```{r stat_lineribbon_gradient_ramp, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  ggplot(aes(x = x, y = y, fill_ramp = after_stat(.width))) +
-  stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
-  scale_fill_ramp_continuous(range = c(1, 0)) +
-  labs(
-    title = "stat_lineribbon(.width = ppoints(50))",
-    subtitle = "aes(fill_ramp = after_stat(.width))"
-  )
-```
+is dark in the middle (rather than the outside).
 
 The default legend for the `fill_ramp` and `color_ramp` scales is `guide_legend()`,
 which uses discrete legends even for continuous scales. To get a gradient-style
