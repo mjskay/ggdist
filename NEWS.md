@@ -10,6 +10,8 @@ New features and enhancements:
   to `bandwidth_nrd0()` when they fail, with a warning that suggests trying 
   a dotplot or histogram (as these failures tend to happen on data that is not
   a good candidate for a density plot in the first place) (#196).
+* Much faster (C++) implementation of Wilkinson dotplot binning, especially
+  for large dotplots.
 
 Bug fixes:
 

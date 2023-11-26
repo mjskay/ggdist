@@ -410,21 +410,8 @@ wilkinson_bin_to_right = function(x, width) {
     ))
   }
 
-  # determine bins and midpoints of bins
-  bins = rep(NA_integer_, length(x))
-  bins[[1]] = 1L
-  current_bin = 1L
-  first_x = x[[1]]
-  n = 1
-  for (i in seq_along(x)[-1]) {
-    # This is equivalent to x[[i]] - first_x >= width but it accounts for machine precision.
-    # If we instead used `>=` directly some things that should be symmetric will not be
-    if (x[[i]] - first_x - width >= -.Machine$double.eps) {
-      current_bin = current_bin + 1L
-      first_x = x[[i]]
-    }
-    bins[[i]] = current_bin
-  }
+  # determine bins
+  bins = wilkinson_bin_to_right_(x, width)
 
   # determine bin positions
   # can take advantage of the fact that bins is sorted runs of numbers to

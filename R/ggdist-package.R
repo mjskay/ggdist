@@ -1,3 +1,9 @@
+## usethis namespace: start
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib ggdist, .registration = TRUE
+## usethis namespace: end
+NULL
+
 #' Visualizations of Distributions and Uncertainty
 #'
 #' @docType package

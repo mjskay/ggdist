@@ -34,7 +34,8 @@ Imports:
     distributional (>= 0.3.2),
     numDeriv,
     glue,
-    quadprog
+    quadprog,
+    Rcpp
 Suggests:
     knitr,
     testthat (>= 3.0.0),
@@ -70,6 +71,7 @@ Collate:
     "ggdist-package.R"
     "util.R"
     "rd.R"
+    "RcppExports.R"
     "abstract_geom.R"
     "abstract_stat.R"
     "abstract_stat_slabinterval.R"
@@ -123,3 +125,5 @@ Collate:
     "deprecated.R"
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
+LinkingTo: 
+    Rcpp
