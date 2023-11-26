@@ -148,15 +148,18 @@ auto_partial = function(f, name = NULL) {
     partial_self
   }
 
-  new_function(
+  new_f = new_function(
     args,
     expr({
-      if (!!any_required_args_missing) return((!!partial_self)(!!name))
+      if (!!any_required_args_missing) return((!!partial_self_f)(!!name))
 
       !!!f_body
     }),
     env = environment(f)
   )
+  attr(new_f, "srcref") = attr(f, "srcref")
+
+  new_f
 }
 
 #' @importFrom rlang get_expr

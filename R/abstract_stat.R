@@ -136,7 +136,7 @@ make_stat = function(stat, geom,
   args_to_syms = syms(names(args_to_defaults))
   names(args_to_syms) = names(args_to_defaults)
 
-  new_function(
+  new_f = new_function(
     c(
       pairlist2(
         mapping = mapping,
@@ -168,4 +168,7 @@ make_stat = function(stat, geom,
     }),
     env = parent.frame()
   )
+  attr(body(new_f), "srcref") = NULL
+
+  new_f
 }
