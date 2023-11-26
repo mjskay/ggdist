@@ -197,7 +197,7 @@ and stats/geoms based on it (like eye plots).
 The following additional scales / aesthetics are defined for use with \code{\link[=geom_slabinterval]{geom_slabinterval()}} and
 related geoms:
 
-\enumerate{
+\describe{
 \item{\verb{scale_point_color_* }}{Point color}
 \item{\verb{scale_point_fill_* }}{Point fill color}
 \item{\verb{scale_point_alpha_* }}{Point alpha level / opacity}
@@ -231,7 +231,7 @@ this is what \code{guide_colorbar2} is for:
 
 These scales have been deprecated:
 
-\enumerate{
+\describe{
 \item{\verb{scale_interval_size_* }}{Use \verb{scale_linewidth_*}}
 \item{\verb{scale_slab_size_* }}{Slab \verb{scale_size_linewidth_*}}
 }

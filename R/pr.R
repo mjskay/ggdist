@@ -56,11 +56,11 @@
 #' functions (CDFs). Valid operators inside `Pr_()` are:
 #'
 #' - `<`, `<=`, `>`, `>=`: generates values of the cumulative distribution
-#'   function (CDF) or complementary CDF by comparing one of {`x`, `y`, `value`}
-#'   to one of {`xdist`, `ydist`, `dist`, `X`, `Y`}. For example, `Pr_(xdist <= x)`
+#'   function (CDF) or complementary CDF by comparing one of \{`x`, `y`, `value`\}
+#'   to one of \{`xdist`, `ydist`, `dist`, `X`, `Y`\}. For example, `Pr_(xdist <= x)`
 #'   gives the CDF and `Pr_(xdist > x)` gives the CCDF.
 #' - `%in%`: currently can only be used with `interval` on the right-hand side:
-#'   gives the probability of {`x`, `y`, `value`} (left-hand side) being in the
+#'   gives the probability of \{`x`, `y`, `value`\} (left-hand side) being in the
 #'   smallest interval the stat generated that contains the value; e.g.
 #'   `Pr_(x %in% interval)`.
 #'

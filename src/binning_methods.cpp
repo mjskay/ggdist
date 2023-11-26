@@ -10,7 +10,7 @@ IntegerVector wilkinson_bin_to_right_(const NumericVector& x, double width) {
   int current_bin = 1;
   double first_x = x[0];
 
-  for(int i = 1; i < n; i++) {
+  for (int i = 1; i < n; i++) {
     // This is equivalent to x[i] - first_x >= width but it accounts for machine precision.
     // If we instead used `>=` directly some things that should be symmetric will not be
     if (x[i] - first_x - width >= -DBL_EPSILON) {

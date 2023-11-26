@@ -62,11 +62,11 @@ used as synonyms for \code{xdist} and \code{ydist}.
 functions (CDFs). Valid operators inside \code{Pr_()} are:
 \itemize{
 \item \code{<}, \code{<=}, \code{>}, \code{>=}: generates values of the cumulative distribution
-function (CDF) or complementary CDF by comparing one of {\code{x}, \code{y}, \code{value}}
-to one of {\code{xdist}, \code{ydist}, \code{dist}, \code{X}, \code{Y}}. For example, \code{Pr_(xdist <= x)}
+function (CDF) or complementary CDF by comparing one of \{\code{x}, \code{y}, \code{value}\}
+to one of \{\code{xdist}, \code{ydist}, \code{dist}, \code{X}, \code{Y}\}. For example, \code{Pr_(xdist <= x)}
 gives the CDF and \code{Pr_(xdist > x)} gives the CCDF.
 \item \code{\%in\%}: currently can only be used with \code{interval} on the right-hand side:
-gives the probability of {\code{x}, \code{y}, \code{value}} (left-hand side) being in the
+gives the probability of \{\code{x}, \code{y}, \code{value}\} (left-hand side) being in the
 smallest interval the stat generated that contains the value; e.g.
 \code{Pr_(x \%in\% interval)}.
 }

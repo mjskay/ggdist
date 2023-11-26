@@ -14,7 +14,7 @@
 #' The following additional scales / aesthetics are defined for use with [geom_slabinterval()] and
 #' related geoms:
 #'
-#' \enumerate{
+#' \describe{
 #'   \item{`scale_point_color_* `}{Point color}
 #'   \item{`scale_point_fill_* `}{Point fill color}
 #'   \item{`scale_point_alpha_* `}{Point alpha level / opacity}
@@ -48,7 +48,7 @@
 #'
 #' These scales have been deprecated:
 #'
-#' \enumerate{
+#' \describe{
 #'   \item{`scale_interval_size_* `}{Use `scale_linewidth_*`}
 #'   \item{`scale_slab_size_* `}{Slab `scale_size_linewidth_*`}
 #' }
