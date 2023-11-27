@@ -327,27 +327,18 @@ df = tribble(
   unnest(value)
 ```
 
-We can summarize it at the group level using an eye plot with `stat_eye()` (ignoring subgroups for now):
-
-```{r group_eye, fig.width = tiny_height, fig.height = tiny_height}
-df %>%
-  ggplot(aes(y = group, x = value)) +
-  stat_eye() +
-  ggtitle("stat_eye()")
-```
-
-Users of older versions of `tidybayes` (which used to contain the `ggdist` geoms) might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in version 2 of `tidybayes` (see the description above), `stat_eye()` is now the preferred spelling. `geom_eye()` will continue to work for now, but is deprecated and may throw a warning in future versions.
-
-We can also use `stat_halfeye()` instead to get densities instead of violins:
+We can summarize it at the group level using a "half-eye" plot, which combines a density plot with intervals
+(ignoring subgroups for now):
 
 ```{r group_halfeye, fig.width = tiny_height, fig.height = tiny_height}
 df %>%
   ggplot(aes(y = group, x = value)) +
   stat_halfeye() +
-  ggtitle("stat_halfeye()")
+  ggtitle("stat_halfeye() (or stat_slabinterval())")
 ```
 
-Or use the `side` parameter to more finely control where the slab (in this case, the density) is drawn:
+We can use the `side` parameter to more finely control where the slab (in this case, the density) is drawn;
+`stat_eye()` is also a shortcut for `stat_slabinterval(side = "both")`, as it creates "eye" plots:
 
 ```{r eye_side, fig.width = med_width, fig.height = small_height}
 p = df %>%
@@ -355,9 +346,9 @@ p = df %>%
   panel_border()
 
 plot_grid(ncol = 3, align = "hv",
-  p + stat_eye(side = "left") + labs(title = "stat_eye()", subtitle = "side = 'left'"),
-  p + stat_eye(side = "both") + labs(subtitle = "side = 'both'"),
-  p + stat_eye(side = "right")  + labs(subtitle = "side = 'right'")
+  p + stat_slabinterval(side = "left") + labs(title = "stat_slabinterval()", subtitle = "side = 'left'"),
+  p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'"),
+  p + stat_slabinterval(side = "right")  + labs(subtitle = "side = 'right'")
 )
 ```
 
@@ -373,15 +364,15 @@ p = df %>%
 
 plot_grid(ncol = 3, align = "hv", 
   # side = "left" would give the same result
-  p + stat_eye(side = "left") + ggtitle("stat_eye()") + labs(subtitle = "side = 'bottom'"),
-  p + stat_eye(side = "both") + labs(subtitle = "side = 'both'"),
+  p + stat_slabinterval(side = "left") + ggtitle("stat_slabinterval()") + labs(subtitle = "side = 'bottom'"),
+  p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'"),
   # side = "right" would give the same result
-  p + stat_eye(side = "right") + labs(subtitle = "side = 'top'")
+  p + stat_slabinterval(side = "right") + labs(subtitle = "side = 'top'")
 )
 ```
 
-Eye plots are also designed to support dodging through the standard mechanism of `position = "dodge"`. 
-Unlike with geom_violin(), densities in groups that are not dodged (here, 'a' and 'b') have the same area and max width as those in groups that are dodged ('c'):
+The slabinterval geoms support dodging through the standard mechanism of `position = "dodge"`. 
+Unlike with `geom_violin()`, densities in groups that are not dodged (here, 'a' and 'b') have the same area and max width as those in groups that are dodged ('c'):
 
 ```{r eye_dodge}
 df %>%
@@ -440,7 +431,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   )
 ```
 
-If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using `stat_halfeye(show_interval = FALSE, ...)`. A shortcut for `stat_halfeye(show_interval = FALSE, ...)` is `stat_slab()`. We'll also turn off the fill color with `fill = NA` to make the stacking easier to see, and use outline `color` to show the value of `alpha`:
+If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using `stat_slabinterval(show_interval = FALSE, ...)`. A shortcut for `stat_slabinterval(show_interval = FALSE, ...)` is `stat_slab()`. We'll also turn off the fill color with `fill = NA` to make the stacking easier to see, and use outline `color` to show the value of `alpha`:
 
 ```{r beta_overplotted_slabh}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
@@ -456,18 +447,10 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   )
 ```
 
-Distributional vectors also make it easy to visualize different distribution types simultaneously. For example, if we wished to compare a Student's t distribution and a Normal distribution, we can combine them into a single vector of distributions and plot them (these two distributions are particularly useful as they are often needed for visualizing frequentist confidence distributions---see `vignette("freq-uncertainty-vis")`---and Bayesian priors):
+### Visualizing frequentist uncertainty
 
-```{r norm_vs_t, fig.width = tiny_height, fig.height = tiny_height}
-tibble(
-  dist = c(dist_normal(0,1), dist_student_t(3, 0, 1))
-) %>%
-  ggplot(aes(y = format(dist), xdist = dist)) +
-  stat_halfeye() +
-  ggtitle("stat_halfeye()", "aes(xdist = dist)")
-```
-
-The `format()` function in `aes(y = format(dist))` generates a string containing a human-readable name for the distribution for labeling purposes.
+Distributional vectors also make it easy to visualize frequentist *confidence* distributions, which
+are often Normal or Student's t distributions. For examples of this, see `vignette("freq-uncertainty-vis")`. 
 
 ### Visualizing priors
 
@@ -525,6 +508,8 @@ priors %>%
   )
 ```
 
+The `format()` function in `format(.dist_obj)` generates a string containing a human-readable name for the distribution for labeling purposes.
+
 ### Sharing thickness scaling across geometries
 
 In some cases, such as visualizing priors and posteriors, it can be helpful to
@@ -577,7 +562,7 @@ data.frame(dist = dist_lognormal(log(10), 2*log(10))) %>%
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 ```
 
-As expected, a log-Normal density plotted on the log scale appears Normal. The Jacobian for the scale transformation is applied to the density so that the correct density is shown on the log scale. Internally, ggdist attempts to do symbolic differentiation on scale transformation functions (and if that fails, uses numerical differentiation) to calculate the Jacobian so that the `stat_slabinterval()` family works generically across the different scale transformations supported by ggplot.
+As expected, a log-Normal density plotted on the log scale appears Normal. The Jacobian correction for the scale transformation is applied to the density so that the correct density is shown on the log scale. Internally, ggdist attempts to do symbolic differentiation on scale transformation functions (and if that fails, uses numerical differentiation) to calculate the Jacobian so that the `stat_slabinterval()` family works generically across the different scale transformations supported by ggplot.
 
 ### Summing up eye plots: `stat_[half]eye`
 
@@ -649,30 +634,11 @@ This was inspired by an example from Isabella Ghement.
 
 Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](https://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
 
-For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
+For all of the examples above, both on sample data and analytical distributions, you can replace `slabinterval` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
 
 `stat_ccdfinterval()` is roughly equivalent to `stat_slabinterval(aes(thickness = after_stat(1 - cdf)), justification = 0.5, side = "topleft", normalize = "none", expand = TRUE)`
 
 ### On sample data
-
-`stat_[c]cdfinterval` has the following basic combinations:
-
-```{r cdfinterval_family, fig.width = med_width, fig.height = med_width}
-p = df %>%
-  ggplot(aes(x = group, y = value)) +
-  panel_border()
-
-ph = df %>%
-  ggplot(aes(y = group, x = value)) +
-  panel_border()
-
-plot_grid(ncol = 2, align = "hv",
-  p + stat_ccdfinterval() + labs(title = "stat_ccdfinterval()", subtitle = "vertical"),
-  ph + stat_ccdfinterval() + labs(subtitle = "horizontal"),
-  p + stat_cdfinterval() + labs(title = "stat_cdfinterval()", subtitle = "vertical"),
-  ph + stat_cdfinterval()  + labs(subtitle = "horizontal")
-)
-```
 
 The CCDF interval plots are probably more useful than the CDF interval plots in most cases, as the bars typically grow up from the baseline. For example, replacing `stat_eye()` with `stat_ccdfinterval()` in our previous subgroup plot produces CCDF bar plots:
 
@@ -694,41 +660,13 @@ df %>%
   ggtitle("stat_ccdfinterval(position = 'dodge', justification = 1)")
 ```
 
-The `side` parameter also works in the same way it does with `stat_eye()`. Here we'll demonstrate it horizontally:
-
-```{r ccdf_side, fig.width = med_width, fig.height = med_height/1.5}
-p = df %>%
-  ggplot(aes(x = value, y = group)) +
-  expand_limits(x = 0) +
-  panel_border()
-
-plot_grid(ncol = 3, align = "hv", 
-  # side = "left" would give the same result
-  p + stat_ccdfinterval(side = "bottom") + labs(subtitle = "side = 'bottom'") +
-    ggtitle("stat_ccdfinterval()"),
-  p + stat_ccdfinterval(side = "both") + labs(subtitle = "side = 'both'"),
-  # side = "right" would give the same result
-  p + stat_ccdfinterval(side = "top") + labs(subtitle = "side = 'top'")
-)
-```
+All other parameters, like `orientation` and `side`, work in the same way it does with the basic
+`stat_slabinterval()`.
 
 ### On analytical distributions
 
-You can also use `stat_ccdfinterval()` to visualize analytical distributions or distribution vectors, just as you can with `stat_eye()` and `stat_halfeye()`.
-
-By default, `stat_slabinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` of the distributions to determine their extent (unless the lower or upper limit of the distribution's support is finite, in which case that value is used). You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown, as before:
-
-```{r dist_ccdf_dodge}
-dist_df %>%
-  ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
-  stat_ccdfinterval(position = "dodge") +
-  expand_limits(y = 0) +
-  ggtitle(
-    "stat_ccdfinterval(position = 'dodge')",
-    "aes(x = dist_normal(mean, sd)) + expand_limits(y = 0)"
-  ) +
-  coord_cartesian(expand = FALSE)
-```
+As with other plot types, you can also use `stat_ccdfinterval()`/`stat_cdfinterval()` to visualize analytical 
+distributions or distribution vectors, using the `xdist` or `ydist` aesthetic (see previous examples).
 
 ### Summing up CDF bar plots
 

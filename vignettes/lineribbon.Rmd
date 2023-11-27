@@ -144,15 +144,8 @@ df %>%
   scale_fill_brewer()
 ```
 
-The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above. We can
-change this as well; for example:
-
-```{r stat_lineribbon_width, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  ggplot(aes(x = x, y = y)) +
-  stat_lineribbon(.width = c(.66, .95)) +
-  scale_fill_brewer()
-```
+The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above. 
+We can change this to get other sets of any number of intervals (e.g., `c(.66, .95)`, `c(.80, .95, .99)`, etc).
 
 ### Lineribbon "gradients"
 
@@ -197,7 +190,7 @@ df %>%
 
 It's worth noting that the use of `.width` as the fill color means these gradients
 are akin to classical "fan" charts; i.e. the fill color is proportional to the
-CDF or the so-called "confidence function". We may instead want the fill color
+folded CDF or the so-called "confidence function". We may instead want the fill color
 to be proportional to the *density*.
 
 ### Lineribbon density gradients
