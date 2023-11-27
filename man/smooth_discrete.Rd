@@ -36,7 +36,7 @@ If \code{x} is missing, returns a partial application of itself. See \link{autom
 }
 \description{
 \strong{Note:} Better-looking bar dotplots are typically easier to achieve using
-\code{layout = "bar"} with the \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} familty instead of
+\code{layout = "bar"} with the \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} family instead of
 \code{smooth = "bar"} or \code{smooth = "discrete"}.
 
 Smooths \code{x} values where \code{x} is presumed to be discrete, returning a new \code{x}

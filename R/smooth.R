@@ -130,7 +130,7 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #'
 #' @description
 #' **Note:** Better-looking bar dotplots are typically easier to achieve using
-#' `layout = "bar"` with the [geom_dotsinterval()] familty instead of
+#' `layout = "bar"` with the [geom_dotsinterval()] family instead of
 #' `smooth = "bar"` or `smooth = "discrete"`.
 #'
 #' Smooths `x` values where `x` is presumed to be discrete, returning a new `x`
