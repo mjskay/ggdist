@@ -24,7 +24,7 @@ and stats/geoms based on it (like eye plots)."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -250,23 +250,50 @@ If the purpose is to zoom, use the limit argument in the coordinate system
     <h2>Details</h2>
     <p>The following additional scales / aesthetics are defined for use with <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> and
 related geoms:</p>
-<ol><li><p><code>scale_point_color_* </code>Point color</p></li>
-<li><p><code>scale_point_fill_* </code>Point fill color</p></li>
-<li><p><code>scale_point_alpha_* </code>Point alpha level / opacity</p></li>
-<li><p><code>scale_point_size_* </code>Point size</p></li>
-<li><p><code>scale_interval_color_* </code>Interval line color</p></li>
-<li><p><code>scale_interval_alpha_* </code>Interval alpha level / opacity</p></li>
-<li><p><code>scale_interval_linetype_* </code>Interval line type</p></li>
-<li><p><code>scale_slab_color_* </code>Slab outline color</p></li>
-<li><p><code>scale_slab_fill_* </code>Slab fill color</p></li>
-<li><p><code>scale_slab_alpha_* </code>Slab alpha level / opacity. The default settings of
+<dl><dt><code>scale_point_color_* </code></dt>
+<dd><p>Point color</p></dd>
+
+<dt><code>scale_point_fill_* </code></dt>
+<dd><p>Point fill color</p></dd>
+
+<dt><code>scale_point_alpha_* </code></dt>
+<dd><p>Point alpha level / opacity</p></dd>
+
+<dt><code>scale_point_size_* </code></dt>
+<dd><p>Point size</p></dd>
+
+<dt><code>scale_interval_color_* </code></dt>
+<dd><p>Interval line color</p></dd>
+
+<dt><code>scale_interval_alpha_* </code></dt>
+<dd><p>Interval alpha level / opacity</p></dd>
+
+<dt><code>scale_interval_linetype_* </code></dt>
+<dd><p>Interval line type</p></dd>
+
+<dt><code>scale_slab_color_* </code></dt>
+<dd><p>Slab outline color</p></dd>
+
+<dt><code>scale_slab_fill_* </code></dt>
+<dd><p>Slab fill color</p></dd>
+
+<dt><code>scale_slab_alpha_* </code></dt>
+<dd><p>Slab alpha level / opacity. The default settings of
 <code>scale_slab_alpha_continuous</code> differ from <code><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha_continuous()</a></code> and
 are designed for gradient plots (e.g. <code><a href="stat_gradientinterval.html">stat_gradientinterval()</a></code>) by ensuring that
-densities of 0 get mapped to 0 in the output.</p></li>
-<li><p><code>scale_slab_linewidth_* </code>Slab outline line width</p></li>
-<li><p><code>scale_slab_linetype_* </code>Slab outline line type</p></li>
-<li><p><code>scale_slab_shape_* </code>Slab dot shape (for <code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code>)</p></li>
-</ol><p>See the corresponding scale documentation in ggplot for more information; e.g.
+densities of 0 get mapped to 0 in the output.</p></dd>
+
+<dt><code>scale_slab_linewidth_* </code></dt>
+<dd><p>Slab outline line width</p></dd>
+
+<dt><code>scale_slab_linetype_* </code></dt>
+<dd><p>Slab outline line type</p></dd>
+
+<dt><code>scale_slab_shape_* </code></dt>
+<dd><p>Slab dot shape (for <code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code>)</p></dd>
+
+
+</dl><p>See the corresponding scale documentation in ggplot for more information; e.g.
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_color_continuous()</a></code>, etc.</p>
 <p>Other scale functions can be used with the aesthetics/scales defined here by using the <code>aesthetics</code>
 argument to that scale function. For example, to use color brewer scales with the <code>point_color</code> aesthetic:</p>
@@ -275,9 +302,14 @@ argument to that scale function. For example, to use color brewer scales with th
 this is what <code>guide_colorbar2</code> is for:</p>
 <p><code>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</code></p>
 <p>These scales have been deprecated:</p>
-<ol><li><p><code>scale_interval_size_* </code>Use <code>scale_linewidth_*</code></p></li>
-<li><p><code>scale_slab_size_* </code>Slab <code>scale_size_linewidth_*</code></p></li>
-</ol></div>
+<dl><dt><code>scale_interval_size_* </code></dt>
+<dd><p>Use <code>scale_linewidth_*</code></p></dd>
+
+<dt><code>scale_slab_size_* </code></dt>
+<dd><p>Slab <code>scale_size_linewidth_*</code></p></dd>
+
+
+</dl></div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other ggplot2 scales: <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_color_continuous()</a></code>, etc.</p>

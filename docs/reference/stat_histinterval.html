@@ -29,7 +29,7 @@ stat_slabinterval(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -83,9 +83,9 @@ stat_slabinterval(
     <p>Shortcut version of <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code> with <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> for
 creating histogram + interval plots.</p>
 <p>Roughly equivalent to:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_slabinterval</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">density =</span> <span class="st">"histogram"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">stat_slabinterval</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">density =</span> <span class="st">"histogram"</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>)</span></code></pre><p></p></div>
     </div>
 
     <div id="ref-usage">
@@ -225,11 +225,12 @@ the data and then uses a bounded density estimator based on the reflection metho
 
 <dt>p_limits</dt>
 <dd><p>Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is <code>c(.001, .999)</code>, then a slab is drawn
+limits of <em>theoretical</em> distributions (distributions from <em>samples</em> ignore this parameter and determine
+their limits based on the limits of the sample). E.g., if this is <code>c(.001, .999)</code>, then a slab is drawn
 for the distribution from the quantile at <code>p = .001</code> to the quantile at <code>p = .999</code>. If the lower
 (respectively upper) limit is <code>NA</code>, then the lower (upper) limit will be the minimum (maximum) of the
 distribution's support if it is finite, and <code>0.001</code> (<code>0.999</code>) if it is not finite. E.g., if
-<code>p_limits</code> is <code>c(NA, NA)</code> on a gamma distribution the effective value of <code>p_limits</code> would be
+<code>p_limits</code> is <code>c(NA, NA)</code>, on a gamma distribution the effective value of <code>p_limits</code> would be
 <code>c(0, .999)</code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
 it would be equivalent to <code>c(.001, .999)</code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></dd>
 
@@ -384,7 +385,7 @@ is a valid distribution name because R defines the <code><a href="https://rdrr.i
 functions for Normal distributions.</p>
 <p>See the <code><a href="parse_dist.html">parse_dist()</a></code> function for a useful way to generate <code>dist</code> and <code>args</code>
 values from human-readable distribution specs (like <code>"normal(0,1)"</code>). Such specs are also
-produced by other packages (like the <code><a href="https://rdrr.io/pkg/brms/man/get_prior.html" class="external-link">brms::get_prior</a></code> function in brms); thus,
+produced by other packages (like the <code><a href="https://paul-buerkner.github.io/brms/reference/get_prior.html" class="external-link">brms::get_prior</a></code> function in brms); thus,
 <code><a href="parse_dist.html">parse_dist()</a></code> combined with the stats described here can help you visualize the output
 of those functions.</p></li>
 </ul></div>

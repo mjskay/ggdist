@@ -24,7 +24,7 @@ some after_stat() expressions in aesthetic assignments in ggdist stats."><meta p
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -102,11 +102,11 @@ the <strong>Computed Variables</strong> section of <code><a href="stat_slabinter
 the desired probabilities or densities.</p>
 <p>For example, one way to map the density of a distribution onto the <code>alpha</code>
 aesthetic of a slab is to use <code>after_stat(pdf)</code>:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> distributional<span class="sc">::</span><span class="fu">dist_normal</span>(), <span class="at">alpha =</span> <span class="fu">after_stat</span>(pdf)))</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> distributional<span class="sc">::</span><span class="fu">dist_normal</span>(), <span class="at">alpha =</span> <span class="fu">after_stat</span>(pdf)))</span></code></pre><p></p></div>
 <p><span class="pkg">ggdist</span> probability expressions offer an alternative, equivalent syntax:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> distributional<span class="sc">::</span><span class="fu">dist_normal</span>(), <span class="at">alpha =</span> <span class="sc">!!</span><span class="fu">p_</span>(x)))</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> distributional<span class="sc">::</span><span class="fu">dist_normal</span>(), <span class="at">alpha =</span> <span class="sc">!!</span><span class="fu">p_</span>(x)))</span></code></pre><p></p></div>
 <p>Where <code>p_(x)</code> is the probability density function. The use of <code>!!</code> is
 necessary to splice the generated expression into the <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> call; for
 more information, see quasiquotation.</p>
@@ -126,11 +126,11 @@ used as synonyms for <code>xdist</code> and <code>ydist</code>.</p></li>
 <li><p><code>interval</code>: the smallest interval containing the current <code>x</code>/<code>y</code> value.</p></li>
 </ul><p><code>Pr_()</code> generates expressions for probabilities, e.g. cumulative distribution
 functions (CDFs). Valid operators inside <code>Pr_()</code> are:</p><ul><li><p><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>: generates values of the cumulative distribution
-function (CDF) or complementary CDF by comparing one of <code>x</code>, <code>y</code>, <code>value</code>
-to one of <code>xdist</code>, <code>ydist</code>, <code>dist</code>, <code>X</code>, <code>Y</code>. For example, <code>Pr_(xdist &lt;= x)</code>
+function (CDF) or complementary CDF by comparing one of {<code>x</code>, <code>y</code>, <code>value</code>}
+to one of {<code>xdist</code>, <code>ydist</code>, <code>dist</code>, <code>X</code>, <code>Y</code>}. For example, <code>Pr_(xdist &lt;= x)</code>
 gives the CDF and <code>Pr_(xdist &gt; x)</code> gives the CCDF.</p></li>
 <li><p><code>%in%</code>: currently can only be used with <code>interval</code> on the right-hand side:
-gives the probability of <code>x</code>, <code>y</code>, <code>value</code> (left-hand side) being in the
+gives the probability of {<code>x</code>, <code>y</code>, <code>value</code>} (left-hand side) being in the
 smallest interval the stat generated that contains the value; e.g.
 <code>Pr_(x %in% interval)</code>.</p></li>
 </ul><p><code>p_()</code> generates expressions for probability density functions or probability mass

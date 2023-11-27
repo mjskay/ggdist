@@ -131,4 +131,6 @@ I welcome feedback, suggestions, issues, and contributions! I am not particularl
 
 ## Citing `ggdist`
 
-Matthew Kay (`r format(Sys.Date(), "%Y")`). _ggdist: Visualizations of Distributions and Uncertainty_. R package version `r getNamespaceVersion("ggdist")`, <https://mjskay.github.io/ggdist/>. DOI: [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
+Matthew Kay (2024). ggdist: Visualizations of Distributions and Uncertainty in the Grammar of Graphics. _IEEE Transactions on Visualization and Computer Graphics_. DOI: [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
+
+Matthew Kay (`r format(Sys.Date(), "%Y")`). ggdist: Visualizations of Distributions and Uncertainty. R package version `r getNamespaceVersion("ggdist")`, <https://mjskay.github.io/ggdist/>. DOI: [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

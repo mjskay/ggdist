@@ -30,7 +30,7 @@ geom_dotsinterval(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -85,9 +85,9 @@ geom_dotsinterval(
 Geoms based on <code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code> create dotplots that automatically
 ensure the plot fits within the available space.</p>
 <p>Roughly equivalent to:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_dotsinterval</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_point =</span> <span class="cn">FALSE</span>, <span class="at">show_interval =</span> <span class="cn">FALSE</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">geom_dotsinterval</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">show_point =</span> <span class="cn">FALSE</span>, <span class="at">show_interval =</span> <span class="cn">FALSE</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>)</span></code></pre><p></p></div>
     </div>
 
     <div id="ref-usage">
@@ -204,12 +204,13 @@ less than 1 (something like <code>0.9</code> tends to work).</p></li>
 <li><p><code>"swarm"</code>: uses the <code>"compactswarm"</code> layout from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html" class="external-link">beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with <code>"bin"</code>, <code>"weave"</code>, or <code>"hex"</code>).</p></li>
+<li><p><code>"bar"</code>: for discrete distributions, lays out duplicate values in rectangular bars.</p></li>
 </ul></dd>
 
 
 <dt>overlaps</dt>
 <dd><p>How to handle overlapping dots or bins in the <code>"bin"</code>,
-<code>"weave"</code>, and <code>"hex"</code> layouts (dots never overlap in the <code>"swarm"</code> layout).
+<code>"weave"</code>, and <code>"hex"</code> layouts (dots never overlap in the <code>"swarm"</code> or <code>"bar"</code> layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when <code>dotsize = 1</code> and <code>stackratio = 1</code>; i.e.
 if you set those arguments to other values, overlaps may still occur.

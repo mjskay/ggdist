@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
 <span>  <span class="va">binwidth</span>,</span>
 <span>  heightratio <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  stackratio <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bin"</span>, <span class="st">"weave"</span>, <span class="st">"hex"</span>, <span class="st">"swarm"</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bin"</span>, <span class="st">"weave"</span>, <span class="st">"hex"</span>, <span class="st">"swarm"</span>, <span class="st">"bar"</span><span class="op">)</span>,</span>
 <span>  side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"top"</span>, <span class="st">"right"</span>, <span class="st">"bottomleft"</span>, <span class="st">"bottom"</span>, <span class="st">"left"</span>, <span class="st">"topleft"</span>,</span>
 <span>    <span class="st">"bottomright"</span>, <span class="st">"both"</span><span class="op">)</span>,</span>
 <span>  orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizontal"</span>, <span class="st">"vertical"</span>, <span class="st">"y"</span>, <span class="st">"x"</span><span class="op">)</span>,</span>
@@ -130,6 +130,7 @@ less than 1 (something like <code>0.9</code> tends to work).</p></li>
 <li><p><code>"swarm"</code>: uses the <code>"compactswarm"</code> layout from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html" class="external-link">beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with <code>"bin"</code>, <code>"weave"</code>, or <code>"hex"</code>).</p></li>
+<li><p><code>"bar"</code>: for discrete distributions, lays out duplicate values in rectangular bars.</p></li>
 </ul></dd>
 
 
@@ -156,7 +157,7 @@ variable and that dots will be stacked up in the <code>x</code> direction.</p></
 
 <dt>overlaps</dt>
 <dd><p>How to handle overlapping dots or bins in the <code>"bin"</code>,
-<code>"weave"</code>, and <code>"hex"</code> layouts (dots never overlap in the <code>"swarm"</code> layout).
+<code>"weave"</code>, and <code>"hex"</code> layouts (dots never overlap in the <code>"swarm"</code> or <code>"bar"</code> layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when <code>dotsize = 1</code> and <code>stackratio = 1</code>; i.e.
 if you set those arguments to other values, overlaps may still occur.
@@ -189,7 +190,6 @@ these algorithms to create dotplots.</p></div>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package 'dplyr' was built under R version 4.2.3</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'dplyr'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>

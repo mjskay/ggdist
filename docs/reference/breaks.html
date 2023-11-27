@@ -25,7 +25,7 @@ Supports automatic partial function application."><meta property="og:image" cont
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@ Supports automatic partial function application."><meta property="og:image" cont
     <div class="ref-description">
     <p>Methods for determining breaks (bins) in histograms, as used in the <code>breaks</code>
 argument to <code><a href="density_histogram.html">density_histogram()</a></code>.
-Supports <a href="automatic-partial-functions.html">automatic partial function application</a>.</p>
+Supports <a href="auto_partial.html">automatic partial function application</a>.</p>
     </div>
 
     <div id="ref-usage">
@@ -142,34 +142,39 @@ versions of the corresponding base functions. See <code><a href="https://rdrr.io
 <span class="r-in"><span><span class="co"># Let's compare the different break-selection algorithms on this data:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="stat_slab.html">stat_slab</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"fixed at 0.5"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"breaks_fixed(width = 0.5)"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    density <span class="op">=</span> <span class="st">"histogram"</span>,</span></span>
 <span class="r-in"><span>    breaks <span class="op">=</span> <span class="fu">breaks_fixed</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    outline_bars <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    color <span class="op">=</span> <span class="st">"black"</span>,</span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="stat_slab.html">stat_slab</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Sturges"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"breaks_Sturges()\nor 'Sturges'"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    density <span class="op">=</span> <span class="st">"histogram"</span>,</span></span>
 <span class="r-in"><span>    breaks <span class="op">=</span> <span class="st">"Sturges"</span>,</span></span>
 <span class="r-in"><span>    outline_bars <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    color <span class="op">=</span> <span class="st">"black"</span>,</span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="stat_slab.html">stat_slab</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Scott"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"breaks_Scott()\nor 'Scott'"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    density <span class="op">=</span> <span class="st">"histogram"</span>,</span></span>
 <span class="r-in"><span>    breaks <span class="op">=</span> <span class="st">"Scott"</span>,</span></span>
 <span class="r-in"><span>    outline_bars <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    color <span class="op">=</span> <span class="st">"black"</span>,</span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="stat_slab.html">stat_slab</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"FD"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"breaks_FD()\nor 'FD'"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    density <span class="op">=</span> <span class="st">"histogram"</span>,</span></span>
 <span class="r-in"><span>    breaks <span class="op">=</span> <span class="st">"FD"</span>,</span></span>
 <span class="r-in"><span>    outline_bars <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    color <span class="op">=</span> <span class="st">"black"</span>,</span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    subtitle <span class="op">=</span> <span class="st">"ggdist::stat_slab(density = 'histogram', ...)"</span>,</span></span>
+<span class="r-in"><span>    y <span class="op">=</span> <span class="st">"breaks ="</span>,</span></span>
+<span class="r-in"><span>    x <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-plt img"><img src="breaks-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

@@ -10,7 +10,10 @@ status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 
-![Preview of ggdist plots](man/figures/preview.png)
+<figure>
+<img src="man/figures/preview.png" alt="Preview of ggdist plots" />
+<figcaption aria-hidden="true">Preview of ggdist plots</figcaption>
+</figure>
 
 [ggdist](https://mjskay.github.io/ggdist/) is an R package that provides
 a flexible set of `ggplot2` geoms and stats designed especially for
@@ -29,8 +32,12 @@ The `geom_slabinterval()` / `stat_slabinterval()` family (see
 and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots,
 gradient plots, histograms, and more:
 
-![The slabinterval family of geoms and
-stats](man/figures/slabinterval_family.png)
+<figure>
+<img src="man/figures/slabinterval_family.png"
+alt="The slabinterval family of geoms and stats" />
+<figcaption aria-hidden="true">The slabinterval family of geoms and
+stats</figcaption>
+</figure>
 
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 `vignette("dotsinterval")`) makes it easy to visualize dot+interval
@@ -94,7 +101,12 @@ reproduce the issue. Pull requests should be filed against the
 
 ## Citing `ggdist`
 
-Matthew Kay (2023). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 3.3.0,
+Matthew Kay (2024). ggdist: Visualizations of Distributions and
+Uncertainty in the Grammar of Graphics. *IEEE Transactions on
+Visualization and Computer Graphics*. DOI:
+[10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
+
+Matthew Kay (2023). ggdist: Visualizations of Distributions and
+Uncertainty. R package version 3.3.1,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

@@ -27,7 +27,7 @@ brms models.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ brms models.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
     <p>Parses simple string distribution specifications, like <code>"normal(0, 1)"</code>, into two columns of
 a data frame, suitable for use with the <code>dist</code> and <code>args</code> aesthetics of <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code>
 and its shortcut stats (like <code><a href="stat_halfeye.html">stat_halfeye()</a></code>). This format is output
-by <code><a href="https://rdrr.io/pkg/brms/man/get_prior.html" class="external-link">brms::get_prior</a></code>, making it particularly useful for visualizing priors from
+by <code><a href="https://paul-buerkner.github.io/brms/reference/get_prior.html" class="external-link">brms::get_prior</a></code>, making it particularly useful for visualizing priors from
 brms models.</p>
     </div>
 
@@ -195,14 +195,14 @@ of distribution specifications.</p></dd>
 
 
 <dt>lb</dt>
-<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
+<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://paul-buerkner.github.io/brms/reference/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
 the lower bound of the distribution, which if present will produce a truncated distribution using
 <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_truncated.html" class="external-link">dist_truncated()</a></code>. Ignored if <code>lb</code> is <code>NULL</code> or if <code>object[[lb]]</code> is <code>NA</code> for the corresponding
 input row.</p></dd>
 
 
 <dt>ub</dt>
-<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
+<dd><p>The name of an input column (for <code>data.frame</code> and <code><a href="https://paul-buerkner.github.io/brms/reference/set_prior.html" class="external-link">brms::prior</a></code> objects) that contains
 the upper bound of the distribution, which if present will produce a truncated distribution using
 <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_truncated.html" class="external-link">dist_truncated()</a></code>. Ignored if <code>ub</code> is <code>NULL</code> or if <code>object[[ub]]</code> is <code>NA</code> for the corresponding
 input row.</p></dd>

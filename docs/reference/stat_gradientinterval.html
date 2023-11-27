@@ -35,7 +35,7 @@ graphics device you are using.'><meta property="og:image" content="http://mjskay
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -89,11 +89,11 @@ graphics device you are using.'><meta property="og:image" content="http://mjskay
     <p>Shortcut version of <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code> with <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> for
 creating gradient + interval plots.</p>
 <p>Roughly equivalent to:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_slabinterval</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">justification =</span> <span class="fu">after_stat</span>(<span class="fl">0.5</span>), <span class="at">thickness =</span> <span class="fu">after_stat</span>(<span class="fu">thickness</span>(<span class="dv">1</span>)), <span class="at">slab_alpha =</span> <span class="fu">after_stat</span>(f)),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill_type =</span> <span class="st">"auto"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">show.legend =</span> <span class="fu">c</span>(<span class="at">size =</span> <span class="cn">FALSE</span>, <span class="at">slab_alpha =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">stat_slabinterval</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">justification =</span> <span class="fu">after_stat</span>(<span class="fl">0.5</span>), <span class="at">thickness =</span> <span class="fu">after_stat</span>(<span class="fu">thickness</span>(<span class="dv">1</span>)), <span class="at">slab_alpha =</span> <span class="fu">after_stat</span>(f)),</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">fill_type =</span> <span class="st">"auto"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">show.legend =</span> <span class="fu">c</span>(<span class="at">size =</span> <span class="cn">FALSE</span>, <span class="at">slab_alpha =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>)</span></code></pre><p></p></div>
 <p>If your graphics device supports it, it is recommended to use this stat
 with <code>fill_type = "gradient"</code> (see the description of that parameter). On R &gt;= 4.2,
 support for <code>fill_type = "gradient"</code> should be auto-detected based on the
@@ -225,11 +225,12 @@ if you are using a graphics device that support gradients.</p></li>
 
 <dt>p_limits</dt>
 <dd><p>Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is <code>c(.001, .999)</code>, then a slab is drawn
+limits of <em>theoretical</em> distributions (distributions from <em>samples</em> ignore this parameter and determine
+their limits based on the limits of the sample). E.g., if this is <code>c(.001, .999)</code>, then a slab is drawn
 for the distribution from the quantile at <code>p = .001</code> to the quantile at <code>p = .999</code>. If the lower
 (respectively upper) limit is <code>NA</code>, then the lower (upper) limit will be the minimum (maximum) of the
 distribution's support if it is finite, and <code>0.001</code> (<code>0.999</code>) if it is not finite. E.g., if
-<code>p_limits</code> is <code>c(NA, NA)</code> on a gamma distribution the effective value of <code>p_limits</code> would be
+<code>p_limits</code> is <code>c(NA, NA)</code>, on a gamma distribution the effective value of <code>p_limits</code> would be
 <code>c(0, .999)</code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
 it would be equivalent to <code>c(.001, .999)</code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></dd>
 
@@ -398,7 +399,7 @@ is a valid distribution name because R defines the <code><a href="https://rdrr.i
 functions for Normal distributions.</p>
 <p>See the <code><a href="parse_dist.html">parse_dist()</a></code> function for a useful way to generate <code>dist</code> and <code>args</code>
 values from human-readable distribution specs (like <code>"normal(0,1)"</code>). Such specs are also
-produced by other packages (like the <code><a href="https://rdrr.io/pkg/brms/man/get_prior.html" class="external-link">brms::get_prior</a></code> function in brms); thus,
+produced by other packages (like the <code><a href="https://paul-buerkner.github.io/brms/reference/get_prior.html" class="external-link">brms::get_prior</a></code> function in brms); thus,
 <code><a href="parse_dist.html">parse_dist()</a></code> combined with the stats described here can help you visualize the output
 of those functions.</p></li>
 </ul></div>
@@ -569,18 +570,6 @@ See <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code> for th
 <span class="r-in"><span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">stat_gradientinterval</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`fill_type = "gradient"` is not supported by the current graphics device, which</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> is `"agg_png"`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Falling back to `fill_type = "segments"`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> If you believe your current graphics device <span style="font-style: italic;">does</span> support `fill_type =</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "gradient"` but auto-detection failed, try setting `fill_type = "gradient"`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   explicitly. If this causes the gradient to display correctly, then this</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   warning is likely a false positive caused by the graphics device failing to</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   properly report its support for the `"LinearGradient"` pattern via</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   `grDevices::dev.capabilities()`. Consider reporting a bug to the author of</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   the graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See the documentation for `fill_type` in `ggdist::geom_slabinterval()` for</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   more information.</span>
 <span class="r-plt img"><img src="stat_gradientinterval-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ON ANALYTICAL DISTRIBUTIONS</span></span></span>
@@ -594,18 +583,6 @@ See <code><a href="stat_slabinterval.html">stat_slabinterval()</a></code> for th
 <span class="r-in"><span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">stat_gradientinterval</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`fill_type = "gradient"` is not supported by the current graphics device, which</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> is `"agg_png"`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Falling back to `fill_type = "segments"`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> If you believe your current graphics device <span style="font-style: italic;">does</span> support `fill_type =</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "gradient"` but auto-detection failed, try setting `fill_type = "gradient"`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   explicitly. If this causes the gradient to display correctly, then this</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   warning is likely a false positive caused by the graphics device failing to</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   properly report its support for the `"LinearGradient"` pattern via</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   `grDevices::dev.capabilities()`. Consider reporting a bug to the author of</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   the graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See the documentation for `fill_type` in `ggdist::geom_slabinterval()` for</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   more information.</span>
 <span class="r-plt img"><img src="stat_gradientinterval-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

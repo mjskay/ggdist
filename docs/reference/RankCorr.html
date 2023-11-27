@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -86,8 +86,8 @@ is described in Harrison <em>et al.</em> (2014).</p>
 <p><code>data("RankCorr")</code> is a substantially thinned version of the original posterior sample and has omitted several
 parameters in order for it to be a more manageable size.</p>
 <p><code>data("RankCorr_u_tau")</code> is used for testing and examples and is roughly the equivalent of the following:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"RankCorr"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>RankCorr_u_tau <span class="ot">=</span> tidybayes<span class="sc">::</span><span class="fu">spread_draws</span>(RankCorr, u_tau[i])<span class="er">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"RankCorr"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>RankCorr_u_tau <span class="ot">=</span> tidybayes<span class="sc">::</span><span class="fu">spread_draws</span>(RankCorr, u_tau[i])<span class="er">)</span></span></code></pre><p></p></div>
     </div>
     <div id="references">
     <h2>References</h2>

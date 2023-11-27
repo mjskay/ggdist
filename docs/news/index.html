@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -73,7 +73,23 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="3.3.0" id="ggdist-330">ggdist 3.3.0<a class="anchor" aria-label="anchor" href="#ggdist-330"></a></h2>
+<h2 class="page-header" data-toc-text="3.3.1" id="ggdist-331">ggdist 3.3.1<a class="anchor" aria-label="anchor" href="#ggdist-331"></a></h2>
+<p>New features and enhancements:</p>
+<ul><li>Use derivatives supplied by transformations in <em>scales</em> &gt;= 1.2.2 to make transformations of densities more reliable (r-lib/scales#341).</li>
+<li>New <code>layout = "bar"</code> for <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> that provides better bar dotplots (with thanks to <a href="https://github.com/sharoz" class="external-link">@sharoz</a> for feedback; <a href="https://github.com/mjskay/ggdist/issues/190" class="external-link">#190</a>).</li>
+<li>Bandwidth estimators (including the default, <code><a href="../reference/bandwidth.html">bandwidth_dpi()</a></code>) now fall back to <code><a href="../reference/bandwidth.html">bandwidth_nrd0()</a></code> when they fail, with a warning that suggests trying a dotplot or histogram (as these failures tend to happen on data that is not a good candidate for a density plot in the first place) (<a href="https://github.com/mjskay/ggdist/issues/196" class="external-link">#196</a>).</li>
+<li>Much faster (C++) implementation of Wilkinson dotplot binning, especially for large dotplots.</li>
+</ul><p>Bug fixes:</p>
+<ul><li>Ensure <code><a href="../reference/scale_side_mirrored.html">scale_side_mirrored()</a></code> supports <code>start = "left"</code> and <code>start = "right"</code>
+</li>
+<li>Ensure <code><a href="../reference/geom_spike.html">geom_spike()</a></code> draws the point on the correct end of the line depending on <code>side</code>.</li>
+<li>Future-proof <code><a href="../reference/guide_rampbar.html">guide_rampbar()</a></code> for ggplot2 &gt; 3.4.2 (<a href="https://github.com/mjskay/ggdist/issues/186" class="external-link">#186</a>). Thanks to <a href="https://github.com/teunbrand" class="external-link">@teunbrand</a>.</li>
+<li>Future-proof some minor tests for ggplot2 &gt; 3.4.2 (<a href="https://github.com/mjskay/ggdist/issues/187" class="external-link">#187</a>).</li>
+<li>Allow the <code>size</code> aesthetic to be overridden for the <code><a href="../reference/geom_dots.html">geom_dots()</a></code> legend.</li>
+<li>Ensure <code><a href="../reference/point_interval.html">hdi()</a></code> supports constants. (<a href="https://github.com/mjskay/ggdist/issues/194" class="external-link">#194</a>)</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.3.0" id="ggdist-330">ggdist 3.3.0<small>2023-05-13</small><a class="anchor" aria-label="anchor" href="#ggdist-330"></a></h2>
 <p>Breaking changes: The following changes, mostly due to new default density estimators, may cause some plots on sample data to change. Changes should usually be small, and generally should result in more accurate density estimation. Revert to the old behavior by setting <code>density = density_unbounded(bandwidth = "nrd0")</code>.</p>
 <ul><li>
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> now uses <code><a href="../reference/density_bounded.html">density_bounded()</a></code> as its default density estimator, which uses a bounded density estimator that also estimates the bounds of the data. The default bandwidth estimator is also now <code><a href="../reference/bandwidth.html">bandwidth_dpi()</a></code>, which is the Sheather-Jones direct plug-in estimator (the same as <code>stats::bw.SJ(..., method = "dpi")</code>). These changes may cause existing charts using densities to change; usually only slightly. These changes should be worth it, as they should drastically improve the accuracy of density estimates, especially on bounded data, and should have little noticeable impact on densities on unbounded data.</li>
@@ -131,7 +147,7 @@
 </li>
 </ul></li>
 <li>A new <strong>experimental</strong> mini domain-specific language for probability expressions in <em>ggdist</em> <code>stat</code>s: the <code><a href="../reference/Pr_.html">Pr_()</a></code> and <code><a href="../reference/Pr_.html">p_()</a></code> functions can be used to generate <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> expressions in terms of <em>ggdist</em> computed variables; e.g. <code>aes(thickness = !!Pr_(X &lt;= x))</code> maps the CDF of the distribution onto the <code>thickness</code> aesthetic; <code>aes(thickness = !!p_(x))</code> maps the PDF onto the <code>thickness</code> aesthetic. (<a href="https://github.com/mjskay/ggdist/issues/160" class="external-link">#160</a>)</li>
-<li>Several function families in <em>ggdist</em> now use “currying” (automatic partial function application). These function families partially apply themselves until all non-optional arguments have been supplied: <code><a href="../reference/point_interval.html">point_interval()</a></code>, <code>smooth_...</code>, and <code>density_...</code>. See <code><a href="../reference/automatic-partial-functions.html">help("automatic-partial-functions")</a></code>.</li>
+<li>Several function families in <em>ggdist</em> now use “currying” (automatic partial function application). These function families partially apply themselves until all non-optional arguments have been supplied: <code><a href="../reference/point_interval.html">point_interval()</a></code>, <code>smooth_...</code>, and <code>density_...</code>. See <code><a href="../reference/auto_partial.html">help("automatic-partial-functions")</a></code>.</li>
 <li>Performance improvements for <code><a href="../reference/point_interval.html">point_interval()</a></code> on grouped data frames. (<a href="https://github.com/mjskay/ggdist/issues/154" class="external-link">#154</a>)</li>
 </ul><p>Documentation:</p>
 <ul><li>Uses of <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> have been replaced with <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> to be consistent with the deprecation of <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> in <em>ggplot2</em> 3.4.</li>
@@ -256,7 +272,7 @@
 <li>add <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> for creating (amongst other things) interval-filled halfeyes, in the style of <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">bayesplot::mcmc_areas()</a></code> (<a href="https://github.com/mjskay/ggdist/issues/11" class="external-link">#11</a>)</li>
 <li>add <code>fill_ramp</code> and <code>color_ramp</code> scales to <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> families, making it easier to separate group colors from interval/density/CDF colors. See new examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. (<a href="https://github.com/mjskay/ggdist/issues/16" class="external-link">#16</a>)</li>
 <li>auto-detect finite limits on analytical distributions, so (e.g.) distributions like the beta will not cut off tails close to 0 or 1. (<a href="https://github.com/mjskay/ggdist/issues/18" class="external-link">#18</a>)</li>
-<li>add <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html" class="external-link">brms::brmsprior</a></code> implementation for <code><a href="../reference/parse_dist.html">parse_dist()</a></code> (<a href="https://github.com/mjskay/ggdist/issues/34" class="external-link">#34</a>)</li>
+<li>add <code><a href="https://paul-buerkner.github.io/brms/reference/set_prior.html" class="external-link">brms::brmsprior</a></code> implementation for <code><a href="../reference/parse_dist.html">parse_dist()</a></code> (<a href="https://github.com/mjskay/ggdist/issues/34" class="external-link">#34</a>)</li>
 </ul><p>New documentation:</p>
 <ul><li>
 <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code> now uses <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">distributional::dist_student_t()</a></code> (<a href="https://github.com/mjskay/ggdist/issues/14" class="external-link">#14</a>)</li>
@@ -293,7 +309,7 @@
 <ul><li>Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones), all support functions for stats/geoms (such as <code><a href="../reference/point_interval.html">point_interval()</a></code>), <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. Tidybayes will retain all other functions, and will re-export all <code>ggdist</code> functions for now.</li>
 <li>All stats and geoms now support automatic orientation determination. Thus, all <code>h</code>-suffix geoms are now deprecated. Those geoms have been left in <code>tidybayes</code> and give a deprecation warning when used; they cannot be used from <code>ggdist</code> directly.</li>
 <li>
-<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html" class="external-link">tidybayes::geom_intervalh()</a></code> and <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html" class="external-link">tidybayes::geom_pointintervalh()</a></code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
+<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code>tidybayes::geom_intervalh()</code> and <code>tidybayes::geom_pointintervalh()</code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
 <li>
 <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>/<code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code> now supports a <code>step</code> argument for creating stepped lineribbons. H/T to Solomon Kurz for the suggestion.</li>
 <li>

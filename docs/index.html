@@ -57,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -114,15 +114,13 @@
 <div class="page-header"><h1 id="ggdist-visualizations-of-distributions-and-uncertainty">ggdist: Visualizations of distributions and uncertainty<a class="anchor" aria-label="anchor" href="#ggdist-visualizations-of-distributions-and-uncertainty"></a>
 </h1></div>
 <p><a href="https://github.com/mjskay/ggdist/actions" class="external-link"><img src="https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://codecov.io/github/mjskay/ggdist?branch=master" class="external-link"><img src="https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg" alt="Coverage status"></a> <a href="https://cran.r-project.org/package=ggdist" class="external-link"><img src="https://www.r-pkg.org/badges/version/ggdist" alt="CRAN status"></a> <img src="https://cranlogs.r-pkg.org/badges/last-month/ggdist" alt="Download count"><a href="https://doi.org/10.5281/zenodo.3879620" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg" alt="DOI"></a></p>
-<div class="figure">
-<img src="reference/figures/preview.png" alt=""><p class="caption">Preview of ggdist plots</p>
-</div>
-<p><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package, which builds on top of <code>ggdist</code>).</p>
+<figure><img src="reference/figures/preview.png" alt="Preview of ggdist plots"><figcaption aria-hidden="true">
+Preview of ggdist plots
+</figcaption></figure><p><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package, which builds on top of <code>ggdist</code>).</p>
 <p>The <code><a href="reference/geom_slabinterval.html">geom_slabinterval()</a></code> / <code><a href="reference/stat_slabinterval.html">stat_slabinterval()</a></code> family (see <code><a href="articles/slabinterval.html">vignette("slabinterval")</a></code>) makes it easy to visualize point summaries and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots, gradient plots, histograms, and more:</p>
-<div class="figure">
-<img src="reference/figures/slabinterval_family.png" alt=""><p class="caption">The slabinterval family of geoms and stats</p>
-</div>
-<p>The <code><a href="reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> / <code><a href="reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> family (see <code><a href="articles/dotsinterval.html">vignette("dotsinterval")</a></code>) makes it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and combined with half-eyes, composite plots like rain cloud plots):</p>
+<figure><img src="reference/figures/slabinterval_family.png" alt="The slabinterval family of geoms and stats"><figcaption aria-hidden="true">
+The slabinterval family of geoms and stats
+</figcaption></figure><p>The <code><a href="reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> / <code><a href="reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> family (see <code><a href="articles/dotsinterval.html">vignette("dotsinterval")</a></code>) makes it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and combined with half-eyes, composite plots like rain cloud plots):</p>
 <p><img src="reference/figures/README/halfeye_dotplot-1.png" width="672"></p>
 <p>The <code><a href="reference/geom_lineribbon.html">geom_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_lineribbon()</a></code> family (see <code><a href="articles/lineribbon.html">vignette("lineribbon")</a></code>) makes it easy to visualize fit lines with an arbitrary number of uncertainty bands:</p>
 <p><img src="reference/figures/README/lineribbon-1.png" width="672"></p>
@@ -153,7 +151,8 @@
 <h2 id="citing-ggdist">Citing <code>ggdist</code>
 <a class="anchor" aria-label="anchor" href="#citing-ggdist"></a>
 </h2>
-<p>Matthew Kay (2023). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 3.3.0, <a href="https://mjskay.github.io/ggdist/" class="external-link uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620" class="external-link">10.5281/zenodo.3879620</a>.</p>
+<p>Matthew Kay (2024). ggdist: Visualizations of Distributions and Uncertainty in the Grammar of Graphics. <em>IEEE Transactions on Visualization and Computer Graphics</em>. DOI: <a href="https://doi.org/10.1109/TVCG.2023.3327195" class="external-link">10.1109/TVCG.2023.3327195</a>.</p>
+<p>Matthew Kay (2023). ggdist: Visualizations of Distributions and Uncertainty. R package version 3.3.1, <a href="https://mjskay.github.io/ggdist/" class="external-link uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620" class="external-link">10.5281/zenodo.3879620</a>.</p>
 </div>
 </div>
   </div>

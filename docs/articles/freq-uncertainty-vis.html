@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2023-05-13</h4>
+            <h4 data-toc-skip class="date">2023-11-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/freq-uncertainty-vis.Rmd" class="external-link"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -263,12 +263,12 @@ supports these objects.</p>
 <span>  <span class="fu"><a href="../reference/stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">estimate</span>, sigma <span class="op">=</span> <span class="va">std.error</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/halfeye-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/halfeye-1.png" width="528"></p>
 <p>If we would rather see uncertainty in conditional means, we can
 instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html" class="external-link">modelr::data_grid()</a></code> along with
 <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">broom::augment()</a></code> (similar to how we can use
 <code><a href="https://modelr.tidyverse.org/reference/data_grid.html" class="external-link">modelr::data_grid()</a></code> with
-<code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html" class="external-link">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we
+<code>tidybayes::add_fitted_draws()</code> for Bayesian models). Here we
 want the confidence distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\tilde\mu_c\)</span>:</p>
 <p><span class="math display">\[
 \tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c,
@@ -303,7 +303,7 @@ equal to the point estimate of the mean in condition <span class="math inline">\
 <span>  <span class="co"># we'll add the data back in too (scale = .5 above adjusts the halfeye height so</span></span>
 <span>  <span class="co"># that the data fit in as well)</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">response</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">ABC</span>, pch <span class="op">=</span> <span class="st">"|"</span>, size <span class="op">=</span> <span class="fl">2</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_nudge.html" class="external-link">position_nudge</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/halfeye_with_data-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/halfeye_with_data-1.png" width="528"></p>
 <p>Of course, this works with the entire
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> family. Here are gradient plots
 instead:</p>
@@ -316,7 +316,7 @@ instead:</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>    scale <span class="op">=</span> <span class="fl">.5</span>, fill_type <span class="op">=</span> <span class="st">"gradient"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/gradientinterval-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/gradientinterval-1.png" width="528"></p>
 <p><strong>Note:</strong> The example above uses the
 <strong>experimental</strong> <code>fill_type = "gradient"</code>
 option. This can be omitted if your system does not support it; see
@@ -332,7 +332,7 @@ plots:</p>
 <span>  <span class="fu"><a href="../reference/stat_ccdfinterval.html">stat_ccdfinterval</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/ccdfinterval-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/ccdfinterval-1.png" width="528"></p>
 <p>We can also create quantile dotplots by using the <code>dots</code>
 family of geoms. Quantile dotplots show quantiles from a distribution
 (in this case, the sampling distribution), employing a <em>frequency
@@ -348,7 +348,7 @@ al. 2018</a>):</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    quantiles <span class="op">=</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/dotplot-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/dotplot-1.png" width="528"></p>
 <p>See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> and
 <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code> for more examples of uncertainty
 geoms and stats in the slabinterval family.</p>
@@ -386,7 +386,7 @@ with the <code>mtcars</code> dataset from
 <span>    fill <span class="op">=</span> <span class="st">"cyl"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"mpg"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/lineribbon-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/lineribbon-1.png" width="528"></p>
 <p>Another alternative to using <code>alpha</code> to create gradations
 of lineribbon colors in different groups is to use the
 <code>fill_ramp</code> aesthetic provided by <code>ggdist</code> to
@@ -416,7 +416,7 @@ full color (see <code><a href="../reference/scale_colour_ramp.html">help("scale_
 <span>    fill <span class="op">=</span> <span class="st">"cyl"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"mpg"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/lineribbon_lightened-1.png" width="648"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/lineribbon_lightened-1.png" width="528"></p>
 <p>One way to avoid problems created by overlapping ribbons (besides
 using <code>alpha</code>, as above) is to use commutative blending modes
 available in R &gt; 4.2. The <a href="https://mjskay.github.io/ggblend/" class="external-link">ggblend</a> package enables
