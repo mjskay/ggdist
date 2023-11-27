@@ -405,15 +405,6 @@ abc_df %>%
   ggtitle('geom_dots(side = "both", layout = "hex")')
 ```
 
-And with `"swarm"`:
-
-```{r beeswarm, fig.width = small_width, fig.height = small_height}
-abc_df %>%
-  ggplot(aes(x = abc, y = value)) +
-  geom_dots(side = "both", layout = "swarm") +
-  ggtitle('geom_dots(side = "both", layout = "swarm")')
-```
-
 The combination of `binwidth = unit(1.5, "mm")` and `overflow = "compress"` (see the 
 section on large samples, below) can be used to set the dot size to a specific size
 while guaranteeing the layout stays within the bounds of the geom. 
@@ -448,7 +439,8 @@ swarm_plot + weave_plot
 Aesthetics like `color`, `fill`, `shape`, and `linewidth` can be varied over the dots.
 For example, we can vary the `fill` aesthetic to create two
 subgroups, and use `position = "dodge"` to dodge entire "swarms" at once so
-the subgroups do not overlap:
+the subgroups do not overlap. We'll also set `linewidth = 0` so that the default
+gray outline is not drawn:
 
 ```{r beeswarm_dodge, fig.width = small_width, fig.height = small_height}
 set.seed(12345)
@@ -462,35 +454,16 @@ abcc_df = data.frame(
 abcc_df %>%
   ggplot(aes(y = value, x = abc, fill = hi)) +
   geom_weave(position = "dodge", linewidth = 0, alpha = 0.75) +
-  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
   ggtitle(
     'geom_weave(position = "dodge")',
-    'aes(fill = hi)'
-  )
-```
-
-The color of the default gray outline can be changed using the `color` aesthetic,
-or you can remove it altogether by setting `linewidth = 0` (or `slab_linewidth = 0` when
-using `stat_dotsinterval()` / `geom_dotsinterval()`), or by changing to solid
-shapes (the usual "plotting characters", e.g. 
-numbers from `0:24`, are supported) and using the `color` aesthetic.
-
-For example, we can vary `shape` and `color` simultaneously:
-
-```{r beeswarm_shape_color, fig.width = small_width, fig.height = small_height}
-abcc_df %>%
-  ggplot(aes(y = value, x = abc, shape = abc, color = hi)) +
-  geom_weave(position = "dodge", alpha = 0.75) +
-  scale_color_brewer(palette = "Dark2") +
-  ggtitle(
-    'geom_weave(position = "dodge")',
-    'aes(shape = abc, fill = hi)'
+    'aes(fill = hi, shape = hi)'
   )
 ```
 
 ### Varying discrete aesthetics within dot groups
 
-By default, if you assign a discrete variable to `color`, `shape`, etc it
+By default, if you assign a discrete variable to `fill`, color`, `shape`, etc it
 will also be used in the `group` aesthetic to determine dot groups, which
 are laid out separate (and can be dodged separately, as above).
 
@@ -581,7 +554,7 @@ you may want to apply some smoothing to make the layout more appealing.
 
 `geom_dots()` supports a handful of *smoothers* which can be applied using the
 `smooth = ` parameter. These all correspond to functions that start with `smooth_`,
-like `smooth_bounded()`, `smooth_unbounded()`, `smooth_discrete()`, and `smooth_bar()`, and can be
+like `smooth_bounded()`, `smooth_unbounded()`, and `smooth_discrete()`, and can be
 applied either by passing the suffix as a string (e.g. `smooth = "bounded"`)
 or by passing the function itself, to set specific options on it (e.g. 
 `smooth = smooth_bonuded(adjust = 0.5)`). For continuous distributions with
@@ -603,19 +576,6 @@ ggplot() +
 Note that dot positions in the resulting plot will no longer be as accurate as before.
 With a large sample this may be an acceptable compromise. With a small sample, I **do
 not** recommend using this technique.
-
-Density smoothing works particularly well with the `"hex"` layout and `side = "both"`:
-
-```{r large_sample_smooth_hex, fig.width = small_width, fig.height = small_width/2}
-ggplot() +
-  geom_dots(aes(x), smooth = "unbounded", layout = "hex", stackratio = 0.9, side = "both") +
-  labs(
-    title = 'geom_dots() with 2000 dots',
-    subtitle = 'smooth = "unbounded", layout = "hex", stackratio = 0.9, side = "both")',
-    x = NULL
-  ) +
-  scale_y_continuous(breaks = NULL)
-```
 
 On bounded distributions, you should use `smooth_bounded()`, providing 
 the bounds of the distribution. Otherwise, the dotplot will be smoothed incorrectly. 
@@ -752,24 +712,12 @@ dist_df %>%
 
 Analytical distributions are shown by default using 100 quantiles, sometimes
 referred to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 
-
 This can be changed using the `quantiles` argument. For example, we can plot the same
-distributions again, now with 1000 quantiles:
+distributions again using 1000 quantiles. We'll also make use of `point_interval` to plot
+the mode and highest-density continuous intervals (instead of the default median and quantile
+intervals; see `point_interval()`).
 
-```{r dotsinterval_dist_1000, fig.width = small_width, fig.height = small_height}
-dist_df %>%
-  ggplot(aes(y = dist_name, xdist = dist)) +
-  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci) +
-  ggtitle(
-    "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
-    "aes(y = dist_name, xdist = dist)"
-  )
-```
-
-This example also shows the use of `point_interval` to plot the mode and 
-highest-density continuous intervals (instead of the default median and quantile
-intervals). For more, see `point_interval()`.
-
+We'll also highlight some intervals by coloring the dots.
 Like with the `stat_slabinterval()` family, computed variables from the interval
 sub-geometry (`level` and `.width`) are available to the dots/slab sub-geometry,
 and correspond to the smallest interval containing that dot. We can use these
@@ -829,37 +777,19 @@ color aesthetics).
 ### Thresholds
 
 Another potentially useful application of post-stat aesthetic computation is to
-apply thresholds on a dotplot, coloring points on one side of a line differently:
+apply thresholds on a dotplot, coloring points on one side of a line differently.
+However, the default dotplot layout, `"bin"`, can cause dots to be on the wrong
+side of a cutoff when coloring dots within dotplots. Thus it can be useful when
+plotting thresholds to use the `"weave"` or `"swarm"` layouts, which tend to 
+position dots closer to their true `x` positions, rather than at bin centers:
 
-```{r dist_dots_shape_color, fig.width = small_width, fig.height = small_height}
+```{r dist_dots_weave, fig.width = small_width, fig.height = small_height}
 ab_df = tibble(
   ab = c("a", "b"),
   mean = c(5, 7),
   sd = c(1, 1.5)
 )
 
-ab_df %>%
-  ggplot(aes(
-    y = ab, xdist = dist_normal(mean, sd),
-    fill = after_stat(x < 6), shape = after_stat(x < 6)
-  )) +
-  stat_dots(position = "dodge", color = NA) +
-  labs(
-    title = "stat_dots()",
-    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = after_stat(x < 6))"
-  ) +
-  geom_vline(xintercept = 6, alpha = 0.25) +
-  scale_x_continuous(breaks = 2:10) +
-  # we'll use these shapes since they have fill and outlines
-  scale_shape_manual(values = c(21,22))
-```
-
-Notice the default dotplot layout, `"bin"`, can cause dots to be on the wrong
-side of a cutoff when coloring dots within dotplots. Thus it can be useful to use the
-`"weave"` or `"swarm"` layouts, which tend to position dots closer to their true
-`x` positions, rather than at bin centers:
-
-```{r dist_dots_weave, fig.width = small_width, fig.height = small_height}
 ab_df %>%
   ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = after_stat(x < 6))) +
   stat_dots(position = "dodge", color = NA, layout = "weave") +
