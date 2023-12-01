@@ -1,5 +1,12 @@
 # ggdist (development version)
 
+New features and enhancements:
+
+* The `at` parameter to `stat_spike()` (or its names) now determines values of
+  an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
+  to more easily label spikes. (#203; thanks @mattansb for the suggestion).
+
+
 # ggdist 3.3.1
 
 New features and enhancements:

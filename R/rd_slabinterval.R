@@ -159,6 +159,12 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
         aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. `pdf`, `cdf`, or
         `1 - cdf`) directly onto the desired aesthetic.
       '
+    },
+    if ("at" %in% names(stat$default_params)) {'
+      - `at`: For spikes, a character vector of names of the functions or expressions used to determine
+        the points at which the slab functions were evaluated to create spikes. Values of this computed
+        variable are determined by the `at` parameter; see its description above.
+      '
     }
   )
 
