@@ -143,7 +143,7 @@ StatSpike = ggproto("StatSpike", StatSlab,
     params = ggproto_parent(StatSlab, self)$setup_params(data, params)
 
     # normalize the `at` parameter so it is always a named list of functions,
-    # scalar strings, and scalar numerics
+    # and scalar numerics
     params$at = check_at(params$at)
 
     params
@@ -159,8 +159,16 @@ stat_spike = make_stat(StatSpike, geom = "spike")
 
 # helpers -----------------------------------------------------------------
 
-# check the `at` parameter and normalize it to a flat list of named scalars
-# that are either functions or numerics
+#' check the `at` parameter and normalize it to a flat list of named scalars
+#' that are either functions or numerics, generating sensible names for each
+#' list element.
+#' @param at `at` as accepted by `stat_spike()`; i.e. a character vector
+#'  of function names, a numeric vector of evaluation points, a function, or
+#'  a list of any combination of those.
+#' @returns a named list, where each element is either a single function
+#'  (corresponding to functions or function names in `at`) or a scalar numeric
+#'  (corresponding to each evaluation point specific by numeric vectors in `at`).
+#' @noRd
 check_at = function(at, call = parent.frame()) {
   if (is.function(at)) at = list(at)
   if (is.numeric(at) || is.character(at) || is.null(at)) at = as.list(at)
