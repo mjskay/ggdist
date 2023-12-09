@@ -6,6 +6,10 @@ New features and enhancements:
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
 
+Bug fixes:
+
+* Ensure `Mode()` works on analytical constant distributions.
+
 
 # ggdist 3.3.1
 

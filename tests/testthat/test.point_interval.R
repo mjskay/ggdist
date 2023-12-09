@@ -717,4 +717,6 @@ test_that("intervals work on constants", {
 test_that("Mode works on constants", {
   expect_equal(Mode(1), 1)
   expect_equal(Mode(c(1,1,1)), 1)
+  expect_equal(Mode(dist_normal(1:2, 0)), c(1,2))
+  expect_equal(Mode(dist_degenerate(1:2)), c(1,2))
 })

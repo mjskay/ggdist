@@ -541,6 +541,8 @@ Mode.distribution = function(x, na.rm = FALSE, ...) {
       NA_real_
     } else if (distr_is_sample(x)) {
       Mode(distr_get_sample(x), na.rm = na.rm)
+    } else if (distr_is_constant(x)) {
+      quantile(x, 0.5)[[1]]
     } else if (distr_is_discrete(x)) {
       bounds = quantile(x, c(0, 1))[[1]]
       non_finite_bounds = !is.finite(bounds)
