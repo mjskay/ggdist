@@ -218,7 +218,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
         # find the smallest interval that contains each x value
         contains_x = outer(i_data[[xmin]], s_data[[x]], `<=`) & outer(i_data[[xmax]], s_data[[x]], `>=`)
         # need a fake interval guaranteed to contain all points (for NAs, points out of range...)
-        contains_x = rbind(TRUE, contains_x)
+        contains_x = rbind(rep(TRUE, NCOL(contains_x)), contains_x)
         width = c(Inf, i_data$.width)
         smallest_interval = apply(ifelse(contains_x, width, NA), 2, which.min)
 

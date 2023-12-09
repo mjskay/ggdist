@@ -98,43 +98,31 @@ compute_slab_spike = function(
     slab_type = slab_type,
     ...
   )
+
   dist = data$dist
   pdf_fun = approx_pdf(dist, s_data$.input, s_data$pdf)
   cdf_fun = approx_cdf(dist, s_data$.input, s_data$cdf)
 
-  # determine names for each "at" point
-  at_names = rlang::names2(at)
-  for (i in seq_along(at)[nchar(at_names) == 0]) {
-    at_names[[i]] = if (is.character(at[[i]])) {
-      at[[i]]
-    } else {
-      rlang::as_label(at[[i]])
-    }
-  }
-  # determine evaluation points
-  at_nested = lapply(at, function(at_i) {
-    if (!is.numeric(at_i)) {
-      at_fun = match_function(at_i)
-      at_i = at_fun(dist)
-    }
-    at_i
+  # determine evaluation points (inputs to slab functions)
+  input_nested = lapply(at, function(at_i) {
+    if (is.function(at_i)) at_i(dist) else at_i
   })
   # needs to be a vector (e.g. in cases of interval functions
   # like qi() which return matrices)
-  at = as.vector(unlist(at_nested, use.names = FALSE, recursive = FALSE))
-  names(at) = rep(at_names, times = lengths(at_nested))
+  input = unlist(input_nested, use.names = FALSE, recursive = FALSE)
+  names(input) = rep(names(at), times = lengths(input_nested))
 
   # evaluate functions
-  pdf = pdf_fun(at)
-  cdf = cdf_fun(at)
+  pdf = pdf_fun(input)
+  cdf = cdf_fun(input)
 
   data.frame(
-    .input = at,
-    at = names(at),
-    f = get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
+    .input = input,
+    at = names(input),
+    f = if (length(input) > 0) get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
     pdf = pdf,
     cdf = cdf,
-    n = s_data$n[[1]]
+    n = if (length(input) > 0) s_data$n[[1]]
   )
 }
 
@@ -151,9 +139,91 @@ StatSpike = ggproto("StatSpike", StatSlab,
     at = "median"
   ), StatSlab$default_params),
 
+  setup_params = function(self, data, params) {
+    params = ggproto_parent(StatSlab, self)$setup_params(data, params)
+
+    # normalize the `at` parameter so it is always a named list of functions,
+    # scalar strings, and scalar numerics
+    params$at = check_at(params$at)
+
+    params
+  },
+
   # workaround (#84)
   compute_slab = function(self, ...) compute_slab_spike(self, ...)
 )
 #' @rdname stat_spike
 #' @export
 stat_spike = make_stat(StatSpike, geom = "spike")
+
+
+# helpers -----------------------------------------------------------------
+
+# check the `at` parameter and normalize it to a flat list of named scalars
+# that are either functions or numerics
+check_at = function(at, call = parent.frame()) {
+  if (is.function(at)) at = list(at)
+  if (is.numeric(at) || is.character(at) || is.null(at)) at = as.list(at)
+  names(at) = rlang::names2(at)
+
+  if (!is.list(at)) {
+    cli::cli_abort(c(
+        "{.arg at} must be a {.cls function}, {.cls numeric}, {.cls character}, or {.cls list}.",
+        "x" = "{.arg at} is a {.cls {class(at)}}.",
+        "i" = "See the {.arg at} parameter of {.fun ggdist::stat_spike}."
+      ),
+      class = "ggdist_param_at_invalid",
+      call = call
+    )
+  }
+
+  is_wrong_type = !vapply(at, function(x) is.function(x) || is.numeric(x) || is.character(x), logical(1))
+  if (any(is_wrong_type)) {
+    wrong_type_i = which(is_wrong_type)
+    i = wrong_type_i[[1]]
+    cli::cli_abort(c(
+        "All elements of {.arg at} must be a {.cls function}, {.cls numeric}, or {.cls character}.",
+        "x" = "{.arg at} is an invalid type at position {wrong_type_i}.",
+        "x" = "{if (length(wrong_type_i) > 1) 'For example, '}{.code at[[{i}]]} is a {.cls {class(at[[i]])}}.",
+        "i" = "See the {.arg at} parameter of {.fun ggdist::stat_spike}."
+      ),
+      class = "ggdist_param_at_invalid",
+      call = call
+    )
+  }
+
+  # push names down into vectors --- we do this so that when we unnest into a list
+  # of scalars, if a name was provided for a vector it is retained
+  is_not_function = !vapply(at, is.function, logical(1))
+  named_vectors = which(rlang::have_name(at) & is_not_function)
+  for (i in named_vectors) {
+    if (!any(rlang::have_name(at[[i]]))) {
+      names(at[[i]]) = rep(names(at)[[i]], length(at[[i]]))
+      names(at)[[i]] = ""
+    }
+  }
+
+  # replace character and numeric vectors with lists and unnest them --- this ensures
+  # all elements of the list are scalar, which simplifies naming and logic
+  at[is_not_function] = lapply(at[is_not_function], as.list)
+  at = as.list(unlist(at, recursive = FALSE))
+
+  # ensure unnamed elements have names
+  fn_n = 0
+  for (i in which(!rlang::have_name(at))) {
+    names(at)[[i]] = if (is.function(at[[i]])) {
+      fn_n = fn_n + 1
+      paste0("<fn", fn_n, ">")
+    } else {
+      # everything is a scalar at this point, so we can assume at[[i]] has
+      # length 1
+      as.character(at[[i]])
+    }
+  }
+
+  # find functions for strings
+  is_character = vapply(at, is.character, logical(1))
+  at[is_character] = lapply(at[is_character], match_function)
+
+  at
+}
