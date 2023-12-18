@@ -666,10 +666,10 @@ nudge_bins = function(bin_midpoints, width, count = rep(1, length(bin_midpoints)
   # equivalent to A = matrix(rep_len(c(-1, 1, rep(0, n - 1)), n * (n - 1)), nrow = n)
   # when using solve.QP()
   Amat = matrix(rep(c(-1, 1), n - 1), nrow = 2)
-  Aind = matrix(
-    c(rep(2, n - 1), seq_len(n - 1), seq(2, n)),
-    nrow = 3,
-    byrow = TRUE
+  Aind = rbind(
+    rep(2, n - 1),
+    seq_len(n - 1),
+    seq(2, n)
   )
   b = rep(width, n - 1)
 
