@@ -974,18 +974,21 @@ differ from modes and highest-density intervals in terms of their densities:
 qi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
   ggplot(aes(xdist = dist)) + 
   stat_slab(aes(fill = after_stat(level)), point_interval = median_qi, .width = c(.5, .95)) + 
-  stat_spike(at = c(median, qi)) + 
+  # stat_spike(at = c(median, qi)) would also work, but this demonstrates how 
+  # to re-label the names of the `at` computed variable and use it in an
+  # aesthetic mapping by mapping it to `linetype`
+  stat_spike(aes(linetype = after_stat(at)), at = c("median", "interval (qi)" = qi)) + 
   scale_fill_brewer(na.value = "gray95") +
   scale_thickness_shared() +
   labs(subtitle = "stat_slab() + stat_spike(at = c(median, qi))")
 
 hdi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
   ggplot(aes(xdist = dist)) + 
-  stat_slab(aes(fill = after_stat(level)), point_interval = mode_hdci, .width = c(.5, .95)) + 
-  stat_spike(at = c(Mode, hdci)) +
+  stat_slab(aes(fill = after_stat(level)), point_interval = mode_hdi, .width = c(.5, .95)) + 
+  stat_spike(aes(linetype = after_stat(at)), at = c("mode" = Mode, "interval (hdi)" = hdi)) +
   scale_fill_brewer(na.value = "gray95") +
   scale_thickness_shared() +
-  labs(subtitle = "stat_slab() + stat_spike(at = c(Mode, hdci))")
+  labs(subtitle = "stat_slab() + stat_spike(at = c(Mode, hdi))")
 
 qi_plot_spikes /
   hdi_plot_spikes
