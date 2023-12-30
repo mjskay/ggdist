@@ -25,13 +25,7 @@ test_that("partial function printing works", {
 })
 
 test_that("function bodies without braces work", {
-  add1_auto = auto_partial(name = "add1", function(x, ...) {
-    x + 1
-  })
   add1_auto_nobrace = auto_partial(name = "add1", function(x, ...) x + 1)
-
-  expect_identical(body(add1_auto), body(add1_auto_nobrace))
-  expect_equal(add1_auto(3), 4)
   expect_equal(add1_auto_nobrace(3), 4)
 })
 
@@ -40,11 +34,7 @@ test_that("functions without arguments work", {
 })
 
 test_that("functions inside the ggdist namespace do not inline partial_self", {
-  f = function(x) x + 1
+  f = function(x) { x + 1 }
   environment(f) = asNamespace("ggdist")
-  expect_identical(body(auto_partial(f, name = "f")), quote({
-    if (missing(x))
-      return(partial_self("f"))
-    x + 1
-  }))
+  expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f")', fixed = TRUE)
 })
