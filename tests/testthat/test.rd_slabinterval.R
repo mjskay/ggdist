@@ -49,6 +49,14 @@ test_that("shortcut stat_slabinterval documentation generator works", {
 
 })
 
+test_that("shortcut stat_spike documentation generator works", {
+
+  stat_output = paste0(rd_slabinterval_shortcut_stat("spike", chart_type = "spike"), collapse = "\n")
+  expect_match(stat_output, "@title Spike plot (shortcut stat)", fixed = TRUE)
+  expect_match(stat_output, "- `at`:", fixed = TRUE)
+
+})
+
 test_that("shortcut geom_slabinterval documentation generator works", {
 
   geom_output = paste0(rd_slabinterval_shortcut_geom("interval", chart_type = "multiple-interval"), collapse = "\n")
