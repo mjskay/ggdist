@@ -185,6 +185,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
 
 draw_pointintervals = function(self, i_data, panel_params, coord,
   orientation, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
+  arrow,
   ...
 ) {
   if (nrow(i_data) == 0) return(list())
@@ -216,7 +217,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
   i_data[[xend]] = i_data[[xmax]]
   i_data[[yend]] = i_data[[y]]
   i_data = self$override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
-  interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
+  interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm, arrow = arrow))
 
   c(interval_grobs, point_grobs)
 }
@@ -606,6 +607,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
       specified with that aesthetic will not be adjusted using `fatten_point`.
       '),
+    arrow = '[grid::arrow()] giving the arrow heads to use on the interval, or `NULL` for no arrows.',
 
     # SUB_GEOMETRY FLAGS
     show_slab = 'Should the slab portion of the geom be drawn?',
@@ -620,6 +622,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     interval_size_domain = c(1, 6),
     interval_size_range = c(0.6, 1.4),
     fatten_point = 1.8,
+    arrow = NULL,
     show_slab = TRUE,
     show_point = TRUE,
     show_interval = TRUE,

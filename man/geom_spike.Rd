@@ -10,9 +10,9 @@ geom_spike(
   stat = "identity",
   position = "identity",
   ...,
-  arrow = NULL,
   orientation = NA,
   normalize = "all",
+  arrow = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -52,8 +52,6 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
-
 \item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
@@ -80,6 +78,8 @@ group so that the maximum height in each group is \code{1}.
 \item \code{"none"}: values are taken as is with no normalization (this should probably
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
+
+\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

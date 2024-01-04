@@ -30,7 +30,10 @@ test_that("horizontal grouped pointintervals work", {
   vdiffr::expect_doppelganger("grouped pointintervals (h, stat)",
     RankCorr_u_tau %>%
       ggplot(aes(y = factor(i), x = u_tau)) +
-      stat_pointinterval(.width = c(.66, .95))
+      stat_pointinterval(
+        .width = c(.66, .95),
+        arrow = arrow(angle = 45, length = unit(4, "pt"), type = "closed", ends = "both")
+      )
   )
 
   vdiffr::expect_doppelganger("grouped pointintervals (h, reverse order)",

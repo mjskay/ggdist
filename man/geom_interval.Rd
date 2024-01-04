@@ -13,6 +13,7 @@ geom_interval(
   orientation = NA,
   interval_size_range = c(1, 6),
   interval_size_domain = c(1, 6),
+  arrow = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -81,6 +82,8 @@ aesthetics; see \link{scales}.}
 \item{interval_size_domain}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics that will be
 translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the documentation
 for that argument.)}
+
+\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the interval, or \code{NULL} for no arrows.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

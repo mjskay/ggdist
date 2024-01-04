@@ -84,7 +84,7 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
 
   hidden_params = union(c(
     "show_slab", "show_point", "show_interval",
-    "interval_size_domain", "interval_size_range", "fatten_point"
+    "interval_size_domain", "interval_size_range", "fatten_point", "arrow"
   ), GeomSlabinterval$hidden_params),
 
   draw_key_slab = function(self, data, key_data, params, size) {

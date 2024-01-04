@@ -64,6 +64,7 @@ aesthetics; see \link{scales}.}
 \item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics that will be
 translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the documentation
 for that argument.)}
+\item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the interval, or \code{NULL} for no arrows.}
 }}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use

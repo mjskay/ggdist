@@ -60,7 +60,6 @@ to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \stron
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_spike]{geom_spike()}},
 these include:
 \describe{
-\item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
 \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
 \itemize{
 \item \code{"all"}: normalize so that the maximum height across all data is \code{1}.
@@ -72,6 +71,7 @@ group so that the maximum height in each group is \code{1}.
 \item \code{"none"}: values are taken as is with no normalization (this should probably
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
+\item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
 }}
 
 \item{at}{The points at which to evaluate the PDF and CDF of the distribution. One of:
