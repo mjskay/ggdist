@@ -5,6 +5,8 @@ New features and enhancements:
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
+* The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
+  (#206; thanks to @ASKurz for the suggestion).
 
 Bug fixes:
 
