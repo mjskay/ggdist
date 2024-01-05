@@ -106,7 +106,14 @@ hdi(
 
 Mode(x, na.rm = FALSE, ...)
 
-\method{Mode}{default}(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001)
+\method{Mode}{default}(
+  x,
+  na.rm = FALSE,
+  ...,
+  density = density_bounded(trim = TRUE),
+  n = 2001,
+  weights = NULL
+)
 
 \method{Mode}{rvar}(x, na.rm = FALSE, ...)
 
@@ -195,6 +202,9 @@ and unbounded data.}
 
 \item{n}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the number of points to use to estimate highest-density
 intervals or modes.}
+
+\item{weights}{For \code{\link[=Mode]{Mode()}}, an optional vector, which (if not \code{NULL}) is of the same length
+as \code{x} and provides weights for each element of \code{x}.}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding

@@ -108,19 +108,6 @@ distr_point_interval = function(dist, point_interval, trans, ...) {
   UseMethod("distr_point_interval")
 }
 #' @export
-distr_point_interval.numeric = function(dist, point_interval, trans, ...) {
-  point_interval(trans$transform(dist), .simple_names = TRUE, ...)
-}
-#' @export
-distr_point_interval.factor = function(dist, point_interval, trans, ...) {
-  # cannot calculate intervals on categorical distributions
-  distr_point_interval(NA_real_, point_interval, trans, ...)
-}
-#' @export
-distr_point_interval.ordered = function(dist, point_interval, trans, ...) {
-  distr_point_interval(as.numeric(dist), point_interval, trans, ...)
-}
-#' @export
 distr_point_interval.list = function(dist, point_interval, trans, ...) {
   check_dist_length_1(dist)
 
@@ -130,11 +117,16 @@ distr_point_interval.list = function(dist, point_interval, trans, ...) {
 #' @export
 distr_point_interval.distribution = function(dist, point_interval, trans, ...) {
   if (distr_is_sample(dist)) {
-    distr_point_interval(distr_get_sample(dist), point_interval, trans, ...)
+    x = distr_get_sample(dist)
+    if (is.ordered(x)) x = as.numeric(x)
+    # cannot calculate intervals on categorical distributions
+    else if (is.factor(x)) x = rep(NA_real_, length(x))
+
+    t_dist = distr_set_sample(dist, trans$transform(x))
   } else {
     t_dist = dist_transformed(dist, trans$transform, trans$inverse)
-    point_interval(t_dist, .simple_names = TRUE, ...)
   }
+  point_interval(t_dist, .simple_names = TRUE, ...)
 }
 #' @export
 distr_point_interval.rvar = distr_point_interval.distribution
@@ -259,11 +251,11 @@ distr_is_multivariate = function(dist) {
 #' Is a distribution sample based?
 #' @noRd
 distr_is_sample = function(dist) {
-  inherits(dist, c("rvar", "dist_sample")) ||
+  inherits(dist, c("rvar", "dist_sample", "ggdist__weighted_sample")) ||
     (
       inherits(dist, c("distribution")) &&
       length(dist) == 1 &&
-      inherits(vctrs::field(dist, 1), "dist_sample")
+      inherits(vctrs::field(dist, 1), c("dist_sample", "ggdist__weighted_sample"))
     )
 }
 
@@ -273,9 +265,39 @@ distr_get_sample = function(dist) {
   if (inherits(dist, "rvar")) {
     posterior::draws_of(dist)
   } else if (inherits(dist, "distribution")) {
-    vctrs::field(vctrs::field(dist, 1), 1)
+    vctrs::field(dist, 1)[["x"]]
+  } else if (inherits(dist, c("dist_sample", "ggdist__weighted_sample"))) {
+    dist[["x"]]
+  }
+}
+
+#' Modify samples from a sample-based distribution
+#' @noRd
+distr_set_sample = function(dist, value) {
+  if (inherits(dist, "rvar")) {
+    posterior::draws_of(dist) = value
+  } else if (inherits(dist, "distribution")) {
+    old_class = oldClass(dist)
+    dist = unclass(dist)
+    dist[[1]][["x"]] = value
+    class(dist) = old_class
+  } else if (inherits(dist, c("dist_sample", "ggdist__weighted_sample"))) {
+    dist[["x"]] = value
+  }
+  dist
+}
+
+#' Get all weights from a weighted sample-based distribution
+#' @noRd
+distr_get_sample_weights = function(dist) {
+  if (inherits(dist, "rvar")) {
+    NULL
+  } else if (inherits(dist, "distribution")) {
+    distr_get_sample_weights(vctrs::field(dist, 1))
   } else if (inherits(dist, "dist_sample")) {
-    vctrs::field(dist, 1)
+    NULL
+  } else if (inherits(dist, "ggdist__weighted_sample")) {
+    vctrs::field(dist, "weights")
   }
 }
 
@@ -321,7 +343,7 @@ is_dist_like = function(x) {
 }
 
 
-# custom distributions ----------------------------------------------------
+# wrapped categorical distribution ----------------------------------------------------
 
 #' A wrapped categorical distribution with a different level set
 #' @noRd
@@ -363,6 +385,74 @@ generate.ggdist__wrapped_categorical = function(x, ...) {
   generate(x[["wrapped_dist"]], ...)
 }
 
+
+# weighted sample distribution ----------------------------------------------------
+
+#' A sample distribution with weights
+#' @noRd
+.dist_weighted_sample = function(x, weights) {
+  x = vec_cast(x, list_of(x[[1]]))
+  weights = vec_cast(weights, list_of(numeric()))
+
+  weight_is_null = vapply(weights, is.null, logical(1))
+  stopifnot(all(lengths(x) == lengths(weights) | weight_is_null))
+
+  # only allow univariate samples since that's all we should ever end
+  # up with via mappings in ggplot
+  stopifnot(all(lengths(lapply(x, dim)) <= 1))
+
+  distributional::new_dist(
+    x = x,
+    weights = weights,
+    class = "ggdist__weighted_sample"
+  )
+}
+
+#' @export
+format.ggdist__weighted_sample <- function(x, ...){
+  paste0("weighted_sample[", length(x[["x"]]), "]")
+}
+
+#' @export
+density.ggdist__weighted_sample = function(x, at, ..., na.rm = TRUE) {
+  d = density_bounded(x[["x"]], weights = x[["weights"]], trim = TRUE, ..., na.rm = na.rm)
+  approx(d$x, d$y, xout = at, yleft = 0, yright = 0, ties = "ordered")$y
+}
+
+#' @export
+cdf.ggdist__weighted_sample = function(x, q, ..., na.rm = TRUE) {
+  F_x = weighted_ecdf(x[["x"]], weights = x[["weights"]], ..., na.rm = na.rm)
+  F_x(q)
+}
+
+#' @export
+quantile.ggdist__weighted_sample = function(x, p, ..., na.rm = TRUE) {
+  weighted_quantile(x[["x"]], p, weights = x[["weights"]], ..., na.rm = TRUE)
+}
+
+#' @export
+generate.ggdist__weighted_sample = function(x, times, ...) {
+  i = sample.int(length(x[["x"]]), times, replace = TRUE, prob = x[["weights"]])
+  x[["x"]][i]
+}
+
+#' @export
+mean.ggdist__weighted_sample = function(x, ...) {
+  if (is.null(x[["weights"]])){
+    mean(x[["x"]])
+  } else {
+    weighted.mean(x[["x"]], x[["weights"]])
+  }
+}
+
+#' @export
+variance.ggdist__weighted_sample = function(x, ...) {
+  if (is.null(x[["weights"]])){
+    variance(x[["x"]])
+  } else {
+    weighted_var(x[["x"]], x[["weights"]])
+  }
+}
 
 
 # transforming density functions ------------------------------------------

@@ -33,7 +33,8 @@ compute_limits_slabinterval = function(
 
   if (distr_is_sample(dist)) {
     sample = distr_get_sample(dist)
-    return(compute_limits_sample(sample, trans, trim, adjust, ...))
+    weights = distr_get_sample_weights(dist)
+    return(compute_limits_sample(sample, trans, trim, adjust, ..., weights = weights))
   }
 
   quantile_fun = distr_quantile(dist)
@@ -67,12 +68,12 @@ compute_limits_slabinterval = function(
 #' @param trans scale transformation
 #' @param trim/adjust see stat_slabinterval
 #' @noRd
-compute_limits_sample = function(x, trans, trim, adjust, ..., density = "bounded") {
+compute_limits_sample = function(x, trans, trim, adjust, ..., density = "bounded", weights = NULL) {
   density = match_function(density, "density_")
 
   # determine limits of data based on the density estimator
   x = trans$transform(x)
-  x_range = range(density(x, n = 2, range_only = TRUE, trim = trim, adjust = adjust)$x)
+  x_range = range(density(x, n = 2, range_only = TRUE, trim = trim, adjust = adjust, weights = weights)$x)
   data.frame(
     .lower = trans$inverse(x_range[[1]]),
     .upper = trans$inverse(x_range[[2]])
@@ -119,7 +120,8 @@ compute_slab_slabinterval = function(
       slab_type = slab_type, limits = limits, n = n,
       adjust = adjust, trim = trim, expand = expand,
       breaks = breaks, align = align, outline_bars = outline_bars,
-      ...
+      ...,
+      weights = distr_get_sample_weights(dist)
     ))
   } else if (trans$name == "identity") {
     pdf_fun = distr_pdf(dist)
@@ -186,7 +188,8 @@ compute_slab_sample = function(
   slab_type, limits, n,
   adjust, trim, expand, breaks, align, outline_bars,
   density,
-  ...
+  ...,
+  weights = NULL
 ) {
 
   if (is.integer(x) || inherits(x, "mapped_discrete")) {
@@ -199,16 +202,15 @@ compute_slab_sample = function(
   density = match_function(density, prefix = "density_")
 
   # calculate pdf and cdf
-  # TODO: pass weights here
   d = density(
     x, n = n, adjust = adjust, trim = trim,
-    breaks = breaks, align = align, outline_bars = outline_bars
+    breaks = breaks, align = align, outline_bars = outline_bars,
+    weights = weights
   )
   slab_df = data.frame(
     .input = trans$inverse(d$x),
     pdf = d$y,
-    # TODO: pass weights here
-    cdf = d$cdf %||% weighted_ecdf(x)(d$x)
+    cdf = d$cdf %||% weighted_ecdf(x, weights = weights)(d$x)
   )
 
   # extend x values to the range of the plot. To do that we have to include

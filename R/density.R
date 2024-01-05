@@ -479,6 +479,10 @@ bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
   from = min(x) - cut*bw,
   to = max(x) + cut*bw
 ) {
+  if (!is.null(weights)) {
+    weights = weights / sum(weights)
+  }
+
   if (adapt == 1) {
     # quick exit: just return the non-adaptive density
     return(density(

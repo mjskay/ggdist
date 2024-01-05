@@ -100,6 +100,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' and unbounded data.
 #' @param n For [hdi()] and [Mode()], the number of points to use to estimate highest-density
 #' intervals or modes.
+#' @param weights For [Mode()], an optional vector, which (if not `NULL`) is of the same length
+#' as `x` and provides weights for each element of `x`.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
@@ -417,7 +419,10 @@ hdi_ = function(x, ...) {
 }
 #' @importFrom stats density
 #' @export
-hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 4096) {
+hdi_.numeric = function(
+  x, .width = .95, na.rm = FALSE, ...,
+  density = density_bounded(trim = TRUE), n = 4096, weights = NULL
+) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -426,10 +431,10 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_b
   }
   x = check_na(x, na.rm)
 
-  intervals = .hdi_numeric(x, .width = .width, ..., density = density, n = n)
+  intervals = .hdi_numeric(x, .width = .width, ..., density = density, n = n, weights = weights)
   if (nrow(intervals) == 1) {
     # if the result is unimodal, switch to hdci (which will be more accurate)
-    intervals = hdci_.numeric(x, .width = .width)
+    intervals = hdci_.numeric(x, .width = .width, weights = weights)
   }
   intervals
 }
@@ -437,17 +442,17 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ..., density = density_b
 # based on hdr.dist_default from {distributional}
 # https://github.com/mitchelloharawild/distributional/blob/50e29554456d99e9b7671ba6110bebe5961683d2/R/default.R#L137
 #' @importFrom stats approx
-.hdi_numeric = function(x, .width = 0.95, ..., density = density_bounded(trim = TRUE), n = 4096) {
+.hdi_numeric = function(x, .width = 0.95, ..., density = density_bounded(trim = TRUE), weights = NULL, n = 4096) {
   density = match_function(density, "density_")
 
-  dist_x = quantile(x, ppoints(n, a = 0.5), names = FALSE)
+  dist_x = weighted_quantile(x, ppoints(n, a = 0.5), weights = weights)
   # Remove duplicate values of dist_x from less continuous distributions
   dist_x = unique(dist_x)
   if (length(dist_x) == 1) {
     # distribution is a constant => quick exit
     return(matrix(rep(dist_x, 2), ncol = 2))
   }
-  d = density(x, n = n)
+  d = density(x, n = n, weights = weights)
   dist_y = approx(d$x, d$y, dist_x)$y
   alpha = quantile(dist_y, probs = 1 - .width, names = FALSE)
 
@@ -490,7 +495,10 @@ hdi_.distribution = function(x, .width = .95, na.rm = FALSE, ..., density = dens
     return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
   }
   if (distr_is_sample(x)) {
-    return(hdi_.numeric(distr_get_sample(x), .width = .width, na.rm = na.rm, ..., density = density, n = n))
+    return(hdi_.numeric(
+      distr_get_sample(x), .width = .width, na.rm = na.rm, ...,
+      density = density, n = n, weights = distr_get_sample_weights(x)
+    ))
   }
 
   hilos = hdr(x, .width * 100, n = n, ...)
@@ -506,7 +514,7 @@ Mode = function(x, na.rm = FALSE, ...) {
 }
 #' @export
 #' @rdname point_interval
-Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001) {
+Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001, weights = NULL) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
@@ -516,12 +524,18 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
   density = match_function(density, "density_")
 
   if (is_integerish(x)) {
-    # for the discrete case, based on https://stackoverflow.com/a/8189441
-    ux = unique(x)
-    ux[which.max(tabulate(match(x, ux)))]
+    if (is.null(weights)) {
+      # for the discrete case, based on https://stackoverflow.com/a/8189441
+      ux = unique(x)
+      ux[which.max(tabulate(match(x, ux)))]
+    } else {
+      ux = unique(x)
+      ux_weights = vapply(split(weights, factor(ux, ux)), sum, numeric(1))
+      ux[which.max(ux_weights)]
+    }
   } else {
     # for the continuous case
-    d = density(x, n = n)
+    d = density(x, n = n, weights = weights)
     d$x[which.max(d$y)]
   }
 }
@@ -540,7 +554,7 @@ Mode.distribution = function(x, na.rm = FALSE, ...) {
     if (anyNA(x)) {
       NA_real_
     } else if (distr_is_sample(x)) {
-      Mode(distr_get_sample(x), na.rm = na.rm)
+      Mode(distr_get_sample(x), na.rm = na.rm, weights = distr_get_sample_weights(x))
     } else if (distr_is_constant(x)) {
       quantile(x, 0.5)[[1]]
     } else if (distr_is_discrete(x)) {
@@ -578,7 +592,7 @@ hdci_ = function(x, ...) {
 }
 #' @importFrom stats density
 #' @export
-hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
+hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ..., weights = NULL) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -586,9 +600,7 @@ hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
     return(matrix(range(x), ncol = 2))
   }
 
-  # d = density_bounded(x, na.rm = na.rm, adjust = 0.1)
-  # .hdci_function(ggdist::weighted_quantile_fun(d$x, weights = d$y, type = 5), .width = .width)
-  .hdci_function(ggdist::weighted_quantile_fun(x, na.rm = na.rm, type = 5), .width = .width)
+  .hdci_function(ggdist::weighted_quantile_fun(x, na.rm = na.rm, weights = weights, type = 5), .width = .width)
 }
 
 #' find the hdci using a quantile function
@@ -625,6 +637,11 @@ hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
   }
   if (isTRUE(.width == 1)) {
     return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
+  }
+  if (distr_is_sample(x)) {
+    return(hdci_.numeric(
+      distr_get_sample(x), .width = .width, na.rm = na.rm, ..., weights = distr_get_sample_weights(x)
+    ))
   }
 
   .hdci_function(function(p) quantile(x, p)[[1]], .width = .width)

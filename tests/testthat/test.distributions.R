@@ -105,14 +105,13 @@ test_that("distribution functions work on factor rvars", {
 
   expect_equal(
     distr_point_interval(x_ordered, median_qi, trans = scales::identity_trans()),
-    data.frame(
+    tibble(
       .value = 2,
       .lower = 1,
       .upper = 3,
       .width = 0.95,
       .point = "median",
-      .interval = "qi",
-      stringsAsFactors = FALSE
+      .interval = "qi"
     )
   )
 })
