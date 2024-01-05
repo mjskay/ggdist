@@ -358,7 +358,7 @@ density_histogram = auto_partial(name = "density_histogram", function(
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
 
-  h = weighted_hist(x, breaks = breaks, align = align)
+  h = weighted_hist(x, weights = weights, breaks = breaks, align = align)
   input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
   input_2 = h$breaks[-1]                 # second edge of bin
   input_ = (input_1 + input_2)/2   # center of bin

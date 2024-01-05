@@ -618,9 +618,9 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       }
 
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
-      # this means we need to wrap it as a dist_sample
+      # this means we need to wrap it as a weighted dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
-        data.frame(dist = dist_sample(list(trans$inverse(d[[x]]))))
+        data.frame(dist = .dist_weighted_sample(list(trans$inverse(d[[x]])), list(d[["weight"]])))
       })
       data[[x]] = median(data$dist)
     }

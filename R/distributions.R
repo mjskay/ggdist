@@ -186,7 +186,7 @@ distr_is_factor_like = function(dist) {
   inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
     is_factor_like = map_lgl_(vctrs::vec_data(dist), function(d) {
       inherits(d, c("dist_categorical", "ggdist__wrapped_categorical")) ||
-        (inherits(d, "dist_sample") && inherits(distr_get_sample(d), c("character", "factor"))) ||
+        (inherits(d, c("dist_sample", "ggdist__weighted_sample")) && inherits(distr_get_sample(d), c("character", "factor"))) ||
         is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
     })
     length(dist) > 0 && all(is_factor_like)
@@ -445,6 +445,7 @@ mean.ggdist__weighted_sample = function(x, ...) {
   }
 }
 
+#' @importFrom distributional variance
 #' @export
 variance.ggdist__weighted_sample = function(x, ...) {
   if (is.null(x[["weights"]])){
