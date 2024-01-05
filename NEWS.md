@@ -2,6 +2,10 @@
 
 New features and enhancements:
 
+* The `weight` aesthetic is now supported in `stat_slabinterval()`, including
+  weighted calculations for densities, CDFs, all interval types (quantile
+  intervals, highest density intervals, and highest density continuous intervals),
+  and all point summaries (mean, median, and mode) (#41).
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
