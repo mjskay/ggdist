@@ -290,14 +290,10 @@ distr_set_sample = function(dist, value) {
 #' Get all weights from a weighted sample-based distribution
 #' @noRd
 distr_get_sample_weights = function(dist) {
-  if (inherits(dist, "rvar")) {
-    NULL
-  } else if (inherits(dist, "distribution")) {
+  if (inherits(dist, "distribution")) {
     distr_get_sample_weights(vctrs::field(dist, 1))
-  } else if (inherits(dist, "dist_sample")) {
-    NULL
-  } else if (inherits(dist, "ggdist__weighted_sample")) {
-    vctrs::field(dist, "weights")
+  } else {
+    weights(dist)
   }
 }
 
@@ -453,6 +449,12 @@ variance.ggdist__weighted_sample = function(x, ...) {
   } else {
     weighted_var(x[["x"]], x[["weights"]])
   }
+}
+
+#' @importFrom stats weights
+#' @export
+weights.ggdist__weighted_sample = function(object, ...) {
+  object[["weights"]]
 }
 
 
