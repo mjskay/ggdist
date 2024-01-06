@@ -530,7 +530,7 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
       ux[which.max(tabulate(match(x, ux)))]
     } else {
       ux = unique(x)
-      ux_weights = vapply(split(weights, factor(ux, ux)), sum, numeric(1))
+      ux_weights = vapply(split(weights, factor(x, ux)), sum, numeric(1))
       ux[which.max(ux_weights)]
     }
   } else {
