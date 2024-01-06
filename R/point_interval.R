@@ -544,7 +544,7 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
 Mode.rvar = function(x, na.rm = FALSE, ...) {
   draws <- posterior::draws_of(x)
   dim <- dim(draws)
-  apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm)
+  apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm, weights = weights(x))
 }
 #' @importFrom stats optim
 #' @export
