@@ -113,9 +113,10 @@ draw_slabs = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
-  s_data = self$override_slab_aesthetics(rescale_slab_thickness(
+  s_data = rescale_slab_thickness(
     s_data, orientation, normalize, na.rm, name = "geom_slabinterval"
-  ))
+  )
+  s_data = self$override_slab_aesthetics(s_data)
 
   # avoid giving fill type warnings multiple times
   fill_type = switch_fill_type(fill_type, segments = "segments", gradient = "gradient")
@@ -172,14 +173,41 @@ draw_slabs = function(self, s_data, panel_params, coord,
     }
   })
 
+  subguide_grobs = dlply_(s_data, c(y, "side", "justification", "scale"), function(d) {
+    d <- coord$transform(d, panel_params)
+
+    # determine scale parameters
+    thickness_range = range(as.numeric(d$thickness_orig))
+    y_range = range(d[[ymax]])
+    zero = rescale(0, from = thickness_range, to = y_range)
+    scale = scale_thickness_shared()
+    scale$train(as.numeric(d$thickness_orig))
+
+    # construct a viewport such that the guide drawn in this viewport
+    # will have its data values at the correct locations
+    vp = viewport(just = c(0,0))
+    vp[[x]] = unit(0, "native")
+    vp[[y]] = unit(zero, "native")
+    vp[[width.]] = unit(1, "npc")
+    vp[[height]] = unit(diff(y_range), "native")
+
+    grobTree(
+      # rectGrob(gp = gpar(col = "red", fill = NA)),
+      subguide_left(scale, orientation = orientation),
+      vp = vp
+    )
+  })
+
   # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
   # unfortunately we can only do this by checking the first value of `side`, which
   # means this may be incorrect if `side` varies across slabs
-  switch_side(s_data$side[[1]], orientation,
+  slab_grobs = switch_side(s_data$side[[1]], orientation,
     topright = rev(slab_grobs),
     bottomleft = slab_grobs,
     both = slab_grobs
   )
+
+  c(slab_grobs, subguide_grobs)
 }
 
 
@@ -687,6 +715,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # must do this here: not setup_data, so it happens after the thickness scale
     # has been applied; and not draw_panel, because normalization may be applied
     # across panels.
+    data$thickness_orig = data$thickness # keep this around for drawing subguides
     switch(params$normalize,
       all = {
         # normalize so max height across all data is 1

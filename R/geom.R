@@ -121,6 +121,7 @@ define_orientation_variables = function(orientation) {
 
   if (orientation == "horizontal" || orientation == "y") {
     f$height = "height"
+    f$width. = "width"
 
     f$y = "y"
     f$ymin = "ymin"
@@ -137,6 +138,7 @@ define_orientation_variables = function(orientation) {
     f$xdist = "xdist"
   } else if (orientation == "vertical" || orientation == "x") {
     f$height = "width"
+    f$width. = "height"
 
     f$y = "x"
     f$ymin = "xmin"
