@@ -12,29 +12,35 @@ normalize_thickness = function(x) UseMethod("normalize_thickness")
 
 #' @export
 normalize_thickness.default = function(x) {
+  lower = NA_real_
+  upper = NA_real_
+
   finite_thickness = x[is.finite(x)]
   if (length(finite_thickness) > 0) {
     max_finite_thickness = max(finite_thickness)
     min_finite_thickness = min(finite_thickness, 0)
     if (max_finite_thickness > min_finite_thickness) {
-      x = (x - min_finite_thickness) / (max_finite_thickness - min_finite_thickness)
+      lower = min_finite_thickness
+      upper = max_finite_thickness
+      x = (x - lower) / (upper - lower)
     }
   }
   # infinite values get plotted at the max height (e.g. for point masses)
   if (length(x) > 0) {
     x[x == Inf] = 1
   }
-  x
+
+  thickness(x, lower, upper)
 }
 
 #' @export
 normalize_thickness.ggdist_thickness = function(x) {
   # thickness values passed directly into the geom (e.g. by
   # scale_thickness_shared()) are not normalized again.
-  x = as.double(x)
+
   # infinite values get plotted at the max height (e.g. for point masses)
   if (length(x) > 0) {
-    x[x == Inf] = 1
+    field(x, "x")[field(x, "x") == Inf] = 1
   }
   x
 }
@@ -53,6 +59,10 @@ normalize_thickness.data.frame = function(x) {
 #' all the same, and we want to preserve our normalization settings.
 #' so we scale things based on the min height to ensure everything
 #' is the same height
+#' @returns a list of two elements:
+#'   - data: a data frame containing the transformed version of `s_data`
+#'   - subguide_params: a data frame with one row per transformed group
+#'     in the output giving the parameters of the transformation
 #' @noRd
 rescale_slab_thickness = function(
   s_data, orientation, normalize, na.rm,
@@ -71,7 +81,7 @@ rescale_slab_thickness = function(
   min_height = min(s_data[[height]])
 
   # must do this within groups so that `side` can vary by slab
-  ddply_(s_data, c("group", y), function(d) {
+  data__params = dlply_(s_data, c("group", y), function(d) {
     scaling_aes = c("side", "justification", "scale")
     for (a in scaling_aes) {
       # use %in% here so that `NA`s are treated as equal
@@ -83,37 +93,59 @@ rescale_slab_thickness = function(
       }
     }
 
-    thickness_scale = d$scale * min_height
+    thickness_scale = d$scale[[1]] * min_height
 
+    subguide_params = data.frame(
+      group = d$group[[1]],
+      side = d$size[[1]],
+      justification = d$justification[[1]],
+      scale = d$scale[[1]],
+      thickness_lower = thickness_lower(d$thickness),
+      thickness_upper = thickness_upper(d$thickness)
+    )
+    subguide_params[[y]] = d[[y]][[1]]
+
+    thickness = as.numeric(d$thickness)
     switch_side(d$side[[1]], orientation,
       topright = {
+        subguide_params[[ymin]] = d[[y]][[1]] - d$justification[[1]] * thickness_scale
+        subguide_params[[ymax]] = d[[y]][[1]] + (1 - d$justification[[1]]) * thickness_scale
         d[[ymin]] = d[[y]] - d$justification * thickness_scale
-        d[[ymax]] = d[[y]] + (d$thickness - d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + (thickness - d$justification) * thickness_scale
       },
       bottomleft = {
-        d[[ymin]] = d[[y]] - (d$thickness - 1 + d$justification) * thickness_scale
+        subguide_params[[ymin]] = d[[y]][[1]] + (1 - d$justification[[1]]) * thickness_scale
+        subguide_params[[ymax]] = d[[y]][[1]] - d$justification[[1]] * thickness_scale
+        d[[ymin]] = d[[y]] - (thickness - 1 + d$justification) * thickness_scale
         d[[ymax]] = d[[y]] + (1 - d$justification) * thickness_scale
       },
       both = {
-        d[[ymin]] = d[[y]] - d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
-        d[[ymax]] = d[[y]] + d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
+        subguide_params[[ymin]] = d[[y]][[1]] - (0.5 - d$justification[[1]]) * thickness_scale
+        subguide_params[[ymax]] = d[[y]][[1]] + (1 - d$justification[[1]]) * thickness_scale
+        d[[ymin]] = d[[y]] - thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
       }
     )
 
-    d
+    list(data = d, subguide_params = subguide_params)
   })
+
+  list(
+    data = bind_rows(lapply(data__params, `[[`, "data")),
+    subguide_params = bind_rows(lapply(data__params, `[[`, "subguide_params"))
+  )
 }
 
 
 # drawing functions -------------------------------------------------------
 
 draw_slabs = function(self, s_data, panel_params, coord,
-  orientation, normalize, fill_type, na.rm,
+  orientation, normalize, fill_type, na.rm, subguide,
   ...
 ) {
   define_orientation_variables(orientation)
 
-  s_data = rescale_slab_thickness(
+  c(s_data, subguide_params) %<-% rescale_slab_thickness(
     s_data, orientation, normalize, na.rm, name = "geom_slabinterval"
   )
   s_data = self$override_slab_aesthetics(s_data)
@@ -173,30 +205,38 @@ draw_slabs = function(self, s_data, panel_params, coord,
     }
   })
 
-  subguide_grobs = dlply_(s_data, c(y, "side", "justification", "scale"), function(d) {
-    d <- coord$transform(d, panel_params)
+  subguide_grobs = if (identical(subguide, "none")) {
+    # quick exit, also avoid errors for multiple non-equal axes when not drawing them
+    list()
+  } else {
+    subguide_fun = match_function(subguide, "subguide_")
+    subguide_params = coord$transform(subguide_params, panel_params)
+    dlply_(subguide_params, c(y, "side", "justification", "scale"), function(d) {
+      d$group = NULL
+      if (nrow(unique(d)) > 1) {
+        cli_abort(c(
+          "Cannot draw a subguide for the thickness axis when multiple slabs
+          with different normalizations are drawn on the same axis."
+        ))
+      }
 
-    # determine scale parameters
-    thickness_range = range(as.numeric(d$thickness_orig))
-    y_range = range(d[[ymax]])
-    zero = rescale(0, from = thickness_range, to = y_range)
-    scale = scale_thickness_shared()
-    scale$train(as.numeric(d$thickness_orig))
+      scale = scale_thickness_shared()
+      scale$train(c(d$thickness_lower, d$thickness_upper))
 
-    # construct a viewport such that the guide drawn in this viewport
-    # will have its data values at the correct locations
-    vp = viewport(just = c(0,0))
-    vp[[x]] = unit(0, "native")
-    vp[[y]] = unit(zero, "native")
-    vp[[width.]] = unit(1, "npc")
-    vp[[height]] = unit(diff(y_range), "native")
+      # construct a viewport such that the guide drawn in this viewport
+      # will have its data values at the correct locations
+      vp = viewport(just = c(0,0))
+      vp[[x]] = unit(0, "native")
+      vp[[y]] = unit(d[[y]], "native")
+      vp[[width.]] = unit(1, "npc")
+      vp[[height]] = unit(d[[ymax]] - d[[ymin]], "native")
 
-    grobTree(
-      # rectGrob(gp = gpar(col = "red", fill = NA)),
-      subguide_left(scale, orientation = orientation),
-      vp = vp
-    )
-  })
+      grobTree(
+        subguide_fun(scale, orientation = orientation),
+        vp = vp
+      )
+    })
+  }
 
   # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
   # unfortunately we can only do this by checking the first value of `side`, which
@@ -640,7 +680,21 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # SUB_GEOMETRY FLAGS
     show_slab = 'Should the slab portion of the geom be drawn?',
     show_point = 'Should the point portion of the geom be drawn?',
-    show_interval = 'Should the interval portion of the geom be drawn?'
+    show_interval = 'Should the interval portion of the geom be drawn?',
+
+    # GUIDES
+    subguide = glue_doc('
+      Sub-guide used to annotate the `thickness` scale. One of:
+      \\itemize{
+        \\item A function that takes a `scale` argument giving a [ggplot2::Scale]
+          object and an `orientation` argument giving the orientation of the
+          geometry and then returns a [grid::grob] that will draw the axis
+          annotation, such as [subguide_axis()] (to draw a traditional axis) or
+          [subguide_none()] (to draw no annotation).
+        \\item A string giving the name of such a function when prefixed
+          with `"subguide"`; e.g. `"axis"` or `"none"`.
+      }
+      ')
   ), AbstractGeom$param_docs),
 
   default_params = list(
@@ -654,6 +708,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     show_slab = TRUE,
     show_point = TRUE,
     show_interval = TRUE,
+    subguide = "none",
     na.rm = FALSE
   ),
 

@@ -19,6 +19,7 @@ geom_dots(
   overflow = "keep",
   verbose = FALSE,
   orientation = NA,
+  subguide = "none",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -175,6 +176,17 @@ draw points, intervals, and slabs.
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
+
+\item{subguide}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\itemize{
+\item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
+object and an \code{orientation} argument giving the orientation of the
+geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
+\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation).
+\item A string giving the name of such a function when prefixed
+with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
+}}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

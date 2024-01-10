@@ -20,7 +20,7 @@ scale_thickness_shared(
 
 scale_thickness_identity(..., guide = "none")
 
-thickness(x = double())
+thickness(x = double(), lower = NA_real_, upper = NA_real_)
 }
 \arguments{
 \item{name}{The name of the scale. Used as the axis or legend title. If
@@ -69,7 +69,10 @@ values be allowed to be renormalized by geoms (e.g. via the \code{normalize} par
 to \code{\link[=geom_slabinterval]{geom_slabinterval()}})? The default is \code{FALSE}: if \code{scale_thickness_shared()}
 is in use, the geom-specific \code{normalize} parameter is ignored (this is achieved
 by flagging values as already normalized by wrapping them in \code{thickness()}).
-Set this to \code{TRUE} to allow geoms to also apply their own normalization.}
+Set this to \code{TRUE} to allow geoms to also apply their own normalization.
+Note that if you set renormalize to \code{TRUE}, subguides created via the
+\code{subguide} parameter to \code{\link[=geom_slabinterval]{geom_slabinterval()}} will display the scaled values
+output by this scale, not the original data values.}
 
 \item{oob}{One of:
 \itemize{
@@ -138,6 +141,10 @@ transformation with \code{\link[scales:trans_new]{scales::trans_new()}}.}
 
 \item{x}{An object (typically a \code{numeric()}) to be converted to a \code{thickness()}
 object.}
+
+\item{lower}{The original lower bounds of thickness values before scaling.}
+
+\item{upper}{The original upper bounds of thickness values before scaling.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{thickness}

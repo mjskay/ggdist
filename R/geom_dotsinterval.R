@@ -169,9 +169,10 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
-  s_data = self$override_slab_aesthetics(rescale_slab_thickness(
+  c(s_data, subguide_params) %<-% rescale_slab_thickness(
     s_data, orientation, normalize, na.rm, name = "geom_dotsinterval"
-  ))
+  )
+  s_data = self$override_slab_aesthetics(s_data)
   if (nrow(s_data) == 0) return(list())
 
   # in order for the dots grob to respect the `justification` aesthetic, we

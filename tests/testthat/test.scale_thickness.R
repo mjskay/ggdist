@@ -47,7 +47,7 @@ test_that("thickness formatting works", {
   expect_equal(vec_ptype_full(thickness()), "thickness")
   expect_equal(vec_ptype_abbr(thickness()), "thk")
   expect_equal(format(thickness()), character())
-  expect_equal(format(thickness(1:2)), c("1thk", "2thk"))
+  expect_equal(format(thickness(1:2, 3, 4)), c("1thk [3,4]", "2thk [3,4]"))
 })
 
 test_that("thickness casting works", {

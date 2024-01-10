@@ -89,6 +89,16 @@ can be set explicitly). On R < 4.2, support for gradients cannot be auto-detecte
 fall back to \code{fill_type = "segments"}, in which case you can set \code{fill_type = "gradient"} explicitly
 if you are using a graphics device that support gradients.
 }}
+\item{\code{subguide}}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\itemize{
+\item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
+object and an \code{orientation} argument giving the orientation of the
+geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
+\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation).
+\item A string giving the name of such a function when prefixed
+with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
+}}
 }}
 
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper

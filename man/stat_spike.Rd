@@ -72,6 +72,16 @@ group so that the maximum height in each group is \code{1}.
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
 \item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
+\item{\code{subguide}}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\itemize{
+\item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
+object and an \code{orientation} argument giving the orientation of the
+geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
+\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation).
+\item A string giving the name of such a function when prefixed
+with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
+}}
 }}
 
 \item{at}{The points at which to evaluate the PDF and CDF of the distribution. One of:

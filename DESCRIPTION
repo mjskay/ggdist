@@ -116,6 +116,7 @@ Collate:
     "stat_lineribbon.R"
     "stat_spike.R"
     "student_t.R"
+    "subguide.R"
     "testthat.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
