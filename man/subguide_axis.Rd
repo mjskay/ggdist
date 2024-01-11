@@ -2,27 +2,38 @@
 % Please edit documentation in R/subguide.R
 \name{subguide_axis}
 \alias{subguide_axis}
+\alias{subguide_inside}
+\alias{subguide_outside}
 \title{Axis sub-guide for thickness scales}
 \usage{
 subguide_axis(
   scale,
   title = NULL,
+  position = 0,
   just = 0,
   label_side = "topright",
   orientation = "horizontal",
   theme = theme_get()
 )
+
+subguide_inside(...)
+
+subguide_outside(...)
 }
 \arguments{
 \item{scale}{A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}, typically an instance of \code{\link[=scale_thickness_shared]{scale_thickness_shared()}}.}
 
 \item{title}{The title of the scale shown on the sub-guide's axis.}
 
-\item{just}{Numeric value between \code{0} and \code{1} giving the justification of the
+\item{position}{Numeric value between \code{0} and \code{1} giving the position of the
 guide relative to the axis: \code{0} causes the sub-guide to be drawn on the
 left or bottom depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"},
 and \code{1} causes the sub-guide to be drawn on the top or right depending on
 if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.}
+
+\item{just}{Numeric value between \code{0} and \code{1} giving the justification of the
+guide relative to its position: 0 means aligned towards the inside of the
+axis edge, 1 means aligned towards the outside of the axis edge.}
 
 \item{label_side}{Which side of the axis to draw the ticks and labels on.
 \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms which cause the labels
@@ -31,7 +42,10 @@ to be drawn on the top or the right depending on if \code{orientation} is
 are synonyms which cause the labels to be drawn on the bottom or the left
 depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
 \code{"topleft"} causes the labels to be drawn on the top or the left, and
-\code{"bottomright"} causes the labels to be drawn on the bottom or the right.}
+\code{"bottomright"} causes the labels to be drawn on the bottom or the right.
+\code{"inside"} causes the labels to be drawn on the side closest to the inside
+of the chart, depending on \code{position}, and \code{"outside"} on the side closest
+to the outside of the chart.}
 
 \item{orientation}{Orientation of the geometry this sub-guide is for. One
 of \code{"horizontal"} (\code{"y"}) or \code{"vertical"} (\code{"x"}). See the \code{orientation}
@@ -48,6 +62,11 @@ This is a sub-guide intended for annotating the \link{thickness} aesthetic
 in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
+}
+\details{
+\code{\link[=subguide_inside]{subguide_inside()}} is a shortcut for \code{subguide_axis(label_side = "inside")}
+
+\code{\link[=subguide_outside]{subguide_outside()}} is a shortcut for \code{subguide_axis(label_side = "outside", just = 1)}
 }
 \seealso{
 Other sub-guides: 

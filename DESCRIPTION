@@ -35,6 +35,7 @@ Imports:
     numDeriv,
     glue,
     quadprog,
+    gtable,
     Rcpp
 Suggests:
     knitr,
