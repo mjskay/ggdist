@@ -84,7 +84,7 @@ NULL
 #' @importFrom rlang as_quosure enquos eval_tidy expr get_expr
 partial_self = function(name = NULL) {
   f = sys.function(-1L)
-  call = match.call(f, sys.call(-1L))
+  call = match.call(f, sys.call(-1L), TRUE, parent.frame(2L))
   f_quo = as_quosure(call[[1]], parent.frame(2L))
   default_args = lapply(call[-1], as_quosure, env = parent.frame(2L))
   name = name %||% deparse0(get_expr(call[[1]]))

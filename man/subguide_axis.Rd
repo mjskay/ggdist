@@ -4,11 +4,14 @@
 \alias{subguide_axis}
 \alias{subguide_inside}
 \alias{subguide_outside}
+\alias{subguide_count}
 \title{Axis sub-guide for thickness scales}
 \usage{
 subguide_axis(
-  scale,
+  values,
   title = NULL,
+  breaks = waiver(),
+  labels = waiver(),
   position = 0,
   just = 0,
   label_side = "topright",
@@ -16,20 +19,48 @@ subguide_axis(
   theme = theme_get()
 )
 
-subguide_inside(...)
+subguide_inside(..., label_side = "inside")
 
-subguide_outside(...)
+subguide_outside(..., label_side = "outside", just = 1)
+
+subguide_count(..., breaks = scales::breaks_width(1))
 }
 \arguments{
-\item{scale}{A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}, typically an instance of \code{\link[=scale_thickness_shared]{scale_thickness_shared()}}.}
+\item{values}{Values used to construct the scale used for this guide.
+Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 
 \item{title}{The title of the scale shown on the sub-guide's axis.}
+
+\item{breaks}{One of:
+\itemize{
+\item \code{NULL} for no breaks
+\item \code{waiver()} for the default breaks computed by the
+\link[scales:trans_new]{transformation object}
+\item A numeric vector of positions
+\item A function that takes the limits as input and returns breaks
+as output (e.g., a function returned by \code{\link[scales:breaks_extended]{scales::extended_breaks()}}).
+Also accepts rlang \link[rlang:as_function]{lambda} function notation.
+}}
+
+\item{labels}{One of:
+\itemize{
+\item \code{NULL} for no labels
+\item \code{waiver()} for the default labels computed by the
+transformation object
+\item A character vector giving labels (must be same length as \code{breaks})
+\item An expression vector (must be the same length as breaks). See ?plotmath for details.
+\item A function that takes the breaks as input and returns labels
+as output. Also accepts rlang \link[rlang:as_function]{lambda} function
+notation.
+}}
 
 \item{position}{Numeric value between \code{0} and \code{1} giving the position of the
 guide relative to the axis: \code{0} causes the sub-guide to be drawn on the
 left or bottom depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"},
 and \code{1} causes the sub-guide to be drawn on the top or right depending on
-if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.}
+if \code{orientation} is \code{"horizontal"} or \code{"vertical"}. May also be a string
+indicating the position: \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"},
+\code{"topright"}, \code{"topleft"}, \code{"bottomright"}, or \code{"bottomleft"}.}
 
 \item{just}{Numeric value between \code{0} and \code{1} giving the justification of the
 guide relative to its position: 0 means aligned towards the inside of the
@@ -56,6 +87,9 @@ sub-guide elements are drawn in. The title label is drawn using the
 \code{"axis.title.x"} or \code{"axis.title.y"} theme setting, and the axis line,
 ticks, and tick labels are drawn using \code{\link[=guide_axis]{guide_axis()}}, so the same theme
 settings that normally apply to axis guides will be followed.}
+
+\item{...}{Arguments passed to other functions, typically back to
+\code{subguide_axis()} itself.}
 }
 \description{
 This is a sub-guide intended for annotating the \link{thickness} aesthetic
@@ -64,9 +98,14 @@ in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{
-\code{\link[=subguide_inside]{subguide_inside()}} is a shortcut for \code{subguide_axis(label_side = "inside")}
+\code{\link[=subguide_inside]{subguide_inside()}} is a shortcut for drawing labels inside of the chart
+region.
 
-\code{\link[=subguide_outside]{subguide_outside()}} is a shortcut for \code{subguide_axis(label_side = "outside", just = 1)}
+\code{\link[=subguide_outside]{subguide_outside()}} is a shortcut for drawing labels outside of the chart
+region.
+
+\code{\link[=subguide_count]{subguide_count()}} is a shortcut for drawing labels where each whole number
+is labeled, useful for labeling counts in \code{\link[=geom_dots]{geom_dots()}}.
 }
 \seealso{
 Other sub-guides: 

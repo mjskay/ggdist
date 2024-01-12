@@ -11,6 +11,11 @@
 normalize_thickness = function(x) UseMethod("normalize_thickness")
 
 #' @export
+normalize_thickness.NULL = function(x) {
+  NULL
+}
+
+#' @export
 normalize_thickness.default = function(x) {
   lower = NA_real_
   upper = NA_real_
@@ -76,7 +81,7 @@ rescale_slab_thickness = function(
   s_data = ggplot2::remove_missing(s_data, na.rm, c(height, "justification", "scale"), name = name, finite = TRUE)
   # side is a character vector, thus need finite = FALSE for it; x/y can be Inf here
   s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "side"), name = name)
-  if (nrow(s_data) == 0) return(s_data)
+  if (nrow(s_data) == 0) return(list(data = s_data, subguide_params = data.frame()))
 
   min_height = min(s_data[[height]])
 
@@ -120,7 +125,7 @@ rescale_slab_thickness = function(
         d[[ymax]] = d[[y]] + (1 - d$justification) * thickness_scale
       },
       both = {
-        subguide_params[[ymin]] = d[[y]][[1]] - (0.5 - d$justification[[1]]) * thickness_scale
+        subguide_params[[ymin]] = d[[y]][[1]] + (0.5 - d$justification[[1]]) * thickness_scale
         subguide_params[[ymax]] = d[[y]][[1]] + (1 - d$justification[[1]]) * thickness_scale
         d[[ymin]] = d[[y]] - thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
         d[[ymax]] = d[[y]] + thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
@@ -220,19 +225,16 @@ draw_slabs = function(self, s_data, panel_params, coord,
         ))
       }
 
-      scale = scale_thickness_shared()
-      scale$train(c(d$thickness_lower, d$thickness_upper))
-
       # construct a viewport such that the guide drawn in this viewport
       # will have its data values at the correct locations
       vp = viewport(just = c(0,0))
       vp[[x]] = unit(0, "native")
-      vp[[y]] = unit(d[[y]], "native")
+      vp[[y]] = unit(d[[ymin]], "native")
       vp[[width.]] = unit(1, "npc")
       vp[[height]] = unit(d[[ymax]] - d[[ymin]], "native")
 
       grobTree(
-        subguide_fun(scale, orientation = orientation),
+        subguide_fun(c(d$thickness_lower, d$thickness_upper), orientation = orientation),
         vp = vp
       )
     })
@@ -770,7 +772,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # must do this here: not setup_data, so it happens after the thickness scale
     # has been applied; and not draw_panel, because normalization may be applied
     # across panels.
-    data$thickness_orig = data$thickness # keep this around for drawing subguides
     switch(params$normalize,
       all = {
         # normalize so max height across all data is 1

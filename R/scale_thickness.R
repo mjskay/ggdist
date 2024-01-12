@@ -165,6 +165,7 @@ scale_type.ggdist_thickness = function(x) {
 # data type for thickness ---------------------------------------------------------------
 
 new_thickness = function(x = double(), lower = NA_real_, upper = NA_real_) {
+  if (length(x) < 1) x = double()
   stopifnot(is.double(x))
   if (length(lower) <= 1) lower = rep(lower, length(x))
   if (length(upper) <= 1) upper = rep(upper, length(x))
@@ -185,7 +186,6 @@ thickness = function(x = double(), lower = NA_real_, upper = NA_real_) {
 }
 
 
-
 # bounds ------------------------------------------------------------------
 
 thickness_lower = function(x) {
@@ -201,6 +201,11 @@ thickness_upper = function(x) {
 
 is_thickness = function(x) {
   inherits(x, "ggdist_thickness")
+}
+
+#' @export
+is.na.ggdist_thickness = function(x) {
+  is.na(field(x, "x"))
 }
 
 

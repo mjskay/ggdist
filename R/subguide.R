@@ -5,7 +5,9 @@
 #' [geom_slabinterval()].
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
-#' @param scale A [ggplot2::Scale], typically an instance of [scale_thickness_shared()].
+#' @inheritParams scale_thickness
+#' @param values Values used to construct the scale used for this guide.
+#'    Typically provided automatically by [geom_slabinterval()].
 #' @param title The title of the scale shown on the sub-guide's axis.
 #' @param position Numeric value between `0` and `1` giving the position of the
 #'    guide relative to the axis: `0` causes the sub-guide to be drawn on the
@@ -41,8 +43,10 @@
 #' @family sub-guides
 #' @export
 subguide_axis = auto_partial(name = "subguide_axis", function(
-  scale,
+  values,
   title = NULL,
+  breaks = waiver(),
+  labels = waiver(),
   position = 0,
   just = 0,
   label_side = "topright",
@@ -52,6 +56,9 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   define_orientation_variables(orientation)
   grob_width = switch(width., width = grobWidth, height = grobHeight)
   position = get_subguide_position(position, orientation)
+
+  scale = scale_thickness_shared(breaks = breaks, labels = labels, limits = range(values))
+  scale$train(values)
 
   break_positions = as.numeric(scale$map(scale$get_breaks()))
   break_labels = scale$get_labels()
@@ -92,16 +99,31 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
 })
 
 #' @details
-#' [subguide_inside()] is a shortcut for `subguide_axis(label_side = "inside")`
+#' [subguide_inside()] is a shortcut for drawing labels inside of the chart
+#' region.
 #' @rdname subguide_axis
 #' @export
-subguide_inside = subguide_axis(label_side = "inside")
+subguide_inside = function(..., label_side = "inside") {
+  subguide_axis(..., label_side = label_side)
+}
 
 #' @details
-#' [subguide_outside()] is a shortcut for `subguide_axis(label_side = "outside", just = 1)`
+#' [subguide_outside()] is a shortcut for drawing labels outside of the chart
+#' region.
 #' @rdname subguide_axis
 #' @export
-subguide_outside = subguide_axis(label_side = "outside", just = 1)
+subguide_outside = function(..., label_side = "outside", just = 1) {
+  subguide_axis(..., label_side = label_side, just = just)
+}
+
+#' @details
+#' [subguide_count()] is a shortcut for drawing labels where each whole number
+#' is labeled, useful for labeling counts in [geom_dots()].
+#' @rdname subguide_axis
+#' @export
+subguide_count = function(..., breaks = scales::breaks_width(1)) {
+  subguide_axis(..., breaks = breaks)
+}
 
 #' Empty sub-guide for thickness scales
 #'
@@ -161,6 +183,7 @@ get_subguide_position = function(position, orientation) {
 
 #' Transform the combination of `position` and `side` into an axis position;
 #' i.e. one of `"left"` or `"right"`.
+#' @noRd
 get_subguide_axis_position = function(side, position, orientation) {
   switch(orientation,
     y = ,

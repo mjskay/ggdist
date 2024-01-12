@@ -13,6 +13,7 @@ dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
   overlaps = "nudge", overflow = "keep",
+  subguide = "none",
   verbose = FALSE,
   orientation = "vertical"
 ) {
@@ -25,6 +26,7 @@ dots_grob = function(data, x, y, xscale = 1,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
     overlaps = overlaps, overflow = overflow,
+    subguide = subguide,
     verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -44,6 +46,7 @@ makeContent.dots_grob = function(x) {
   layout = grob_$layout
   overlaps = grob_$overlaps
   overflow = grob_$overflow
+  subguide = grob_$subguide
 
   define_orientation_variables(orientation)
 
@@ -109,7 +112,7 @@ makeContent.dots_grob = function(x) {
   }
 
   # now, draw all the dotplots using the same bin width
-  children = do.call(gList, lapply(datas, function(d) {
+  dot_grobs = lapply(datas, function(d) {
     # bin the dots
     dot_positions = bin_dots(
       d$x, d$y,
@@ -150,9 +153,51 @@ makeContent.dots_grob = function(x) {
         lty = d$linetype
       )
     )
-  }))
+  })
 
-  setChildren(grob_, children)
+  # generate subguide if requested
+  subguide_grobs = if (identical(subguide, "none")) {
+    # quick exit, also avoid errors for multiple non-equal axes when not drawing them
+    list()
+  } else {
+    subguide_fun = match_function(subguide, "subguide_")
+    subguide_params = bind_rows(lapply(datas, `[`, i = 1, j = , drop = FALSE))
+    dlply_(
+      subguide_params[, c(y, ymin, ymax, "side", "justification", "scale")],
+      c(y, "side", "justification", "scale"),
+      function(d) {
+        if (nrow(unique(d)) > 1) {
+          cli_abort(c(
+            "Cannot draw a subguide for the dot count axis when multiple dots
+             geometries with different parameters are drawn on the same axis."
+          ))
+        }
+        d = d[1, ]
+
+        dot_height = binwidth * heightratio / stackratio
+        guide_height = max(d[[ymax]] - d[[y]], d[[y]] - d[[ymin]])
+        direction = switch_side(d$side, orientation, topright = 1, bottomleft = -1, both = 1)
+        both_adjust = if (d$side == "both") 2 else 1
+        not_both = if (d$side == "both") 0 else 1
+        max_count = guide_height / binwidth / heightratio * both_adjust + 1 - 1/stackratio
+
+        # construct a viewport such that the guide drawn in this viewport
+        # will have its data values at the correct locations
+        vp = viewport(just = c(0,0))
+        vp[[x]] = unit(0, "native")
+        vp[[y]] = unit(d[[y]] + dot_height / 2 * not_both * direction, "native")
+        vp[[width.]] = unit(1, "npc")
+        vp[[height]] = unit(guide_height - dot_height / both_adjust, "native") * direction
+
+
+        grobTree(
+          subguide_fun(c(1, max_count), orientation = orientation),
+          vp = vp
+        )
+      })
+  }
+
+  setChildren(grob_, do.call(gList, c(dot_grobs, subguide_grobs)))
 }
 
 
@@ -162,6 +207,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
   overlaps, overflow,
+  subguide,
   verbose,
   ...
 ) {
@@ -224,6 +270,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     layout = layout,
     overlaps = overlaps,
     overflow = overflow,
+    subguide = subguide,
     verbose = verbose,
     orientation = orientation
   ))

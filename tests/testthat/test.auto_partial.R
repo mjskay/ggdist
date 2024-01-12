@@ -38,3 +38,12 @@ test_that("functions inside the ggdist namespace do not inline partial_self", {
   environment(f) = asNamespace("ggdist")
   expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f")', fixed = TRUE)
 })
+
+test_that("wrapper functions work", {
+  f = auto_partial(function(x, y = 1, z = 2) { y + z }, name = "f")
+  g = function(..., y = 2) f(..., y = y)
+
+  expect_output(print(g(y = 2)), "<partial_function>:.*f\\(y = y\\)")
+  expect_equal(g(1), f(1, y = 2))
+  expect_equal(g(1, y = 3, z = 4), f(1, y = 3, z = 4))
+})
