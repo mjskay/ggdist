@@ -499,14 +499,17 @@ parameter. The `.dist_obj` vector can be assigned to the `xdist` or `ydist` aest
 priors %>%
   parse_dist(prior) %>%
   ggplot(aes(y = paste(class, "~", format(.dist_obj)), xdist = .dist_obj)) +
-  stat_halfeye() +
+  stat_halfeye(subguide = subguide_inside(position = "right", title = "density")) +
   labs(
     title = "stat_halfeye()",
-    subtitle = "with brms::prior() and ggdist::parse_dist() to visualize priors",
+    subtitle = "with parse_dist() and brms::prior() to show priors",
     x = NULL,
     y = NULL
   )
 ```
+
+This example also demonstrates the use of sub-guides to label the `thickness` axis.
+For more on subguides, see the documentation for the `subguide_axis()` function.
 
 The `format()` function in `format(.dist_obj)` generates a string containing a human-readable name for the distribution for labeling purposes.
 

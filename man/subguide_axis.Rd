@@ -107,6 +107,37 @@ region.
 \code{\link[=subguide_count]{subguide_count()}} is a shortcut for drawing labels where each whole number
 is labeled, useful for labeling counts in \code{\link[=geom_dots]{geom_dots()}}.
 }
+\examples{
+# example code
+library(ggplot2)
+library(distributional)
+
+df = data.frame(d = dist_normal(2:3, 2:3), g = c("a", "b"))
+
+# subguides allow you to label thickness axes
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_slabinterval(subguide = "inside")
+
+# they respect normalization and use of scale_thickness_shared()
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_slabinterval(subguide = "inside", normalize = "groups")
+
+# they can also be positioned outside the plot area, though
+# this typically requires manually adjusting plot margins
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_slabinterval(subguide = subguide_outside(title = "density", position = "right")) +
+  theme(plot.margin = margin(5.5, 50, 5.5, 5.5))
+
+# any of the subguide types will also work to indicate bin counts in
+# geom_dots(); subguide_count() can be useful for dotplots as its default
+# `breaks` value will label every whole number:
+df = data.frame(d = dist_gamma(2:3, 2:3), g = c("a", "b"))
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_dots(subguide = subguide_count(label_side = "left", title = "count")) +
+  scale_y_discrete(expand = expansion(add = 0.1)) +
+  scale_x_continuous(expand = expansion(add = 0.5))
+
+}
 \seealso{
 Other sub-guides: 
 \code{\link{subguide_none}()}

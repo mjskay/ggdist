@@ -41,6 +41,36 @@
 #' @param ... Arguments passed to other functions, typically back to
 #'    `subguide_axis()` itself.
 #' @family sub-guides
+#' @examples
+#' # example code
+#' library(ggplot2)
+#' library(distributional)
+#'
+#' df = data.frame(d = dist_normal(2:3, 2:3), g = c("a", "b"))
+#'
+#' # subguides allow you to label thickness axes
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_slabinterval(subguide = "inside")
+#'
+#' # they respect normalization and use of scale_thickness_shared()
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_slabinterval(subguide = "inside", normalize = "groups")
+#'
+#' # they can also be positioned outside the plot area, though
+#' # this typically requires manually adjusting plot margins
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_slabinterval(subguide = subguide_outside(title = "density", position = "right")) +
+#'   theme(plot.margin = margin(5.5, 50, 5.5, 5.5))
+#'
+#' # any of the subguide types will also work to indicate bin counts in
+#' # geom_dots(); subguide_count() can be useful for dotplots as its default
+#' # `breaks` value will label every whole number:
+#' df = data.frame(d = dist_gamma(2:3, 2:3), g = c("a", "b"))
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_dots(subguide = subguide_count(label_side = "left", title = "count")) +
+#'   scale_y_discrete(expand = expansion(add = 0.1)) +
+#'   scale_x_continuous(expand = expansion(add = 0.5))
+#'
 #' @export
 subguide_axis = auto_partial(name = "subguide_axis", function(
   values,
@@ -76,7 +106,7 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   title_width = grob_width(title_grob)
 
   # determine positions of title and axis grobs in the table layout
-  col_widths = unit.c(title_margin, title_width, title_margin, axis_width)
+  col_widths = unit.c(title_margin, title_width, if (!is.null(title)) title_margin else unit(0, "npc"), axis_width)
   if (axis_is_topleft) {
     title_i = 2
     axis_i = 4

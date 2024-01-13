@@ -703,12 +703,16 @@ dist_df = tibble(
 
 dist_df %>%
   ggplot(aes(y = dist_name, xdist = dist)) +
-  stat_dotsinterval() +
+  stat_dotsinterval(subguide = 'inside') +
   ggtitle(
-    "stat_dotsinterval()",
+    "stat_dotsinterval(subguide = 'inside')",
     "aes(y = dist_name, xdist = dist)"
   )
 ```
+
+This example also shows the use of sub-guides to label dot counts. See the documentation
+of `subguide_axis()` and its shortcuts (particularly `subguide_count()`) for more
+examples.
 
 Analytical distributions are shown by default using 100 quantiles, sometimes
 referred to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 
