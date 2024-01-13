@@ -17,7 +17,10 @@ dots_grob = function(data, x, y, xscale = 1,
   verbose = FALSE,
   orientation = "vertical"
 ) {
-  datas = data %>%
+  # drop the dist columns because they can be expensive and we don't need them
+  # after this point
+  keep_cols = !(names(data) %in% c("xdist", "ydist", "dist"))
+  datas = data[, keep_cols, drop = FALSE] %>%
     group_by_at(c("group", y)) %>%
     group_split()
 

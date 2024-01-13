@@ -2,6 +2,9 @@
 
 New features and enhancements:
 
+* The `geom_slabinterval()` and `geom_dotsinterval()` families gain "sub-guides",
+  which can be passed to the `subguide` parameter to create axis annotations for
+  the `thickness` aesthetic (for slabs) and the dot count (for dots) (#183).
 * The `weight` aesthetic is now supported in `stat_slabinterval()`, including
   weighted calculations for densities, CDFs, all interval types (quantile
   intervals, highest density intervals, and highest density continuous intervals),
