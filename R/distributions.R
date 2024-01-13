@@ -279,7 +279,7 @@ distr_set_sample = function(dist, value) {
   } else if (inherits(dist, "distribution")) {
     old_class = oldClass(dist)
     dist = unclass(dist)
-    dist[[1]][["x"]] = value
+    dist[[1]] = distr_set_sample(dist[[1]], value)
     class(dist) = old_class
   } else if (inherits(dist, c("dist_sample", "ggdist__weighted_sample"))) {
     dist[["x"]] = value

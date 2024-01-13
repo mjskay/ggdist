@@ -279,7 +279,10 @@ vec_arith.ggdist_thickness.ggdist_thickness <- function(op, x, y, ...) {
 
     incompatible = !(use_x | use_y)
     if (any(incompatible)) {
-      cli_abort("incompatible <thickness> bounds at locations {which(incompatible)}")
+      cli_abort(
+        "incompatible <thickness> bounds at locations {which(incompatible)}",
+        class = "ggdist_incompatible_thickness_bounds"
+      )
     }
 
     x_bound[use_y] = y_bound[use_y]

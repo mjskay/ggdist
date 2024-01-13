@@ -180,7 +180,7 @@ check_at = function(at, call = parent.frame()) {
         "x" = "{.arg at} is a {.cls {class(at)}}.",
         "i" = "See the {.arg at} parameter of {.fun ggdist::stat_spike}."
       ),
-      class = "ggdist_param_at_invalid",
+      class = "ggdist_invalid_at_param",
       call = call
     )
   }
@@ -195,7 +195,7 @@ check_at = function(at, call = parent.frame()) {
         "x" = "{if (length(wrong_type_i) > 1) 'For example, '}{.code at[[{i}]]} is a {.cls {class(at[[i]])}}.",
         "i" = "See the {.arg at} parameter of {.fun ggdist::stat_spike}."
       ),
-      class = "ggdist_param_at_invalid",
+      class = "ggdist_invalid_at_param",
       call = call
     )
   }

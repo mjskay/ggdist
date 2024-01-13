@@ -84,6 +84,7 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
   # remove missing values - unlike slabinterval, thickness NAs not allowed here
   s_data = ggplot2::remove_missing(s_data, na.rm, "thickness", name = "geom_spike")
 
+  subguide_params = NULL
   c(s_data, subguide_params) %<-% rescale_slab_thickness(
     s_data, orientation, normalize, na.rm, name = "geom_spike"
   )

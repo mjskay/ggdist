@@ -588,7 +588,7 @@ bw_fallback = function(f, x, ..., call = caller_env()) {
                (e.g., {.fun density_histogram}, {.code stat_slab(density = 'histogram')},
                or {.fun stat_histinterval}) may better represent the data."
       ),
-      class = "ggdist_warn_bandwidth_fallback",
+      class = "ggdist_bandwidth_fallback_warning",
       call = call,
       parent = e
     )

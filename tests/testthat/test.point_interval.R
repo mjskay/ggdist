@@ -720,3 +720,11 @@ test_that("Mode works on constants", {
   expect_equal(Mode(dist_normal(1:2, 0)), c(1,2))
   expect_equal(Mode(dist_degenerate(1:2)), c(1,2))
 })
+
+
+# weighted distributions --------------------------------------------------
+
+test_that("Mode works on weighted discrete distributions", {
+  x = .dist_weighted_sample(list(1:5, 2:6), list(c(1,2,3,5,4)/15))
+  expect_equal(Mode(x), c(4,5))
+})

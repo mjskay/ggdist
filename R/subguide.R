@@ -71,6 +71,7 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
 
   title_element = calc_element(paste0("axis.title.", y), theme)
   title_margin = max(title_element$margin)
+  title_element$margin = margin(0, 0, 0, 0)
   title_grob = element_grob(title_element, label = title)
   title_width = grob_width(title_grob)
 

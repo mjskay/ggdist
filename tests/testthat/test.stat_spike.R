@@ -58,8 +58,8 @@ test_that("at param works", {
   expect_equal(check_at(list(a = c(x = "mean", "median"))), list(a.x = mean, a2 = median))
   expect_equal(check_at(list(a = c(x = "mean", y = "median"))), list(a.x = mean, a.y = median))
 
-  expect_error(check_at(TRUE), class = "ggdist_param_at_invalid")
-  expect_error(check_at(list(TRUE)), class = "ggdist_param_at_invalid")
-  expect_error(check_at(list("a", TRUE, FALSE)), class = "ggdist_param_at_invalid")
-  expect_error(check_at(list(list())), class = "ggdist_param_at_invalid")
+  expect_error(check_at(TRUE), class = "ggdist_invalid_at_param")
+  expect_error(check_at(list(TRUE)), class = "ggdist_invalid_at_param")
+  expect_error(check_at(list("a", TRUE, FALSE)), class = "ggdist_invalid_at_param")
+  expect_error(check_at(list(list())), class = "ggdist_invalid_at_param")
 })

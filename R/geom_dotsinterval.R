@@ -167,10 +167,11 @@ makeContent.dots_grob = function(x) {
       c(y, "side", "justification", "scale"),
       function(d) {
         if (nrow(unique(d)) > 1) {
-          cli_abort(c(
+          cli_abort(
             "Cannot draw a subguide for the dot count axis when multiple dots
-             geometries with different parameters are drawn on the same axis."
-          ))
+             geometries with different parameters are drawn on the same axis.",
+            class = "ggdist_incompatible_subguides"
+          )
         }
         d = d[1, ]
 
@@ -215,6 +216,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
+  subguide_params = NULL
   c(s_data, subguide_params) %<-% rescale_slab_thickness(
     s_data, orientation, normalize, na.rm, name = "geom_dotsinterval"
   )

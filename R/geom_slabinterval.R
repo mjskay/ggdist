@@ -219,10 +219,11 @@ draw_slabs = function(self, s_data, panel_params, coord,
     dlply_(subguide_params, c(y, "side", "justification", "scale"), function(d) {
       d$group = NULL
       if (nrow(unique(d)) > 1) {
-        cli_abort(c(
+        cli_abort(
           "Cannot draw a subguide for the thickness axis when multiple slabs
-          with different normalizations are drawn on the same axis."
-        ))
+          with different normalizations are drawn on the same axis.",
+          class = "ggdist_incompatible_subguides"
+        )
       }
 
       # construct a viewport such that the guide drawn in this viewport
