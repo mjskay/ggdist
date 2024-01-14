@@ -26,6 +26,7 @@
 ^data-raw$
 ^figures-source$
 ^vignettes/.*_cache$
+^vignettes/thickness\.Rmd$
 ^revdep$
 ^man/figures$
 ^man-roxygen$

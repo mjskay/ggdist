@@ -147,7 +147,7 @@ test_that("dots subguide works with side and justification", {
     ggplot(aes(xdist = x)) +
     scale_x_continuous(expand = expansion(add = 0.3))
 
-  sg = subguide_count(title = "num", label_side = "left")
+  sg = subguide_count(title = "num", label_side = "left", theme = theme_test())
   vdiffr::expect_doppelganger("dots subguide with side",
     p +
       stat_dotsinterval(aes(y = "1 bottom"), subguide = sg, side = "bottom", quantiles = 50, stackratio = 1.25) +

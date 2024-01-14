@@ -40,7 +40,7 @@ theme_set(theme_ggdist())
 ```
 
 ```{r hidden_options, include=FALSE}
-.old_options = options(width = 120)
+.old_options = options(width = 110)
 ```
 
 

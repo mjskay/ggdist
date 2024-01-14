@@ -15,6 +15,11 @@ New features and enhancements:
 * The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
   (#206; thanks to @ASKurz for the suggestion).
 
+Documentation:
+
+* The pkgdown documentation now includes an online article on the `thickness`
+  aesthetic and how its scaling works.
+
 Bug fixes:
 
 * Ensure `Mode()` works on analytical constant distributions.
