@@ -693,7 +693,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
           object and an `orientation` argument giving the orientation of the
           geometry and then returns a [grid::grob] that will draw the axis
           annotation, such as [subguide_axis()] (to draw a traditional axis) or
-          [subguide_none()] (to draw no annotation).
+          [subguide_none()] (to draw no annotation). See [subguide_axis()]
+          for a list of possibilities and examples.
         \\item A string giving the name of such a function when prefixed
           with `"subguide"`; e.g. `"axis"` or `"none"`.
       }

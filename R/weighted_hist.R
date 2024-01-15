@@ -18,14 +18,18 @@ weighted_hist = function(
 
   if (length(x) < 1) cli_abort("{.fun ggdist::density_histogram} requires {.code length(x) >= 1}.")
 
-  weights = weights %||% rep(1, length(x))
-
   # figure out breaks
   if (is.character(breaks)) {
     breaks = match_function(breaks, prefix = "breaks_")
   }
   if (is.function(breaks)) {
-    breaks = breaks(x, weights = weights)
+    # don't pass NULL weights to breaks function for compatibility with breaks
+    # functions from other packages that don't support weights; e.g. {scales}
+    if (is.null(weights)) {
+      breaks = breaks(x)
+    } else {
+      breaks = breaks(x, weights = weights)
+    }
   }
   if (length(breaks) == 1) {
     if (length(x) == 1) {
@@ -40,6 +44,8 @@ weighted_hist = function(
     bin_width = diff(breaks)
     equidist = diff(range(bin_width)) < 1e-7 * mean(bin_width)
   }
+
+  weights = weights %||% rep(1, length(x))
 
   # apply alignment if bins are equidistant
   if (equidist) {

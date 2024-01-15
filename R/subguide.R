@@ -63,8 +63,8 @@
 #'   theme(plot.margin = margin(5.5, 50, 5.5, 5.5))
 #'
 #' # any of the subguide types will also work to indicate bin counts in
-#' # geom_dots(); subguide_count() can be useful for dotplots as its default
-#' # `breaks` value will label every whole number:
+#' # geom_dots(); subguide_integer() and subguide_count() can be useful for
+#' # dotplots as they only label integers / whole numbers:
 #' df = data.frame(d = dist_gamma(2:3, 2:3), g = c("a", "b"))
 #' ggplot(df, aes(xdist = d, y = g)) +
 #'   stat_dots(subguide = subguide_count(label_side = "left", title = "count")) +
@@ -148,8 +148,28 @@ subguide_outside = function(..., label_side = "outside", just = 1) {
 }
 
 #' @details
-#' [subguide_count()] is a shortcut for drawing labels where each whole number
-#' is labeled, useful for labeling counts in [geom_dots()].
+#' [subguide_integer()] only draws breaks that are integer values, useful for
+#' labeling counts in [geom_dots()].
+#' @rdname subguide_axis
+#' @export
+subguide_integer = function(..., breaks = scales::breaks_extended(Q = c(1,5,2,4,3))) {
+  force(breaks)
+  breaks_fun = function(x, ...) {
+    x = x[is.finite(x)]
+    if (length(x) == 0) return(numeric())
+
+    b = breaks(x, ...)
+    b = b[is_integerish(b)]
+    if (length(b) == 0) b = unique(round(range(x)))
+    b
+  }
+  subguide_axis(..., breaks = breaks_fun)
+}
+
+#' @details
+#' [subguide_count()] is a shortcut for drawing labels where *every* whole number
+#' is labeled, useful for labeling counts in [geom_dots()]. If your max count is
+#' large, [subguide_integer()] may be better.
 #' @rdname subguide_axis
 #' @export
 subguide_count = function(..., breaks = scales::breaks_width(1)) {
