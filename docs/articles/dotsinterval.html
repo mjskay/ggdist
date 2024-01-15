@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1.9000</span>
       </span>
     </div>
 
@@ -74,6 +74,9 @@
     </li>
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
+    <li>
+      <a href="../articles/thickness.html">Thickness scale</a>
     </li>
   </ul>
 </li>
@@ -105,7 +108,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2023-11-26</h4>
+            <h4 data-toc-skip class="date">2024-01-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/dotsinterval.Rmd" class="external-link"><code>vignettes/dotsinterval.Rmd</code></a></small>
       <div class="hidden name"><code>dotsinterval.Rmd</code></div>
@@ -737,12 +740,18 @@ functions such as <code><a href="https://pkg.mitchelloharawild.com/distributiona
 <span></span>
 <span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>subguide <span class="op">=</span> <span class="st">'integer'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
-<span>    <span class="st">"stat_dotsinterval()"</span>,</span>
+<span>    <span class="st">"stat_dotsinterval(subguide = 'integer')"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist)"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/dotsinterval_dist-1.png" width="648"></p>
+<p>This example also shows the use of sub-guides to label dot counts.
+See the documentation of <code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> and its shortcuts
+(particularly <code><a href="../reference/subguide_axis.html">subguide_integer()</a></code> and
+<code><a href="../reference/subguide_axis.html">subguide_count()</a></code>) for more examples. <strong>Note</strong>:
+subguides are currently only available in the development version of
+ggdist (&gt; 3.3.1) on Github.</p>
 <p>Analytical distributions are shown by default using 100 quantiles,
 sometimes referred to as a <em>quantile dotplot</em>, which can help
 people make better decisions under uncertainty (<a href="https://doi.org/10.1145/2858036.2858558" class="external-link">Kay 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718" class="external-link">Fernandes 2018</a>). This
@@ -763,7 +772,7 @@ layout):</p>
 <code class="sourceCode R"><span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span>, slab_fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fl">1000</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span>, layout <span class="op">=</span> <span class="st">"weave"</span>, slab_color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html" class="external-link">brewer_pal</a></span><span class="op">(</span><span class="op">)</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/pal_brewer.html" class="external-link">brewer_pal</a></span><span class="op">(</span><span class="op">)</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))"</span></span>

@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1.9000</span>
       </span>
     </div>
 
@@ -74,6 +74,9 @@
     </li>
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
+    <li>
+      <a href="../articles/thickness.html">Thickness scale</a>
     </li>
   </ul>
 </li>
@@ -105,7 +108,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2023-11-26</h4>
+            <h4 data-toc-skip class="date">2024-01-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/slabinterval.Rmd" class="external-link"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -176,6 +179,14 @@ of each sub-geometry separately.</p>
 intervals, densities, and cumulative distribution functions, and maps
 these onto endpoints of the interval sub-geometry or the
 <code>thickness</code> of the slab sub-geometry.</p>
+<p>The scaling of slab <code>thickness</code> is determined by a
+combination of the geometry’s <code>height</code>/<code>width</code>,
+its <code>scale</code>, the <code>normalize</code> parameter, and any
+<code>thickness</code> scales added to the plot (such as
+<code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code>). For complete details on the
+<code>thickness</code> aesthetic and how to adjust slab scaling, see the
+<a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+article</a>.</p>
 <p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not always advisable: they
 are highly configurable on their own, but this configurability requires
@@ -464,14 +475,21 @@ or <code>ydist</code> aesthetic in ggdist:</p>
 <code class="sourceCode R"><span><span class="va">priors</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/parse_dist.html">parse_dist</a></span><span class="op">(</span><span class="va">prior</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">class</span>, <span class="st">"~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.dist_obj</span><span class="op">)</span><span class="op">)</span>, xdist <span class="op">=</span> <span class="va">.dist_obj</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span>subguide <span class="op">=</span> <span class="fu"><a href="../reference/subguide_axis.html">subguide_inside</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"right"</span>, title <span class="op">=</span> <span class="st">"density"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"stat_halfeye()"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"with brms::prior() and ggdist::parse_dist() to visualize priors"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"with parse_dist() and brms::prior() to show priors"</span>,</span>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="648"></p>
+<p>This example also demonstrates the use of subguides to label the
+<code>thickness</code> axis. <strong>Note</strong>: subguides are
+currently only available in the development version of ggdist (&gt;
+3.3.1) on Github. For more on subguides, see the documentation for the
+<code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> function, and for more on scaling of the
+<code>thickness</code> aesthetic, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+article</a>.</p>
 <p>The <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> function in <code>format(.dist_obj)</code>
 generates a string containing a human-readable name for the distribution
 for labeling purposes.</p>
@@ -515,7 +533,9 @@ plot. The difference is illustrated below:</p>
 <span><span class="va">separate_scale_plot</span> <span class="op">+</span> <span class="va">shared_scale_plot</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"prior (slab) + posterior (halfeye)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/prior_post-1.png" width="648"></p>
 <p>With <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> applied, both densities
-have the same area under their curves.</p>
+have the same area under their curves. Futher details of scaling of the
+<code>thickness</code> aesthetic are discussed in the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+article</a></p>
 </div>
 <div class="section level3">
 <h3 id="scale-transformations-of-densities">Scale transformations of densities<a class="anchor" aria-label="anchor" href="#scale-transformations-of-densities"></a>
@@ -1077,18 +1097,21 @@ densities:</p>
 <code class="sourceCode R"><span><span class="va">qi_plot_spikes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_beta.html" class="external-link">dist_beta</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span>, point_interval <span class="op">=</span> <span class="va">median_qi</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/stat_spike.html">stat_spike</a></span><span class="op">(</span>at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">median</span>, <span class="va">qi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="co"># stat_spike(at = c(median, qi)) would also work, but this demonstrates how </span></span>
+<span>  <span class="co"># to re-label the names of the `at` computed variable and use it in an</span></span>
+<span>  <span class="co"># aesthetic mapping by mapping it to `linetype`</span></span>
+<span>  <span class="fu"><a href="../reference/stat_spike.html">stat_spike</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">at</span><span class="op">)</span><span class="op">)</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"interval (qi)"</span> <span class="op">=</span> <span class="va">qi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>na.value <span class="op">=</span> <span class="st">"gray95"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_thickness.html">scale_thickness_shared</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"stat_slab() + stat_spike(at = c(median, qi))"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">hdi_plot_spikes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_beta.html" class="external-link">dist_beta</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/stat_spike.html">stat_spike</a></span><span class="op">(</span>at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Mode</span>, <span class="va">hdci</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span>, point_interval <span class="op">=</span> <span class="va">mode_hdi</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/stat_spike.html">stat_spike</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">at</span><span class="op">)</span><span class="op">)</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mode"</span> <span class="op">=</span> <span class="va">Mode</span>, <span class="st">"interval (hdi)"</span> <span class="op">=</span> <span class="va">hdi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>na.value <span class="op">=</span> <span class="st">"gray95"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_thickness.html">scale_thickness_shared</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"stat_slab() + stat_spike(at = c(Mode, hdci))"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"stat_slab() + stat_spike(at = c(Mode, hdi))"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">qi_plot_spikes</span> <span class="op">/</span></span>
 <span>  <span class="va">hdi_plot_spikes</span></span></code></pre></div>

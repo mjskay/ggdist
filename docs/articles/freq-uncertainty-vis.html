@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.1.9000</span>
       </span>
     </div>
 
@@ -74,6 +74,9 @@
     </li>
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
+    <li>
+      <a href="../articles/thickness.html">Thickness scale</a>
     </li>
   </ul>
 </li>
@@ -105,7 +108,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2023-11-26</h4>
+            <h4 data-toc-skip class="date">2024-01-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/freq-uncertainty-vis.Rmd" class="external-link"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -243,7 +246,7 @@ column from <code><a href="https://generics.r-lib.org/reference/tidy.html" class
 <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">broom::tidy()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 5</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 5</span></span>m</span>
 <span><span class="co">##   term        estimate std.error statistic      p.value</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)    0.182     0.173      1.05 0.300       </span></span>
@@ -268,7 +271,7 @@ supports these objects.</p>
 instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html" class="external-link">modelr::data_grid()</a></code> along with
 <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">broom::augment()</a></code> (similar to how we can use
 <code><a href="https://modelr.tidyverse.org/reference/data_grid.html" class="external-link">modelr::data_grid()</a></code> with
-<code>tidybayes::add_fitted_draws()</code> for Bayesian models). Here we
+<code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html" class="external-link">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we
 want the confidence distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\tilde\mu_c\)</span>:</p>
 <p><span class="math display">\[
 \tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c,

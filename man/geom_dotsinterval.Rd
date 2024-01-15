@@ -218,7 +218,8 @@ specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 object and an \code{orientation} argument giving the orientation of the
 geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
-\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation).
+\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
+for a list of possibilities and examples.
 \item A string giving the name of such a function when prefixed
 with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
 }}

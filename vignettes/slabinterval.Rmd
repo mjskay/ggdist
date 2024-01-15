@@ -290,7 +290,9 @@ dists_df_("halfeye") %>%
 
 Depending on whether you want a horizontal or vertical orientation, you can provide `ymin` and `ymax` instead of `xmin` and `xmax`. By default, some aesthetics (e.g., `fill`, `color`, `size`, `alpha`) set properties of multiple sub-geometries at once. For example, the `color` aesthetic by default sets both the color of the point and the interval, but can also be overridden by `point_color` or `interval_color` to set the color of each sub-geometry separately. 
 
-`geom_slabinterval()` is most useful when paired with `stat_slabinterval()`, which will automatically calculate intervals, densities, and cumulative distribution functions, and maps these onto endpoints of the interval sub-geometry or the `thickness` of the slab sub-geometry.
+`geom_slabinterval()` is most useful when paired with `stat_slabinterval()`, which will automatically calculate intervals, densities, and cumulative distribution functions, and maps these onto endpoints of the interval sub-geometry or the `thickness` of the slab sub-geometry. 
+
+The scaling of slab `thickness` is determined by a combination of the geometry's `height`/`width`, its `scale`, the `normalize` parameter, and any `thickness` scales added to the plot (such as `scale_thickness_shared()`). For complete details on the `thickness` aesthetic and how to adjust slab scaling, see the [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html).
 
 Using `geom_slabinterval()` and `stat_slabinterval()` directly is not always advisable: they are highly configurable on their own, but this configurability requires remembering a number of combinations of options to use. For quick plotting, ggdist contains a number of pre-configured, easier-to-remember **shortcut stats and geoms** built on top of the slabinterval:
 
@@ -508,8 +510,11 @@ priors %>%
   )
 ```
 
-This example also demonstrates the use of sub-guides to label the `thickness` axis.
-For more on subguides, see the documentation for the `subguide_axis()` function.
+This example also demonstrates the use of subguides to label the `thickness` axis.
+**Note**: subguides are currently only available in the development version
+of ggdist (> 3.3.1) on Github.
+For more on subguides, see the documentation for the `subguide_axis()` function, and
+for more on scaling of the `thickness` aesthetic, see the [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html).
 
 The `format()` function in `format(.dist_obj)` generates a string containing a human-readable name for the distribution for labeling purposes.
 
@@ -552,7 +557,9 @@ separate_scale_plot + shared_scale_plot + plot_annotation(title = "prior (slab) 
 ```
 
 With `scale_thickness_shared()` applied, both densities have the same area under
-their curves.
+their curves. 
+Futher details of scaling of the `thickness` aesthetic are discussed in the
+[thickness article](https://mjskay.github.io/ggdist/articles/thickness.html)
 
 ### Scale transformations of densities
 
