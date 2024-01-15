@@ -19,18 +19,23 @@ test_that("slab subguide works with dodging", {
   )
 
   p = df %>%
-    ggplot(aes(xdist = x, y = group, fill = subgroup)) +
-    scale_x_continuous(expand = expansion(add = 1))
+    ggplot(aes(ydist = x, x = group, fill = subgroup)) +
+    scale_y_continuous(expand = expansion(add = 1)) +
+    scale_x_discrete(position = "top")
 
   vdiffr::expect_doppelganger("slab subguide with dodging and group normalization",
     p + stat_slabinterval(
-      subguide = subguide_axis(label_side = "outside", title = "den", theme = theme_test()),
+      subguide = subguide_outside(title = "den", theme = theme_test(), position = "bottom"),
       position = "dodgejust",
-      height = 0.9,
+      width = 0.9,
       scale = 0.8,
       normalize = "groups",
       n = 11
-    )
+    ) +
+      theme_test() +
+      theme(
+        plot.margin = margin(5.5, 5.5, 50, 5.5),
+      )
   )
 })
 
@@ -52,6 +57,7 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
+      stat_slabinterval(aes(y = "inside, right"), subguide = subguide_inside(position = "right", title = "test"), n = 5) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )
@@ -65,6 +71,7 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
+      stat_slabinterval(aes(y = "outside, right"), subguide = subguide_outside(position = "right", title = "test"), n = 5) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )
