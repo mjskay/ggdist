@@ -422,8 +422,8 @@ cdf.ggdist__weighted_sample = function(x, q, ..., na.rm = TRUE) {
 }
 
 #' @export
-quantile.ggdist__weighted_sample = function(x, p, ..., na.rm = TRUE) {
-  weighted_quantile(x[["x"]], p, weights = x[["weights"]], ..., na.rm = TRUE)
+quantile.ggdist__weighted_sample = function(x, p, ..., na.rm = TRUE, names = FALSE) {
+  weighted_quantile(x[["x"]], p, weights = x[["weights"]], ..., na.rm = na.rm, names = names)
 }
 
 #' @export

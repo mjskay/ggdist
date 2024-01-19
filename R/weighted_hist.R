@@ -346,5 +346,5 @@ weighted_var = function(x, weights) {
 }
 
 weighted_iqr = function(x, weights) {
-  diff(weighted_quantile(as.numeric(x), c(0.25, 0.75), weights = weights, n = "sum"))
+  diff(weighted_quantile(as.numeric(x), c(0.25, 0.75), weights = weights, n = "sum", names = FALSE))
 }

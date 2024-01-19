@@ -386,7 +386,7 @@ qi_ = function(x, lower_prob, upper_prob, na.rm) {
     #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
     do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob)), t))
   } else {
-    matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
+    matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm, names = FALSE), ncol = 2)
   }
 }
 
@@ -445,7 +445,7 @@ hdi_.numeric = function(
 .hdi_numeric = function(x, .width = 0.95, ..., density = density_bounded(trim = TRUE), weights = NULL, n = 4096) {
   density = match_function(density, "density_")
 
-  dist_x = weighted_quantile(x, ppoints(n, a = 0.5), weights = weights)
+  dist_x = weighted_quantile(x, ppoints(n, a = 0.5), weights = weights, names = FALSE)
   # Remove duplicate values of dist_x from less continuous distributions
   dist_x = unique(dist_x)
   if (length(dist_x) == 1) {
@@ -600,7 +600,7 @@ hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ..., weights = NULL) {
     return(matrix(range(x), ncol = 2))
   }
 
-  .hdci_function(ggdist::weighted_quantile_fun(x, na.rm = na.rm, weights = weights, type = 5), .width = .width)
+  .hdci_function(weighted_quantile_fun(x, na.rm = na.rm, weights = weights, type = 5), .width = .width)
 }
 
 #' find the hdci using a quantile function

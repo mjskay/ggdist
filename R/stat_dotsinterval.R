@@ -41,7 +41,7 @@ compute_slab_dots = function(
       # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
       quantile_type = if (distr_is_discrete(dist)) 1 else 5
       input = weighted_quantile(
-        input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm, weights = weights
+        input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm, weights = weights, names = FALSE
       )
     }
   } else {

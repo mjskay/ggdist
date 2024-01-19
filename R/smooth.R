@@ -101,7 +101,7 @@ NULL
   a = if (trim) 1 else 0.5
 
   # take quantiles from the KDE
-  x_dens = weighted_quantile(d$x, ppoints(n, a = a), d$y, type = 5)
+  x_dens = weighted_quantile(d$x, ppoints(n, a = a), d$y, type = 5, names = FALSE)
 
   # match up each smoothed value to a close value from `x` using the order of x
   x_dens[rank(x, ties.method = "first")]

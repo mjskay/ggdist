@@ -57,7 +57,7 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
-      stat_slabinterval(aes(y = "inside, right"), subguide = subguide_inside(position = "right", title = "test"), n = 5) +
+      stat_slabinterval(aes(y = "inside, right"), subguide = subguide_inside(position = "right", title = "test", theme = theme_test()), n = 5) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )
@@ -71,7 +71,7 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
-      stat_slabinterval(aes(y = "outside, right"), subguide = subguide_outside(position = "right", title = "test"), n = 5) +
+      stat_slabinterval(aes(y = "outside, right"), subguide = subguide_outside(position = "right", title = "test", theme = theme_test()), n = 5) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )

@@ -35,6 +35,10 @@
 #'       sum represents the true sample size.
 #' @param na.rm logical: if `TRUE`, corresponding entries in `x` and `weights`
 #' are removed if either is `NA`.
+#' @param names logical: If `TRUE`, add names to the output giving the input
+#' `probs` formatted as a percentage.
+#' @param digits numeric: the number of digits to use to format percentages
+#' when `names` is `TRUE`.
 #' @param type integer between 1 and 9: determines the type of quantile estimator
 #' to be used. Types 1 to 3 are for discontinuous quantiles, types 4 to 9 are
 #' for continuous quantiles. See **Details**.
@@ -81,15 +85,37 @@
 #' @seealso [weighted_ecdf()]
 #' @importFrom stats stepfun approxfun
 #' @export
-weighted_quantile = function(x, probs = seq(0, 1, 0.25), weights = NULL, n = NULL, na.rm = FALSE, type = 7) {
-  weighted_quantile_fun(x, weights = weights, n = n, na.rm = na.rm, type = type)(probs)
+weighted_quantile = function(
+  x,
+  probs = seq(0, 1, 0.25),
+  weights = NULL,
+  n = NULL,
+  na.rm = FALSE,
+  names = TRUE,
+  type = 7,
+  digits = 7
+) {
+  q = weighted_quantile_fun(
+    x,
+    weights = weights,
+    n = n,
+    na.rm = na.rm,
+    type = type
+  )(probs)
+
+  if (isTRUE(names) && length(q) > 0) {
+    names(q) = paste0(formatC(probs * 100, format = "fg", width = 1, digits = digits), "%")
+    names(q)[is.na(probs)] = ""
+  }
+
+  q
 }
 
 #' @rdname weighted_quantile
 #' @export
 weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7) {
   weights = weights %||% rep(1, length(x))
-  if (!type %in% 1:9) {
+  if (!isTRUE(type %in% 1:9)) {
     stop0("Quantile type `", deparse0(type), "` is invalid. It must be in 1:9.")
   }
   if (isTRUE(na.rm)) {
@@ -121,10 +147,12 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
   # in terms of unnormalized weights)
   weights = weights / sum(weights)
 
-  # sort values
-  x_order = order(x)
-  x = x[x_order]
-  weights = weights[x_order]
+  # sort values if necessary
+  if (is.unsorted(x)) {
+    x_order = order(x)
+    x = x[x_order]
+    weights = weights[x_order]
+  }
 
   if (is.null(n)) {
     f_x = weights

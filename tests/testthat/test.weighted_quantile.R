@@ -9,7 +9,7 @@ test_that("weighted_quantile is equivalent to quantile on non-weighted samples",
 
   p = ppoints(20, a = 1)
   for (type in 1:9) {
-    expect_equal(weighted_quantile(x, p, type = !!type), quantile(x, p, type = !!type, names = FALSE))
+    expect_equal(weighted_quantile(x, p, type = !!type), quantile(x, p, type = !!type))
   }
 })
 
@@ -22,7 +22,7 @@ test_that("weighted_quantile is equivalent to quantile on weighted samples", {
   for (type in 1:9) {
     expect_equal(
       weighted_quantile(xw, p, weights = w, n = "sum", type = !!type),
-      quantile(x, p, type = !!type, names = FALSE)
+      quantile(x, p, type = !!type)
     )
   }
 })
@@ -42,10 +42,10 @@ test_that("0- and 1-length vectors work", {
   # these fail in R < 4.0.3 because of a bug in quantile()
   skip_if_not(getRversion() >= "4.0.3")
 
-  expect_equal(weighted_quantile(1, c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
-  expect_equal(weighted_quantile(c(1,1), c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
-  expect_equal(weighted_quantile(c(1,2), weights = c(1,0), c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
+  expect_equal(weighted_quantile(1, c(0, 0.5, 1, NA)), c("0%" = 1, "50%" = 1, "100%" = 1, NA))
+  expect_equal(weighted_quantile(c(1,1), c(0, 0.5, 1, NA), names = FALSE), c(1, 1, 1, NA))
+  expect_equal(weighted_quantile(c(1,2), weights = c(1,0), c(0, 0.5, 1, NA), names = FALSE), c(1, 1, 1, NA))
 
-  expect_equal(weighted_quantile(numeric(), c(0, 0.5, 1, NA)), c(NA_real_, NA_real_, NA_real_, NA_real_))
+  expect_equal(weighted_quantile(numeric(), c(0, 0.5, 1, NA), names = FALSE), c(NA_real_, NA_real_, NA_real_, NA_real_))
 })
 
