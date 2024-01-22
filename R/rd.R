@@ -109,7 +109,7 @@ rd_aesthetics_sections = function(
   for (i in seq_along(geom_aes_sections)) {
     section = names(geom_aes_sections)[[i]]
     geom_aes = filter_aes(geom_aes_sections[[i]], geom$aesthetics())
-    if (length(geom_aes) == 0) next;
+    if (length(geom_aes) == 0) next
     out = c(out, glue_doc('
       **<<section>>**
 
@@ -157,9 +157,9 @@ rd_layer_params = function(geom_name, stat = NULL, as_dots = FALSE) {
   )
   params = params[param_names]
 
-  missing_docs = sapply(params, is.null)
+  missing_docs = vapply(params, is.null, logical(1))
   if (any(missing_docs)) {
-    stop("Missing docs for params: ", paste0(param_names[missing_docs], collapse = ", "))
+    cli_abort("Missing docs for params: {param_names[missing_docs]}")
   }
 
   if (length(params)) {
@@ -219,7 +219,7 @@ glue_doc = function(...) {
 }
 
 title_case = function(x) {
-  substring(x, 1, 1) = toupper(substring(x, 1, 1))
+  substr(x, 1, 1) = toupper(substr(x, 1, 1))
   x
 }
 
@@ -247,8 +247,9 @@ changed_geom_values = function(
   changed_values = function(list, exclude) {
     # find values changes in the child stat
     values = to[[list]][
-      map_lgl_(names(to[[list]]), function(name)
-        !identical(to[[list]][[name]], from[[list]][[name]])
+      map_lgl_(
+        names(to[[list]]),
+        function(name) !identical(to[[list]][[name]], from[[list]][[name]])
       )
     ]
     # find deleted values

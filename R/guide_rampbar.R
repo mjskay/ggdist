@@ -61,7 +61,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
   if (inherits(guide, "GuideColourbar")) {
     # If ggplot2 >3.4.2, guides are written ggproto, so here we inherit from
     # the colourbar guide
-    new = ggproto(
+    new_guide = ggproto(
       "GuideRampbar", guide,
       params = c(list(to = to), guide$params),
       extract_decor = function(scale, aesthetic, nbin = 300,
@@ -71,7 +71,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
         bar
       }
     )
-    return(new)
+    return(new_guide)
   }
   guide$to = to
   class(guide) = c("guide", "rampbar", "colorbar")
@@ -79,7 +79,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
 }
 
 #' @export
-guide_train.rampbar <- function(guide, scale, aesthetic = NULL) {
+guide_train.rampbar = function(guide, scale, aesthetic = NULL) {
   guide = NextMethod()
   guide$bar$colour = apply_colour_ramp(guide$to, guide$bar$colour)
   guide

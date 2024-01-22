@@ -34,7 +34,7 @@ theme_ggdist = function() {
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
-    strip.text = element_text(color = "black", margin = margin(6,6,6,6)),
+    strip.text = element_text(color = "black", margin = margin(6, 6, 6, 6)),
     strip.background = element_rect(fill = "gray90")
   )
 }

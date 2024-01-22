@@ -191,7 +191,7 @@ make_geom = function(geom,
         data = data,
         stat = stat,
         position = position,
-        ... =,
+        ... =
       ),
       params_to_defaults,
       args_to_defaults
@@ -215,7 +215,7 @@ make_geom = function(geom,
       )
 
       !!(
-        if (length(geom$default_computed_aes) > 0) {
+        if (length(geom$default_computed_aes) > 0L) {
           expr(add_default_computed_aesthetics(l, !!geom$default_computed_aes))
         } else {
           quote(l)
@@ -237,5 +237,5 @@ make_geom = function(geom,
 #' (which will be expressions) match the formals of the generated code.
 #' @noRd
 to_expression = function(x) {
-  parse(text = deparse(x), keep.source = FALSE)[[1]]
+  parse(text = deparse(x), keep.source = FALSE)[[1L]]
 }

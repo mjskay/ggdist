@@ -11,7 +11,9 @@ weighted_quantile(
   weights = NULL,
   n = NULL,
   na.rm = FALSE,
-  type = 7
+  names = TRUE,
+  type = 7,
+  digits = 7
 )
 
 weighted_quantile_fun(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7)
@@ -55,9 +57,15 @@ sum represents the true sample size.
 \item{na.rm}{logical: if \code{TRUE}, corresponding entries in \code{x} and \code{weights}
 are removed if either is \code{NA}.}
 
+\item{names}{logical: If \code{TRUE}, add names to the output giving the input
+\code{probs} formatted as a percentage.}
+
 \item{type}{integer between 1 and 9: determines the type of quantile estimator
 to be used. Types 1 to 3 are for discontinuous quantiles, types 4 to 9 are
 for continuous quantiles. See \strong{Details}.}
+
+\item{digits}{numeric: the number of digits to use to format percentages
+when \code{names} is \code{TRUE}.}
 }
 \value{
 \code{weighted_quantile()} returns a numeric vector of \code{length(probs)} with the

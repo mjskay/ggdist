@@ -99,8 +99,10 @@ bounder_cdf = auto_partial(name = "bounder_cdf", function(x, p = 0.01) {
 #' i.e. method 2.3 from Loh (1984). These bounds are:
 #'
 #' \deqn{\left[\begin{array}{l}
-#' 2X_{(1)} - \sum_{i = 1}^n \left[\left(1 - \frac{i - 1}{n}\right)^n - \left(1 - \frac{i}{n}\right)^n \right] X_{(i)}\\
-#' 2X_{(n)} - \sum_{i = 1}^n \left[\left(1 - \frac{n - i}{n}\right)^n - \left(1 - \frac{n + 1 - i}{n} \right)^n\right] X_{(i)}
+#' 2X_{(1)} - \sum_{i = 1}^n \left[\left(1 - \frac{i - 1}{n}\right)^n -
+#'   \left(1 - \frac{i}{n}\right)^n \right] X_{(i)}\\
+#' 2X_{(n)} - \sum_{i = 1}^n \left[\left(1 - \frac{n - i}{n}\right)^n -
+#'   \left(1 - \frac{n + 1 - i}{n} \right)^n\right] X_{(i)}
 #' \end{array}\right]}
 #'
 #' Where \eqn{X_{(i)}} is the \eqn{i}th order statistic of `x` (i.e. its

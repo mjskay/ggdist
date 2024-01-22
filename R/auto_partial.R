@@ -84,15 +84,15 @@ NULL
 #' @importFrom rlang as_quosure enquos eval_tidy expr get_expr
 partial_self = function(name = NULL) {
   f = sys.function(-1L)
-  call = match.call(f, sys.call(-1L), TRUE, parent.frame(2L))
-  f_quo = as_quosure(call[[1]], parent.frame(2L))
-  default_args = lapply(call[-1], as_quosure, env = parent.frame(2L))
-  name = name %||% deparse0(get_expr(call[[1]]))
+  call_expr = match.call(f, sys.call(-1L), TRUE, parent.frame(2L))
+  f_quo = as_quosure(call_expr[[1]], parent.frame(2L))
+  default_args = lapply(call_expr[-1], as_quosure, env = parent.frame(2L))
+  name = name %||% deparse0(get_expr(call_expr[[1]]))
 
   partial_f = function(...) {
     new_args = enquos(...)
-    args = defaults(new_args, default_args)
-    eval_tidy(expr((!!f_quo)(!!!args)))
+    all_args = defaults(new_args, default_args)
+    eval_tidy(expr((!!f_quo)(!!!all_args)))
   }
 
   attr(partial_f, "default_args") = default_args
@@ -121,11 +121,15 @@ auto_partial = function(f, name = NULL) {
   f_body = body(f)
   # must ensure the function body is a { ... } block, not a single expression,
   # so we can splice it in later with !!!f_body
-  if (!inherits(f_body, "{")) f_body = expr({ !!f_body })
-  args = formals(f)
+  if (!inherits(f_body, "{")) {
+    f_body = expr({
+      !!f_body
+    })
+  }
+  f_args = formals(f)
 
   # find the required arguments
-  required_args = args[vapply(args, rlang::is_missing, FUN.VALUE = logical(1))]
+  required_args = f_args[vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))]
   required_arg_names = names(required_args)
   required_arg_names = required_arg_names[required_arg_names != "..."]
 
@@ -149,7 +153,7 @@ auto_partial = function(f, name = NULL) {
   }
 
   new_f = new_function(
-    args,
+    f_args,
     expr({
       if (!!any_required_args_missing) return((!!partial_self_f)(!!name))
 
@@ -165,14 +169,14 @@ auto_partial = function(f, name = NULL) {
 #' @importFrom rlang get_expr
 #' @export
 print.ggdist_partial_function = function(x, ...) {
-  function_sym = as.name(attr(x, "name"))
-  args = lapply(attr(x, "default_args"), get_expr)
+  f_sym = as.name(attr(x, "name"))
+  f_args = lapply(attr(x, "default_args"), get_expr)
 
   cat(sep = "\n",
     "<partial_function>: ",
     paste0("  ", format(as.call(c(
-      list(function_sym),
-      args
+      list(f_sym),
+      f_args
     ))))
   )
 

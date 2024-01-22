@@ -61,8 +61,10 @@ makeContent.dots_grob = function(x) {
   # and the vertical spacing of dots (y_spacing)
   # this is a bit different from a raw stackratio since we want to account
   # for the dotsize
-  heightratio = convertUnit(unit(dotsize * stackratio, "native"),
-    "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
+  heightratio = convertUnit(
+    unit(dotsize * stackratio, "native"), "native",
+    axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE
+  )
 
   # if bin width was specified as a grid::unit, convert it to native units
   if (is.unit(binwidth)) {
@@ -137,8 +139,10 @@ makeContent.dots_grob = function(x) {
     # (font_size_ratio) plus need to account for stroke width
     lwd = d$linewidth * .stroke/2
     lwd[is.na(lwd) | is.na(d$colour)] = 0
-    dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
-      "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+    dot_pointsize = convertUnit(
+      unit(binwidth * dotsize, "native"), "points",
+      axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE
+    )
     dot_fontsize = max(
       dot_pointsize * font_size_ratio - lwd,
       0.5
@@ -187,7 +191,7 @@ makeContent.dots_grob = function(x) {
 
         # construct a viewport such that the guide drawn in this viewport
         # will have its data values at the correct locations
-        vp = viewport(just = c(0,0))
+        vp = viewport(just = c(0, 0))
         vp[[x]] = unit(0, "native")
         vp[[y]] = unit(d[[y]] + dot_height / 2 * not_both * direction, "native")
         vp[[width.]] = unit(1, "npc")
@@ -198,7 +202,8 @@ makeContent.dots_grob = function(x) {
           subguide_fun(c(1, max_count), orientation = orientation),
           vp = vp
         )
-      })
+      }
+    )
   }
 
   setChildren(grob_, do.call(gList, c(dot_grobs, subguide_grobs)))
@@ -265,7 +270,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   s_data = s_data[order(s_data[["order"]] %||% s_data[[x]]), ]
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  slab_grobs = list(dots_grob(
+  list(dots_grob(
     s_data,
     x, y,
     xscale = xscale,
@@ -456,20 +461,28 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       '),
     layout = glue_doc('The layout method used
       for the dots: \\itemize{
-        \\item `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
-          This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
-          classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
-          the input data are symmetrical it will return a symmetrical layout.
-        \\item `"weave"`: uses the same basic binning approach of `"bin"`, but places dots in the off-axis at their actual
-          positions (unless `overlaps = "nudge"`, in which case overlaps may be nudged out of the way). This maintains
-          the alignment of rows but does not align dots within columns.
-        \\item `"hex"`: uses the same basic binning approach of `"bin"`, but alternates placing dots `+ binwidth/4` or
-          `- binwidth/4` in the off-axis from the bin center. This allows hexagonal packing by setting a `stackratio`
-          less than 1 (something like `0.9` tends to work).
-        \\item `"swarm"`: uses the `"compactswarm"` layout from [beeswarm::beeswarm()]. Does not maintain alignment of rows or
-          columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
-          dotplots of theoretical distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
-        \\item `"bar"`: for discrete distributions, lays out duplicate values in rectangular bars.
+        \\item `"bin"` (default): places dots on the off-axis at the midpoint of
+          their bins as in the classic Wilkinson dotplot. This maintains the
+          alignment of rows and columns in the dotplot. This layout is slightly
+          different from the classic Wilkinson algorithm in that: (1) it nudges
+          bins slightly to avoid overlapping bins and (2) if the input data are
+          symmetrical it will return a symmetrical layout.
+        \\item `"weave"`: uses the same basic binning approach of `"bin"`, but
+          places dots in the off-axis at their actual positions (unless
+          `overlaps = "nudge"`, in which case overlaps may be nudged out of the
+          way). This maintains the alignment of rows but does not align dots
+          within columns.
+        \\item `"hex"`: uses the same basic binning approach of `"bin"`, but
+          alternates placing dots `+ binwidth/4` or `- binwidth/4` in the
+          off-axis from the bin center. This allows hexagonal packing by setting
+          a `stackratio` less than 1 (something like `0.9` tends to work).
+        \\item `"swarm"`: uses the `"compactswarm"` layout from
+          [beeswarm::beeswarm()]. Does not maintain alignment of rows or columns,
+          but can be more compact and neat looking, especially for sample data
+          (as opposed to quantile dotplots of theoretical distributions, which
+          may look better with `"bin"`, `"weave"`, or `"hex"`).
+        \\item `"bar"`: for discrete distributions, lays out duplicate values in
+          rectangular bars.
       }'),
     overlaps = glue_doc('How to handle overlapping dots or bins in the `"bin"`,
       `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"` or `"bar"` layouts).

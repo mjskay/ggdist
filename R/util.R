@@ -65,8 +65,8 @@ check_na = function(x, na.rm) {
 }
 
 # simple version of destructuring assignment
-`%<-%` <- function(vars, values, envir = parent.frame()) {
-  vars <- as.character(substitute(vars)[-1])
+`%<-%` = function(vars, values, envir = parent.frame()) {
+  vars = as.character(substitute(vars)[-1])
   for (i in seq_along(vars)) {
     assign(vars[[i]], values[[i]], envir = envir)
   }

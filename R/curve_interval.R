@@ -138,7 +138,7 @@ globalVariables(".value")
 #' @importFrom tidyselect eval_select
 #' @export
 curve_interval = function(
-  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
   UseMethod("curve_interval")
@@ -147,7 +147,7 @@ curve_interval = function(
 #' @rdname curve_interval
 #' @export
 curve_interval.matrix = function(
-  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
   if (!requireNamespace("posterior", quietly = TRUE)) {
@@ -165,7 +165,7 @@ curve_interval.matrix = function(
 #' @rdname curve_interval
 #' @export
 curve_interval.rvar = function(
-  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
   check_along_is_null(.along)
@@ -180,7 +180,7 @@ curve_interval.rvar = function(
 #' @rdname curve_interval
 #' @export
 curve_interval.data.frame = function(
-  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd"),
   .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
@@ -243,7 +243,7 @@ curve_interval.data.frame = function(
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
+    if (!all(map_lgl_(data[, names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
@@ -251,7 +251,8 @@ curve_interval.data.frame = function(
     actual_widths = NULL
     for (col_name in names(col_exprs)) {
       col_result = .curve_interval(
-        data, col_name, paste0(col_name, ".lower"), paste0(col_name, ".upper"), .width, .interval, .conditional_groups, na.rm = na.rm
+        data, col_name, paste0(col_name, ".lower"), paste0(col_name, ".upper"),
+        .width, .interval, .conditional_groups, na.rm = na.rm
       )
 
       # actual widths aren't always going to be equal so we'll take the means of them
@@ -279,13 +280,13 @@ curve_interval.data.frame = function(
 check_along_is_null = function(.along) {
   if (!is.null(.along)) cli_abort(c(
     '{.fun ggdist::curve_interval} applied to a matrix or rvar does not support the {.arg .along} argument',
-    'i' = 'Intervals for {.code curve_interval(<rvar>)} and {.code curve_interval(<matrix>)}
+    `i` = 'Intervals for {.code curve_interval(<rvar>)} and {.code curve_interval(<matrix>)}
       are calculated jointly for all dimensions of the input.',
-    '>' = 'If you want all dimensions to be joint, simply do not pass anything to {.arg .along}.',
-    '>' = 'If you want only some dimensions to be joint (i.e., some to be conditional), consider
+    `>` = 'If you want all dimensions to be joint, simply do not pass anything to {.arg .along}.',
+    `>` = 'If you want only some dimensions to be joint (i.e., some to be conditional), consider
       using a data frame, and group by the conditional columns and pass the joint columns to
       {.arg .along}',
-    'i' = 'For more information, see the {.arg .along} argument of {.fun ggdist::curve_interval}.'
+    `i` = 'For more information, see the {.arg .along} argument of {.fun ggdist::curve_interval}.'
   ))
 }
 

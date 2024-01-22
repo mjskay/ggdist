@@ -143,7 +143,7 @@ make_stat = function(stat, geom,
         data = data,
         geom = geom,
         position = position,
-        ... =,
+        ... =
       ),
       params_to_defaults,
       args_to_defaults

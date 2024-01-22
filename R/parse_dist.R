@@ -6,7 +6,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c("prior"))
+globalVariables("prior")
 
 
 #' Parse distribution specifications into columns of a data frame
@@ -86,7 +86,15 @@ globalVariables(c("prior"))
 #' @importFrom tibble tibble
 #' @importFrom distributional dist_wrap dist_truncated
 #' @export
-parse_dist = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+parse_dist = function(
+  object,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  to_r_names = TRUE
+) {
   UseMethod("parse_dist")
 }
 
@@ -102,7 +110,16 @@ parse_dist.default = function(object, ...) {
 #' @rdname parse_dist
 #' @export
 parse_dist.data.frame = function(
-  object, dist_col, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, lb = "lb", ub = "ub", to_r_names = TRUE
+  object,
+  dist_col,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  lb = "lb",
+  ub = "ub",
+  to_r_names = TRUE
 ) {
   package = package %||% parent.frame()
 

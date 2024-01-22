@@ -1,10 +1,38 @@
-linters: with_defaults(
-  assignment_linter = NULL,
-  line_length_linter(120),
-  open_curly_linter(allow_single_line = TRUE),
-  closed_curly_linter = NULL,
-  object_name_linter = NULL,
-  object_length_linter = NULL,
-  snake_case_linter = NULL,
-  camel_case_linter = NULL
+linters: all_linters(
+    assignment_linter = NULL,
+    commas_linter(allow_trailing = TRUE),
+    consecutive_assertion_linter = NULL,
+    implicit_integer_linter = NULL,
+    infix_spaces_linter(exclude_operators = c("/", "*")),
+    keyword_quote_linter = NULL,
+    line_length_linter(120L),
+    missing_argument_linter(except = c("alist", "quote", "switch", "pairlist2")),
+    numeric_leading_zero_linter = NULL,
+    object_length_linter = NULL,
+    object_name_linter(
+      styles = c("snake_case", "symbols"),
+      regexes = c(
+        misc = "^(F_x|x_1_hat,x_n_hat)$",
+        CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|K|.*Pr.*)$",
+        dot.case = "^(na\\.rm|lower\\.tail|log\\.p)$",
+        bandwidth = "^(bandwidth_.*)$"
+      )
+    ),
+    object_overwrite_linter(
+      allow_names = c("dist", "data", "layout", "pdf")
+    ),
+    quotes_linter = NULL,
+    scalar_in_linter = NULL,
+    undesirable_function_linter(modify_defaults(
+      defaults = all_undesirable_functions,
+      library = NULL,
+      options = NULL,
+      ifelse = NULL,
+      structure = NULL
+    )),
+    undesirable_operator_linter(modify_defaults(
+      defaults = all_undesirable_operators,
+      "<-" = "House style is to use `=`, not `<-`, for assignment."
+    )),
+    unnecessary_concatenation_linter(allow_single_expression = FALSE)
   )

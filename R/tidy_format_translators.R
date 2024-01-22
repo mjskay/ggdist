@@ -1,4 +1,4 @@
-# to_broom_names / from_broom_names
+# to_broom_names and from_broom_names
 #
 # Author: mjskay
 ###############################################################################
@@ -71,7 +71,7 @@ to_broom_names = function(data) {
 
   # this approach, while possibly a little odd seeming, ensures that
   # group names in grouped data frames are also changed
-  select_all(data, ~ lookup[.] %||% .)
+  select_all(data, function(col) lookup[col] %||% col)
 }
 
 
@@ -86,7 +86,7 @@ from_broom_names = function(data) {
     conf.high = ".upper"
   )
 
-  select_all(data, ~ lookup[.] %||% .)
+  select_all(data, function(col) lookup[col] %||% col)
 }
 
 
@@ -118,4 +118,3 @@ from_ggmcmc_names = function(data) {
 
   select_all(data, ~ lookup[.] %||% .)
 }
-

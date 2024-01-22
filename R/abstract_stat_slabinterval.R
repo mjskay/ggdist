@@ -25,7 +25,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     n = 501,
 
     point_interval = NULL,
-    .width = c(.66, .95),
+    .width = c(0.66, 0.95),
 
     show_slab = TRUE,
     show_point = TRUE,
@@ -127,10 +127,10 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     # detect rvar or distribution missingness correctly, so we do the removal
     # manually and then generate a call to remove_missing on a dummy data frame
     # that will create the appropriate warning message, if needed
-    missing = is.na(data$dist)
-    if (any(missing)) {
-      data = data[!missing, ]
-      remove_missing(data.frame(dist = ifelse(missing, NA_real_, 0)), na.rm, "dist", name = "stat_slabinterval")
+    is_missing = is.na(data$dist)
+    if (any(is_missing)) {
+      data = data[!is_missing, ]
+      remove_missing(data.frame(dist = ifelse(is_missing, NA_real_, 0)), na.rm, "dist", name = "stat_slabinterval")
     }
     if (nrow(data) == 0) return(data.frame())
 
@@ -329,7 +329,7 @@ compute_panel_limits = function(
     na_(min, min_limits[[2]], max_limits[[2]])
   )
   #default to 0 (min) and 1 (max) for unknown limits
-  limits = ifelse(is.na(limits), c(0,1), limits)
+  limits = ifelse(is.na(limits), c(0, 1), limits)
 
   limits
 }
@@ -356,7 +356,7 @@ approx_pdf = function(dist, x, f_x) {
 approx_cdf = function(dist, x, F_x) {
   if (distr_is_constant(dist)) {
     dist_value = distr_quantile(dist)(0.5)
-    function(x) ifelse(x >= dist_value, 1, 0)
+    function(x) as.numeric(x >= dist_value)
   } else {
     approxfun(x, F_x, yleft = 0, yright = 1, method = "constant", ties = max)
   }

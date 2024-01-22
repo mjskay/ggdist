@@ -7,7 +7,7 @@
 # groups, but keep any columns in the groups that have only one value in them
 # (i.e. columns where every value in the column is the same)
 #' @importFrom dplyr group_split across
-summarise_by = function(data, by = "group", fun, ...) {
+summarise_by = function(data, by, fun, ...) {
   ddply_(data, by, function(d) {
     new_d = fun(d, ...)
     missing_names = setdiff(names(d), names(new_d))
@@ -19,7 +19,7 @@ summarise_by = function(data, by = "group", fun, ...) {
           if (is.list(d[[col]])) {
             # list columns must be wrapped
             new_d[[col]] = list(d[[col]][[1]])
-          } else{
+          } else {
             new_d[[col]] = d[[col]][[1]]
           }
         }

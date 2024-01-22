@@ -180,8 +180,9 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
   draw_key_slab = function(self, data, key_data, params, size) {
     s_key_data = self$override_slab_aesthetics(key_data)
 
-    spike_key = if (any(!is.na(data[c("colour","colour_ramp","alpha","linewidth","linetype")]))) {
-      line_key = if(params$orientation %in% c("y", "horizontal")) {
+    show_spike_when_present = c("colour", "colour_ramp", "alpha", "linewidth", "linetype")
+    spike_key = if (!all(is.na(data[show_spike_when_present]))) {
+      line_key = if (params$orientation %in% c("y", "horizontal")) {
         draw_key_vpath
       } else {
         draw_key_path
@@ -191,10 +192,10 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
 
     point_key = if (
       !all(is.na(s_key_data$size) | s_key_data$size == 0) && (
-        any(!is.na(data[c("size","stroke","shape","alpha")])) ||
+        !all(is.na(data[c("size","stroke","shape","alpha")])) ||
         # only draw point for `fill` aesthetic if a shape that has a fill colour is used
-        (any(!is.na(data[c("fill","fill_ramp")])) && length(intersect(data$shape, c(21:25))) > 0) ||
-        (any(!is.na(data[c("fill","fill_ramp")])) && length(intersect(data$shape, c(21:25))) > 0)
+        (!all(is.na(data[c("fill", "fill_ramp")])) && length(intersect(data$shape, 21:25)) > 0) ||
+        (!all(is.na(data[c("fill", "fill_ramp")])) && length(intersect(data$shape, 21:25)) > 0)
       )
     ) {
       draw_key_point(s_key_data, params, size)

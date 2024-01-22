@@ -89,7 +89,7 @@
 #'   scale_fill_brewer(direction = -1, na.translate = FALSE)
 #'
 #' @export
-cut_cdf_qi = function(p, .width = c(.66, .95, 1), labels = NULL) {
+cut_cdf_qi = function(p, .width = c(0.66, 0.95, 1), labels = NULL) {
   .width = sort(.width)
 
   if (is.function(labels)) {

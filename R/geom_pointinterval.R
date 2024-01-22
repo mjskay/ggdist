@@ -6,7 +6,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c(".width"))
+globalVariables(".width")
 
 
 #' @eval rd_slabinterval_shortcut_geom("pointinterval", "point + multiple-interval")

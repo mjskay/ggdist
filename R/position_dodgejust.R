@@ -120,7 +120,7 @@
 #'
 #'
 #' @export
-position_dodgejust <- function(width = NULL, preserve = c("total", "single"), justification = NULL) {
+position_dodgejust = function(width = NULL, preserve = c("total", "single"), justification = NULL) {
   ggproto(NULL, PositionDodgejust,
     width = width,
     preserve = match.arg(preserve),
@@ -132,7 +132,7 @@ position_dodgejust <- function(width = NULL, preserve = c("total", "single"), ju
 #' @format NULL
 #' @usage NULL
 #' @export
-PositionDodgejust <- ggproto("PositionDodgejust", Position,
+PositionDodgejust = ggproto("PositionDodgejust", Position,
   width = NULL,
   preserve = "total",
   justification = NULL,
@@ -197,7 +197,7 @@ pos_dodgejust = function(df, width, n = NULL) {
 
   # Find the center for each group, then use that to calculate xmin and xmax
   max_width = max(x_width)
-  df$x = df$x + width * ((groupidx - 0.5) / n - .5)
+  df$x = df$x + width * ((groupidx - 0.5) / n - 0.5)
   df$xmin = df$x - max_width / n / 2
   df$xmax = df$x + max_width / n / 2
 

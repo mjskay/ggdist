@@ -28,3 +28,21 @@ it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and
 The \code{\link[=geom_lineribbon]{geom_lineribbon()}} / \code{\link[=stat_lineribbon]{stat_lineribbon()}} family (see \code{vignette("lineribbon")})
 makes it easy to visualize fit lines with an arbitrary number of uncertainty bands.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://mjskay.github.io/ggdist/}
+  \item \url{https://github.com/mjskay/ggdist/}
+  \item Report bugs at \url{https://github.com/mjskay/ggdist/issues/new}
+}
+
+}
+\author{
+\strong{Maintainer}: Matthew Kay \email{mjskay@northwestern.edu}
+
+Other contributors:
+\itemize{
+  \item Brenton M. Wiernik \email{brenton@wiernik.org} [contributor]
+}
+
+}

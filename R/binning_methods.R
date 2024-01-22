@@ -101,7 +101,7 @@ bin_dots = function(x, y, binwidth,
     both = 0
   )
   switch(layout,
-    bin =, hex =, bar = {
+    bin = , hex = , bar = {
       bin_midpoints = h$binning$bin_midpoints
       if (overlaps == "nudge" && layout != "bar") {
         bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
@@ -133,7 +133,10 @@ bin_dots = function(x, y, binwidth,
     },
     swarm = {
       if (!requireNamespace("beeswarm", quietly = TRUE)) {
-        stop('Using layout = "swarm" with the dots geom requires the `beeswarm` package to be installed.') #nocov
+        cli_abort(                                                            # nocov
+          'Using {.code layout = "swarm"} with {.help geom_dots} requires the # nocov
+          {.pkg beeswarm} package.'                                           # nocov
+        )                                                                     # nocov
       }
 
       swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
@@ -256,17 +259,28 @@ find_dotplot_binwidth = function(
   # figure out a reasonable minimum number of bins based on histogram binning
   min_nbins = if (length(x) <= 1) {
     1
-  } else{
+  } else {
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
   bin_method = select_bin_method(x, layout)
-  dot_heap_ = function(...) dot_heap(
-    x, ...,
-    maxheight = maxheight, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method
-  )
+  dot_heap_ = function(...) {
+    dot_heap(
+      x,
+      ...,
+      maxheight = maxheight,
+      heightratio = heightratio,
+      stackratio = stackratio,
+      bin_method = bin_method
+    )
+  }
   min_h = dot_heap_(nbins = min_nbins)
 
-  if (!min_h$is_valid) {
+  if (min_h$is_valid) {
+    # if the minimum heap (i.e. the dot heap constructed from the smallest
+    # number of bins --- thus, at the upper limit of the height we will allow)
+    # is valid, then we don't need to search and can just use it.
+    h = min_h
+  } else {
     # figure out a maximum number of bins based on data resolution (except
     # for bars, which handle duplicate values differently, so must go by
     # number of data points instead of unique data points)
@@ -276,10 +290,7 @@ find_dotplot_binwidth = function(
       dot_heap_(binwidth = resolution(x))
     }
 
-    if (max_h$nbins <= min_h$nbins) {
-      # even at data resolution there aren't enough bins, not much we can do...
-      h = min_h
-    } else if (max_h$nbins == min_h$nbins + 1) {
+    if (max_h$nbins <= min_h$nbins + 1) {
       # nowhere to search, use maximum number of bins
       h = max_h
     } else {
@@ -328,20 +339,18 @@ find_dotplot_binwidth = function(
         h = new_h
       }
     }
-  } else {
-    h = min_h
   }
 
   # check if the selected heap spec is valid....
-  if (!h$is_valid_approx) {
+  if (h$is_valid_approx) {
+    h$max_binwidth
+  } else {
     # ... if it isn't, this means we've ended up with some bin that's too
     # tall, probably because we have discrete data --- we'll just
     # conservatively shrink things down so they fit by backing out a bin
     # width that works with the tallest bin
     y_spacing = maxheight / h$max_bin_count
     y_spacing / heightratio
-  } else {
-    h$max_binwidth
   }
 }
 
@@ -358,7 +367,15 @@ find_dotplot_binwidth = function(
 #' @param heightratio ratio between the bin width and the y spacing
 #' @return  a list of properties of this dot "heap"
 #' @noRd
-dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightratio = 1, stackratio = 1, bin_method = automatic_bin) {
+dot_heap = function(
+  x,
+  nbins = NULL,
+  binwidth = NULL,
+  maxheight = Inf,
+  heightratio = 1,
+  stackratio = 1,
+  bin_method = automatic_bin
+) {
   xspread = diff(range(x))
   if (xspread == 0) xspread = 1
   if (is.null(binwidth)) {

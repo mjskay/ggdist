@@ -198,12 +198,25 @@ draw_slabs = function(self, s_data, panel_params, coord,
       # the definition of "outside" depends on the value of `side`:
       side = d$side[[1]]
       if (side == "both") {
-        outline_data_top = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, "top")
-        outline_data_bottom = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, "bottom")
-        gList(slab_grob, draw_path(outline_data_top, panel_params, coord), draw_path(outline_data_bottom, panel_params, coord))
+        outline_data_top = group_slab_data_by(
+          d, c("colour", "alpha", "linewidth", "linetype"), orientation, "top"
+        )
+        outline_data_bottom = group_slab_data_by(
+          d, c("colour", "alpha", "linewidth", "linetype"), orientation, "bottom"
+        )
+        gList(
+          slab_grob,
+          draw_path(outline_data_top, panel_params, coord),
+          draw_path(outline_data_bottom, panel_params, coord)
+        )
       } else {
-        outline_data = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, side)
-        gList(slab_grob, draw_path(outline_data, panel_params, coord))
+        outline_data = group_slab_data_by(
+          d, c("colour", "alpha", "linewidth", "linetype"), orientation, side
+        )
+        gList(
+          slab_grob,
+          draw_path(outline_data, panel_params, coord)
+        )
       }
     } else {
       slab_grob
@@ -228,7 +241,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
 
       # construct a viewport such that the guide drawn in this viewport
       # will have its data values at the correct locations
-      vp = viewport(just = c(0,0))
+      vp = viewport(just = c(0, 0))
       vp[[x]] = unit(0, "native")
       vp[[y]] = unit(d[[ymin]], "native")
       vp[[width.]] = unit(1, "npc")
@@ -288,7 +301,9 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
   i_data[[xend]] = i_data[[xmax]]
   i_data[[yend]] = i_data[[y]]
   i_data = self$override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
-  interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm, arrow = arrow))
+  interval_grobs = list(
+    GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm, arrow = arrow)
+  )
 
   c(interval_grobs, point_grobs)
 }

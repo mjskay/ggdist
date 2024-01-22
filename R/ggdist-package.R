@@ -6,7 +6,6 @@ NULL
 
 #' Visualizations of Distributions and Uncertainty
 #'
-#' @docType package
 #' @name ggdist-package
 #' @aliases ggdist
 #'
@@ -35,4 +34,4 @@ NULL
 #' The [geom_lineribbon()] / [stat_lineribbon()] family (see `vignette("lineribbon")`)
 #' makes it easy to visualize fit lines with an arbitrary number of uncertainty bands.
 #'
-NULL
+"_PACKAGE"

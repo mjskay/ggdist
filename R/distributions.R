@@ -36,10 +36,10 @@ distr_function.distribution = function(dist, fun, ..., categorical_okay = FALSE)
     # for categorical distributions --- but only when requested --- treat
     # them as ordinal so we can generate values in their bins. This is used
     # for stat_dots to put dots in bins approximately proportional to bin probs.
-    levels = distr_levels(dist)
+    levs = distr_levels(dist)
     probs = distr_probs(dist)
     Finv = stepfun(c(0, cumsum(probs)), c(1, seq_along(probs), length(probs)))
-    return(function(x, ...) levels[Finv(x)])
+    return(function(x, ...) levs[Finv(x)])
   }
   # eat up extra args as they are ignored anyway
   # (and can cause problems, e.g. with cdf())
@@ -64,14 +64,14 @@ distr_function.rvar_factor = function(dist, fun, ...) {
   } else if (fun %in% c("density", "cdf")) {
     # for density and cdf we must translate numeric input to factor levels
     f = force(NextMethod())
-    levels = levels(dist)
+    levs = levels(dist)
     function(x, ...) {
       # only x values > 0 are valid; values <= 0 are 0s
       gt_0 = x > 0
-      x_gt_0_levels = levels[x[gt_0]]
-      f = numeric(length(x))
-      f[gt_0] = f(x_gt_0_levels, ...)
-      f
+      x_gt_0_levels = levs[x[gt_0]]
+      out = numeric(length(x))
+      out[gt_0] = f(x_gt_0_levels, ...)
+      out
     }
   } else {
     NextMethod()
@@ -186,8 +186,11 @@ distr_is_factor_like = function(dist) {
   inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
     is_factor_like = map_lgl_(vctrs::vec_data(dist), function(d) {
       inherits(d, c("dist_categorical", "ggdist__wrapped_categorical")) ||
-        (inherits(d, c("dist_sample", "ggdist__weighted_sample")) && inherits(distr_get_sample(d), c("character", "factor"))) ||
-        is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
+      (
+        inherits(d, c("dist_sample", "ggdist__weighted_sample")) &&
+        inherits(distr_get_sample(d), c("character", "factor"))
+      ) ||
+      is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
     })
     length(dist) > 0 && all(is_factor_like)
   } else {
@@ -253,7 +256,7 @@ distr_is_multivariate = function(dist) {
 distr_is_sample = function(dist) {
   inherits(dist, c("rvar", "dist_sample", "ggdist__weighted_sample")) ||
     (
-      inherits(dist, c("distribution")) &&
+      inherits(dist, "distribution") &&
       length(dist) == 1 &&
       inherits(vctrs::field(dist, 1), c("dist_sample", "ggdist__weighted_sample"))
     )
@@ -391,11 +394,11 @@ generate.ggdist__wrapped_categorical = function(x, ...) {
   weights = vec_cast(weights, list_of(numeric()))
 
   weight_is_null = vapply(weights, is.null, logical(1))
-  stopifnot(all(lengths(x) == lengths(weights) | weight_is_null))
+  stopifnot(lengths(x) == lengths(weights) | weight_is_null)
 
   # only allow univariate samples since that's all we should ever end
   # up with via mappings in ggplot
-  stopifnot(all(lengths(lapply(x, dim)) <= 1))
+  stopifnot(lengths(lapply(x, dim)) <= 1)
 
   distributional::new_dist(
     x = x,
@@ -405,7 +408,7 @@ generate.ggdist__wrapped_categorical = function(x, ...) {
 }
 
 #' @export
-format.ggdist__weighted_sample <- function(x, ...){
+format.ggdist__weighted_sample = function(x, ...) {
   paste0("weighted_sample[", length(x[["x"]]), "]")
 }
 
@@ -434,7 +437,7 @@ generate.ggdist__weighted_sample = function(x, times, ...) {
 
 #' @export
 mean.ggdist__weighted_sample = function(x, ...) {
-  if (is.null(x[["weights"]])){
+  if (is.null(x[["weights"]])) {
     mean(x[["x"]])
   } else {
     weighted.mean(x[["x"]], x[["weights"]])
@@ -444,7 +447,7 @@ mean.ggdist__weighted_sample = function(x, ...) {
 #' @importFrom distributional variance
 #' @export
 variance.ggdist__weighted_sample = function(x, ...) {
-  if (is.null(x[["weights"]])){
+  if (is.null(x[["weights"]])) {
     variance(x[["x"]])
   } else {
     weighted_var(x[["x"]], x[["weights"]])
@@ -486,9 +489,9 @@ inverse_deriv_at_y = function(trans, y) {
     # must do this within the environment of the transformation function b/c
     # some functions are defined as closures with other variables needed to
     # fully define the transformation
-    args = list(y)
-    names(args) = y_name
-    eval(f_deriv_expr, args, environment(f))
+    f_args = list(y)
+    names(f_args) = y_name
+    eval(f_deriv_expr, f_args, environment(f))
   }, error = function(e) {
     # if analytical approach fails, use numerical approach.
     # we use this (slightly less quick) approach instead of numDeriv::grad()

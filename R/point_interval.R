@@ -153,7 +153,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom tibble as_tibble
 #' @export
 point_interval = function(
-  .data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
+  .data, ..., .width = 0.95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
   if (missing(.data)) return(partial_self("point_interval"))

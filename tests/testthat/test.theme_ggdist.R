@@ -3,9 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-library(tidyr)
-
+suppressWarnings(suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+}))
 
 
 test_that("theme helper functions work", {

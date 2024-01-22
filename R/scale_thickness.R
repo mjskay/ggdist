@@ -145,7 +145,7 @@ ScaleThicknessShared = ggproto("ScaleThicknessShared", ScaleContinuous,
 #' @rdname scale_thickness
 #' @importFrom scales identity_pal
 #' @export
-scale_thickness_identity = function (..., guide = "none") {
+scale_thickness_identity = function(..., guide = "none") {
   continuous_scale(
     "thickness", "identity", identity_pal(),
     ...,
@@ -267,7 +267,7 @@ vec_arith.ggdist_thickness.default = function(op, x, y, ...) {
 
 #' @export
 #' @method vec_arith.ggdist_thickness ggdist_thickness
-vec_arith.ggdist_thickness.ggdist_thickness <- function(op, x, y, ...) {
+vec_arith.ggdist_thickness.ggdist_thickness = function(op, x, y, ...) {
   x_value = field(x, "x")
   y_value = field(y, "x")
 
@@ -300,7 +300,7 @@ vec_arith.ggdist_thickness.ggdist_thickness <- function(op, x, y, ...) {
 
 #' @export
 #' @method vec_arith.ggdist_thickness numeric
-vec_arith.ggdist_thickness.numeric <- function(op, x, y, ...) {
+vec_arith.ggdist_thickness.numeric = function(op, x, y, ...) {
   x_value = field(x, "x")
   switch(
     op,
@@ -312,7 +312,7 @@ vec_arith.ggdist_thickness.numeric <- function(op, x, y, ...) {
 
 #' @export
 #' @method vec_arith.numeric ggdist_thickness
-vec_arith.numeric.ggdist_thickness <- function(op, x, y, ...) {
+vec_arith.numeric.ggdist_thickness = function(op, x, y, ...) {
   y_value = field(y, "x")
   switch(
     op,

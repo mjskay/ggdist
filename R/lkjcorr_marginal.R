@@ -106,7 +106,7 @@ rlkjcorr_marginal = function(n, K, eta) {
 #' @importFrom rlang is_integerish
 lkjcorr_marginal_alpha = function(K, eta) {
   if (!is_integerish(K) || K < 2) {
-    stop("Correlation matrix dimension (K) must be an integer greater than or equal to 2")
+    cli_abort("Correlation matrix dimension (K) must be an integer greater than or equal to 2")
   }
   eta - 1 + K/2
 }

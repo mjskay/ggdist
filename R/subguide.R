@@ -96,7 +96,9 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   axis_position = get_subguide_axis_position(label_side, position, orientation)
   axis_is_topleft = axis_position %in% c("left", "top")
   #TODO: can't use unexported function here
-  axis_grob = ggplot2:::draw_axis(break_positions = break_positions, break_labels = break_labels, axis_position = axis_position, theme = theme)
+  axis_grob = ggplot2:::draw_axis(
+    break_positions = break_positions, break_labels = break_labels, axis_position = axis_position, theme = theme
+  )
   axis_width = grob_width(axis_grob)
 
   title_element = calc_element(paste0("axis.title.", y), theme)
@@ -152,7 +154,7 @@ subguide_outside = function(..., label_side = "outside", just = 1) {
 #' labeling counts in [geom_dots()].
 #' @rdname subguide_axis
 #' @export
-subguide_integer = function(..., breaks = scales::breaks_extended(Q = c(1,5,2,4,3))) {
+subguide_integer = function(..., breaks = scales::breaks_extended(Q = c(1, 5, 2, 4, 3))) {
   force(breaks)
   breaks_fun = function(x, ...) {
     x = x[is.finite(x)]

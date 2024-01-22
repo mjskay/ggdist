@@ -34,7 +34,7 @@ add_default_computed_aesthetics = function(l, default_mapping) {
           is.null(mapping[[aesthetic, exact = FALSE]]) &&
           (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
           all(vars_in_mapping %in% names(data)) &&
-          !anyNA(data[,vars_in_mapping])
+          !anyNA(data[, vars_in_mapping])
         ) {
           # We reconstruct the quosure here instead of using default_mapping[[aesthetic]]
           # as a hack because for some reason when this is run inside {covr} it
@@ -115,7 +115,11 @@ get_orientation = function(flipped_aes) {
 # function (for convenience): these are variables (typically aesthetics)
 # that differ depending on whether the geom's orientation is horizontal
 # or vertical. They are named assuming a horizontal orientation.
-globalVariables(c("width.", "height", "y", "ymin", "ymax", "yend", "x", "xmin", "xmax", "xend","x.range","y.range"))
+globalVariables(c(
+  "width.", "height",
+  "y", "ymin", "ymax", "yend", "y.range",
+  "x", "xmin", "xmax", "xend", "x.range"
+))
 define_orientation_variables = function(orientation) {
   f = parent.frame()
 

@@ -110,7 +110,7 @@ Pr_ = function(x) {
     e1 = parse_Pr_element(expr[[2]], label)
     e2 = parse_Pr_element(expr[[3]], label)
     switch(f,
-      ">" =, ">=" =, "<" =, "<=" = {
+      ">" = , ">=" = , "<" = , "<=" = {
         check_Pr_cdf_element_combination(e1, e2, label)
         e1 = standardize_Pr_element(e1)
         e2 = standardize_Pr_element(e2)
@@ -156,8 +156,8 @@ p_ = function(x) {
 parse_Pr_element = function(e, label = NULL) {
   e = deparse0(e)
   switch(e,
-    X =, xdist = "xdist",
-    Y =, ydist = "ydist",
+    X = , xdist = "xdist",
+    Y = , ydist = "ydist",
     x = "x",
     y = "y",
     value = "value",
@@ -169,8 +169,8 @@ parse_Pr_element = function(e, label = NULL) {
 
 standardize_Pr_element = function(e) {
   switch(e,
-    x =, y =, value = "value",
-    xdist =, ydist =, dist = "dist",
+    x = , y = , value = "value",
+    xdist = , ydist = , dist = "dist",
     e
   )
 }

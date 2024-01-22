@@ -34,11 +34,18 @@ draw_key_slabinterval_ = function(self, data, params, size) {
 draw_key_slab_ = function(self, data, key_data, params, size) {
   # size is not in this list because if size it set but colour is not then there's nothing to draw,
   # so use size can only occur in cases where colour is alos set (so we can just check colour)
-  if (params$show_slab && any(!is.na(data[,c("fill","fill_ramp","alpha","slab_fill","slab_colour","slab_linewidth","slab_size","slab_linetype","slab_alpha")]))) {
+  show_slab_when_present = c(
+    "fill", "fill_ramp", "slab_fill",
+    "alpha", "slab_alpha",
+    "slab_colour",
+    "slab_linewidth", "slab_size", "slab_linetype"
+  )
+  if (params$show_slab && !all(is.na(data[show_slab_when_present]))) {
     s_key_data = self$override_slab_aesthetics(key_data)
 
-    if (any(!is.na(data[,c("slab_linewidth","slab_size","slab_linetype")])) && is.na(s_key_data$colour)) {
-      # because the default slab_colour is NA, if we want to draw a key for size / linetype we need to reset the colour to its default
+    if (!all(is.na(data[c("slab_linewidth", "slab_size", "slab_linetype")])) && is.na(s_key_data$colour)) {
+      # because the default slab_colour is NA, if we want to draw a key for size / linetype
+      # we need to reset the colour to its default
       s_key_data$colour = self$default_key_aes$colour
     }
     draw_key_polygon(s_key_data, params, size)
@@ -46,9 +53,14 @@ draw_key_slab_ = function(self, data, key_data, params, size) {
 }
 
 draw_key_interval_ = function(self, data, key_data, params, size) {
-  if(params$show_interval && any(!is.na(data[c("colour","colour_ramp","alpha","size","linewidth","linetype","interval_colour","interval_alpha","interval_size","interval_linetype")]))) {
+  show_interval_when_present = c(
+    "colour", "colour_ramp", "interval_colour",
+    "alpha", "interval_alpha",
+    "size", "linewidth", "linetype", "interval_size", "interval_linetype"
+  )
+  if (params$show_interval && !all(is.na(data[show_interval_when_present]))) {
     i_key_data = self$override_interval_aesthetics(key_data, params$interval_size_domain, params$interval_size_range)
-    line_key = if(params$orientation %in% c("y", "horizontal")) {
+    line_key = if (params$orientation %in% c("y", "horizontal")) {
       draw_key_path
     } else {
       draw_key_vpath
@@ -58,14 +70,24 @@ draw_key_interval_ = function(self, data, key_data, params, size) {
 }
 
 draw_key_point_ = function(self, data, key_data, params, size) {
-  if(params$show_point && (
-    any(!is.na(data[c("shape","stroke","colour","colour_ramp","alpha","size","point_colour","point_fill","point_alpha","point_size")])) ||
+  show_point_when_present = c(
+    "shape",
+    "stroke",
+    "colour", "colour_ramp", "point_colour", "point_fill",
+    "alpha", "point_alpha",
+    "size", "point_size"
+  )
+  if (
+    params$show_point && (
+      !all(is.na(data[show_point_when_present])) ||
       # only draw point for `fill` aesthetic if a shape that has a fill colour is used
-      (!is.na(data$fill) && length(intersect(data$shape, c(21:25))) > 0) ||
-      (!is.na(data$point_fill) && length(intersect(data$shape, c(21:25))) > 0)
-  )) {
-    p_key_data = self$override_point_aesthetics(key_data,
-      params$interval_size_domain, params$interval_size_range, params$fatten_point)
+      (!is.na(data$fill) && length(intersect(data$shape, 21:25)) > 0) ||
+      (!is.na(data$point_fill) && length(intersect(data$shape, 21:25)) > 0)
+    )
+  ) {
+    p_key_data = self$override_point_aesthetics(
+      key_data, params$interval_size_domain, params$interval_size_range, params$fatten_point
+    )
     draw_key_point(p_key_data, params, size)
   }
 }

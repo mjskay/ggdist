@@ -73,7 +73,7 @@ scale_colour_ramp_discrete = function(
   from = "white", ..., range = c(0.2, 1),
   aesthetics = "colour_ramp"
 ) {
-  scale = discrete_scale(
+  discrete_scale(
     aesthetics, "colour_ramp_d", colour_ramp_pal_discrete(range, from), ...
   )
 }
@@ -104,7 +104,7 @@ colour_ramp_pal = function(range, from) {
   force(from)
   function(x) {
     # this is a stupid hack so we can pass the color through
-    # surely there is a better way?
+    # surely there is a better way? TODO: use a record type, probably
     lapply(rescale(x, range, c(0, 1)), function(y) {
       attr(y, "from") = from
       y
@@ -125,12 +125,17 @@ colour_ramp_pal_discrete = function(range, from) {
   }
 }
 
-# assuming equal-length vectors `colors` and `amounts`, where `colors` are
-# colors and `amounts` is a scaled ramp aesthetic column, returns a vector
-# of same length as input giving the transformed (ramped) colors. E.g.
-# inside a draw_group() or draw_panel() method of a geom, usage might be:
-# data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
-# to apply the effects of the fill_ramp aesthetic to the fill aesthetic.
+#' Assuming equal-length vectors `colors` and `amounts`, where `colors` are
+#' colors and `amounts` is a scaled ramp aesthetic column, returns a vector
+#' of same length as input giving the transformed (ramped) colors.
+#'
+#' E.g. inside a `draw_group()` or `draw_panel()` method of a geom,
+#' usage might be:
+#'
+#'  data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
+#'
+#' to apply the effects of the fill_ramp aesthetic to the fill aesthetic.
+#' @noRd
 apply_colour_ramp = function(colors, amounts) {
   if (is.null(colors) || is.null(amounts)) return(colors)
 

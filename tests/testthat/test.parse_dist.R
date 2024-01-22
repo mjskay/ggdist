@@ -3,8 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-library(distributional)
+suppressWarnings(suppressPackageStartupMessages({
+  library(dplyr)
+  library(distributional)
+}))
 
 
 test_that("parse_dist works on vectors", {

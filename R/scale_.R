@@ -150,8 +150,10 @@ scale_point_size_continuous =
 #' @export
 scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
-  discrete_scale("point_size", "point_size_d", function(n) seq(range[1], range[2], length.out = n),
-    na.translate = na.translate, ...)
+  discrete_scale(
+    "point_size", "point_size_d", function(n) seq(range[1], range[2], length.out = n),
+    na.translate = na.translate, ...
+  )
 }
 
 
@@ -196,8 +198,10 @@ scale_interval_size_continuous =
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
-  discrete_scale("interval_size", "interval_size_d", function(n) seq(range[1], range[2], length.out = n),
-    na.translate = na.translate, ...)
+  discrete_scale(
+    "interval_size", "interval_size_d", function(n) seq(range[1], range[2], length.out = n),
+    na.translate = na.translate, ...
+  )
 }
 
 
@@ -266,8 +270,10 @@ scale_slab_size_continuous =
 #' @export
 scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
-  discrete_scale("slab_size", "slab_size_d", function(n) seq(range[1], range[2], length.out = n),
-    na.translate = na.translate, ...)
+  discrete_scale(
+    "slab_size", "slab_size_d", function(n) seq(range[1], range[2], length.out = n),
+    na.translate = na.translate, ...
+  )
 }
 
 
@@ -280,8 +286,10 @@ scale_slab_linewidth_continuous =
 #' @export
 scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
-  discrete_scale("slab_linewidth", "slab_linewidth_d", function(n) seq(range[1], range[2], length.out = n),
-    na.translate = na.translate, ...)
+  discrete_scale(
+    "slab_linewidth", "slab_linewidth_d", function(n) seq(range[1], range[2], length.out = n),
+    na.translate = na.translate, ...
+  )
 }
 
 
@@ -306,7 +314,7 @@ scale_slab_shape_discrete = function(..., solid = TRUE) {
 }
 #' @rdname scales
 #' @export
-scale_slab_shape_continuous = function (...) {
+scale_slab_shape_continuous = function(...) {
   stop0("A continuous variable cannot be mapped to shape")
 }
 

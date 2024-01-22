@@ -59,7 +59,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 NULL
 
 draw_key_lineribbon = function(self, data, params, size) {
-  if (is.null(data[["fill"]]) &&
+  if (
+    is.null(data[["fill"]]) &&
     (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))
   ) {
     data$fill = self$default_key_aes$fill
@@ -141,9 +142,9 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   rename_size = TRUE,
   non_missing_aes = union("size", AbstractGeom$non_missing_aes),
 
-  required_aes = c("x|y"),
+  required_aes = c("x|y", "ymin|xmin", "ymax|xmax"),
 
-  optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp", "order"),
+  optional_aes = c("fill_ramp", "order"),
 
 
   ## params ------------------------------------------------------------------
