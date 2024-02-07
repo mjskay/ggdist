@@ -267,7 +267,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
     # this also ensures that rvars and distributional objects are supported (as those act as lists)
-    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
+    if (!all(map_lgl_(data[, names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
@@ -338,10 +338,8 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   result[[".interval"]] = interval_name
 
   if (.simple_names) {
-    result %>%
-      rename(.value = y, .lower = ymin, .upper = ymax)
-  }
-  else {
+    rename(result, .value = y, .lower = ymin, .upper = ymax)
+  } else {
     result
   }
 }
@@ -396,7 +394,7 @@ ll = function(x, .width = .95, na.rm = FALSE) {
   lower_prob = 1 - .width
   upper_prob = rep(1, length(.width))
 
-  out = qi_(x, lower_prob, upper_prob, na.rm)
+  qi_(x, lower_prob, upper_prob, na.rm)
 }
 
 #' @export
@@ -405,7 +403,7 @@ ul = function(x, .width = .95, na.rm = FALSE) {
   lower_prob = rep(0, length(.width))
   upper_prob = .width
 
-  out = qi_(x, lower_prob, upper_prob, na.rm)
+  qi_(x, lower_prob, upper_prob, na.rm)
 }
 
 #' @export
@@ -517,8 +515,7 @@ Mode = function(x, na.rm = FALSE, ...) {
 Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001, weights = NULL) {
   if (na.rm) {
     x = x[!is.na(x)]
-  }
-  else if (anyNA(x)) {
+  } else if (anyNA(x)) {
     return(NA_real_)
   }
   density = match_function(density, "density_")
@@ -542,9 +539,9 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
 #' @export
 #' @rdname point_interval
 Mode.rvar = function(x, na.rm = FALSE, ...) {
-  draws <- posterior::draws_of(x)
-  dim <- dim(draws)
-  apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm, weights = weights(x))
+  draws = posterior::draws_of(x)
+  .dim = dim(draws)
+  apply(draws, seq_along(.dim)[-1], Mode, na.rm = na.rm, weights = weights(x))
 }
 #' @importFrom stats optim
 #' @export
@@ -649,75 +646,90 @@ hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
 
 #' @export
 #' @rdname point_interval
-mean_qi = function(.data, ..., .width = .95)
+mean_qi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = mean, .interval = qi)
+}
 
 #' @export
 #' @rdname point_interval
-median_qi = function(.data, ..., .width = .95)
+median_qi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = median, .interval = qi)
+}
 
 #' @export
 #' @rdname point_interval
-mode_qi = function(.data, ..., .width = .95)
+mode_qi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = qi)
+}
 
 #' @export
 #' @rdname point_interval
-mean_ll = function(.data, ..., .width = .95)
+mean_ll = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = mean, .interval = ll)
+}
 
 #' @export
 #' @rdname point_interval
-median_ll = function(.data, ..., .width = .95)
+median_ll = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = median, .interval = ll)
+}
 
 #' @export
 #' @rdname point_interval
-mode_ll = function(.data, ..., .width = .95)
+mode_ll = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = ll)
+}
 
 #' @export
 #' @rdname point_interval
-mean_ul = function(.data, ..., .width = .95)
+mean_ul = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = mean, .interval = ul)
+}
 
 #' @export
 #' @rdname point_interval
-median_ul = function(.data, ..., .width = .95)
+median_ul = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = median, .interval = ul)
+}
 
 #' @export
 #' @rdname point_interval
-mode_ul = function(.data, ..., .width = .95)
+mode_ul = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = ul)
+}
 
 #' @export
 #' @rdname point_interval
-mean_hdi = function(.data, ..., .width = .95)
+mean_hdi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = mean, .interval = hdi)
+}
 
 #' @export
 #' @rdname point_interval
-median_hdi = function(.data, ..., .width = .95)
+median_hdi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = median, .interval = hdi)
+}
 
 #' @export
 #' @rdname point_interval
-mode_hdi = function(.data, ..., .width = .95)
+mode_hdi = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdi)
+}
 
 #' @export
 #' @rdname point_interval
-mean_hdci = function(.data, ..., .width = .95)
+mean_hdci = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = mean, .interval = hdci)
+}
 
 #' @export
 #' @rdname point_interval
-median_hdci = function(.data, ..., .width = .95)
+median_hdci = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = median, .interval = hdci)
+}
 
 #' @export
 #' @rdname point_interval
-mode_hdci = function(.data, ..., .width = .95)
+mode_hdci = function(.data, ..., .width = .95) {
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdci)
+}

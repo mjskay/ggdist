@@ -27,14 +27,14 @@ compute_limits_slabinterval = function(
   }
 
   if (distr_is_constant(dist)) {
-    median = distr_quantile(dist)(0.5)
-    return(data.frame(.lower = median, .upper = median))
+    .median = distr_quantile(dist)(0.5)
+    return(data.frame(.lower = .median, .upper = .median))
   }
 
   if (distr_is_sample(dist)) {
-    sample = distr_get_sample(dist)
-    weights = distr_get_sample_weights(dist)
-    return(compute_limits_sample(sample, trans, trim, adjust, ..., weights = weights))
+    .sample = distr_get_sample(dist)
+    .weights = distr_get_sample_weights(dist)
+    return(compute_limits_sample(.sample, trans, trim, adjust, ..., weights = .weights))
   }
 
   quantile_fun = distr_quantile(dist)
@@ -142,7 +142,12 @@ compute_slab_slabinterval = function(
       # work as expected if 1 is a bin edge.
       eps = 2*.Machine$double.eps
 
-      if (!outline_bars) {
+      if (outline_bars) {
+        # have to return to 0 in between each bar so that bar outlines are drawn
+        input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
+        pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, pdf, pdf, 0))
+        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf, cdf))
+      } else {
         # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
         # us the bin endpoints and midpoints --- then just need to repeat the same
         # value of density for both endpoints of the same bin and to make sure the
@@ -150,11 +155,6 @@ compute_slab_slabinterval = function(
         input = as.vector(rbind(input_1, input_1 + eps, input_, input_, input_2 - eps, input_2))
         pdf = rep(pdf, each = 6)
         cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
-      } else {
-        # have to return to 0 in between each bar so that bar outlines are drawn
-        input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
-        pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, pdf, pdf, 0))
-        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf, cdf))
       }
     } else {
       pdf = pdf_fun(input)
@@ -305,10 +305,10 @@ compute_interval_slabinterval = function(
 #' @inheritParams density_histogram
 #' @param geom Use to override the default connection between
 #' [stat_slabinterval()] and [geom_slabinterval()]
-#' @param slab_type (deprecated) The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
-#' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`). Instead of using `slab_type` to
-#' change `f` and then mapping `f` onto an aesthetic, it is now recommended to simply map the corresponding
-#' computed variable (e.g. `pdf`, `cdf`, or  `1 - cdf`) directly onto the desired aesthetic.
+#' @param slab_type (deprecated) The type of slab function to calculate: probability density (or mass) function
+#' (`"pdf"`), cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`). Instead of using
+#' `slab_type` to change `f` and then mapping `f` onto an aesthetic, it is now recommended to simply map the
+#' corresponding computed variable (e.g. `pdf`, `cdf`, or  `1 - cdf`) directly onto the desired aesthetic.
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
 #' limits of *theoretical* distributions (distributions from *samples* ignore this parameter and determine
 #' their limits based on the limits of the sample). E.g., if this is `c(.001, .999)`, then a slab is drawn
@@ -521,7 +521,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 
     # check for dist-like objects in x / y axis: these are likely user errors
     # caused by assigning a distribution to x / y instead of xdist / ydist
-    dist_like_cols = c("x","y")[map_lgl_(c("x", "y"), function(col) is_dist_like(data[[col]]))]
+    dist_like_cols = c("x", "y")[map_lgl_(c("x", "y"), function(col) is_dist_like(data[[col]]))]
     if (length(dist_like_cols) > 0) {
       s = if (length(dist_like_cols) > 1) "s"
       stop0(
@@ -547,8 +547,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
         if (is.na(dist)) {
           dist_missing()
         } else {
-          args = args_from_aes(...)
-          do.call(dist_wrap, c(list(dist), args))
+          .args = args_from_aes(...)
+          do.call(dist_wrap, c(list(dist), .args))
         }
       })
     }
@@ -557,7 +557,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       # Need to group by rows in the data frame to draw correctly, as
       # each output slab will need to be in its own group.
       # First check if we are grouped by rows already (in which case leave it)
-      if (length(unique(data$group)) != nrow(data)) {
+      if (anyDuplicated(data$group)) {
         # need to make new groups that ensure every row is unique but which
         # preserve old group order at the top level
         data$group = as.numeric(interaction(

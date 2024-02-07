@@ -204,8 +204,8 @@ distr_levels = function(dist) {
   if (inherits(dist, "rvar_factor")) {
     levels(dist)
   } else if (inherits(dist, "distribution")) {
-    levels = lapply(vec_data(dist), distr_levels)
-    unique(do.call(c, levels))
+    levs = lapply(vec_data(dist), distr_levels)
+    unique(do.call(c, levs))
   } else if (inherits(dist, "dist_categorical")) {
     as.character(dist[["x"]] %||% seq_along(dist[["p"]]))
   } else if (inherits(dist, "ggdist__wrapped_categorical")) {
@@ -218,7 +218,7 @@ distr_levels = function(dist) {
       unique(s)
     }
   } else {
-    warning("Don't know how to determine the levels of distribution: ", format(dist))
+    warning0("Don't know how to determine the levels of distribution: ", format(dist))
     NULL
   }
 }
@@ -233,7 +233,7 @@ distr_probs = function(dist) {
   } else if (inherits(dist, "ggdist__wrapped_categorical")) {
     distr_probs(dist[["wrapped_dist"]])
   } else {
-    warning("Don't know how to determine the category probabilities of distribution: ", format(dist))
+    warning0("Don't know how to determine the category probabilities of distribution: ", format(dist))
     NULL
   }
 }

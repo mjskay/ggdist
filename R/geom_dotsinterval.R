@@ -173,13 +173,14 @@ makeContent.dots_grob = function(x) {
       subguide_params[, c(y, ymin, ymax, "side", "justification", "scale")],
       c(y, "side", "justification", "scale"),
       function(d) {
-        if (nrow(unique(d)) > 1) {
+        if (nrow(unique(d)) > 1) {                                 # nocov start
+          # this should not be possible
           cli_abort(
             "Cannot draw a subguide for the dot count axis when multiple dots
              geometries with different parameters are drawn on the same axis.",
             class = "ggdist_incompatible_subguides"
           )
-        }
+        }                                                          # nocov end
         d = d[1, ]
 
         dot_height = binwidth * heightratio / stackratio
@@ -553,9 +554,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     # so size can only occur in cases where colour is also set (so we can just check colour)
     if (
       params$show_slab &&
-      any(!is.na(data[,c(
-        "fill","alpha","slab_fill","slab_colour","slab_linewidth","slab_size",
-        "slab_linetype","slab_alpha","slab_shape"
+      !all(is.na(data[, c(
+        "fill", "alpha", "slab_fill", "slab_colour", "slab_linewidth", "slab_size",
+        "slab_linetype", "slab_alpha", "slab_shape"
       )]))
     ) {
       s_key_data = self$override_slab_aesthetics(key_data)
@@ -603,7 +604,8 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
     s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
     s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
     s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
-    s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]] %||% s_data[["linewidth"]] %||% s_data[["size"]]
+    s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]] %||%
+      s_data[["linewidth"]] %||% s_data[["size"]]
     s_data$shape = s_data[["slab_shape"]] %||% s_data[["shape"]]
     s_data
   },

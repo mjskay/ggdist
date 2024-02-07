@@ -2,6 +2,7 @@ linters: all_linters(
     assignment_linter = NULL,
     commas_linter(allow_trailing = TRUE),
     consecutive_assertion_linter = NULL,
+    duplicate_argument_linter(except = c("mutate", "transmute", "c")),
     implicit_integer_linter = NULL,
     infix_spaces_linter(exclude_operators = c("/", "*")),
     keyword_quote_linter = NULL,
@@ -12,9 +13,9 @@ linters: all_linters(
     object_name_linter(
       styles = c("snake_case", "symbols"),
       regexes = c(
-        misc = "^(F_x|x_1_hat,x_n_hat)$",
-        CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|K|.*Pr.*)$",
-        dot.case = "^(na\\.rm|lower\\.tail|log\\.p)$",
+        misc = "^(F_x|x_1_hat,x_n_hat|R_inv|Amat|Aind)$",
+        CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|Position.*|K|.*Pr.*)$",
+        dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p)$",
         bandwidth = "^(bandwidth_.*)$"
       )
     ),
@@ -34,5 +35,6 @@ linters: all_linters(
       defaults = all_undesirable_operators,
       "<-" = "House style is to use `=`, not `<-`, for assignment."
     )),
-    unnecessary_concatenation_linter(allow_single_expression = FALSE)
+    unnecessary_concatenation_linter(allow_single_expression = FALSE),
+    unnecessary_nesting_linter = NULL
   )

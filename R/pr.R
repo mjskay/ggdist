@@ -176,7 +176,8 @@ standardize_Pr_element = function(e) {
 }
 
 check_Pr_cdf_element_combination = function(e1, e2, label = NULL) {
-  if (!list(sort(c(e1, e2))) %in% list(
+  if (
+    !list(sort(c(e1, e2))) %in% list(
       c("x", "xdist"),
       c("y", "ydist"),
       c("dist", "value")

@@ -34,14 +34,14 @@ compute_slab_dots = function(
 
   if (distr_is_sample(dist)) {
     input = map_character(distr_get_sample(dist))
-    weights = distr_get_sample_weights(dist)
+    .weights = distr_get_sample_weights(dist)
     if (quantiles_provided) {
       # ppoints() with a = 1/2 corresponds to quantile() with type = 5
       # (on continuous samples --- on discrete, we use type = 1)
       # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
       quantile_type = if (distr_is_discrete(dist)) 1 else 5
       input = weighted_quantile(
-        input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm, weights = weights, names = FALSE
+        input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm, weights = .weights, names = FALSE
       )
     }
   } else {

@@ -348,7 +348,8 @@ override_point_aesthetics = function(self, p_data, size_domain, size_range, fatt
   p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
   p_data$alpha = p_data[["point_alpha"]] %||% p_data[["alpha"]]
   # TODO: insert fatten_point deprecation warning
-  p_data$size = p_data[["point_size"]] %||% (fatten_point * transform_size(p_data[["interval_size"]] %||% p_data[["size"]], size_domain, size_range))
+  p_data$size = p_data[["point_size"]] %||%
+    (fatten_point * transform_size(p_data[["interval_size"]] %||% p_data[["size"]], size_domain, size_range))
   p_data
 }
 
@@ -357,16 +358,21 @@ override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
   i_data$colour = apply_colour_ramp(i_data[["colour"]], i_data[["colour_ramp"]])
   i_data$alpha = i_data[["interval_alpha"]] %||% i_data[["alpha"]]
   # TODO: insert interval_size deprecation warning
-  i_data$linewidth = transform_size(i_data[["linewidth"]] %||% i_data[["interval_size"]] %||% i_data[["size"]], size_domain, size_range)
+  i_data$linewidth = transform_size(
+    i_data[["linewidth"]] %||% i_data[["interval_size"]] %||% i_data[["size"]], size_domain, size_range
+  )
   i_data$linetype = i_data[["interval_linetype"]] %||% i_data[["linetype"]]
   i_data
 }
 
 transform_size = function(size, size_domain, size_range) {
   pmax(
-    (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
-      (size_range[[2]] - size_range[[1]]) + size_range[[1]],
-    0)
+    (size - size_domain[[1]]) /
+      (size_domain[[2]] - size_domain[[1]]) *
+      (size_range[[2]] - size_range[[1]]) +
+      size_range[[1]],
+    0
+  )
 }
 
 
@@ -618,7 +624,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     slab_colour = NA
   ),
 
-  required_aes = c("x|y"),
+  required_aes = "x|y",
 
   optional_aes = c(
     "ymin", "ymax", "xmin", "xmax", "width", "height", "thickness"
@@ -671,9 +677,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
     # INTERVAL PARAMS
     interval_size_domain = glue_doc('
-      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics that will be
-      translated into actual sizes for intervals drawn according to `interval_size_range` (see the documentation
-      for that argument.)
+      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics
+      that will be translated into actual sizes for intervals drawn according to `interval_size_range` (see the
+      documentation for that argument.)
       '),
     interval_size_range = glue_doc('
       A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
@@ -810,7 +816,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
         # ensure thickness is a thickness-type vector so it is not normalized again
         data$thickness = normalize_thickness(as_thickness(data$thickness))
       },
-      stop('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
+      stop0('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
     )
 
     ggproto_parent(AbstractGeom, self)$draw_layer(data, params, layout, coord)
@@ -975,7 +981,7 @@ group_slab_data_by = function(
   define_orientation_variables(orientation)
 
   aesthetics = intersect(aesthetics, names(slab_data))
-  groups = factor(do.call(paste, slab_data[,aesthetics]))
+  groups = factor(do.call(paste, slab_data[, aesthetics]))
 
   if (nlevels(groups) > 1) {
     # need to split into groups based on varying aesthetics
@@ -1013,7 +1019,7 @@ group_slab_data_by = function(
     slab_data
   }
   bottomleft = function() {
-    slab_data = slab_data[nrow(slab_data):1,]
+    slab_data = slab_data[rev(seq_len(nrow(slab_data))), ]
     slab_data[[y]] = slab_data[[ymin]]
     slab_data
   }

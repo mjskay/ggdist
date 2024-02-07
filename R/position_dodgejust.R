@@ -261,12 +261,12 @@ collide = function(
   intervals = as.numeric(t(unique(data[c("xmin", "xmax")])))
   intervals = intervals[!is.na(intervals)]
 
-  if (length(unique(intervals)) > 1 & any(diff(scale(intervals)) < -1e-6)) {
+  if (length(unique(intervals)) > 1 && any(diff(scale(intervals)) < -1e-6)) {
     warning0(paste0(name, " requires non-overlapping ", x_name, " intervals"))
   }
 
   # workaround so that mapped_discrete columns can be combined with numerics
-  xy_cols = intersect(c("x","y","xmin","xmax","ymin","ymax"), names(data))
+  xy_cols = intersect(c("x", "y", "xmin", "xmax", "ymin", "ymax"), names(data))
   data[xy_cols] = lapply(data[xy_cols], as.numeric)
 
   if (!is.null(data$ymax)) {

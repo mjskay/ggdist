@@ -227,7 +227,9 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     # draw all the ribbons
     ribbon_grobs = data %>%
       dlply_(grouping_columns, function(d) {
-        group_grobs = list(GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes))
+        group_grobs = list(
+          GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes)
+        )
         list(
           order = mean(d[["order"]], na.rm = TRUE),
           grobs = group_grobs
@@ -273,25 +275,29 @@ stepify = function(df, x = "x", direction = "hv") {
   # sort by x and double up all rows in the data frame
   step_df = df[rep(order(df[[x]]), each = 2),]
 
-  if (direction == "hv") {
-    # horizontal-to-vertical step => lead x and drop last row
-    step_df[[x]] = lead(step_df[[x]])
-    step_df[-2*n,]
-  } else if (direction == "vh") {
-    # vertical-to-horizontal step => lag x and drop first row
-    step_df[[x]] = lag(step_df[[x]])
-    step_df[-1,]
-  } else if (direction == "mid") {
-    # mid step => last value in each pair is matched with the first value in the next pair,
-    # then we set their x position to their average.
-    # Need to repeat the last value one more time to make it work
-    step_df[2*n + 1,] = step_df[2*n,]
+  switch(direction,
+    hv = {
+      # horizontal-to-vertical step => lead x and drop last row
+      step_df[[x]] = lead(step_df[[x]])
+      step_df[-2*n,]
+    },
+    vh = {
+      # vertical-to-horizontal step => lag x and drop first row
+      step_df[[x]] = lag(step_df[[x]])
+      step_df[-1,]
+    },
+    mid = {
+      # mid step => last value in each pair is matched with the first value in the next pair,
+      # then we set their x position to their average.
+      # Need to repeat the last value one more time to make it work
+      step_df[2*n + 1,] = step_df[2*n,]
 
-    x_i = seq_len(n)*2
-    mid_x = (step_df[x_i, x] + step_df[x_i + 1, x]) / 2
+      x_i = seq_len(n)*2
+      mid_x = (step_df[x_i, x] + step_df[x_i + 1, x]) / 2
 
-    step_df[x_i, x] = mid_x
-    step_df[x_i + 1, x] = mid_x
-    step_df
-  }
+      step_df[x_i, x] = mid_x
+      step_df[x_i + 1, x] = mid_x
+      step_df
+    }
+  )
 }

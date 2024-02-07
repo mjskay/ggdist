@@ -101,9 +101,12 @@ parse_dist = function(
 #' @rdname parse_dist
 #' @export
 parse_dist.default = function(object, ...) {
-  stop(
-    "Objects of type ", deparse0(class(object)), " are not currently supported by `parse_dist`.\n",
-    "A character vector or a data frame are expected.\n"
+  cli_abort(
+    c(
+      "{.arg object} must be a character vector, factor, data frame, or {.help brms::prior} object.",
+      "x" = "{.arg object} was {.type {object}}"
+    ),
+    class = "ggdist_unsupported_type"
   )
 }
 
@@ -148,7 +151,15 @@ parse_dist.data.frame = function(
 
 #' @rdname parse_dist
 #' @export
-parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+parse_dist.character = function(
+  object,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  to_r_names = TRUE
+) {
   package = package %||% parent.frame()
 
   na_spec = tibble( # for unparseable specs
@@ -247,11 +258,17 @@ check_dist_name = function(dist) {
     is.na(mget(paste0("q", dist), inherits = TRUE, ifnotfound = NA))
   failed_names = dist[invalid & !is.na(dist)]
   if (length(failed_names) > 0) {
-    warning(
-      "The following distribution names were not recognized and were ignored: \n",
-      "    ", paste(failed_names, collapse = ", "), "\n",
-      "  See help('stat_slabinterval') for information on specifying distribution names.",
-      if ("lkjcorr" %in% failed_names) "\n  See help('marginalize_lkjcorr') for help visualizing LKJ distributions."
+    cli_warn(
+      c(
+        "The following distribution names were not recognized and were ignored: {failed_names}",
+        "i" = "See {.emph Details} in the {.help stat_slabinterval} documentation for information
+          on specifying distribution names.",
+        if ("lkjcorr" %in% failed_names) c(
+          "i" = "See the {.help marginalize_lkjcorr} documentation for help visualizing LKJ
+            distributions."
+        )
+      ),
+      class = "ggdist_unsupported_distribution_name"
     )
   }
   dist[invalid] = NA
