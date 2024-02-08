@@ -1,8 +1,8 @@
 
 # ggdist: Visualizations of distributions and uncertainty
 
-[![R build
-status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggdist/actions)
+[![R CMD check
+status](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml)
 [![Coverage
 status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://app.codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN
@@ -106,7 +106,7 @@ Uncertainty in the Grammar of Graphics. *IEEE Transactions on
 Visualization and Computer Graphics*. DOI:
 [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
 
-Matthew Kay (2023). ggdist: Visualizations of Distributions and
-Uncertainty. R package version 3.3.1,
+Matthew Kay (2024). ggdist: Visualizations of Distributions and
+Uncertainty. R package version 3.3.1.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
