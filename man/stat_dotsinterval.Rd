@@ -156,9 +156,9 @@ selected bin width to fit within a desired area, it is probably easier to use
 \code{scale} than to copy and scale \code{binwidth} manually, and if you just want to
 provide constraints on the bin width, you can pass a length-2 vector to \code{binwidth}.
 }
-\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics that will be
-translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the documentation
-for that argument.)}
+\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
+that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
+documentation for that argument.)}
 \item{\code{interval_size_range}}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
 sizes, as they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give
 sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size

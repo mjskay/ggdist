@@ -434,8 +434,8 @@ See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this 
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
 Other dotsinterval geoms: 
-\code{\link{geom_dotsinterval}()},
 \code{\link{geom_dots}()},
+\code{\link{geom_dotsinterval}()},
 \code{\link{geom_weave}()}
 }
 \concept{dotsinterval geoms}

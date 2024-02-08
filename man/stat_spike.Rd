@@ -176,10 +176,10 @@ if outlines in between the bars are drawn when the \code{slab_color} aesthetic i
 (the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
 bars are also drawn. See \code{\link[=density_histogram]{density_histogram()}}.}
 
-\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
-change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
-computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
+\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function
+(\code{"pdf"}), cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using
+\code{slab_type} to change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the
+corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the

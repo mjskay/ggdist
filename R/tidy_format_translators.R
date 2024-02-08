@@ -103,7 +103,7 @@ to_ggmcmc_names = function(data) {
     .value = "value"
   )
 
-  select_all(data, ~ lookup[.] %||% .)
+  select_all(data, function(col) lookup[col] %||% col)
 }
 
 #' @rdname tidy-format-translators
@@ -116,5 +116,5 @@ from_ggmcmc_names = function(data) {
     value = ".value"
   )
 
-  select_all(data, ~ lookup[.] %||% .)
+  select_all(data, function(col) lookup[col] %||% col)
 }
