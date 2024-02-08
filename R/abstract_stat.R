@@ -148,7 +148,7 @@ make_stat = function(stat, geom,
       params_to_defaults,
       args_to_defaults
     ),
-    expr({
+    expr({                                                   # nocov start
       .Deprecated_arguments(!!stat$deprecated_params, ...)
 
       (!!layer_function)(
@@ -165,7 +165,7 @@ make_stat = function(stat, geom,
           ...
         )
       )
-    }),
+    }),                                                      # nocov end
     env = parent.frame()
   )
   attr(body(new_f), "srcref") = NULL

@@ -229,7 +229,7 @@ get_subguide_position = function(position, orientation) {
 
         stop0("Unknown position: ", deparse0(position))
       ),
-      stop0("Unknown orientation: ", deparse0(orientation))
+      stop0("Unknown orientation: ", deparse0(orientation))  # nocov
     )
   }
 }
@@ -273,6 +273,6 @@ get_subguide_axis_position = function(side, position, orientation) {
 
       stop0("Unknown side: ", deparse0(side))
     ),
-    stop0("Unknown orientation: ", deparse0(orientation))
+    stop0("Unknown orientation: ", deparse0(orientation))  # nocov
   )
 }

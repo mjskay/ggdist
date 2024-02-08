@@ -196,7 +196,7 @@ make_geom = function(geom,
       params_to_defaults,
       args_to_defaults
     ),
-    expr({
+    expr({                                                     # nocov start
       .Deprecated_arguments(!!geom$deprecated_params, ...)
 
       l = layer(
@@ -221,7 +221,7 @@ make_geom = function(geom,
           quote(l)
         }
       )
-    }),
+    }),                                                        # nocov end
     env = parent.frame()
   )
   attr(body(new_f), "srcref") = NULL
