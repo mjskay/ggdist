@@ -205,6 +205,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 
   # determine bandwidth and bounds
   bw = get_bandwidth(x, bandwidth) * adjust
+  left_bounded = right_bounded = NULL
   c(bounds, left_bounded, right_bounded) %<-% get_bounds(x, bw, bounds, bounder)
 
   if (isTRUE(range_only)) {

@@ -18,6 +18,7 @@ weighted_hist = function(
   if (length(x) < 1) cli_abort("{.fun ggdist::density_histogram} requires {.code length(x) >= 1}.")
 
   # figure out breaks
+  binwidths = equidist = NULL
   c(breaks, binwidths, equidist) %<-% get_breaks(x, weights, breaks)
   # only apply bin alignment if bins are equidistant
   if (equidist) c(breaks, binwidths) %<-% align_breaks(x, breaks, binwidths, align)
