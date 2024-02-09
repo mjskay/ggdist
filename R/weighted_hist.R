@@ -220,19 +220,19 @@ breaks_Scott = auto_partial(name = "breaks_Scott", function(
 breaks_FD = auto_partial(name = "breaks_FD", function(
   x, weights = NULL, digits = 5
 ) {
+  .x = signif(x, digits = digits)
   weights = weights %||% rep(1, length(x))
-  h = 2 * weighted_iqr(.x <- signif(x, digits = digits), weights)
+  h = 2 * weighted_iqr(.x, weights)
 
   if (h == 0) {
     .x_order = order(.x)
     .x = .x[.x_order]
     .weights = weights[.x_order]
-    al = 1/4
-    al_min = 1/512
 
     quantile_fun = weighted_quantile_fun(.x, weights = .weights, n = "sum")
-    while (h == 0 && (al <- al/2) >= al_min) {
+    for (al in 2^(-3:-9)) {
       h = diff(quantile_fun(c(al, 1 - al))) / (1 - 2 * al)
+      if (h != 0) break
     }
   }
 

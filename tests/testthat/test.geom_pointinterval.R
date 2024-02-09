@@ -114,7 +114,8 @@ test_that("missing data is handled correctly", {
     xmin = c(NA,0,0),
     xmax = c(NA,2,2),
     y = c("a","b",NA)
-  ) %>% ggplot(aes(x=x,xmin=xmin,xmax=xmax, y=y))
+  ) %>%
+    ggplot(aes(x = x, xmin = xmin, xmax = xmax, y = y))
 
   expect_warning(vdiffr::expect_doppelganger("geom_pointinterval na.rm = FALSE",
     p + geom_pointinterval(na.rm = FALSE)

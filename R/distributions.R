@@ -38,8 +38,8 @@ distr_function.distribution = function(dist, fun, ..., categorical_okay = FALSE)
     # for stat_dots to put dots in bins approximately proportional to bin probs.
     levs = distr_levels(dist)
     probs = distr_probs(dist)
-    Finv = stepfun(c(0, cumsum(probs)), c(1, seq_along(probs), length(probs)))
-    return(function(x, ...) levs[Finv(x)])
+    quantile_fun = stepfun(c(0, cumsum(probs)), c(1, seq_along(probs), length(probs)))
+    return(function(x, ...) levs[quantile_fun(x)])
   }
   # eat up extra args as they are ignored anyway
   # (and can cause problems, e.g. with cdf())

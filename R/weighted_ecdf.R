@@ -39,7 +39,7 @@
 weighted_ecdf = function(x, weights = NULL, na.rm = FALSE) {
   x = check_na(x, na.rm)
   n = length(x)
-  if (n < 1) stop("Need at least 1 or more values to calculate an ECDF")
+  if (n < 1) cli_abort("Need at least 1 or more values to calculate an ECDF")
 
   weights = if (is.null(weights)) rep(1, n) else weights
 

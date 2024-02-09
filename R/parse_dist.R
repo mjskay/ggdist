@@ -200,16 +200,39 @@ parse_dist.character = function(
 
 #' @rdname parse_dist
 #' @export
-parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+parse_dist.factor = function(
+  object,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  to_r_names = TRUE
+) {
   package = package %||% parent.frame()
-  parse_dist(as.character(object), ..., dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names)
+  parse_dist(
+    as.character(object), ...,
+    dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names
+  )
 }
 
 #' @rdname parse_dist
 #' @export
-parse_dist.brmsprior = function(object, dist_col = prior, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+parse_dist.brmsprior = function(
+  object,
+  dist_col = prior,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  to_r_names = TRUE
+) {
   package = package %||% parent.frame()
-  parse_dist.data.frame(as.data.frame(object), {{ dist_col }}, ..., dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names)
+  parse_dist.data.frame(
+    as.data.frame(object), {{ dist_col }}, ...,
+    dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names
+  )
 }
 
 

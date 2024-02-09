@@ -218,7 +218,7 @@ ScaleColourRampDiscrete = ggproto("ScaleColourRampDiscrete", ScaleDiscrete,
 #' @noRd
 apply_colour_ramp = function(colors, ramps) {
   if (is.null(colors) || is.null(ramps)) return(colors)
-  ramps <- vec_cast(ramps, new_partial_colour_ramp())
+  ramps = vec_cast(ramps, new_partial_colour_ramp())
 
   map2_chr_(colors, ramps, function(color, ramp) {
     scales::seq_gradient_pal(field(ramp, "from"), color)(field(ramp, "amount"))

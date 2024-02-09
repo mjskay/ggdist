@@ -67,20 +67,20 @@ bounder_cdf = auto_partial(name = "bounder_cdf", function(x, p = 0.01) {
   # between min(x) (or max(x)) and the nearest estimated order statistic.
   # We can use the fact that given a CDF of distribution F_X(x), the
   # distribution of its first and last order statistics are:
-  #  F_X_1(x) = 1 - (1 - F_X(x))^n
-  #  F_X_n(x) = F_X(x)^n
+  # >  F_X_1(x) = 1 - (1 - F_X(x))^n
+  # >  F_X_n(x) = F_X(x)^n
   # Re-arranging, we can get the inverse CDFs (quantile functions) of each
   # in terms of the quantile function of X:
-  #  F_X_1^-1(p) = F_X^-1(1 - (1 - p)^(1/n))
-  #  F_X_n^-1(p) = F_X^-1(p^(1/n))
+  # >  F_X_1^-1(p) = F_X^-1(1 - (1 - p)^(1/n))
+  # >  F_X_n^-1(p) = F_X^-1(p^(1/n))
   # e.g. by default (when p = 0.5) we can use the median of these distributions
   # as our estimates by
-  #  X_1_hat = F_X^-1(1 - p^(1/n)) = F_X^-1(1 - p_sample)
-  #  X_n_hat = F_X^-1(p^(1/n)) = F_X^-1(p_sample)
+  # >  X_1_hat = F_X^-1(1 - p^(1/n)) = F_X^-1(1 - p_sample)
+  # >  X_n_hat = F_X^-1(p^(1/n)) = F_X^-1(p_sample)
   # Where p_sample = p^(1/n)
   # Then the estimated bounds are:
-  #  2 * min(x) - X_1_hat
-  #  2 * max(x) - X_n_hat
+  # >  2 * min(x) - X_1_hat
+  # >  2 * max(x) - X_n_hat
   p_sample = p^(1/length(x))
   `x_1_hat,x_n_hat` = quantile(x, c(1 - p_sample, p_sample), names = FALSE)
   2 * range(x) - `x_1_hat,x_n_hat`
@@ -118,13 +118,12 @@ bounder_cooke = auto_partial(name = "bounder_cooke", function(x) {
   n = length(x)
 
   # the sequence in Cooke's method below reaches a point beyond which (due to
-  # floating point round off) it is always zero. This point happens pretty
-  # quickly on large samples (e.g. at 720 for a sample of size 10,000), so we
-  # can save a lot of computation on very large samples by not computing
-  # anything beyond that point (= n_nonzero). The reciprocal of the square root
-  # of this point becomes roughly linear in 1/n at large n. The coefficients
-  # below for estimating n_nonzero come from a linear model of
-  # 1/sqrt(n_nonzero) ~ 1/n
+  # floating point round off) it is always zero. This point happens pretty quickly
+  # on large samples (e.g. at 720 for a sample of size 10,000), so we can save a
+  # lot of computation on very large samples by not computing anything beyond that
+  # point (= n_nonzero). The reciprocal of the square root of this point becomes
+  # roughly linear in 1/n at large n. The coefficients below for estimating
+  # n_nonzero come from a linear model of 1/sqrt(n_nonzero) ~ 1/n
   n_nonzero = if (n < 200) {
     n
   } else {
@@ -134,11 +133,11 @@ bounder_cooke = auto_partial(name = "bounder_cooke", function(x) {
   # Method from Cooke (1979) Statistical Inference for Bounds of Random Variables,
   # re-written so i is 1 to n (instead of 0 to n - 1) and we multiply by X_(i)
   # instead of X_(n - i) (to avoid having to reverse x):
-  #   i = seq_along(x)
-  #   c(
-  #     2 * x[1] - sum(((1 - (i - 1)/n)^n - (1 - i/n)^n) * x),
-  #     2 * x[n] - sum(((1 - (n - i)/n)^n - (1 - (n + 1 - i)/n)^n) * x)
-  #   )
+  # >  i = seq_along(x)
+  # >  c(
+  # >    2 * x[1] - sum(((1 - (i - 1)/n)^n - (1 - i/n)^n) * x),
+  # >    2 * x[n] - sum(((1 - (n - i)/n)^n - (1 - (n + 1 - i)/n)^n) * x)
+  # >  )
   # Then, we re-write that to use logs (to make computation faster and more
   # stable), to only compute the non-zero coefficients, to use dot products
   # instead of sum(coef[i] * x[i]), and to take advantage of the fact that

@@ -533,7 +533,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
      `interval_linetype` aesthetics (below) to set sub-geometry line types separately.'
     ),
 
-    "Slab-specific color/line override aesthetics" = list(
+    "Slab-specific color and line override aesthetics" = list(
       slab_fill = 'Override for `fill`: the fill color of the slab.',
       slab_colour = '(or `slab_color`) Override for `colour`/`color`: the outline color of the slab.',
       slab_alpha = 'Override for `alpha`: the opacity of the slab.',
@@ -542,13 +542,13 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
     ),
 
-    "Interval-specific color/line override aesthetics" = list(
+    "Interval-specific color and line override aesthetics" = list(
       interval_colour = '(or `interval_color`) Override for `colour`/`color`: the color of the interval.',
       interval_alpha = 'Override for `alpha`: the opacity of the interval.',
       interval_linetype = 'Override for `linetype`: the line type of the interval.'
     ),
 
-    "Point-specific color/line override aesthetics" = list(
+    "Point-specific color and line override aesthetics" = list(
       point_fill = 'Override for `fill`: the fill color of the point.',
       point_colour = '(or `point_color`) Override for `colour`/`color`: the outline color of the point.',
       point_alpha = 'Override for `alpha`: the opacity of the point.',

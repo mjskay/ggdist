@@ -17,7 +17,7 @@ get_draws = function() {
   rank_corr = RankCorr[[1]]
   purrr::map_dfr(1:3, function(i) {
     data.frame(
-      .chain = as.integer(1),
+      .chain = 1L,
       .iteration = seq_len(nrow(rank_corr)),
       .draw = seq_len(nrow(rank_corr)),
       ff = ff_labels[i],

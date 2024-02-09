@@ -14,13 +14,13 @@ linters: all_linters(
       styles = c("snake_case", "symbols"),
       regexes = c(
         misc = "^(F_x|x_1_hat,x_n_hat|R_inv|Amat|Aind)$",
-        CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|Position.*|K|.*Pr.*)$",
-        dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p)$",
+        CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|Position.*|K|Mode.*|.*Pr.*|.*linearGradient.*|\\.Deprecated.*)$",
+        dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p|width\\.cutoff)$",
         bandwidth = "^(bandwidth_.*)$"
       )
     ),
     object_overwrite_linter(
-      allow_names = c("dist", "data", "layout", "pdf")
+      allow_names = c("dist", "data", "layout", "pdf", "q")
     ),
     quotes_linter = NULL,
     scalar_in_linter = NULL,

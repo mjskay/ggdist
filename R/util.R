@@ -173,21 +173,17 @@ dlply_ = function(data, groups, fun, ...) {
   }
 }
 
-map_dbl_ = function(X, FUN, ...) {
-  vapply(X, FUN, FUN.VALUE = numeric(1), ...)
+map_dbl_ = function(.x, .f, ...) {
+  vapply(.x, .f, FUN.VALUE = numeric(1), ...)
 }
 
-map_lgl_ = function(X, FUN, ...) {
-  vapply(X, FUN, FUN.VALUE = logical(1), ...)
+map_lgl_ = function(.x, .f, ...) {
+  vapply(.x, .f, FUN.VALUE = logical(1), ...)
 }
 
-map2_chr_ = function(X, Y, FUN) {
-  as.character(mapply(FUN, X, Y, USE.NAMES = FALSE))
+map2_chr_ = function(.x, .y, .f) {
+  vctrs::list_unchop(.mapply(.f, list(.x, .y), NULL), ptype = character())
 }
-
-# map2_dfr_ = function(X, Y, FUN) {
-#   bind_rows(mapply(FUN, X, Y, SIMPLIFY = FALSE, USE.NAMES = FALSE))
-# }
 
 fct_rev_ = function(x) {
   if (is.character(x)) {

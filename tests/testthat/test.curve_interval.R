@@ -19,7 +19,7 @@ test_that("curve_interval works with lineribbon", {
   curve_df = tibble(
     .draw = 1:k,
     mean = seq(-5,5, length.out = k),
-    x = list(seq(-15,15,length.out = n)),
+    x = list(seq(-15,15,length.out = n))
   ) %>%
     unnest(x) %>%
     mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3))) %>%
@@ -96,10 +96,22 @@ test_that("basic cases on single interval work", {
     .interval = "mhd"
   )
 
-  expect_equal(curve_interval(df, .width = .95), mutate(ref, .lower = .0255, .upper = .9745, .actual_width = .95, .width = .95))
-  expect_equal(curve_interval(df, .width = 0), mutate(ref, .lower = 0.4995, .upper = .5005, .actual_width = 0.002, .width = 0))
-  expect_equal(curve_interval(df, .width = 1), mutate(ref, .lower = 0.0005, .upper = .9995, .actual_width = 1, .width = 1))
-  expect_equal(curve_interval(df, .width = 1.1), mutate(ref, .lower = 0.0005, .upper = .9995, .actual_width = 1, .width = 1.1))
+  expect_equal(
+    curve_interval(df, .width = .95),
+    mutate(ref, .lower = .0255, .upper = .9745, .actual_width = .95, .width = .95)
+  )
+  expect_equal(
+    curve_interval(df, .width = 0),
+    mutate(ref, .lower = 0.4995, .upper = .5005, .actual_width = 0.002, .width = 0)
+  )
+  expect_equal(
+    curve_interval(df, .width = 1),
+    mutate(ref, .lower = 0.0005, .upper = .9995, .actual_width = 1, .width = 1)
+  )
+  expect_equal(
+    curve_interval(df, .width = 1.1),
+    mutate(ref, .lower = 0.0005, .upper = .9995, .actual_width = 1, .width = 1.1)
+  )
 })
 
 test_that("basic cases on single curve work", {

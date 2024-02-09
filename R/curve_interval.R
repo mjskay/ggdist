@@ -365,7 +365,7 @@ halfspace_depth = function(x) {
     map_dfr_(.width, function(w) {
       # The naive approach would be to just use quantiles of draw depths to determine
       # the cutoff; something like:
-      #   depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
+      # >  depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
       # However this does not work well, since the envelope around a w% set of curves
       # determined via quantiles tends to incidentally cover some other curves, making
       # the coverage be (sometimes substantially) more than w%.

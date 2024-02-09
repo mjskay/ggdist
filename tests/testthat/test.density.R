@@ -126,5 +126,3 @@ test_that("weighted density estimator works", {
   expect_equal(du$x, d$x)
   expect_equal(du$y, d$y)
 })
-
-

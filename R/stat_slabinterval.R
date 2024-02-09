@@ -110,9 +110,9 @@ compute_slab_slabinterval = function(
     pdf = c(0, 0, Inf, 0, 0)
     cdf = c(0, 0, 1, 1, 1)
     if (!expand) {
-      input = input[-c(1,5)]
-      pdf = pdf[-c(1,5)]
-      cdf = cdf[-c(1,5)]
+      input = input[-c(1, 5)]
+      pdf = pdf[-c(1, 5)]
+      cdf = cdf[-c(1, 5)]
     }
   } else if (!distr_is_factor_like(dist) && distr_is_sample(dist)) {
     return(compute_slab_sample(
@@ -717,7 +717,7 @@ stat_halfeye = stat_slabinterval
 
 StatEye = ggproto("StatEye", StatSlabinterval,
   default_aes = defaults(aes(
-    side = after_stat("both"),
+    side = after_stat("both")
   ), StatSlabinterval$default_aes)
 )
 #' @eval rd_slabinterval_shortcut_stat("eye", "eye (violin + interval)", geom_name = "slabinterval")
@@ -728,7 +728,7 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
   default_aes = defaults(aes(
     thickness = after_stat(thickness(1 - cdf, 0, 1)),
     justification = after_stat(0.5),
-    side = after_stat("topleft"),
+    side = after_stat("topleft")
   ), StatSlabinterval$default_aes),
 
   default_params = defaults(list(
@@ -744,7 +744,7 @@ stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
 StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
   default_aes = defaults(aes(
-    thickness = after_stat(thickness(cdf, 0, 1)),
+    thickness = after_stat(thickness(cdf, 0, 1))
   ), StatCcdfinterval$default_aes),
 
   default_slab_type = "cdf"
@@ -830,7 +830,7 @@ stat_slab = make_stat(StatSlab, geom = "slab")
 #' @noRd
 args_from_aes = function(args = list(), ...) {
   args_names = names(args)
-  if (length(args_names > 0)) {
+  if (length(args_names) > 0) {
     named_args_i = nzchar(args_names)
     named_args = args[named_args_i]
     unnamed_args = args[!named_args_i]
