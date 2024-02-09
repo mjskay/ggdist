@@ -66,12 +66,16 @@ test_that("position_dodgejust works on zero-width geoms", {
   skip_if_no_vdiffr()
 
 
-  expect_warning(vdiffr::expect_doppelganger("zero-width dodgejust",
-    data.frame(x = c(1,1), y = "a", group = c("a","b")) %>%
-      ggplot(aes(x = x, y = y, color = group, shape = group)) +
-      geom_point(position = position_dodgejust(), size = 4) +
-      scale_shape_manual(values = c(0, 3))
-  ), "Width not defined. Set with `position_dodgejust\\(width = \\?\\)`")
+  expect_warning(
+    vdiffr::expect_doppelganger(
+      "zero-width dodgejust",
+      tibble(x = c(1,1), y = "a", group = c("a","b")) %>%
+        ggplot(aes(x = x, y = y, color = group, shape = group)) +
+        geom_point(position = position_dodgejust(), size = 4) +
+        scale_shape_manual(values = c(0, 3))
+    ),
+    "Width not defined. Set with `position_dodgejust\\(width = \\?\\)`"
+  )
 })
 
 

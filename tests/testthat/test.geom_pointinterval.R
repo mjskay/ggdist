@@ -63,8 +63,11 @@ test_that("grouped pointintervals work", {
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
-    ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))), point_size = 3) +
-    geom_pointinterval()
+    ggplot(aes(
+      x = i, y = u_tau, ymin = .lower, ymax = .upper,
+      interval_size = forcats::fct_rev(ordered(.width))
+    )) +
+    geom_pointinterval(point_size = 3)
 
   vdiffr::expect_doppelganger("grouped, with interval_size and legend", forward_plot)
 
@@ -80,12 +83,13 @@ test_that("orientation detection on pointintervals works", {
   skip_if_no_vdiffr()
 
 
-  p = data.frame(
-    v = c(1,2),
+  p = tibble(
+    v = c(1, 2),
     l = c(0, 1),
-    u = c(4,5),
+    u = c(4, 5),
     g = c("a", "b")
-  ) %>% ggplot()
+  ) %>%
+    ggplot()
 
   vdiffr::expect_doppelganger("vertical, orientation detection",
     p + geom_pointinterval(aes(x = g, y = v, ymin = l, ymax = u), orientation = NA)
@@ -109,7 +113,7 @@ test_that("missing data is handled correctly", {
   skip_if_no_vdiffr()
 
 
-  p = data.frame(
+  p = tibble(
     x = c(1,NA,1),
     xmin = c(NA,0,0),
     xmax = c(NA,2,2),
@@ -117,9 +121,12 @@ test_that("missing data is handled correctly", {
   ) %>%
     ggplot(aes(x = x, xmin = xmin, xmax = xmax, y = y))
 
-  expect_warning(vdiffr::expect_doppelganger("geom_pointinterval na.rm = FALSE",
-    p + geom_pointinterval(na.rm = FALSE)
-  ), "Removed 1 row.+missing values")
+  expect_warning(
+    vdiffr::expect_doppelganger("geom_pointinterval na.rm = FALSE",
+      p + geom_pointinterval(na.rm = FALSE)
+    ),
+    "Removed 1 row.+missing values"
+  )
 
   vdiffr::expect_doppelganger("geom_pointinterval na.rm = TRUE",
     p + geom_pointinterval(na.rm = TRUE)

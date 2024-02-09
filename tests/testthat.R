@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(ggdist)
+library(ggdist)     # nolint
 
 test_check("ggdist")

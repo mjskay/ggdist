@@ -15,7 +15,7 @@ test_that("direct scale setting works", {
 
 
   vdiffr::expect_doppelganger("direct scale setting",
-    data.frame(dist = "norm", mean = 1, sd = 2) %>%
+    tibble(dist = "norm", mean = 1, sd = 2) %>%
       ggplot(aes(y = "", dist = dist, arg1 = mean, arg2 = sd)) +
       stat_dist_halfeye(
         n = 20,
@@ -47,12 +47,12 @@ test_that("mapping custom aesthetics works", {
 
 
   df = tibble(
-      datatype = "slab",
-      x = c("a", "b", "c"),
-      x_num = c(1, 2, 3),
-      y = list(c(-0.75, -0.25)),
-      f = .1
-    ) %>%
+    datatype = "slab",
+    x = c("a", "b", "c"),
+    x_num = c(1, 2, 3),
+    y = list(c(-0.75, -0.25)),
+    f = .1
+  ) %>%
     unnest(y) %>%
     bind_rows(tibble(
       datatype = "interval",
@@ -164,7 +164,12 @@ test_that("mapping custom aesthetics works", {
     p + geom_slabinterval(aes(slab_linetype = x), normalize = "none", slab_color = "black")
   )
   expect_error(
-    ggplot_build(p + geom_slabinterval(aes(slab_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)),
+    ggplot_build(
+      p +
+        geom_slabinterval(
+          aes(slab_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2
+        )
+    ),
     "A continuous variable cannot be mapped to linetype"
   )
 
@@ -174,8 +179,8 @@ test_that("mapping custom aesthetics works", {
 
 
   # DOTS
-  p = data.frame(x = qnorm(ppoints(20)), y = "a") %>%
-    rbind(data.frame(x = qnorm(ppoints(20), 3, 2), y = "b")) %>%
+  p = tibble(x = qnorm(ppoints(20)), y = "a") %>%
+    rbind(tibble(x = qnorm(ppoints(20), 3, 2), y = "b")) %>%
     ggplot(aes(x = x, y = y, group = NA))
 
   vdiffr::expect_doppelganger("dots: slab_color plus slab_shape mapping",

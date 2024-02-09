@@ -33,12 +33,12 @@
 <line x1='289.00' y1='431.32' x2='289.00' y2='204.52' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <line x1='447.25' y1='457.79' x2='447.25' y2='248.58' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <line x1='130.76' y1='368.98' x2='130.76' y2='228.53' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<circle cx='289.00' cy='311.25' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='447.25' cy='350.92' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='130.76' cy='301.28' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='289.00' cy='311.25' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='447.25' cy='350.92' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='130.76' cy='301.28' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='289.00' cy='311.25' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='447.25' cy='350.92' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='130.76' cy='301.28' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='289.00' cy='311.25' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='447.25' cy='350.92' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='130.76' cy='301.28' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='27.90' y='22.78' width='522.21' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
@@ -66,8 +66,10 @@
 <text x='561.06' y='267.71' style='font-size: 11.00px; font-family: sans;' textLength='153.46px' lengthAdjust='spacingAndGlyphs'>forcats::fct_rev(ordered(.width))</text>
 <rect x='561.06' y='274.33' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='569.70' y1='289.89' x2='569.70' y2='276.06' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<circle cx='569.70' cy='282.97' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='561.06' y='291.61' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='569.70' y1='307.17' x2='569.70' y2='293.34' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<circle cx='569.70' cy='300.25' r='3.73' style='stroke-width: 1.06; fill: #000000;' />
 <text x='583.82' y='286.00' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.95</text>
 <text x='583.82' y='303.28' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.66</text>
 <text x='27.90' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='225.30px' lengthAdjust='spacingAndGlyphs'>grouped, with interval_size and legend</text>

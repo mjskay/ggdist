@@ -430,7 +430,10 @@ or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Co
 }
 \seealso{
 See \code{\link[=stat_dots]{stat_dots()}} for the stat version, intended for
-use on sample data or analytical distributions. See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this shortcut is based on.
+use on sample data or analytical distributions.
+
+See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this shortcut is based on.
+
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
 Other dotsinterval geoms: 

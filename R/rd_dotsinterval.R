@@ -24,17 +24,17 @@ rd_dotsinterval_shortcut_geom = function(geom_name, chart_type, from_name = "dot
     '@inheritParams geom_dotsinterval',
     glue_doc('
       @return A [ggplot2::Geom] representing a <<chart_type>> geometry which can
-      be added to a [ggplot()] object.'),
+      be added to a [ggplot()] object.
+      '),
     '@template details-dotsinterval-family',
     '@template references-quantile-dotplots',
     rd_dotsinterval_aesthetics(geom_name),
-    glue_doc('
-      @seealso ',
-      if (exists(paste0("stat_", geom_name))) 'See [stat_<<geom_name>>()] for the stat version, intended for
-      use on sample data or analytical distributions. ',
-      'See [geom_dotsinterval()] for the geometry this shortcut is based on.
-      See `vignette("dotsinterval")` for a variety of examples of use.
+    if (exists(paste0("stat_", geom_name))) glue_doc('
+      @seealso See [stat_<<geom_name>>()] for the stat version, intended for
+      use on sample data or analytical distributions.
       '),
+    '@seealso See [geom_dotsinterval()] for the geometry this shortcut is based on.',
+    '@seealso See `vignette("dotsinterval")` for a variety of examples of use.',
     '@family dotsinterval geoms',
     glue_doc('@examples
       library(dplyr)

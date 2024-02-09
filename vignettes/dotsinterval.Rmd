@@ -389,9 +389,9 @@ with `side = "both"`:
 ```{r beeswarm_bin, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
 
-abc_df = data.frame(
+abc_df = tibble(
   value = rnorm(300, mean = c(1,2,3), sd = c(1,2,2)),
-  abc = c("a", "b", "c")
+  abc = rep(c("a", "b", "c"), 100)
 )
 
 abc_df %>%
@@ -421,9 +421,9 @@ plots *without* manually tweaking settings:
 ```{r geom_weave, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
 
-swarm_data = data.frame(
+swarm_data = tibble(
   y = rnorm(300, c(1,4)),
-  g = c("a","b")
+  g = rep(c("a","b"), 150)
 )
 
 swarm_plot = swarm_data %>%
@@ -450,10 +450,10 @@ gray outline is not drawn:
 ```{r beeswarm_dodge, fig.width = small_width, fig.height = small_height}
 set.seed(12345)
 
-abcc_df = data.frame(
+abcc_df = tibble(
   value = rnorm(300, mean = c(1,2,3,4), sd = c(1,2,2,1)),
-  abc = c("a", "b", "c", "c"),
-  hi = c("h", "h", "h", "i")
+  abc = rep(c("a", "b", "c", "c"), 75),
+  hi = rep(c("h", "h", "h", "i"), 75)
 )
 
 abcc_df %>%
@@ -614,9 +614,9 @@ visualize under the default settings, because the dots become very small:
 
 ```{r discrete_dots_too_small, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
-abcd_df = data.frame(
+abcd_df = tibble(
   x = sample(c("a", "b", "c", "d"), 1000, replace = TRUE, prob = c(0.27, 0.6, 0.03, 0.005)),
-  g = c("a","b")
+  g = rep(c("a","b"), 500)
 )
 
 abcd_df %>%
@@ -833,8 +833,8 @@ dataset.
 ```{r halfeye_dotplot, fig.width = small_width, fig.height = small_height}
 set.seed(12345) # for reproducibility
 
-data.frame(
-  abc = c("a", "b", "b", "c"),
+tibble(
+  abc = rep(c("a", "b", "b", "c"), 50),
   value = rnorm(200, c(1, 8, 8, 3), c(1, 1.5, 1.5, 1))
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +

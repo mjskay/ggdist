@@ -17,7 +17,8 @@ test_that("group_slab_data_by works", {
     ymin = 2:9,
     ymax = 3:10,
     fill = c("a","a","a","b","b","b","b","a"),
-    alpha = 1
+    alpha = 1,
+    stringsAsFactors = FALSE
   )
 
   ref = data.frame(
@@ -75,7 +76,7 @@ test_that("normalize works", {
     1,  "B",  1, "norm",    8,       2,
     2,  "A",  1, "norm",    0,       2,
     2,  "A",  2, "norm",    0,       2,
-    1,  "B",  2, "norm",    8,       2,
+    1,  "B",  2, "norm",    8,       2
   ) %>%
     ggplot(aes(y = y, dist = dist, arg1 = mu, arg2 = sigma, fill = id)) +
     facet_grid(~p)
@@ -105,7 +106,7 @@ test_that("alpha channel in fill colors works", {
 
 
   vdiffr::expect_doppelganger("alpha channel in slab fill",
-    data.frame(x = c(0,1), y = "a", d = c(1,2)) %>%
+    tibble(x = c(0,1), y = "a", d = c(1,2)) %>%
       ggplot(aes(x = x, y = y, thickness = d)) +
       geom_slab(fill = scales::alpha("black", 0.2))
   )
@@ -138,38 +139,44 @@ test_that("side and justification can vary", {
     df %>%
       ggplot(aes(x = x, y = g, thickness = y,
         side = ifelse(g == "a", "top", "bottom"),
-        justification = ifelse(g == "a", 1, 0),
+        justification = as.numeric(g == "a"),
         scale = ifelse(g == "a", 0.5, 0.25)
       )) +
       geom_slab()
   )
 
   expect_error(
-    print(newpage = FALSE,
-      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
-        side = ifelse(x < 5, "top", "bottom")
-      )) +
-      geom_slab(orientation = "horizontal")
+    ggplotGrob(
+      df %>%
+        ggplot(aes(
+          x = x, y = g, thickness = y, group = g,
+          side = ifelse(x < 5, "top", "bottom")
+        )) +
+        geom_slab(orientation = "horizontal")
     ),
     "Slab `side` cannot vary within groups"
   )
 
   expect_error(
-    print(newpage = FALSE,
-      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
-        justification = ifelse(x < 5, 0, 1)
-      )) +
-      geom_slab(orientation = "horizontal")
+    ggplotGrob(
+      df %>%
+        ggplot(aes(
+          x = x, y = g, thickness = y, group = g,
+          justification = ifelse(x < 5, 0.5, 1)
+        )) +
+        geom_slab(orientation = "horizontal")
     ),
     "Slab `justification` cannot vary within groups"
   )
 
   expect_error(
-    print(newpage = FALSE,
-      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
-        scale = ifelse(x < 5, 0.5, 0.25)
-      )) +
-      geom_slab(orientation = "horizontal")
+    ggplotGrob(
+      df %>%
+        ggplot(aes(
+          x = x, y = g, thickness = y, group = g,
+          scale = ifelse(x < 5, 0.5, 0.25)
+        )) +
+        geom_slab(orientation = "horizontal")
     ),
     "Slab `scale` cannot vary within groups"
   )
@@ -188,22 +195,34 @@ test_that("incorrect side, orientation are caught", {
   p = data.frame(x = 1) %>%
     ggplot(aes(x = x, y = x, thickness = x))
 
-  expect_error(print(newpage = FALSE,
-    p + geom_slabinterval(side = "foo", orientation = "horizontal")
-  ), "Unknown side")
+  expect_error(
+    ggplotGrob(
+      p + geom_slabinterval(side = "foo", orientation = "horizontal")
+    ),
+    "Unknown side"
+  )
 
-  expect_error(print(newpage = FALSE,
-    p + geom_slabinterval(side = "foo", orientation = "vertical")
-  ), "Unknown side")
+  expect_error(
+    ggplotGrob(
+      p + geom_slabinterval(side = "foo", orientation = "vertical")
+    ),
+    "Unknown side"
+  )
 
-  expect_error(print(newpage = FALSE,
-    p + geom_slabinterval(orientation = "foo")
-  ), "Unknown orientation")
+  expect_error(
+    ggplotGrob(
+      p + geom_slabinterval(orientation = "foo")
+    ),
+    "Unknown orientation"
+  )
   expect_error(switch_side("top", "foo"), "Unknown orientation")
 
-  expect_error(print(newpage = FALSE,
-    p + geom_slabinterval(fill_type = "foo")
-  ), "Unknown `fill_type`")
+  expect_error(
+    ggplotGrob(
+      p + geom_slabinterval(fill_type = "foo")
+    ),
+    "Unknown `fill_type`"
+  )
 
 })
 
@@ -228,8 +247,8 @@ test_that("NAs in thickness produce gaps", {
 
   vdiffr::expect_doppelganger("slabinterval with NAs in thickness", {
     rbind(
-      data.frame(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6),
-      data.frame(y = "blank", t = NA, x = 0:6)
+      tibble(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6),
+      tibble(y = "blank", t = NA, x = 0:6)
     ) %>%
       ggplot(aes(x, y, thickness = t)) +
       geom_slab(color = "black")
@@ -237,7 +256,11 @@ test_that("NAs in thickness produce gaps", {
 
   # when side = "both", should not see outlines wrap around
   vdiffr::expect_doppelganger("side = both with NAs in thickness", {
-    data.frame(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6) %>%
+    tibble(
+      y = "gaps",
+      t = c(NA, 1:2, NA, 2:1, NA),
+      x = 0:6
+    ) %>%
       ggplot(aes(x, y, thickness = t)) +
       geom_slab(color = "black", side = "both")
   })
@@ -270,8 +293,9 @@ test_that("NA width works", {
 
   expect_warning(
     vdiffr::expect_doppelganger("missing width",
-      data.frame(
-        y = 1:6, f = c(0,1,0,0,Inf,0),
+      tibble(
+        y = 1:6,
+        f = c(0,1,0,0,Inf,0),
         g = rep(c("a","b"), each = 3),
         w = rep(c(1, NA), each = 3)
       ) %>% ggplot(aes(x = g, y = y, thickness = f, width = w)) +

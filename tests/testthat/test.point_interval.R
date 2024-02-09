@@ -37,7 +37,7 @@ test_that("median_qi works on a grouped variable", {
       tau = median(tau)
     )
 
-  result.simple = draws %>%
+  result_simple = draws %>%
     group_by(ff) %>%
     median_qi(tau)
 
@@ -45,9 +45,9 @@ test_that("median_qi works on a grouped variable", {
     group_by(ff) %>%
     median_qi(tau, .simple_names = FALSE)
 
-  expect_equal(result.simple$tau, ref$tau)
-  expect_equal(result.simple$.lower, ref$tau.lower)
-  expect_equal(result.simple$.upper, ref$tau.upper)
+  expect_equal(result_simple$tau, ref$tau)
+  expect_equal(result_simple$.lower, ref$tau.lower)
+  expect_equal(result_simple$.upper, ref$tau.upper)
   expect_equal(result$tau, ref$tau)
   expect_equal(result$tau.lower, ref$tau.lower)
   expect_equal(result$tau.upper, ref$tau.upper)
@@ -226,8 +226,10 @@ test_that("multiple-response intervals work", {
 })
 
 test_that("point_interval errors if there are no columns to summarise", {
-  expect_error(median_hdi(data.frame()),
-    "No columns found to calculate point and interval summaries for\\.")
+  expect_error(
+    median_hdi(data.frame()),
+    "No columns found to calculate point and interval summaries for\\."
+  )
 })
 
 test_that("point_interval works on vectors", {
@@ -250,30 +252,50 @@ test_that("point_interval works on vectors", {
 test_that("various point summaries and intervals give correct numbers", {
   expect_equal(
     median_hdci(c(0:6, 1:3 + 0.25, 1:3 + 0.5, 4.5, 5, 2), .width = .625),
-    data.frame(y = 2.75, ymin = 1, ymax = 4, .width = 0.625, .point = "median", .interval = "hdci", stringsAsFactors = FALSE),
+    data.frame(
+      y = 2.75, ymin = 1, ymax = 4,
+      .width = 0.625, .point = "median", .interval = "hdci",
+      stringsAsFactors = FALSE
+    ),
     tolerance = 1e-7
   )
 
   expect_equal(
     mean_qi(c(0:6, 1:5, 2:4, 2), .width = .6),
-    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+    data.frame(
+      y = 2.9375, ymin = 2, ymax = 4,
+      .width = 0.6, .point = "mean", .interval = "qi",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mode_hdi(c(0:6, 0:5 + 0.5, 2:4), .width = .5, .simple_names = TRUE),
-    data.frame(.value = 3, .lower = 1.75, .upper = 4.25, .width = 0.5, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE),
+    data.frame(
+      .value = 3, .lower = 1.75, .upper = 4.25,
+      .width = 0.5, .point = "mode", .interval = "hdi",
+      stringsAsFactors = FALSE
+    ),
     tolerance = 1e-7
   )
 
   expect_equal(
     mode_hdci(c(0:6, 0:5 + 0.5, 2:4), .width = .5, .simple_names = TRUE),
-    data.frame(.value = 3, .lower = 1.75, .upper = 4.25, .width = 0.5, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE),
+    data.frame(
+      .value = 3, .lower = 1.75, .upper = 4.25,
+      .width = 0.5, .point = "mode", .interval = "hdci",
+      stringsAsFactors = FALSE
+    ),
     tolerance = 1e-7
   )
 
   expect_equal(
     mean_hdci(c(0:6, 0:5 + 0.5, 2:4), .width = .5),
-    data.frame(y = 3, ymin = 1.75, ymax = 4.25, .width = 0.5, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE),
+    data.frame(
+      y = 3, ymin = 1.75, ymax = 4.25,
+      .width = 0.5, .point = "mean", .interval = "hdci",
+      stringsAsFactors = FALSE
+    ),
     tolerance = 1e-7
   )
 
@@ -289,62 +311,110 @@ test_that("attempting to use hdi with multiple multimodal columns simultaneously
 test_that("NAs are handled correctly in point_interval", {
   expect_equal(
     median_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
-    data.frame(y = 3, ymin = 2, ymax = 5, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      y = 3, ymin = 2, ymax = 5,
+      .width = 0.6, .point = "median", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_qi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
-    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+    data.frame(
+      y = 2.9375, ymin = 2, ymax = 4,
+      .width = 0.6, .point = "mean", .interval = "qi",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mode_hdi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 5, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+    data.frame(
+      .value = 2, .lower = 2, .upper = 5,
+      .width = 0.6, .point = "mode", .interval = "hdi",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mode_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 5, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      .value = 2, .lower = 2, .upper = 5,
+      .width = 0.6, .point = "mode", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
-    data.frame(y = 2.9375, ymin = 2, ymax = 5, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      y = 2.9375, ymin = 2, ymax = 5,
+      .width = 0.6, .point = "mean", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     median_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      y = NA_real_, ymin = NA_real_, ymax = NA_real_,
+      .width = 0.6, .point = "median", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_qi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+    data.frame(
+      y = NA_real_, ymin = NA_real_, ymax = NA_real_,
+      .width = 0.6, .point = "mean", .interval = "qi",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mode_hdi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = FALSE),
-    data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+    data.frame(
+      .value = NA_real_, .lower = NA_real_, .upper = NA_real_,
+      .width = 0.6, .point = "mode", .interval = "hdi",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mode_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = FALSE),
-    data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      .value = NA_real_, .lower = NA_real_, .upper = NA_real_,
+      .width = 0.6, .point = "mode", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(
+      y = NA_real_, ymin = NA_real_, ymax = NA_real_,
+      .width = 0.6, .point = "mean", .interval = "hdci",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_ll(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ll", stringsAsFactors = FALSE)
+    data.frame(
+      y = NA_real_, ymin = NA_real_, ymax = NA_real_,
+      .width = 0.6, .point = "mean", .interval = "ll",
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(
     mean_ul(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ul", stringsAsFactors = FALSE)
+    data.frame(
+      y = NA_real_, ymin = NA_real_, ymax = NA_real_,
+      .width = 0.6, .point = "mean", .interval = "ul",
+      stringsAsFactors = FALSE
+    )
   )
 
 })
@@ -422,9 +492,9 @@ test_that("multivariate rvars work", {
 
   x = c(
     posterior::rvar(c(qnorm(ppoints(50)), qnorm(ppoints(50), 5))),
-    posterior::rvar(c(qnorm(ppoints(100), 3))),
-    posterior::rvar(c(qnorm(ppoints(100), 2))),
-    posterior::rvar(c(qnorm(ppoints(100), 4)))
+    posterior::rvar(qnorm(ppoints(100), 3)),
+    posterior::rvar(qnorm(ppoints(100), 2)),
+    posterior::rvar(qnorm(ppoints(100), 4))
   )
   dim(x) = c(2,2)
 
@@ -494,9 +564,10 @@ test_that("multivariate rvars work", {
 
 
   # > 2 dims
-  x_draws = array(c(
-    rep(qi(ppoints(100, a = 1)), 12) + rep(1:12, each = 100)
-  ), dim = c(100, 2, 3, 2))
+  x_draws = array(
+    rep(qi(ppoints(100, a = 1)), 12) + rep(1:12, each = 100),
+    dim = c(100, 2, 3, 2)
+  )
   df = tibble(i = 1:2, x = posterior::rvar(x_draws))
 
   .index = paste0(rep(1:3, 4), ",", rep(1:2, each = 3, times = 2))
@@ -524,15 +595,35 @@ test_that("pointintervals work on distributional objects", {
 
   expect_equal(
     median_qi(x, .width = 0.6),
-    tibble(.value = qgamma(0.5, 1:2, 2:3), .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "median", .interval = "qi")
+    tibble(
+      .value = qgamma(0.5, 1:2, 2:3),
+      .lower = qgamma(0.2, 1:2, 2:3),
+      .upper = qgamma(0.8, 1:2, 2:3),
+      .width = 0.6, .point = "median",
+      .interval = "qi"
+    )
   )
   expect_equal(
     mean_qi(tibble(x), .width = 0.6),
-    tibble(x = 1:2 / 2:3, .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "mean", .interval = "qi")
+    tibble(
+      x = 1:2 / 2:3,
+      .lower = qgamma(0.2, 1:2, 2:3),
+      .upper = qgamma(0.8, 1:2, 2:3),
+      .width = 0.6,
+      .point = "mean",
+      .interval = "qi"
+    )
   )
   expect_equal(
     mode_qi(tibble(x), .width = 0.6),
-    tibble(x = 0:1 / 2:3, .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "mode", .interval = "qi"),
+    tibble(
+      x = 0:1 / 2:3,
+      .lower = qgamma(0.2, 1:2, 2:3),
+      .upper = qgamma(0.8, 1:2, 2:3),
+      .width = 0.6,
+      .point = "mode",
+      .interval = "qi"
+    ),
     tolerance = 1e-05
   )
 })
@@ -631,8 +722,8 @@ test_that("flattened indices retain index order", {
       ),
       y = c("a","b")
     )  %>%
-    ggplot(aes(xdist = x, y = y, group = after_stat(.index))) +
-    stat_pointinterval(position = "dodge")
+      ggplot(aes(xdist = x, y = y, group = after_stat(.index))) +
+      stat_pointinterval(position = "dodge")
   )
 
 })
