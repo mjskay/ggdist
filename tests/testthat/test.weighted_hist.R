@@ -22,12 +22,16 @@ test_that("weighted_hist works", {
 
 test_that("weighted_hist is roughly equivalent to hist on non-weighted samples", {
   x = c(1,2,3,3,4,5,8,2,7)
+  x1 = c(rep(10,20), 10.1)
+  x2 = c(rep(10,1000), 10.1)
 
   # breaks / nclass functions match
   for (breaks in list(c("Sturges", "Sturges"), c("Scott","scott"), c("FD","FD"))) {
     breaks_fun = paste0("breaks_", breaks[[1]])
     nclass_fun = paste0("nclass.", breaks[[2]])
     expect_equal((!!breaks_fun)(x), (!!nclass_fun)(x))
+    expect_equal((!!breaks_fun)(x1), (!!nclass_fun)(x1))
+    expect_equal((!!breaks_fun)(x2), (!!nclass_fun)(x2))
 
     #partial application
     expect_equal((!!breaks_fun)()(x), (!!breaks_fun)(x))
