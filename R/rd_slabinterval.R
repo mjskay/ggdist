@@ -62,7 +62,9 @@ rd_slabinterval_shortcut_stat = function(
 
   example_layers = if (length(example_layers) > 0) {
     paste0(" +\n  ", example_layers, collapse = "")
-  } else ""
+  } else {
+    ""
+  }
 
   c(
     glue_doc('@title <<title_case(chart_type)>> plot (shortcut stat)'),
@@ -151,21 +153,19 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
         If `options("ggdist.experimental.slab_data_in_intervals")` is `TRUE`:
         For intervals, the CDF at the point summary; intervals also have `cdf_min` and `cdf_max`
         for the CDF at the lower and upper ends of the interval.',
-    if (isTRUE(stat$default_params$show_slab)) {'
+    if (isTRUE(stat$default_params$show_slab)) '
       - `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
         an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
       -  `f`: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
         determined by `slab_type`. Instead of using `slab_type` to change `f` and then mapping `f` onto an
         aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. `pdf`, `cdf`, or
         `1 - cdf`) directly onto the desired aesthetic.
-      '
-    },
-    if ("at" %in% names(stat$default_params)) {'
+      ',
+    if ("at" %in% names(stat$default_params)) '
       - `at`: For spikes, a character vector of names of the functions or expressions used to determine
         the points at which the slab functions were evaluated to create spikes. Values of this computed
         variable are determined by the `at` parameter; see its description above.
       '
-    }
   )
 
   out

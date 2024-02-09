@@ -55,13 +55,13 @@ slabs on the same plot, each with its own separate `thickness` subscale.
 For example:
 
 ```{r intro}
-df = data.frame(
+df = tibble(
   h = c(0,1,1,0, 0,2,2,0, 0,4/3,4/3,0,  0,1,1,0,     0,1.25,1.25,0, 0,.5,.5,0),
   x = c(0,1,4,5, 4,5,6,7, 6,7,9,10,     11,12,15,16, 1,2,4.2,5.2,   4,5,12,13),
   y     = rep(c("a", "b", "a", "a", "b", "a"), each = 4),
   group = rep(c("c", "c", "d", "d", "c", "c"), each = 4),
   panel = rep(c("e", "e", "e", "e", "f", "f"), each = 4),
-  name  = rep(c( 1,   2, "3a","3b",  4,   5 ), each = 4)
+  name  = rep(c(1,    2, "3a","3b",  4,   5),  each = 4)
 )
 
 df_group = df %>%
@@ -75,7 +75,7 @@ df %>%
   facet_grid(cols = vars(panel), labeller = "label_both") +
   labs("geom_slab() with default thickness scaling") +
   theme(
-    legend.position = "bottom", 
+    legend.position = "bottom",
     panel.grid.major.y = element_line(color = "gray85"),
     panel.background = element_rect(color = "gray70", fill = NA)
   )
@@ -110,8 +110,8 @@ of the default normalization settings:
 
 ```{r normalize_all}
 subguide_orangered = subguide_outside(
-  title = "thickness", 
-  position = "right", 
+  title = "thickness",
+  position = "right",
   theme = theme_ggdist() + theme(
     text = element_text(color = "orangered"),
     axis.line.y = element_line(color = "orangered"),
@@ -122,32 +122,32 @@ subguide_orangered = subguide_outside(
 
 plot_slabs_with_scales = function(..., subguide = subguide_orangered) {
   df %>%
-  ggplot(aes(x = x, y = y, fill = group)) +
-  geom_hline(yintercept = c(1,1.9, 2,2.9), color = "orangered", linetype = "11", linewidth = 0.5) +
-  geom_slab(
-    aes(thickness = h),
-    subguide = subguide,
-    alpha = 0.75,
-    color = "gray25",
-    ...
-  ) +
-  geom_label(
-    aes(label = name), 
-    data = df_group, 
-    color = "gray25", 
-    alpha = 0.75,
-    vjust = 0,
-    show.legend = FALSE
-  ) +
-  scale_y_discrete(expand = expansion(add = 0.1)) +
-  scale_fill_brewer(palette = "Set2") +
-  facet_grid(cols = vars(panel), labeller = "label_both") +
-  theme(
-    plot.margin = margin(5.5, 50, 5.5, 5.5),
-    panel.spacing.x = unit(40, "pt"),
-    legend.position = "bottom",
-    panel.background = element_rect(color = "gray70", fill = NA)
-  )
+    ggplot(aes(x = x, y = y, fill = group)) +
+    geom_hline(yintercept = c(1,1.9, 2,2.9), color = "orangered", linetype = "11", linewidth = 0.5) +
+    geom_slab(
+      aes(thickness = h),
+      subguide = subguide,
+      alpha = 0.75,
+      color = "gray25",
+      ...
+    ) +
+    geom_label(
+      aes(label = name),
+      data = df_group,
+      color = "gray25",
+      alpha = 0.75,
+      vjust = 0,
+      show.legend = FALSE
+    ) +
+    scale_y_discrete(expand = expansion(add = 0.1)) +
+    scale_fill_brewer(palette = "Set2") +
+    facet_grid(cols = vars(panel), labeller = "label_both") +
+    theme(
+      plot.margin = margin(5.5, 50, 5.5, 5.5),
+      panel.spacing.x = unit(40, "pt"),
+      legend.position = "bottom",
+      panel.background = element_rect(color = "gray70", fill = NA)
+    )
 }
 
 plot_slabs_with_scales(normalize = "all") +
@@ -247,20 +247,20 @@ thickness scales annotated:
 
 ```{r prior_post}
 df_prior_post = data.frame(
- prior = dist_normal(0, 1),
- posterior = dist_normal(0.1, 0.3)
+  prior = dist_normal(0, 1),
+  posterior = dist_normal(0.1, 0.3)
 )
 
 prior_post_plot = df_prior_post %>%
   ggplot() +
   stat_slab(
-    aes(xdist = posterior), 
+    aes(xdist = posterior),
     subguide = subguide_inside(title = "posterior thickness")
   ) +
   stat_slab(
-    aes(xdist = prior), 
-    color = "orangered", 
-    fill = NA, 
+    aes(xdist = prior),
+    color = "orangered",
+    fill = NA,
     subguide = subguide_orangered(title = "prior thickness", just = 0, label_side = "inside")
   ) +
   scale_y_continuous(breaks = NULL) +
@@ -301,23 +301,23 @@ The `thickness` aesthetic is drawn within a subset of the bounding box of
 cap = arrow(angle = 90, length = unit(5, "pt"), ends = "both")
 
 scale_plot = function(scale = 0.9) {
-  data.frame(d = dist_normal(c(4,5)), y = c("a","b")) %>%
+  tibble(d = dist_normal(c(4,5)), y = c("a","b")) %>%
     ggplot(aes(xdist = d, y = y)) +
     geom_hline(
-      yintercept = c(1, 1 + scale, 2, 2 + scale), 
+      yintercept = c(1, 1 + scale, 2, 2 + scale),
       color = "orangered", linetype = "11", linewidth = 0.5
     ) +
     stat_slab(scale = scale, subguide = subguide_orangered) +
-    annotate("segment", x = c(-5,-4), xend = c(-5,-4), y = c(1,2), yend = c(2,3), 
+    annotate("segment", x = c(-5,-4), xend = c(-5,-4), y = c(1,2), yend = c(2,3),
       arrow = cap, linewidth = 0.75, color = "gray25"
     ) +
-    annotate("label", x = c(-5,-4), y = c(1.5, 2.5), 
+    annotate("label", x = c(-5,-4), y = c(1.5, 2.5),
       label = "height = 1", hjust = -0.05, color = "gray25"
     ) +
-    annotate("segment", x = c(-2,-1), xend = c(-2,-1), y = c(1,2), yend = c(1,2) + scale, 
+    annotate("segment", x = c(-2,-1), xend = c(-2,-1), y = c(1,2), yend = c(1,2) + scale,
       arrow = cap, linewidth = 0.75, color = "gray25"
     ) +
-    annotate("label", x = c(-2,-1), y = c(1,2) + scale/2, 
+    annotate("label", x = c(-2,-1), y = c(1,2) + scale/2,
       label = paste("scale =", scale), hjust = -0.05, color = "gray25"
     ) +
     scale_y_discrete(expand = expansion(add = 0)) +
@@ -333,7 +333,7 @@ scale_plot(scale = 0.9) +
   labs(
     title = "geom_slab()",
     subtitle = "using default height = 1 and scale = 0.9"
-  ) 
+  )
 ```
 
 This allows us to adjust the spacing between slabs using `scale`:
@@ -355,39 +355,39 @@ and modifying `scale` allows you to change the spacing **within** sets:
 ```{r default_dodge, fig.width = 7, fig.height = 7}
 dodged_scale_plot = function(height = 1, scale = 0.9, add = 0) {
   baselines = c(1 - height/2, 1, 2 - height/2, 2)
-  data.frame(
-    d = dist_normal(c(4,5,4,5)), 
-    y = c("a","a","b","b"), 
+  tibble(
+    d = dist_normal(c(4,5,4,5)),
+    y = c("a","a","b","b"),
     group = c("d","e","d","e")
   ) %>%
     ggplot(aes(xdist = d, y = y, fill = group)) +
     geom_hline(yintercept = c(1,2) + height/2, color = "gray85") +
     geom_hline(
-      yintercept = c(baselines, baselines + height/2*scale), 
-      color = "orangered", 
-      linetype = "11", 
+      yintercept = c(baselines, baselines + height/2*scale),
+      color = "orangered",
+      linetype = "11",
       linewidth = 0.5
     ) +
     stat_slab(
-      height = height, scale = scale, 
+      height = height, scale = scale,
       subguide = subguide_orangered, position = "dodgejust",
       alpha = 0.75
     ) +
-    annotate("segment", 
-      x = c(-5,-4), xend = c(-5,-4), 
-      y = c(1,2) - height/2, yend = c(1,2) + height/2, 
+    annotate("segment",
+      x = c(-5,-4), xend = c(-5,-4),
+      y = c(1,2) - height/2, yend = c(1,2) + height/2,
       arrow = cap, color = "gray25", linewidth = 0.75
     ) +
-    annotate("label", x = c(-5,-4), y = c(1, 2), 
+    annotate("label", x = c(-5,-4), y = c(1, 2),
       label = paste("height =", height), hjust = -0.05,
       color = "gray25"
     ) +
-    annotate("segment", x = c(-2,-2,-1,-1), xend = c(-2,-2,-1,-1), 
-      y = baselines, yend = baselines + scale * height/2, 
+    annotate("segment", x = c(-2,-2,-1,-1), xend = c(-2,-2,-1,-1),
+      y = baselines, yend = baselines + scale * height/2,
       arrow = cap, color = "gray25", linewidth = 0.75
     ) +
-    annotate("label", x = c(-2,-2,-1,-1), 
-      y = baselines + scale*height/4, label = paste("scale =", scale), 
+    annotate("label", x = c(-2,-2,-1,-1),
+      y = baselines + scale*height/4, label = paste("scale =", scale),
       hjust = -0.05, color = "gray25"
     ) +
     scale_y_discrete(expand = expansion(add = add)) +

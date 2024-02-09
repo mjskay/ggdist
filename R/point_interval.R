@@ -218,9 +218,11 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         if (inherits(draws, "rvar") && length(draws) > 1) {
           flat_draws = flatten_array(draws)
           draws = flat_draws$x
-          row[[col_name]] = NA # the next line will have to recycle row[[col_name]]
-                               # which may be expensive b/c it is an rvar, so just
-                               # skip that since we're overwriting it after anyway
+          # the line after this (bind_cols()) will have to recycle
+          # row[[col_name]], which may be expensive because it is an rvar,
+          # so we assign NA first to skip that since we're overwriting
+          # row[[col_name]] right after anyway
+          row[[col_name]] = NA
           row = bind_cols(row, .index = flat_draws$index_names)
           row[[col_name]] = draws
         }

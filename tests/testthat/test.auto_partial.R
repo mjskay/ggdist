@@ -34,13 +34,17 @@ test_that("functions without arguments work", {
 })
 
 test_that("functions inside the ggdist namespace do not inline partial_self", {
-  f = function(x) { x + 1 }
+  f = function(x) {
+    x + 1
+  }
   environment(f) = asNamespace("ggdist")
   expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f")', fixed = TRUE)
 })
 
 test_that("wrapper functions work", {
-  f = auto_partial(function(x, y = 1, z = 2) { y + z }, name = "f")
+  f = auto_partial(name = "f", function(x, y = 1, z = 2) {
+    y + z
+  })
   g = function(..., y = 2) f(..., y = y)
 
   expect_output(print(g(y = 2)), "<partial_function>:.*f\\(y = y\\)")

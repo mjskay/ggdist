@@ -28,4 +28,3 @@ test_that("student_t functions work", {
   set.seed(1234)
   expect_equal(rstudent_t(10, df, median, scale), r)
 })
-

@@ -43,10 +43,10 @@ test_that("lkjcorr_marginal throws an error for invalid K", {
 test_that("marginalize_lkjcorr works", {
   ref = as.data.frame(tibble(
     coef = c("a", "b"),
-    prior = c("lkjcorr(3)", "lkjcorr(3)" ),
+    prior = c("lkjcorr(3)", "lkjcorr(3)"),
     .dist = c("lkjcorr_marginal", "lkjcorr_marginal"),
     .args = list(list(2, 3), list(4, 3)),
-    .dist_obj = dist_wrap(dist = "lkjcorr_marginal", c(2, 4), c(3, 3), package = "ggdist"),
+    .dist_obj = dist_wrap(dist = "lkjcorr_marginal", c(2, 4), c(3, 3), package = "ggdist")
   ))
 
   expect_equal(

@@ -75,7 +75,7 @@ label_ = function(..., hjust = 0, color = red_) {
   )
 }
 arrow_ = function(..., curvature = 0, x, xend = x, y, yend = y) {
-  annotate("curve", 
+  annotate("curve",
     color = red_, arrow = arrow(angle = 45, length = unit(3, "points"), type = "closed"),
     curvature = curvature,
     x = x, xend = xend, y = y, yend = yend
@@ -90,7 +90,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
 
   stat_dotsinterval(
     aes(linewidth = NULL),
-    slab_color = "gray50", 
+    slab_color = "gray50",
     .width = 1 - 2*pnorm(-1, sd = 1.2),
     fill = "gray75",
     point_size = 5,
@@ -100,53 +100,63 @@ tibble(dist = dist_normal(4, 1.2)) %>%
     linewidth = 5,
     slab_linewidth = 1.5
   ) +
-  
+
   # height
   refline_(x = 0, xend = 8.4, y = 1) +
   bracket_(x = 8.4, y = 0, yend = 1) +
   label_(label = "height", x = 8.6, y = 1) +
-  
+
   # scale
   refline_(x = 4, xend = 8.6, y = 0.9) +
   bracket_(x = 8.6, y = 0, yend = 0.9) +
   label_(label = "scale = 0.9", x = 8.8, y = 0.9) +
-  
+
   # slab line properties
-  label_(x = 2.5, y = 0.7, 
+  label_(x = 2.5, y = 0.7,
     label = 'slab_color = "gray50"\nslab_linewidth = 1.5',
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
-  
+
   # slab fill
   label_(x = 5.5, y = 0.7,
     label = 'slab_fill = fill = "gray75"\nslab_alpha = alpha = 1\nslab_shape = 21',
-    vjust = 1,
+    vjust = 1
   ) +
   arrow_(x = 5.48, xend = 4.81, y = 0.67, yend = thickness_(3.1) + 0.01, curvature = 0.2) +
 
-  # xmin / x / xmax
+  # xmin, x, xmax
   arrow_(x = 2.65, xend = 3, y = -0.1, yend = -0.01, curvature = -0.2) +
   label_(x = 2.7, y = -0.1, label = "xmin", hjust = 1, vjust = 1) +
   arrow_(x = 4, y = -0.1, yend = -0.05) +
   label_(x = 4, y = -0.1, label = "x", hjust = 0.5, vjust = 1) +
   arrow_(x = 5.35, xend = 5, y = -0.1, yend = -0.01, curvature = 0.2) +
   label_(x = 5.3, y = -0.1, label = "xmax", hjust = 0, vjust = 1) +
-  
+
   # interval properties
   label_(x = 3.5, y = -0.2,
-    label = 'interval_color = color = "black"\ninterval_alpha = alpha = 1\ninterval_linetype = linetype = "solid"\nlinewidth = size = 5',
+    label = paste0(
+      'interval_color = color = "black"\n',
+      'interval_alpha = alpha = 1\n',
+      'interval_linetype = linetype = "solid"\n',
+      'linewidth = size = 5'
+    ),
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 3.3, xend = 3.4, y = -0.18, yend = -0.015, curvature = -0.1) +
 
   # point properties
   label_(x = 4.5, y = -0.2,
-    label = 'point_fill = fill = "gray75"\npoint_color = color = "black"\npoint_alpha = alpha = 1\npoint_size = size = 5\nshape = 22\nstroke = 1.5',
+    label = paste0(
+      'point_fill = fill = "gray75"\n',
+      'point_color = color = "black"\n',
+      'point_alpha = alpha = 1\n',
+      'point_size = size = 5\nshape = 22\nstroke = 1.5'
+    ),
     vjust = 1, hjust = 0
   ) +
   arrow_(x = 4.55, xend = 4.2, y = -0.18, yend = -0.03, curvature = 0.2) +
-  
+
   coord_cartesian(xlim = c(-1, 10), ylim = c(-0.6, 1)) +
   labs(subtitle = "Properties of geom_dotsinterval", x = NULL, y = NULL)
 ```
@@ -171,28 +181,28 @@ tibble(dist = dist_normal(4, 1.2)) %>%
     linewidth = 1.5,
     shape = 21
   ) +
-  
+
   # height
   refline_(x = 0, xend = 8.4, y = 1) +
   bracket_(x = 8.4, y = 0, yend = 1) +
   label_(label = "height", x = 8.6, y = 1) +
-  
+
   # scale
   refline_(x = 4, xend = 8.6, y = 0.9) +
   bracket_(x = 8.6, y = 0, yend = 0.9) +
   label_(label = "scale = 0.9", x = 8.8, y = 0.9) +
-  
+
   # slab line properties
-  label_(x = 2.5, y = 0.7, 
+  label_(x = 2.5, y = 0.7,
     label = 'color = "gray50"\nlinewidth = 1.5',
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
-  
+
   # slab fill
   label_(x = 5.5, y = 0.7,
     label = 'fill = "gray75"\nalpha = 1\nshape = 21',
-    vjust = 1,
+    vjust = 1
   ) +
   arrow_(x = 5.48, xend = 4.81, y = 0.67, yend = thickness_(3.1) + 0.01, curvature = 0.2) +
 
@@ -218,11 +228,10 @@ Size and layout of dots in the dotplot are controlled by four parameters:
 
 ```{r layout_params, echo=FALSE, fig.height=3.7, fig.width=6}
 data.frame(x = c(.4, .7, .7, 1, 1, 1)) %>%
-# data.frame(x = c(.4, rep(.7, 2), rep(1, 3))) %>%
   ggplot(aes(x = x)) +
-  
+
   geom_hline(yintercept = 0:1, color = "gray95") +
-  
+
   # binwidth
   refline_(x = seq(.25, 1.15, by = .3), y = -0.025, yend = 0.9, color = green_) +
   bracket_(x = .25, xend = .55, y = -0.025, color = green_) +
@@ -232,12 +241,12 @@ data.frame(x = c(.4, .7, .7, 1, 1, 1)) %>%
   ) +
 
   geom_dots(scale = 0.9, dotsize = 1, alpha = 0.5) +
-  
+
   # height
   refline_(x = 0, xend = 2, y = 1) +
   bracket_(x = 2, y = 0, yend = 1) +
   label_(label = "height", x = 2.05, y = 1) +
-  
+
   # scale
   refline_(x = 0.25, xend = 2.1, y = 0.9) +
   bracket_(x = 2.1, y = 0, yend = 0.9) +
@@ -255,7 +264,7 @@ data.frame(x = c(.4, .7, .7, 1, 1, 1)) %>%
     label = "dotsize = 1\n(relative to binwidth)",
     x = 0.85, y = -0.08, vjust = 1, hjust = 0, color = blue_
   ) +
-  
+
   scale_x_continuous(limits = c(-0.1, 2.35)) +
   scale_y_continuous(limits = c(-0.35, 1)) +
   coord_fixed() +
@@ -359,20 +368,16 @@ layout_plot = function(layout, side, ...) {
     theme(panel.border = element_rect(color = "gray75", fill = NA))
 }
 
-(layout_plot("bin", side = "top") +
-  layout_plot("hex", side = "top")) /
-  (layout_plot("weave", side = "top") +
-  layout_plot("swarm", side = "top")) +
+(layout_plot("bin", side = "top") + layout_plot("hex", side = "top")) /
+  (layout_plot("weave", side = "top") + layout_plot("swarm", side = "top")) +
   plot_annotation(title = 'geom_dots() layouts with side = "top"')
 ```
 
 When `side` is `"both"`, these layouts look like this:
 
 ```{r layout_both, fig.width = small_width, fig.height = small_height}
-(layout_plot("bin", side = "both") +
-  layout_plot("hex", side = "both")) /
-  (layout_plot("weave", side = "both") +
-  layout_plot("swarm", side = "both")) +
+(layout_plot("bin", side = "both") + layout_plot("hex", side = "both")) /
+  (layout_plot("weave", side = "both") + layout_plot("swarm", side = "both")) +
   plot_annotation(title = 'geom_dots() layouts with side = "both"')
 ```
 
@@ -836,7 +841,8 @@ data.frame(
   stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA) +
   scale_fill_brewer(palette = "Set2") +
-  ggtitle(paste0(
+  ggtitle(
+    paste0(
       'stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +\n',
       'stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA)'
     ),
@@ -865,7 +871,7 @@ gentoo %>%
   ggtitle(
     "geom_dots(scale = 0.5)",
     'aes(side = sex) + scale_side_mirrored()'
-  ) 
+  )
 ```
 
 This can also be accomplished by setting side directly and omitting
@@ -883,7 +889,7 @@ on top of the mirrored dotplots to create a *logit dotplot*:
 
 ```{r logit_dotplot, fig.width = med_width, fig.height = med_height/1.5}
 # construct a prediction grid for the fit line
-prediction_grid = with(gentoo, 
+prediction_grid = with(gentoo,
   data.frame(body_mass_g = seq(min(body_mass_g), max(body_mass_g), length.out = 100))
 )
 
@@ -913,7 +919,6 @@ prediction_grid %>%
     x = "Body mass (g) of Gentoo penguins",
     y = "Pr(sex = male)"
   )
-  
 ```
 
 

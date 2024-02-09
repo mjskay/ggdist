@@ -822,14 +822,15 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     ggproto_parent(AbstractGeom, self)$draw_layer(data, params, layout, coord)
   },
 
-  draw_panel = function(self, data, panel_params, coord,
-      orientation = self$default_params$orientation,
-      show_slab = self$default_params$show_slab,
-      show_point = self$default_params$show_point,
-      show_interval = self$default_params$show_interval,
-      na.rm = self$default_params$na.rm,
-      ...
-    ) {
+  draw_panel = function(
+    self, data, panel_params, coord,
+    orientation = self$default_params$orientation,
+    show_slab = self$default_params$show_slab,
+    show_point = self$default_params$show_point,
+    show_interval = self$default_params$show_interval,
+    na.rm = self$default_params$na.rm,
+    ...
+  ) {
 
     define_orientation_variables(orientation)
 

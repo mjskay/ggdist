@@ -203,30 +203,9 @@ density_bounded = auto_partial(name = "density_bounded", function(
     return(list(x = range(x), y = c(NA_real_, NA_real_)))
   }
 
-  # determine bandwidth
+  # determine bandwidth and bounds
   bw = get_bandwidth(x, bandwidth) * adjust
-
-  # determine bounds
-  bounds_to_find = is.na(bounds)
-  if (any(bounds_to_find)) {
-    bounder = match_function(bounder, "bounder_")
-    bounds[bounds_to_find] = bounder(x)[bounds_to_find]
-  }
-
-  min_x = min(x)
-  max_x = max(x)
-  if (min_x < bounds[[1]] || max_x > bounds[[2]]) {
-    stop0("All `x` must be inside `bounds` in density_bounded()")
-  }
-
-  # cap bounds at 3*bw beyond the range (and consider them unbounded beyond
-  # that, since past that the density essentially goes to 0)
-  min_bound = min_x - 3 * bw
-  max_bound = max_x + 3 * bw
-  left_bounded = min_bound <= bounds[[1]]
-  right_bounded = bounds[[2]] <= max_bound
-  if (!left_bounded) bounds[[1]] = min_bound
-  if (!right_bounded) bounds[[2]] = max_bound
+  c(bounds, left_bounded, right_bounded) %<-% get_bounds(x, bw, bounds, bounder)
 
   if (isTRUE(range_only)) {
     return(list(x = bounds, y = c(NA_real_, NA_real_)))
@@ -259,8 +238,9 @@ density_bounded = auto_partial(name = "density_bounded", function(
   if (right_bounded) f = f + d$y[seq(length(d$y), by = -1, length.out = n)]
 
   # trim to data range, if needed
-  if (isTRUE(trim) && (bounds[[1]] < min_x || bounds[[2]] > max_x)) {
-    x_trimmed = seq.int(min_x, max_x, length.out = n)
+  range_x = range(x)
+  if (isTRUE(trim) && (bounds[[1]] < range_x[[1]] || bounds[[2]] > range_x[[2]])) {
+    x_trimmed = seq.int(range_x[[1]], range_x[[2]], length.out = n)
     f = approx(d$x, f, x_trimmed)$y
     d$x = x_trimmed
   }
@@ -506,9 +486,9 @@ bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
 
     ### one possibility:
     # # use k-means clustering to create bandwidth groups
-    # bw_clusters = Ckmeans.1d.dp::Ckmeans.1d.dp(bw_local, adapt)
-    # bw_group = bw_clusters$cluster
-    # bws = bw_clusters$centers
+    # > bw_clusters = Ckmeans.1d.dp::Ckmeans.1d.dp(bw_local, adapt)
+    # > bw_group = bw_clusters$cluster
+    # > bws = bw_clusters$centers
 
     ### simpler, cut the range of local bandwidths into equally-sized pieces
     ### doesn't work as well though...
@@ -564,6 +544,41 @@ get_bandwidth = function(x, bandwidth) {
     bandwidth = match_function(bandwidth, prefix = "bandwidth_")(x)
   }
   bandwidth
+}
+
+#' Get the bounds for a bounded density estimator
+#' @param x data
+#' @param bw bandwidth
+#' @param bounds user-specified 2-vector of bounds
+#' @param bounder bounder function as passed to density_bounded (e.g. function or name)
+#' @returns list with:
+#'   - `bounds`: 2-vector of bounds (guaranteed finite and non-`NA`)
+#'   - `left_bounded`: `TRUE` if bounded below
+#'   - `right_bounded`: `TRUE` if bounded above
+#' @noRd
+get_bounds = function(x, bw, bounds, bounder, call = caller_env()) {
+  stopifnot(length(bounds) == 2, is.numeric(bounds) || is.logical(bounds))
+  bounds_to_find = is.na(bounds)
+  if (any(bounds_to_find)) {
+    bounder = match_function(bounder, "bounder_")
+    bounds[bounds_to_find] = bounder(x)[bounds_to_find]
+  }
+
+  range_x = range(x)
+  if (range_x[[1]] < bounds[[1]] || range_x[[2]] > bounds[[2]]) {
+    cli_abort("All {.arg x} must be inside {.arg bounds}", call = call)
+  }
+
+  # cap bounds at 3*bw beyond the range (and consider them unbounded beyond
+  # that, since past that the density essentially goes to 0)
+  min_bound = range_x[[1]] - 3 * bw
+  max_bound = range_x[[2]] + 3 * bw
+  left_bounded = min_bound <= bounds[[1]]
+  right_bounded = bounds[[2]] <= max_bound
+  if (!left_bounded) bounds[[1]] = min_bound
+  if (!right_bounded) bounds[[2]] = max_bound
+
+  list(bounds = bounds, left_bounded = left_bounded, right_bounded = right_bounded)
 }
 
 #' run a bandwidth calculation, catching errors and providing a fallback

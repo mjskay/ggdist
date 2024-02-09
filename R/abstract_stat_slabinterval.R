@@ -232,7 +232,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       # SLAB INFO ADDED TO INTERVAL COMPONENT
       if (
         getOption("ggdist.experimental.slab_data_in_intervals", FALSE) &&
-        show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2
+          show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2
       ) {
         # fill in relevant data from the slab component
         # this is expensive, so we only do it if we are actually showing the interval

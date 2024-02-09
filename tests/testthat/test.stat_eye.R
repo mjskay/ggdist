@@ -41,8 +41,8 @@ test_that("two-parameter eye plots work", {
 
 
   set.seed(123)
-  df = data.frame(x = rnorm(1000), y = "a", y_int = 1) %>%
-    rbind(data.frame(x = rnorm(1000, 1), y = "b", y_int = 2))
+  df = tibble(x = rnorm(1000), y = "a", y_int = 1) %>%
+    rbind(tibble(x = rnorm(1000, 1), y = "b", y_int = 2))
 
   p = ggplot(df, aes(x = x, y = y))
   vdiffr::expect_doppelganger("two-parameter (factor) horizontal eye (fill)",
@@ -56,8 +56,9 @@ test_that("two-parameter eye plots work", {
 
   p = ggplot(df, aes(x = x, y = y_int))
   vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye (fill)",
-    p + stat_halfeye(aes(fill = y_int), fatten_point = 3, n = 15, show.legend = c(size = FALSE)) +
-    scale_y_discrete()
+    p +
+      stat_halfeye(aes(fill = y_int), fatten_point = 3, n = 15, show.legend = c(size = FALSE)) +
+      scale_y_discrete()
   )
 
   p = ggplot(df, aes(x = y_int, y = x))
@@ -74,8 +75,18 @@ test_that("dodged eye plots work", {
 
 
   set.seed(123)
-  df = data.frame(y = rnorm(500, 1), x = "a", g = c("g1")) %>%
-    rbind(data.frame(y = rnorm(900), x = "b", g = c("g1", "g2", "g3")))
+  df = data.frame(
+    y = rnorm(500, 1),
+    x = "a",
+    g = "g1",
+    stringsAsFactors = FALSE
+  ) %>%
+    rbind(data.frame(
+      y = rnorm(900),
+      x = "b",
+      g = c("g1", "g2", "g3"),
+      stringsAsFactors = FALSE
+    ))
 
   p = ggplot(df, aes(x = x, y = y))
 
@@ -94,11 +105,17 @@ test_that("dodged eye plots work", {
   )
 
   vdiffr::expect_doppelganger("vert, dodge, 3 groups, just = 1, top, scale = 0.5",
-    p + stat_halfeye(aes(fill = g), position = "dodge", justification = 1, side = "top", scale = 0.5, n = 15)
+    p + stat_halfeye(
+      aes(fill = g),
+      position = "dodge", justification = 1, side = "top", scale = 0.5, n = 15
+    )
   )
 
   vdiffr::expect_doppelganger("vert, dodge, 3 groups, just = 0.5, top, scale = 0.5",
-    p + stat_halfeye(aes(fill = g), position = "dodge", justification = 0.5, side = "top", scale = 0.5, n = 15)
+    p + stat_halfeye(
+      aes(fill = g),
+      position = "dodge", justification = 0.5, side = "top", scale = 0.5, n = 15
+    )
   )
 
   vdiffr::expect_doppelganger("vert halfeye, dodge, 3 groups, just = 0, top, scale = 1.5",
@@ -110,7 +127,10 @@ test_that("dodged eye plots work", {
   )
 
   vdiffr::expect_doppelganger("halfeye, dodge, 3 groups, just = 0, both, scale = 4, rev y",
-    p + stat_halfeye(aes(x = y, y = forcats::fct_rev(x), fill = g), position = "dodge", side = "top", scale = 4, slab_color = "black", n = 15)
+    p + stat_halfeye(
+      aes(x = y, y = forcats::fct_rev(x), fill = g),
+      position = "dodge", side = "top", scale = 4, slab_color = "black", n = 15
+    )
   )
 
   vdiffr::expect_doppelganger("vert halfeye, dodge, 3 groups, just = 0, bottom, scale = 1.5",

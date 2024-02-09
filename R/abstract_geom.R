@@ -185,16 +185,14 @@ make_geom = function(geom,
   names(args_to_syms) = names(args_to_defaults)
 
   new_f = new_function(
-    c(
-      pairlist2(
-        mapping = mapping,
-        data = data,
-        stat = stat,
-        position = position,
-        ... =
-      ),
-      params_to_defaults,
-      args_to_defaults
+    pairlist2(
+      mapping = mapping,
+      data = data,
+      stat = stat,
+      position = position,
+      ... = ,
+      !!!params_to_defaults,
+      !!!args_to_defaults
     ),
     expr({                                                     # nocov start
       .Deprecated_arguments(!!geom$deprecated_params, ...)

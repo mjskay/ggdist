@@ -75,10 +75,22 @@ test_that("align functions work", {
   x = c(1,2,3,4,5,6)
   breaks = c(0.25, 2.25, 4.25, 6.25)
 
-  expect_equal(weighted_hist(x, breaks = breaks, align = 0.25), weighted_hist(x, breaks = breaks - 0.25))
-  expect_equal(weighted_hist(x, breaks = breaks, align = align_none()), weighted_hist(x, breaks = breaks))
-  expect_equal(weighted_hist(x, breaks = breaks, align = align_center(at = 2)), weighted_hist(x, breaks = breaks + 0.75))
-  expect_equal(weighted_hist(x, breaks = breaks, align = align_boundary(at = 2)), weighted_hist(x, breaks = breaks - 0.25))
+  expect_equal(
+    weighted_hist(x, breaks = breaks, align = 0.25),
+    weighted_hist(x, breaks = breaks - 0.25)
+  )
+  expect_equal(
+    weighted_hist(x, breaks = breaks, align = align_none()),
+    weighted_hist(x, breaks = breaks)
+  )
+  expect_equal(
+    weighted_hist(x, breaks = breaks, align = align_center(at = 2)),
+    weighted_hist(x, breaks = breaks + 0.75)
+  )
+  expect_equal(
+    weighted_hist(x, breaks = breaks, align = align_boundary(at = 2)),
+    weighted_hist(x, breaks = breaks - 0.25)
+  )
 })
 
 

@@ -59,10 +59,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 NULL
 
 draw_key_lineribbon = function(self, data, params, size) {
-  if (
-    is.null(data[["fill"]]) &&
-    (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))
-  ) {
+  if (is.null(data[["fill"]]) && (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))) {
     data$fill = self$default_key_aes$fill
   }
   data$fill = apply_colour_ramp(data$fill, data$fill_ramp)

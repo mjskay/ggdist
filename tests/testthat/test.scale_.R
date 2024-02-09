@@ -38,7 +38,7 @@ test_that("direct scale setting works", {
         slab_linetype = "dotted",
         slab_alpha = .5
       )
-    )
+  )
 })
 
 test_that("mapping custom aesthetics works", {

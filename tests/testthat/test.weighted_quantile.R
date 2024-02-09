@@ -15,8 +15,8 @@ test_that("weighted_quantile is equivalent to quantile on non-weighted samples",
 
 test_that("weighted_quantile is equivalent to quantile on weighted samples", {
   x = c(1,1,1,1,2,2,2,3,3,4)
-  xw = c(1:4)
-  w = c(4:1)
+  xw = 1:4
+  w = 4:1
 
   p = ppoints(20, a = 1)
   for (type in 1:9) {
@@ -48,4 +48,3 @@ test_that("0- and 1-length vectors work", {
 
   expect_equal(weighted_quantile(numeric(), c(0, 0.5, 1, NA), names = FALSE), c(NA_real_, NA_real_, NA_real_, NA_real_))
 })
-

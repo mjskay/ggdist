@@ -180,7 +180,11 @@ test_that("error is thrown when no columns found to summarize", {
 })
 
 test_that("error is thrown with groups of different sizes", {
-  df = data.frame(value = ppoints(9), group = c("a", "a", "b"))
+  df = data.frame(
+    value = ppoints(9),
+    group = c("a", "a", "b"),
+    stringsAsFactors = FALSE
+  )
   expect_error(curve_interval(df, .along = group), "Must have the same number of values in each group")
 })
 

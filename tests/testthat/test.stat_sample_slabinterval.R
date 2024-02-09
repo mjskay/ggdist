@@ -137,12 +137,22 @@ test_that("scale transformation works on halfeye", {
     scale_x_log10(breaks = 10^seq(-1,1))
 
   vdiffr::expect_doppelganger("halfeyeh log scale tri",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5) +
+    p_log +
+      stat_halfeye(
+        point_interval = mode_hdci, n = 20,
+        density = density_unbounded(kernel = "tri"),
+        .width = .5
+      ) +
       geom_point(data = data.frame(x = 10^c(-1, 1)))
   )
 
   vdiffr::expect_doppelganger("halfeyeh log scale tri no trim",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), trim = FALSE, .width = .5) +
+    p_log +
+      stat_halfeye(
+        point_interval = mode_hdci, n = 20,
+        density = density_unbounded(kernel = "tri"), trim = FALSE,
+        .width = .5
+      ) +
       geom_point(data = data.frame(x = 10^c(-1, 1)))
   )
 
@@ -155,7 +165,8 @@ test_that("pdf and cdf aesthetics work", {
 
   p = data.frame(
     x = c("a", "b"),
-    y = qnorm(ppoints(100), c(1, 2), 2)
+    y = qnorm(ppoints(100), c(1, 2), 2),
+    stringsAsFactors = FALSE
   ) %>%
     ggplot(aes(x = x, y = y))
 
@@ -171,7 +182,8 @@ test_that("constant distributions work", {
   # constant dist when n != 1
   p = data.frame(
     x = c("constant = 1", "constant = 2", "constant = 3"),
-    y = rep(c(0,1,2), times = 10)
+    y = rep(c(0, 1, 2), times = 10),
+    stringsAsFactors = FALSE
   ) %>%
     ggplot(aes(x = x, y = y))
 
@@ -188,9 +200,9 @@ test_that("constant distributions work", {
   )
 
   # constant dist when n = 1
-  p = data.frame(
+  p = tibble(
     x = c("constant = 1", "constant = 2", "constant = 3"),
-    y = c(0,1,2)
+    y = c(0, 1, 2)
   ) %>%
     ggplot(aes(x = x, y = y))
 
@@ -222,8 +234,9 @@ test_that("n is calculated correctly", {
 
   set.seed(1234)
   df = data.frame(
-    g = c("a","a","a","b","c"),
-    x = rnorm(15, c(1,1,1,2,3))
+    g = c("a", "a", "a", "b", "c"),
+    x = rnorm(15, c(1, 1, 1, 2, 3)),
+    stringsAsFactors = FALSE
   )
 
   ld = layer_data(
@@ -275,8 +288,9 @@ test_that("trim and expand work", {
 
   set.seed(1234)
   df = data.frame(
-    g = c("a","a","a","b","c"),
-    x = rnorm(120, c(1,1,1,2,3))
+    g = c("a", "a", "a", "b", "c"),
+    x = rnorm(120, c(1, 1, 1, 2, 3)),
+    stringsAsFactors = FALSE
   )
 
   vdiffr::expect_doppelganger("untrimmed and expanded",
@@ -288,9 +302,9 @@ test_that("trim and expand work", {
 
 test_that("expand can take length two vector", {
 
-  df = data.frame(
-    g = c("a","a","b","b"),
-    x = c(1,2,2,3)
+  df = tibble(
+    g = c("a", "a", "b", "b"),
+    x = c(1, 2, 2, 3)
   )
 
   p = df %>%

@@ -168,15 +168,18 @@ test_that("stat_dist_dots works on NA data", {
   skip_if_no_vdiffr()
 
 
-  p = data.frame(
+  p = tibble(
     x = c("norm", NA, "norm"),
     y = c("a","b", NA)
   ) %>%
     ggplot(aes(dist = x, y = y))
 
-  expect_warning(vdiffr::expect_doppelganger("stat_dist_dots with na.rm = FALSE",
-    p + stat_dist_dots(na.rm = FALSE, quantiles = 20)
-  ), "Removed 1 row")
+  expect_warning(
+    vdiffr::expect_doppelganger("stat_dist_dots with na.rm = FALSE",
+      p + stat_dist_dots(na.rm = FALSE, quantiles = 20)
+    ),
+    "Removed 1 row"
+  )
 
   vdiffr::expect_doppelganger("stat_dist_dots with na.rm = TRUE",
     p + stat_dist_dots(na.rm = TRUE, quantiles = 20)
@@ -190,7 +193,8 @@ test_that("stat_dist_dots works on distributional objects", {
 
   p = data.frame(
     x = dist_normal(0:1, 1:2),
-    y = c("a","b")
+    y = c("a","b"),
+    stringsAsFactors = FALSE
   ) %>%
     ggplot(aes(dist = x, y = y))
 
@@ -287,7 +291,11 @@ test_that("dotplot layouts work", {
 test_that("dot order is correct", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = qnorm(ppoints(50)), g = c("a", "b")) %>%
+  p = data.frame(
+    x = qnorm(ppoints(50)),
+    g = c("a", "b"),
+    stringsAsFactors = FALSE
+  ) %>%
     ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
     scale_fill_brewer(palette = "Set1") +
     scale_color_brewer(palette = "Paired")
@@ -334,7 +342,8 @@ test_that("bar layout works", {
 
   df = data.frame(
     x = factor(c(rep(1:5, times = 5:1 * 11), 6, 6, 7)),
-    g = c("a","b")
+    g = c("a","b"),
+    stringsAsFactors = FALSE
   )
 
   vdiffr::expect_doppelganger("bar layout with order",
@@ -381,7 +390,7 @@ test_that("empty slab from NA removal works", {
 
 
   vdiffr::expect_doppelganger("dots with no slab from NA removal", {
-    data.frame(x = c(1, NA), datatype = c("interval", "slab")) %>%
+    tibble(x = c(1, NA), datatype = c("interval", "slab")) %>%
       ggplot(aes(x = x, xmin = x - 1, xmax = x + 1, datatype = datatype)) +
       geom_dotsinterval(na.rm = TRUE)
   })
@@ -408,7 +417,7 @@ test_that("geom_dots works on discrete distributions", {
   )
 
   vdiffr::expect_doppelganger("one character bin",
-    data.frame(x = rep("a", 10)) %>%
+    tibble(x = rep("a", 10)) %>%
       ggplot(aes(x = x, y = 0)) +
       stat_dots(orientation = "horizontal") +
       geom_hline(yintercept = 0.9)
@@ -584,7 +593,7 @@ test_that("dist_bernoulli works", {
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
-  expect_true(!x_scale$is_discrete())
+  expect_false(x_scale$is_discrete())
   expect_equal(x_scale$get_limits(), c(0, 1))
 })
 
@@ -688,9 +697,10 @@ test_that("side, justification, and scale can vary", {
 
   vdiffr::expect_doppelganger("varying side",
     mtcars %>%
-      ggplot(aes(x = mpg, y = cyl,
-        side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
-        )) +
+      ggplot(aes(
+        x = mpg, y = cyl,
+        side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom")
+      )) +
       stat_dotsinterval(orientation = "horizontal")
   )
 

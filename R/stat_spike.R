@@ -175,7 +175,8 @@ check_at = function(at, call = parent.frame()) {
   names(at) = rlang::names2(at)
 
   if (!is.list(at)) {
-    cli::cli_abort(c(
+    cli::cli_abort(
+      c(
         "{.arg at} must be a {.cls function}, {.cls numeric}, {.cls character}, or {.cls list}.",
         "x" = "{.arg at} is a {.cls {class(at)}}.",
         "i" = "See the {.arg at} parameter of {.fun ggdist::stat_spike}."
@@ -189,7 +190,8 @@ check_at = function(at, call = parent.frame()) {
   if (any(is_wrong_type)) {
     wrong_type_i = which(is_wrong_type)
     i = wrong_type_i[[1]]
-    cli::cli_abort(c(
+    cli::cli_abort(
+      c(
         "All elements of {.arg at} must be a {.cls function}, {.cls numeric}, or {.cls character}.",
         "x" = "{.arg at} is an invalid type at position {wrong_type_i}.",
         "x" = "{if (length(wrong_type_i) > 1) 'For example, '}{.code at[[{i}]]} is a {.cls {class(at[[i]])}}.",

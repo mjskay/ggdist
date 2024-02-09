@@ -12,9 +12,9 @@ library(distributional)
 make_line_data = function(offset = 0, seed = 123, g = "a") {
   set.seed(seed)
   tibble(
-      x = seq(0, 1, length.out = 15),
-      g = g
-    ) %>%
+    x = seq(0, 1, length.out = 15),
+    g = g
+  ) %>%
     group_by_all() %>%
     do(tibble(
       y = rnorm(500, mean = .$x + offset)
@@ -117,12 +117,12 @@ test_that("two-group stat_lineribbons work", {
 
   vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by group",
     p +
-    stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer()
+      stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer()
   )
   vdiffr::expect_doppelganger("two-group stats grouped by color and linetype",
     p +
-    stat_lineribbon(aes(color = g, linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
-    guides(fill = guide_legend(order = 1), color = guide_legend(order = 2), linetype = guide_legend(order = 2))
+      stat_lineribbon(aes(color = g, linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
+      guides(fill = guide_legend(order = 1), color = guide_legend(order = 2), linetype = guide_legend(order = 2))
   )
   expect_warning(
     vdiffr::expect_doppelganger("two-group stats grouped by color and linewidth",
@@ -214,8 +214,8 @@ test_that("geom_lineribbon without line works", {
   df = tibble(
     x = 1:10,
     y = (1:10)^2/2,
-    lower = y - 10/(10:1),
-    upper = y + 10/(10:1)
+    lower = y - 10 / (10:1),
+    upper = y + 10 / (10:1)
   )
 
   vdiffr::expect_doppelganger("geom_lineribbon without line",
@@ -247,13 +247,13 @@ test_that("geom_lineribbon with some NA ymin/ymax has correct draw order", {
   # should show up and draw order (95% then 50%) should still be correct
   df = rbind(
     mutate(df,
-      lower = c(NA, y[-1] - 6/(6:2)),
-      upper = c(NA, y[-1] + 6/(6:2)),
+      lower = c(NA, y[-1] - 6 / (6:2)),
+      upper = c(NA, y[-1] + 6 / (6:2)),
       .width = .5
     ),
     mutate(df,
-      lower = c(NA, y[-1] - 12/(6:2)),
-      upper = c(NA, y[-1] + 12/(6:2)),
+      lower = c(NA, y[-1] - 12 / (6:2)),
+      upper = c(NA, y[-1] + 12 / (6:2)),
       .width = .9
     )
   )
@@ -272,7 +272,7 @@ test_that("geom_lineribbon with some NA ymin/ymax has correct draw order", {
 test_that("stat_lineribbon draw order works", {
   skip_if_no_vdiffr()
 
-  p = data.frame(
+  p = tibble(
     x = c(1:10, 1:10),
     y = c(1:10, 10:1),
     sd = rep(c(1, 2), each = 10),

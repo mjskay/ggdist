@@ -105,7 +105,7 @@ df %>%
   group_by(x) %>%
   median_qi(y) %>%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-  geom_lineribbon(fill = "gray65") 
+  geom_lineribbon(fill = "gray65")
 ```
 
 `geom_lineribbon()` automatically pulls in the `.width` column and maps it onto the
@@ -125,7 +125,7 @@ df %>%
   median_qi(y, .width = c(.50, .80, .95)) %>%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
   geom_lineribbon() +
-  scale_fill_brewer() 
+  scale_fill_brewer()
 ```
 
 ## Lineribbons on sample data
@@ -331,7 +331,7 @@ variable `y` that is normally distributed conditional on `x` with mean `y_mean` 
 analytical_df = tibble(
   x = -4:5,
   y_mean = 3 + x,
-  y_sd = sqrt(x^2/10 + 1),
+  y_sd = sqrt(x^2/10 + 1)
 )
 analytical_df
 ```
@@ -363,16 +363,16 @@ An example will help illustrate the difference between the two types of interval
 k = 11 # number of curves
 n = 501
 df = tibble(
-    .draw = 1:k,
-    mean = seq(-5,5, length.out = k),
-    x = list(seq(-15,15,length.out = n)),
-  ) %>%
+  .draw = 1:k,
+  mean = seq(-5, 5, length.out = k),
+  x = list(seq(-15, 15, length.out = n))
+) %>%
   unnest(x) %>%
   mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
 
 df %>%
   ggplot(aes(x = x, y = y)) +
-  geom_line(aes(group = .draw), alpha=0.2)
+  geom_line(aes(group = .draw), alpha = 0.2)
 ```
 
 If one used one of the `point_interval()` functions to summarize this curve (such as `median_qi()`, `mean_qi()`, etc), it would calculate *pointwise* intervals:
@@ -383,7 +383,7 @@ df %>%
   median_qi(y, .width = .5) %>%
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-  geom_line(aes(group = .draw), alpha=0.15, data = df) +
+  geom_line(aes(group = .draw), alpha = 0.15, data = df) +
   scale_fill_brewer() +
   ggtitle("50% pointwise intervals with point_interval()")
 ```
@@ -400,7 +400,7 @@ df %>%
   curve_interval(y, .width = .5) %>%
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-  geom_line(aes(group = .draw), alpha=0.15, data = df) +
+  geom_line(aes(group = .draw), alpha = 0.15, data = df) +
   scale_fill_brewer() +
   ggtitle("50% curvewise intervals with curve_interval()")
 ```
@@ -414,10 +414,10 @@ Given the above, let's see what more realistic curvewise intervals of the above 
 ```{r pointwise_curvewise, fig.width = tiny_width, fig.height = tiny_width, eval = requireNamespace("posterior", quietly = TRUE)}
 k = 1000 # number of curves
 large_df = tibble(
-    .draw = 1:k,
-    mean = seq(-5,5, length.out = k),
-    x = list(seq(-15,15,length.out = n)),
-  ) %>%
+  .draw = 1:k,
+  mean = seq(-5,5, length.out = k),
+  x = list(seq(-15,15,length.out = n))
+) %>%
   unnest(x) %>%
   mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
 
@@ -460,10 +460,10 @@ mpg = seq(min(mtcars$mpg), max(mtcars$mpg), length.out = 100)
 mtcars_boot = tibble(
   .draw = 1:n,
   m = map(.draw, ~ loess(
-    hp ~ mpg, 
+    hp ~ mpg,
     span = 0.9,
     # this lets us predict outside the range of the data
-    control = loess.control(surface = "direct"), 
+    control = loess.control(surface = "direct"),
     data = slice_sample(mtcars, prop = 1, replace = TRUE)
   )),
   hp = map(m, predict, newdata = tibble(mpg)),

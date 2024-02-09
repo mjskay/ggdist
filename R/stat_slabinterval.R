@@ -709,7 +709,9 @@ layer_slabinterval = function(...) {
 # shortcut stats ----------------------------------------------------------
 
 StatHalfeye = StatSlabinterval
-#' @eval rd_slabinterval_shortcut_stat("halfeye", "half-eye (density + interval)", geom_name = "slabinterval", describe = FALSE)
+#' @eval rd_slabinterval_shortcut_stat(
+#'   "halfeye", "half-eye (density + interval)", geom_name = "slabinterval", describe = FALSE
+#' )
 #' @description
 #' Equivalent to [stat_slabinterval()], whose default settings create half-eye (density + interval) plots.
 #' @export
@@ -738,7 +740,9 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
 
   default_slab_type = "ccdf"
 )
-#' @eval rd_slabinterval_shortcut_stat("ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)")
+#' @eval rd_slabinterval_shortcut_stat(
+#'   "ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)"
+#' )
 #' @export
 stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 

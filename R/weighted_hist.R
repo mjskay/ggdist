@@ -15,71 +15,12 @@ weighted_hist = function(
   } else {
     paste0("[", x_label, ", ", weights_label, "]")
   }
-
   if (length(x) < 1) cli_abort("{.fun ggdist::density_histogram} requires {.code length(x) >= 1}.")
 
   # figure out breaks
-  if (is.character(breaks)) {
-    breaks = match_function(breaks, prefix = "breaks_")
-  }
-  if (is.function(breaks)) {
-    # don't pass NULL weights to breaks function for compatibility with breaks
-    # functions from other packages that don't support weights; e.g. {scales}
-    if (is.null(weights)) {
-      breaks = breaks(x)
-    } else {
-      breaks = breaks(x, weights = weights)
-    }
-  }
-  if (length(breaks) == 1) {
-    if (length(x) == 1) {
-      breaks = c(x - 0.5, x + 0.5)
-    } else {
-      breaks = seq.int(min(x), max(x), length.out = breaks)
-    }
-    bin_width = diff(breaks)
-    equidist = TRUE
-  } else {
-    breaks = sort(unique(breaks))
-    bin_width = diff(breaks)
-    equidist = diff(range(bin_width)) < 1e-7 * mean(bin_width)
-  }
-
-  weights = weights %||% rep(1, length(x))
-
-  # apply alignment if bins are equidistant
-  if (equidist) {
-    if (is.character(align)) {
-      align = match_function(align, prefix = "align_")
-    }
-    if (is.function(align)) {
-      align = align(breaks)
-    }
-    if (align < 0 || align > bin_width[[1]]) {
-      cli_abort(c(
-        "{.arg align} must be between 0 and the bin width",
-        "i" = "See the {.arg align} argument to {.fun ggdist::density_histogram}."
-      ))
-    }
-
-    # we check for align != 0 even though in theory we could apply a 0 alignment
-    # below and the result would be correct. We do this because then if someone
-    # manually specifies the breaks and no alignment, exactly those breaks are used.
-    if (align != 0) {
-      breaks = breaks - align
-      max_break = breaks[length(breaks)]
-
-      if (max_break < max(x)) {
-        breaks = c(breaks, max_break + bin_width[[1]])
-        bin_width = c(bin_width, bin_width[[1]])
-      }
-      if (length(breaks) > 2 && breaks[[2]] <= min(x)) {
-        breaks = breaks[-1]
-        bin_width = bin_width[-1]
-      }
-    }
-  }
-
+  c(breaks, binwidths, equidist) %<-% get_breaks(x, weights, breaks)
+  # only apply bin alignment if bins are equidistant
+  if (equidist) c(breaks, binwidths) %<-% align_breaks(x, breaks, binwidths, align)
   # check for invalid binning
   if (min(x) < breaks[1] || max(x) > breaks[length(breaks)]) {
     cli_abort("The {.arg breaks} argument to {.fun ggdist::density_histogram} must cover all values of {.arg x}")
@@ -89,6 +30,7 @@ weighted_hist = function(
   bin = findInterval(x, breaks, rightmost.closed = TRUE, left.open = TRUE)
 
   # sum up weights in each bin
+  weights = weights %||% rep(1, length(x))
   counts = rep(0, length(breaks) - 1)
   used_bins = unique(bin)
   counts[used_bins] = tapply(weights, factor(bin, used_bins), sum)
@@ -97,7 +39,7 @@ weighted_hist = function(
     list(
       breaks = breaks,
       counts = counts,
-      density = counts / bin_width / sum(weights),
+      density = counts / binwidths / sum(weights),
       mids = (breaks[-length(breaks)] + breaks[-1])/2,
       xname = label,
       equidist = equidist
@@ -339,6 +281,94 @@ align_center = auto_partial(name = "align_center", function(breaks, at = 0) {
 
 
 # helpers -----------------------------------------------------------------
+
+#' Given a dataset, weights, and breaks as passed to weighted_hist, return
+#' a named list of breaks and whether or not the breaks are equidistant
+#' @param x data
+#' @param weights weights. vector same length as `x`, or `NULL`.
+#' @param breaks breaks as passed to weighted_hist (e.g. function or name)
+#' @returns list with these elements:
+#'   - `breaks`: vector of breakpoints covering `x`
+#'   - `binwidths`: vector of bin widths of length `length(breaks) - 1`
+#'   - `equidist`: logical: are the breaks equidistant from each other?
+#' @noRd
+get_breaks = function(x, weights, breaks) {
+  if (is.character(breaks)) {
+    breaks = match_function(breaks, prefix = "breaks_")
+  }
+  if (is.function(breaks)) {
+    # don't pass NULL weights to breaks function for compatibility with breaks
+    # functions from other packages that don't support weights; e.g. {scales}
+    if (is.null(weights)) {
+      breaks = breaks(x)
+    } else {
+      breaks = breaks(x, weights = weights)
+    }
+  }
+  if (length(breaks) == 1) {
+    if (length(x) == 1) {
+      breaks = c(x - 0.5, x + 0.5)
+    } else {
+      breaks = seq.int(min(x), max(x), length.out = breaks)
+    }
+    binwidths = diff(breaks)
+    equidist = TRUE
+  } else {
+    breaks = sort(unique(breaks))
+    binwidths = diff(breaks)
+    equidist = diff(range(binwidths)) < 1e-7 * mean(binwidths)
+  }
+
+  list(breaks = breaks, binwidths = binwidths, equidist = equidist)
+}
+
+#' Given a dataset, breaks / binwidths, and an alignment function, returned
+#' the modified breaks / binwidths
+#' @param x data
+#' @param breaks vector of breakpoints
+#' @param binwidths widths of bins; i.e. `diff(breaks)`
+#' @param align alignment function as passed to `weighted_hist` (e.g. function or name)
+#' @returns list with modified breakpoints:
+#'   - `breaks`: vector of breakpoints covering `x`
+#'   - `binwidths`: vector of bin widths of length `length(breaks) - 1`
+#' @noRd
+align_breaks = function(x, breaks, binwidths, align, call = caller_env()) {
+  if (is.character(align)) {
+    align = match_function(align, prefix = "align_")
+  }
+  if (is.function(align)) {
+    align = align(breaks)
+  }
+  if (align < 0 || align > binwidths[[1]]) {
+    cli_abort(
+      c(
+        "{.arg align} must be between 0 and the bin width",
+        "i" = "See the {.arg align} argument to {.fun ggdist::density_histogram}."
+      ),
+      call = call
+    )
+  }
+
+  # we check for align != 0 even though in theory we could apply a 0 alignment
+  # below and the result would be correct. We do this because then if someone
+  # manually specifies the breaks and no alignment, exactly those breaks are used.
+  if (align != 0) {
+    breaks = breaks - align
+    max_break = breaks[length(breaks)]
+
+    if (max_break < max(x)) {
+      breaks = c(breaks, max_break + binwidths[[1]])
+      binwidths = c(binwidths, binwidths[[1]])
+    }
+    if (length(breaks) > 2 && breaks[[2]] <= min(x)) {
+      breaks = breaks[-1]
+      binwidths = binwidths[-1]
+    }
+  }
+
+  list(breaks = breaks, binwidths = binwidths)
+}
+
 
 #' @importFrom stats weighted.mean
 weighted_var = function(x, weights) {

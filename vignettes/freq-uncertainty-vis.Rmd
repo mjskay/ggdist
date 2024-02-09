@@ -134,7 +134,7 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_halfeye(
-    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
     scale = .5
   ) +
   # we'll add the data back in too (scale = .5 above adjusts the halfeye height so
@@ -150,7 +150,7 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_gradientinterval(
-    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
     scale = .5, fill_type = "gradient"
   )
 ```
@@ -207,7 +207,6 @@ mtcars %>%
     alpha = 1/4
   ) +
   geom_point(aes(y = mpg), data = mtcars) +
-  
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Dark2") +
   labs(
@@ -236,7 +235,6 @@ mtcars %>%
     fill_ramp = after_stat(level)
   )) +
   geom_point(aes(y = mpg), data = mtcars) +
-  
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Dark2") +
   labs(

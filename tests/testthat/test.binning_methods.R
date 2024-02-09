@@ -3,12 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-suppressWarnings(suppressPackageStartupMessages({
-  library(dplyr)
-}))
-
-
-
 
 test_that("binning works on symmetric distributions", {
 
@@ -110,8 +104,8 @@ test_that("bin nudging works", {
     NULL
   )
   expect_equal(
-    nudge_bins(c(1), width = 1),
-    c(1)
+    nudge_bins(1, width = 1),
+    1
   )
   expect_equal(
     nudge_bins(c(1,2), width = 1),

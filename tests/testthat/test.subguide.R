@@ -34,9 +34,7 @@ test_that("slab subguide works with dodging", {
       n = 11
     ) +
       theme_test() +
-      theme(
-        plot.margin = margin(5.5, 5.5, 50, 5.5),
-      )
+      theme(plot.margin = margin(5.5, 5.5, 50, 5.5))
   )
 })
 
@@ -62,7 +60,10 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
-      stat_slabinterval(aes(y = "inside, right"), subguide = subguide_inside(position = "right", title = "test", theme = theme_test()), n = 5) +
+      stat_slabinterval(
+        aes(y = "inside, right"),
+        subguide = subguide_inside(position = "right", title = "test", theme = theme_test()), n = 5
+      ) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )
@@ -75,7 +76,10 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(x = "bottom"), subguide = sg(position = "bottom"), n = 5) +
       stat_slabinterval(aes(x = "top"), subguide = sg(position = "top"), n = 5) +
       stat_slabinterval(aes(x = "top, just = 1"), subguide = sg(position = "top", just = 1), n = 5) +
-      stat_slabinterval(aes(x = "inside, top"), subguide = subguide_inside(position = "top", title = "test", theme = theme_test()), n = 5) +
+      stat_slabinterval(
+        aes(x = "inside, top"),
+        subguide = subguide_inside(position = "top", title = "test", theme = theme_test()), n = 5
+      ) +
       theme_test() +
       theme(plot.margin = margin(50,5.5,5.5,5.5))
   )
@@ -89,7 +93,10 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(y = "left"), subguide = sg(position = "left"), n = 5) +
       stat_slabinterval(aes(y = "right"), subguide = sg(position = "right"), n = 5) +
       stat_slabinterval(aes(y = "right, just = 1"), subguide = sg(position = "right", just = 1), n = 5) +
-      stat_slabinterval(aes(y = "outside, right"), subguide = subguide_outside(position = "right", title = "test", theme = theme_test()), n = 5) +
+      stat_slabinterval(
+        aes(y = "outside, right"),
+        subguide = subguide_outside(position = "right", title = "test", theme = theme_test()), n = 5
+      ) +
       theme_test() +
       theme(plot.margin = margin(5.5,50,5.5,5.5))
   )
@@ -102,7 +109,10 @@ test_that("slab subguide positioning works", {
       stat_slabinterval(aes(x = "bottom"), subguide = sg(position = "bottom"), n = 5) +
       stat_slabinterval(aes(x = "top"), subguide = sg(position = "top"), n = 5) +
       stat_slabinterval(aes(x = "top, just = 1"), subguide = sg(position = "top", just = 1), n = 5) +
-      stat_slabinterval(aes(x = "outside, top"), subguide = subguide_outside(position = "top", title = "test", theme = theme_test()), n = 5) +
+      stat_slabinterval(
+        aes(x = "outside, top"),
+        subguide = subguide_outside(position = "top", title = "test", theme = theme_test()), n = 5
+      ) +
       theme_test() +
       theme(plot.margin = margin(50,5.5,5.5,5.5))
   )
@@ -154,10 +164,10 @@ test_that("incompatible slab subguides are detected", {
 test_that("dots subguide works with dodging", {
   skip_if_no_vdiffr()
 
-  df = data.frame(
-    x = c(dist_gamma(1:3,1:3)),
-    group = c("a","a","b"),
-    subgroup = c("d","e","d")
+  df = tibble(
+    x = dist_gamma(1:3, 1:3),
+    group = c("a", "a", "b"),
+    subgroup = c("d", "e", "d")
   )
 
   p = df %>%
@@ -200,9 +210,18 @@ test_that("dots subguide works with side and justification", {
   sg = subguide_integer(title = "num", label_side = "left", theme = theme_test())
   vdiffr::expect_doppelganger("dots subguide with side vertical",
     p +
-      stat_dotsinterval(aes(x = "1 left, just 0.5"), subguide = sg, side = "left", quantiles = 10, justification = 0.5, stackratio = 0.75) +
-      stat_dotsinterval(aes(x = "2 both, just 0"), subguide = sg, side = "both", quantiles = 10, justification = 0, stackratio = 0.75) +
-      stat_dotsinterval(aes(x = "3 right"), subguide = sg, side = "right", quantiles = 10, stackratio = 0.75)
+      stat_dotsinterval(
+        aes(x = "1 left, just 0.5"), subguide = sg, side = "left",
+        quantiles = 10, justification = 0.5, stackratio = 0.75
+      ) +
+      stat_dotsinterval(
+        aes(x = "2 both, just 0"), subguide = sg, side = "both",
+        quantiles = 10, justification = 0, stackratio = 0.75
+      ) +
+      stat_dotsinterval(
+        aes(x = "3 right"), subguide = sg, side = "right",
+        quantiles = 10, stackratio = 0.75
+      )
   )
 })
 

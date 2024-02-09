@@ -11,7 +11,7 @@ test_that("dodged ccdf barplots work", {
   skip_if_no_vdiffr()
 
 
-  df = data.frame(y = 1:5, x = "a", g = c("g1")) %>%
+  df = data.frame(y = 1:5, x = "a", g = "g1") %>%
     rbind(data.frame(y = rep(1:5, each = 3) + 1:3, x = "b", g = c("g1", "g2", "g3")))
 
   p = ggplot(df, aes(x = x, y = y))

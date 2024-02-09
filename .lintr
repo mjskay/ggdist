@@ -1,29 +1,40 @@
 linters: all_linters(
     assignment_linter = NULL,
-    commas_linter(allow_trailing = TRUE),
+    commas_linter = NULL,
     consecutive_assertion_linter = NULL,
-    duplicate_argument_linter(except = c("mutate", "transmute", "c")),
+    duplicate_argument_linter(except = c("mutate", "transmute", "c", "list")),
+    expect_identical_linter = NULL,
+    expect_null_linter = NULL,
+    expect_true_false_linter = NULL,
+    function_argument_linter = NULL,
     implicit_integer_linter = NULL,
     infix_spaces_linter(exclude_operators = c("/", "*")),
     keyword_quote_linter = NULL,
     line_length_linter(120L),
-    missing_argument_linter(except = c("alist", "quote", "switch", "pairlist2")),
+    missing_argument_linter(except = c("alist", "quote", "switch", "pairlist2", "lapply")),
+    nested_ifelse_linter = NULL,
+    nested_pipe_linter = NULL,
+    nonportable_path_linter = NULL,
     numeric_leading_zero_linter = NULL,
     object_length_linter = NULL,
     object_name_linter(
       styles = c("snake_case", "symbols"),
       regexes = c(
-        misc = "^(F_x|x_1_hat,x_n_hat|R_inv|Amat|Aind)$",
+        misc = "^(F_x|f_X|x_1_hat,x_n_hat|R_inv|Amat|Aind|.*ABC.*|)$",
         CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|Position.*|K|Mode.*|.*Pr.*|.*linearGradient.*|\\.Deprecated.*)$",
         dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p|width\\.cutoff)$",
-        bandwidth = "^(bandwidth_.*)$"
+        bandwidth = "^(bandwidth_.*)$",
+        breaks = "^breaks_.*$"
       )
     ),
     object_overwrite_linter(
-      allow_names = c("dist", "data", "layout", "pdf", "q")
+      allow_names = c("dist", "data", "layout", "pdf", "q", "smooth", "scale", "head", "tail", "cut")
     ),
+    object_usage_linter = NULL,
+    one_call_pipe_linter = NULL,
     quotes_linter = NULL,
     scalar_in_linter = NULL,
+    todo_comment_linter = NULL,
     undesirable_function_linter(modify_defaults(
       defaults = all_undesirable_functions,
       library = NULL,

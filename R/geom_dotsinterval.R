@@ -375,9 +375,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     aes_docs
   },
 
-  hidden_aes = union(c(
-    "thickness"
-  ), GeomSlabinterval$hidden_aes),
+  hidden_aes = union("thickness", GeomSlabinterval$hidden_aes),
 
   default_aes = defaults(aes(
     family = "",
@@ -552,13 +550,11 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     # slab key is different from usual - it's actually a point!
     # size is not in this list because if size it set but colour is not then there's nothing to draw,
     # so size can only occur in cases where colour is also set (so we can just check colour)
-    if (
-      params$show_slab &&
-      !all(is.na(data[, c(
-        "fill", "alpha", "slab_fill", "slab_colour", "slab_linewidth", "slab_size",
-        "slab_linetype", "slab_alpha", "slab_shape"
-      )]))
-    ) {
+    show_point_if_present = c(
+      "fill", "alpha", "slab_fill", "slab_colour", "slab_linewidth", "slab_size",
+      "slab_linetype", "slab_alpha", "slab_shape"
+    )
+    if (params$show_slab && !all(is.na(data[, show_point_if_present]))) {
       s_key_data = self$override_slab_aesthetics(key_data)
 
       # what point calls "stroke" is what we call "linewidth", since "linewidth" is determined automatically
