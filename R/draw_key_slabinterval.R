@@ -80,9 +80,9 @@ draw_key_point_ = function(self, data, key_data, params, size) {
   if (
     params$show_point && (
       !all(is.na(data[show_point_when_present])) ||
-      # only draw point for `fill` aesthetic if a shape that has a fill colour is used
-      (!is.na(data$fill) && length(intersect(data$shape, 21:25)) > 0) ||
-      (!is.na(data$point_fill) && length(intersect(data$shape, 21:25)) > 0)
+        # only draw point for `fill` aesthetic if a shape that has a fill colour is used
+        (!is.na(data$fill) && length(intersect(data$shape, 21:25)) > 0) ||
+        (!is.na(data$point_fill) && length(intersect(data$shape, 21:25)) > 0)
     )
   ) {
     p_key_data = self$override_point_aesthetics(

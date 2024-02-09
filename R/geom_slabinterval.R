@@ -931,16 +931,24 @@ case_when_side = function(side, orientation, topright, bottomleft, both) {
   ifelse(
     orientation %in% c("y", "horizontal"),
     ifelse(
-      side %in% c("top", "topright", "topleft", "right"), topright, ifelse(
-      side %in% c("bottom", "bottomleft", "bottomright", "left"), bottomleft,
-      both
-    )),
+      side %in% c("top", "topright", "topleft", "right"),
+      topright,
+      ifelse(
+        side %in% c("bottom", "bottomleft", "bottomright", "left"),
+        bottomleft,
+        both
+      )
+    ),
     # orientation is "vertical" or "x"
     ifelse(
-      side %in% c("right", "topright", "bottomright", "top"), topright, ifelse(
-      side %in% c("left", "topleft", "bottomleft", "bottom"), bottomleft,
-      both
-    ))
+      side %in% c("right", "topright", "bottomright", "top"),
+      topright,
+      ifelse(
+        side %in% c("left", "topleft", "bottomleft", "bottom"),
+        bottomleft,
+        both
+      )
+    )
   )
 }
 

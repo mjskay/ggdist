@@ -94,15 +94,19 @@ test_that("multimodal intervals work with stat_interval", {
     df %>%
       ggplot(aes(x = x, y = "a", group = g)) +
       ## uncomment these layers for verification
-      # stat_slab(position = "dodge") +
-      # stat_slab(
-      # aes(x = NULL, xdist = d),
-      # data = data.frame(
-      #   d = dist_mixture(dist_exponential(1), dist_normal(5), weights = c(0.5, 0.5)) + c(0, 0.5),
-      #   g = c("a","b")
-      # ),
-      # position = "dodge", fill = NA, color = "green", alpha = 0.5
-      # ) +
+      # stat_slab(position = "dodge") +                             # nolint
+      # stat_slab(                                                  # nolint
+      # aes(x = NULL, xdist = d),                                   # nolint
+      # data = data.frame(                                          # nolint
+      #   d = dist_mixture(                                         # nolint
+      #     dist_exponential(1),                                    # nolint
+      #     dist_normal(5),                                         # nolint
+      #     weights = c(0.5, 0.5)                                   # nolint
+      #   ) + c(0, 0.5),                                            # nolint
+      #   g = c("a","b")                                            # nolint
+      # ),                                                          # nolint
+      # position = "dodge", fill = NA, color = "green", alpha = 0.5 # nolint
+      # ) +                                                         # nolint
       stat_interval(point_interval = mean_hdi, position = "dodge", .width = c(.55, .95)) +
       stat_pointinterval(point_interval = mode_hdi, position = "dodge", .width = .55) +
       scale_color_brewer() +

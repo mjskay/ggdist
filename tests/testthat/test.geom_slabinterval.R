@@ -28,7 +28,8 @@ test_that("group_slab_data_by works", {
     fill = c(rep("a", 8), rep("b", 12), rep("a", 4)),
     alpha = 1,
     group = c(rep(0, 8), rep(1, 12), rep(2,4)),
-    y    = c(3:5, 5.5, 4.5, 4:2,   5.5, 6:9, 9.5, 8.5, 8:5, 4.5,    9.5, 10, 9, 8.5)
+    y    = c(3:5, 5.5, 4.5, 4:2,   5.5, 6:9, 9.5, 8.5, 8:5, 4.5,    9.5, 10, 9, 8.5),
+    stringsAsFactors = FALSE
   )
 
   grouped_slab_data = arrange(group_slab_data_by(df, side = "both"), group)

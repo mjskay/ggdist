@@ -32,9 +32,9 @@ add_default_computed_aesthetics = function(l, default_mapping) {
           # only add the aesthetic if it isn't already set and if the variables it uses
           # are in the provided data and none of them are NA
           is.null(mapping[[aesthetic, exact = FALSE]]) &&
-          (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
-          all(vars_in_mapping %in% names(data)) &&
-          !anyNA(data[, vars_in_mapping])
+            (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
+            all(vars_in_mapping %in% names(data)) &&
+            !anyNA(data[, vars_in_mapping])
         ) {
           # We reconstruct the quosure here instead of using default_mapping[[aesthetic]]
           # as a hack because for some reason when this is run inside {covr} it

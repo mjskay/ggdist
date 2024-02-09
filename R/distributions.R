@@ -186,11 +186,11 @@ distr_is_factor_like = function(dist) {
   inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
     is_factor_like = map_lgl_(vctrs::vec_data(dist), function(d) {
       inherits(d, c("dist_categorical", "ggdist__wrapped_categorical")) ||
-      (
-        inherits(d, c("dist_sample", "ggdist__weighted_sample")) &&
-        inherits(distr_get_sample(d), c("character", "factor"))
-      ) ||
-      is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
+        (
+          inherits(d, c("dist_sample", "ggdist__weighted_sample")) &&
+            inherits(distr_get_sample(d), c("character", "factor"))
+        ) ||
+        is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
     })
     length(dist) > 0 && all(is_factor_like)
   } else {
@@ -257,8 +257,8 @@ distr_is_sample = function(dist) {
   inherits(dist, c("rvar", "dist_sample", "ggdist__weighted_sample")) ||
     (
       inherits(dist, "distribution") &&
-      length(dist) == 1 &&
-      inherits(vctrs::field(dist, 1), c("dist_sample", "ggdist__weighted_sample"))
+        length(dist) == 1 &&
+        inherits(vctrs::field(dist, 1), c("dist_sample", "ggdist__weighted_sample"))
     )
 }
 
@@ -473,32 +473,34 @@ inverse_deriv_at_y = function(trans, y) {
     # use the function for the derivative if it was supplied (it is optional
     # and so may not be present)
     trans$d_inverse(y)
-  } else tryCatch({
-    # attempt to find analytical derivative by pulling out the expression
-    # for the transformation from the transformation function. Because many
-    # scale functions are defined as simple wrappers around
-    # single expressions (with no { ... }), we can be pretty naive here and
-    # just try to pull out that single expression
-    f = trans$inverse
-    f_list = as.list(f)
-    y_name = names(f_list)[[1]]
-    f_expr = f_list[[length(f_list)]]
-    f_deriv_expr = D(f_expr, y_name)
+  } else {
+    tryCatch({
+      # attempt to find analytical derivative by pulling out the expression
+      # for the transformation from the transformation function. Because many
+      # scale functions are defined as simple wrappers around
+      # single expressions (with no { ... }), we can be pretty naive here and
+      # just try to pull out that single expression
+      f = trans$inverse
+      f_list = as.list(f)
+      y_name = names(f_list)[[1]]
+      f_expr = f_list[[length(f_list)]]
+      f_deriv_expr = D(f_expr, y_name)
 
-    # apply the analytical derivative to the y values
-    # must do this within the environment of the transformation function b/c
-    # some functions are defined as closures with other variables needed to
-    # fully define the transformation
-    f_args = list(y)
-    names(f_args) = y_name
-    eval(f_deriv_expr, f_args, environment(f))
-  }, error = function(e) {
-    # if analytical approach fails, use numerical approach.
-    # we use this (slightly less quick) approach instead of numDeriv::grad()
-    # because numDeriv::grad() errors out if any data point fails while this
-    # will return `NA` for those points
-    vapply(y, numDeriv::jacobian, func = trans$inverse, numeric(1))
-  })
+      # apply the analytical derivative to the y values
+      # must do this within the environment of the transformation function b/c
+      # some functions are defined as closures with other variables needed to
+      # fully define the transformation
+      f_args = list(y)
+      names(f_args) = y_name
+      eval(f_deriv_expr, f_args, environment(f))
+    }, error = function(e) {
+      # if analytical approach fails, use numerical approach.
+      # we use this (slightly less quick) approach instead of numDeriv::grad()
+      # because numDeriv::grad() errors out if any data point fails while this
+      # will return `NA` for those points
+      vapply(y, numDeriv::jacobian, func = trans$inverse, numeric(1))
+    })
+  }
 }
 
 # return a version of the provided density function f_X(...)

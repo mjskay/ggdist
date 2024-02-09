@@ -191,12 +191,12 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
     }
 
     point_key = if (
-      !all(is.na(s_key_data$size) | s_key_data$size == 0) && (
-        !all(is.na(data[c("size", "stroke", "shape", "alpha")])) ||
-        # only draw point for `fill` aesthetic if a shape that has a fill colour is used
-        (!all(is.na(data[c("fill", "fill_ramp")])) && length(intersect(data$shape, 21:25)) > 0) ||
-        (!all(is.na(data[c("fill", "fill_ramp")])) && length(intersect(data$shape, 21:25)) > 0)
-      )
+      !all(is.na(s_key_data$size) | s_key_data$size == 0) &&
+        (
+          !all(is.na(data[c("size", "stroke", "shape", "alpha")])) ||
+            # only draw point for `fill` aesthetic if a shape that has a fill colour is used
+            (!all(is.na(data[c("fill", "fill_ramp")])) && length(intersect(data$shape, 21:25)) > 0)
+        )
     ) {
       draw_key_point(s_key_data, params, size)
     }
