@@ -10,6 +10,7 @@
 \alias{scale_color_ramp_discrete}
 \alias{scale_fill_ramp_continuous}
 \alias{scale_fill_ramp_discrete}
+\alias{partial_colour_ramp}
 \title{Secondary ggplot color scale that ramps from another color}
 \usage{
 scale_colour_ramp_continuous(
@@ -47,6 +48,8 @@ scale_color_ramp_discrete(
 scale_fill_ramp_continuous(..., aesthetics = "fill_ramp")
 
 scale_fill_ramp_discrete(..., aesthetics = "fill_ramp")
+
+partial_colour_ramp(amount = double(), from = "white")
 }
 \arguments{
 \item{from}{The color to ramp from. Corresponds to \code{0} on the scale.}
@@ -77,6 +80,9 @@ and \code{scale_fill_ramp_continuous()}, \code{guide_rampbar()} can be used to c
 color bars. See \code{guides()} for information on other guides.}
 
 \item{aesthetics}{Names of aesthetics to set scales for.}
+
+\item{amount}{double in \verb{[0, 1]} giving the amount to ramp from
+the \code{from} colour (\code{0} == \code{from} and \code{1} == the other endpoint).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{colour_ramp} and/or \code{fill_ramp}
@@ -87,6 +93,17 @@ This scale creates a secondary scale that modifies the \code{fill} or \code{colo
 geoms that support it (\code{\link[=geom_lineribbon]{geom_lineribbon()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}) to "ramp"
 from a secondary color (by default white) to the primary fill color (determined
 by the standard \code{color} or \code{fill} aesthetics).
+}
+\details{
+These scales transform data into values between \code{0} and \code{1} that represent a
+color between \code{from} and the target color. The target color is determined by
+the aesthetic: for example, the \code{colour_ramp} aesthetic creates ramps between
+\code{from} and whatever the value of the \code{colour} aesthetic is. Then, if the
+\code{colour_ramp} aesthetic is set, \pkg{ggdist} geometries will modify their
+\code{colour} by applying the colour ramp between \code{from} and \code{colour}.
+
+\code{\link[=partial_colour_ramp]{partial_colour_ramp()}} is used by these scales to create \code{numeric()}-like
+objects marked as being a partial colour ramp from the colour \code{from}.
 }
 \examples{
 

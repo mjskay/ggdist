@@ -241,8 +241,6 @@ vec_ptype2.ggdist_thickness.integer = function(x, y, ...) new_thickness()
 vec_ptype2.integer.ggdist_thickness = function(x, y, ...) new_thickness()
 
 #' @export
-vec_cast.double.ggdist_thickness = function(x, to, ...) vec_data(x)
-#' @export
 vec_cast.ggdist_thickness.double = function(x, to, ...) thickness(x)
 #' @export
 vec_cast.ggdist_thickness.integer = function(x, to, ...) thickness(x)
