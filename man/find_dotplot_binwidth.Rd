@@ -9,7 +9,7 @@ find_dotplot_binwidth(
   maxheight,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar")
+  layout = c("bin", "weave", "hex", "swarm", "bar", "histogram")
 )
 }
 \arguments{
@@ -44,6 +44,9 @@ a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
 but can be more compact and neat looking, especially for sample data
 (as opposed to quantile dotplots of theoretical distributions, which
 may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"histogram"}: uses histogram-style fixed-width bins. Dot
+positions will not be as accurate as \code{"bin"}, but bin spacing will
+be regular, which may be more visually pleasing in some cases.
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}

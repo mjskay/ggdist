@@ -12,7 +12,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  overlaps = "nudge", overflow = "keep",
+  overlaps = "nudge", overflow = "keep", align = "none",
   subguide = "none",
   verbose = FALSE,
   orientation = "vertical"
@@ -28,7 +28,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    overlaps = overlaps, overflow = overflow,
+    overlaps = overlaps, overflow = overflow, align = align,
     subguide = subguide,
     verbose = verbose,
     orientation = orientation,
@@ -49,6 +49,7 @@ makeContent.dots_grob = function(x) {
   layout = grob_$layout
   overlaps = grob_$overlaps
   overflow = grob_$overflow
+  align = grob_$align
   subguide = grob_$subguide
 
   define_orientation_variables(orientation)
@@ -122,7 +123,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
-      overlaps = overlaps,
+      overlaps = overlaps, align = align,
       layout = layout, side = d$side[[1]], orientation = orientation
     )
 
@@ -216,7 +217,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
-  overlaps, overflow,
+  overlaps, overflow, align,
   subguide,
   verbose,
   ...
@@ -281,6 +282,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     layout = layout,
     overlaps = overlaps,
     overflow = overflow,
+    align = align,
     subguide = subguide,
     verbose = verbose,
     orientation = orientation
@@ -370,7 +372,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
         'The order in which data points are stacked within bins. Can be used to create the effect of
       "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
       value of the data points themselves are used to determine stacking order. Only applies when
-      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.'
+      `layout` is `"bin"`, `"hex"`, or `"histogram"`, as the other layout methods fully determine
+      both *x* and *y* positions.'
     ), aes_docs[[dots_aes_i]])
     aes_docs
   },
@@ -480,11 +483,15 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           but can be more compact and neat looking, especially for sample data
           (as opposed to quantile dotplots of theoretical distributions, which
           may look better with `"bin"`, `"weave"`, or `"hex"`).
+        \\item `"histogram"`: uses histogram-style fixed-width bins. Dot
+          positions will not be as accurate as `"bin"`, but bin spacing will
+          be regular, which may be more visually pleasing in some cases.
         \\item `"bar"`: for discrete distributions, lays out duplicate values in
           rectangular bars.
       }'),
     overlaps = glue_doc('How to handle overlapping dots or bins in the `"bin"`,
-      `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"` or `"bar"` layouts).
+      `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"`,
+      `"histogram"`, or `"bar"` layouts).
       For the purposes of this argument, dots are only considered to be overlapping
       if they would be overlapping when `dotsize = 1` and `stackratio = 1`; i.e.
       if you set those arguments to other values, overlaps may still occur.
@@ -496,6 +503,21 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           dots to their desired positions, subject to the constraint that adjacent
           dots do not overlap.
       }'),
+    align = glue_doc('For `layout = "histogram"`, determines how to align the bins.
+      One of: \\itemize{
+        \\item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+          The offset must be between `0` and the bin width.
+        \\item A function taking a sorted vector of breaks (bin edges) and returning
+          an offset to subtract from the breaks.
+        \\item A string giving the suffix of a function that starts with
+          `"align_"` used to determine the alignment, such as [align_none()],
+          [align_boundary()], or [align_center()].
+      }
+
+      For example, `align = "none"` will provide no alignment, `align = align_center(at = 0)`
+      will center a bin on `0`, and `align = align_boundary(at = 0)` will align a bin
+      edge on `0`.
+      '),
     verbose = glue_doc('If `TRUE`, print out the bin width of the dotplot. Can be useful
       if you want to start from an automatically-selected bin width and then adjust it
       manually. Bin width is printed both as data units and as normalized parent
@@ -516,6 +538,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     overlaps = "nudge",
     smooth = "none",
     overflow = "keep",
+    align = "none",
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 

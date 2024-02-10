@@ -102,11 +102,15 @@ a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
 but can be more compact and neat looking, especially for sample data
 (as opposed to quantile dotplots of theoretical distributions, which
 may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"histogram"}: uses histogram-style fixed-width bins. Dot
+positions will not be as accurate as \code{"bin"}, but bin spacing will
+be regular, which may be more visually pleasing in some cases.
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
 \item{\code{overlaps}}{How to handle overlapping dots or bins in the \code{"bin"},
-\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} or \code{"bar"} layouts).
+\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"},
+\code{"histogram"}, or \code{"bar"} layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
@@ -349,7 +353,8 @@ the following aesthetics are supported by the underlying geom:
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
 value of the data points themselves are used to determine stacking order. Only applies when
-\code{layout} is \code{"bin"} or \code{"hex"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
+\code{layout} is \code{"bin"}, \code{"hex"}, or \code{"histogram"}, as the other layout methods fully determine
+both \emph{x} and \emph{y} positions.}
 \item{\code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab

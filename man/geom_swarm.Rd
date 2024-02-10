@@ -17,6 +17,7 @@ geom_swarm(
   stackratio = 1,
   overlaps = "nudge",
   smooth = "none",
+  align = "none",
   verbose = FALSE,
   orientation = NA,
   subguide = "none",
@@ -118,6 +119,9 @@ a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
 but can be more compact and neat looking, especially for sample data
 (as opposed to quantile dotplots of theoretical distributions, which
 may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"histogram"}: uses histogram-style fixed-width bins. Dot
+positions will not be as accurate as \code{"bin"}, but bin spacing will
+be regular, which may be more visually pleasing in some cases.
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
@@ -134,7 +138,8 @@ stack relative to the dot height. The default, \code{1}, makes dots in the same
 stack just touch each other.}
 
 \item{overlaps}{How to handle overlapping dots or bins in the \code{"bin"},
-\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} or \code{"bar"} layouts).
+\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"},
+\code{"histogram"}, or \code{"bar"} layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
@@ -161,6 +166,21 @@ applying smoothing.
 
 Smoothing is most effective when the smoother is matched to the support of
 the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
+
+\item{align}{For \code{layout = "histogram"}, determines how to align the bins.
+One of: \itemize{
+\item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+The offset must be between \code{0} and the bin width.
+\item A function taking a sorted vector of breaks (bin edges) and returning
+an offset to subtract from the breaks.
+\item A string giving the suffix of a function that starts with
+\code{"align_"} used to determine the alignment, such as \code{\link[=align_none]{align_none()}},
+\code{\link[=align_boundary]{align_boundary()}}, or \code{\link[=align_center]{align_center()}}.
+}
+
+For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}
+will center a bin on \code{0}, and \code{align = align_boundary(at = 0)} will align a bin
+edge on \code{0}.}
 
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
@@ -281,7 +301,8 @@ the appearance of their three sub-geometries: the \strong{dots} (aka the \strong
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
 value of the data points themselves are used to determine stacking order. Only applies when
-\code{layout} is \code{"bin"} or \code{"hex"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
+\code{layout} is \code{"bin"}, \code{"hex"}, or \code{"histogram"}, as the other layout methods fully determine
+both \emph{x} and \emph{y} positions.}
 \item{\code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab

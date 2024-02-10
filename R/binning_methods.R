@@ -66,10 +66,11 @@
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "bar", "histogram"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge"
+  overlaps = "nudge",
+  align = "none"
 ) {
   layout = match.arg(layout)
   side = match.arg(side)
@@ -90,7 +91,7 @@ bin_dots = function(x, y, binwidth,
   d = d[order(d[[x]]), ]
 
   # bin the dots
-  bin_method = select_bin_method(d[[x]], layout)
+  bin_method = select_bin_method(d[[x]], layout, align)
   h = dot_heap(d[[x]], binwidth = binwidth, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method)
   d$bin = h$binning$bins
 
@@ -101,9 +102,9 @@ bin_dots = function(x, y, binwidth,
     both = 0
   )
   switch(layout,
-    bin = , hex = , bar = {
+    bin = , hex = , bar = , histogram = {
       bin_midpoints = h$binning$bin_midpoints
-      if (overlaps == "nudge" && layout != "bar") {
+      if (overlaps == "nudge" && !layout %in% c("bar", "histogram")) {
         bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
       }
       d[[x]] = bin_midpoints[h$binning$bins]
@@ -151,8 +152,8 @@ bin_dots = function(x, y, binwidth,
     }
   )
 
-  # determine y positions (for bin/weave/bar) and also x offsets (for hex)
-  if (layout %in% c("bin", "weave", "hex", "bar")) {
+  # determine y positions (for bin/weave/bar/histogram) and also x offsets (for hex)
+  if (layout %in% c("bin", "weave", "hex", "bar", "histogram")) {
     d = ddply_(d, "bin", function(bin_df) {
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
       row_offset = 0
@@ -204,6 +205,7 @@ bin_dots = function(x, y, binwidth,
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
 #' @eval rd_param_dots_layout()
+#' @eval rd_param_dots_align()
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
@@ -251,7 +253,8 @@ find_dotplot_binwidth = function(
   maxheight,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar")
+  layout = c("bin", "weave", "hex", "swarm", "bar", "histogram"),
+  align = "none"
 ) {
   layout = match.arg(layout)
   x = sort(x, na.last = TRUE)
@@ -262,7 +265,7 @@ find_dotplot_binwidth = function(
   } else {
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  bin_method = select_bin_method(x, layout)
+  bin_method = select_bin_method(x, layout, align)
   dot_heap_ = function(...) {
     dot_heap(
       x,
@@ -611,21 +614,25 @@ wilkinson_bin_from_center = function(x, width) {
 
 # dynamic binning method selection ----------------------------------------
 
-automatic_bin = function(x, width, layout = "bin") {
-  select_bin_method(x, layout)(x, width)[c("bins", "bin_midpoints")]
+automatic_bin = function(x, width, layout = "bin", align = "none") {
+  select_bin_method(x, layout, align)(x, width)[c("bins", "bin_midpoints")]
 }
 
 # examines a vector x and determines an appropriate binning method based on its properties
-select_bin_method = function(x, layout = "bin") {
-  if (layout == "bar") return(bar_bin)
-
-  diff_x = diff(x)
-  if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
-    # x is symmetric, used centered binning
-    wilkinson_bin_from_center
-  } else {
-    wilkinson_bin
-  }
+select_bin_method = function(x, layout = "bin", align = "none") {
+  switch(layout,
+    bar = bar_bin,
+    histogram = histogram_bin(align = align),
+    {
+      diff_x = diff(x)
+      if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
+        # x is symmetric, used centered binning
+        wilkinson_bin_from_center
+      } else {
+        wilkinson_bin
+      }
+    }
+  )
 }
 
 
@@ -655,6 +662,24 @@ bar_bin = function(x, width, bar_scale = 0.9) {
     bin_midpoints = bin_midpoints
   )
 }
+
+
+# histogram layout --------------------------------------------------------------
+
+#' Bin dots into histogram-like regular bins
+#' @param x data (original positions of dots)
+#' @param width width of the bins in data units
+#' @noRd
+histogram_bin = auto_partial(name = "histogram_bin", function(x, width, align = "none") {
+  breaks = binwidths = equidist = NULL
+  c(breaks, binwidths, equidist) %<-% get_breaks(x, NULL, breaks_fixed(width = width))
+  c(breaks, binwidths) %<-% align_breaks(x, breaks, binwidths, align)
+
+  list(
+    bins = findInterval(x, breaks, rightmost.closed = TRUE, left.open = TRUE),
+    bin_midpoints = breaks[-length(breaks)] + binwidths/2
+  )
+})
 
 
 # bin nudging for overlaps ------------------------------------------------
