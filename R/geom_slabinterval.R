@@ -475,7 +475,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       sides (as in a violin plot).',
       scale =
         'What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
-      slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.',
+      slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space
+      between adjacent slabs. For a comprehensive discussion and examples of slab scaling and normalization,
+      see the [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).',
       justification =
         'Justification of the interval relative to the slab, where `0` indicates bottom/left
       justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
@@ -653,6 +655,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
         \\item `"none"`: values are taken as is with no normalization (this should probably
           only be used with functions whose values are in \\[0,1\\], such as CDFs).
       }
+      For a comprehensive discussion and examples of slab scaling and normalization, see the
+      [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
       '),
     fill_type = glue_doc('
       What type of fill to use when the fill color or alpha varies within a slab. One of:

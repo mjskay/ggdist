@@ -13,6 +13,8 @@
 #' that support the `thickness` aesthetic (such as [geom_slabinterval()]). It
 #' can be used to align the `thickness` scales across multiple geoms (by default,
 #' `thickness` is normalized on a per-geom level instead of as a global scale).
+#' For a comprehensive discussion and examples of slab scaling and normalization,
+#' see the [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
 #'
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritDotParams ggplot2::continuous_scale

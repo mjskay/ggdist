@@ -306,7 +306,7 @@ Depending on whether you want a horizontal or vertical orientation, you can prov
 
 `geom_slabinterval()` is most useful when paired with `stat_slabinterval()`, which will automatically calculate intervals, densities, and cumulative distribution functions, and maps these onto endpoints of the interval sub-geometry or the `thickness` of the slab sub-geometry. 
 
-The scaling of slab `thickness` is determined by a combination of the geometry's `height`/`width`, its `scale`, the `normalize` parameter, and any `thickness` scales added to the plot (such as `scale_thickness_shared()`). For complete details on the `thickness` aesthetic and how to adjust slab scaling, see the [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html).
+The scaling of slab `thickness` is determined by a combination of the geometry's `height`/`width`, its `scale`, the `normalize` parameter, and any `thickness` scales added to the plot (such as `scale_thickness_shared()`). For a comprehensive discussion and examples of slab scaling and normalization, see the [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
 
 Using `geom_slabinterval()` and `stat_slabinterval()` directly is not always advisable: they are highly configurable on their own, but this configurability requires remembering a number of combinations of options to use. For quick plotting, ggdist contains a number of pre-configured, easier-to-remember **shortcut stats and geoms** built on top of the slabinterval:
 

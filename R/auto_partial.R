@@ -147,7 +147,7 @@ auto_partial = function(f, name = NULL) {
     # the partial self function
     quote(partial_self)
   } else {
-    # when auto_partial is called from within the ggdist namespace, we need to
+    # when auto_partial is called from outside the ggdist namespace, we need to
     # inline the partial_self function so that it is guaranteed to be found
     partial_self
   }

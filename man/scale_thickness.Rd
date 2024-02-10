@@ -155,6 +155,8 @@ This \pkg{ggplot2} scale linearly scales all \code{thickness} values of geoms
 that support the \code{thickness} aesthetic (such as \code{\link[=geom_slabinterval]{geom_slabinterval()}}). It
 can be used to align the \code{thickness} scales across multiple geoms (by default,
 \code{thickness} is normalized on a per-geom level instead of as a global scale).
+For a comprehensive discussion and examples of slab scaling and normalization,
+see the \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.
 }
 \details{
 By default, normalization/scaling of slab thicknesses is controlled by geometries,

@@ -22,7 +22,7 @@ New features and enhancements:
 Documentation:
 
 * The pkgdown documentation now includes an online article on the `thickness`
-  aesthetic and how its scaling works.
+  aesthetic and with comprehensive examples of how slab scaling works (#205).
 
 Bug fixes:
 

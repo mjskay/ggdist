@@ -72,7 +72,9 @@ that the maximum height at each value of the opposite axis is \code{1}.
 group so that the maximum height in each group is \code{1}.
 \item \code{"none"}: values are taken as is with no normalization (this should probably
 only be used with functions whose values are in [0,1], such as CDFs).
-}}
+}
+For a comprehensive discussion and examples of slab scaling and normalization, see the
+\href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
 \item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. One of:
 \itemize{
 \item \code{"segments"}: breaks up the slab geometry into segments for each unique combination of fill color and
@@ -380,7 +382,9 @@ to be drawn on the bottom or the left depending on if \code{orientation} is \cod
 causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
 sides (as in a violin plot).}
 \item{\code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space
+between adjacent slabs. For a comprehensive discussion and examples of slab scaling and normalization,
+see the \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
 \item{\code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
