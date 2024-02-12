@@ -8,7 +8,8 @@ New features and enhancements:
 * The `weight` aesthetic is now supported in `stat_slabinterval()`, including
   weighted calculations for densities, CDFs, all interval types (quantile
   intervals, highest density intervals, and highest density continuous intervals),
-  and all point summaries (mean, median, and mode) (#41).
+  and all point summaries (mean, median, and mode) (#41). This includes support
+  for the upcoming weighted random variable type in the *posterior* package.
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
@@ -22,7 +23,7 @@ New features and enhancements:
 Documentation:
 
 * The pkgdown documentation now includes an online article on the `thickness`
-  aesthetic and with comprehensive examples of how slab scaling works (#205).
+  aesthetic with comprehensive examples of how slab scaling works (#205).
 
 Bug fixes:
 
