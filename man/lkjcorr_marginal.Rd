@@ -70,7 +70,6 @@ distribution scaled into \eqn{(-1,1)}{(-1,1)}.
 
 library(dplyr)
 library(ggplot2)
-library(forcats)
 
 theme_set(theme_ggdist())
 
@@ -78,9 +77,10 @@ expand.grid(
   eta = 1:6,
   K = 2:6
 ) \%>\%
-  ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
+  ggplot(aes(y = ordered(eta), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
   stat_slab() +
   facet_grid(~ paste0(K, "x", K)) +
+  scale_y_discrete(limits = rev) +
   labs(
     title = paste0(
       "Marginal correlation for LKJ(eta) prior on different matrix sizes:\n",

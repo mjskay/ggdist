@@ -59,7 +59,6 @@ location (\code{mu}), and scale (\code{sigma}).
 
 library(dplyr)
 library(ggplot2)
-library(forcats)
 
 expand.grid(
   df = c(3,5,10,30),
