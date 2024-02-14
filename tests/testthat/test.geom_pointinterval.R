@@ -4,7 +4,6 @@
 ###############################################################################
 
 library(dplyr)
-library(purrr)
 library(tidyr)
 
 
@@ -65,7 +64,7 @@ test_that("grouped pointintervals work", {
     mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(
       x = i, y = u_tau, ymin = .lower, ymax = .upper,
-      interval_size = forcats::fct_rev(ordered(.width))
+      interval_size = fct_rev_(ordered(.width))
     )) +
     geom_pointinterval(point_size = 3)
 

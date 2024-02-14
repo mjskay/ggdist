@@ -15,7 +15,7 @@ get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "ggdist")
   rank_corr = RankCorr[[1]]
-  purrr::map_dfr(1:3, function(i) {
+  bind_rows(lapply(1:3, function(i) {
     data.frame(
       .chain = 1L,
       .iteration = seq_len(nrow(rank_corr)),
@@ -23,7 +23,7 @@ get_draws = function() {
       ff = ff_labels[i],
       tau = as.vector(rank_corr[, paste0("tau[", i, "]")])
     )
-  })
+  }))
 }
 
 test_that("median_qi works on a grouped variable", {

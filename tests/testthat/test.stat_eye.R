@@ -128,7 +128,7 @@ test_that("dodged eye plots work", {
 
   vdiffr::expect_doppelganger("halfeye, dodge, 3 groups, just = 0, both, scale = 4, rev y",
     p + stat_halfeye(
-      aes(x = y, y = forcats::fct_rev(x), fill = g),
+      aes(x = y, y = fct_rev_(x), fill = g),
       position = "dodge", side = "top", scale = 4, slab_color = "black", n = 15
     )
   )

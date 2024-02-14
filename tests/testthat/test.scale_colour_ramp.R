@@ -5,7 +5,6 @@
 
 library(dplyr)
 library(tidyr)
-library(purrr)
 library(distributional)
 
 
@@ -140,7 +139,7 @@ test_that("fill_ramp works on lineribbons", {
     intercept = rnorm(n, 3, 1),
     slope = rnorm(n, 1, 0.25),
     x = list(-4:5),
-    y = map2(intercept, slope, ~ .x + .y * -4:5)
+    y = .mapply(function(x, y) x + y * -4:5, list(intercept, slope), NULL)
   ) %>%
     unnest(c(x, y))
 

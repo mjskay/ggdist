@@ -29,7 +29,6 @@ library(tidyr)
 library(distributional)
 library(ggdist)
 library(ggplot2)
-library(cowplot)
 library(patchwork)
 
 theme_set(theme_ggdist())
@@ -359,12 +358,17 @@ We can use the `side` parameter to more finely control where the slab (in this c
 ```{r eye_side, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
-  panel_border()
+  theme(panel.background = element_rect(color = "grey70"))
 
-plot_grid(ncol = 3, align = "hv",
-  p + stat_slabinterval(side = "left") + labs(title = "stat_slabinterval()", subtitle = "side = 'left'"),
-  p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'"),
-  p + stat_slabinterval(side = "right")  + labs(subtitle = "side = 'right'")
+(
+  p + stat_slabinterval(side = "left") + 
+    labs(title = "stat_slabinterval()", subtitle = "side = 'left'")
+) + (
+  p + stat_slabinterval(side = "both") + 
+    labs(subtitle = "side = 'both'")
+) + (
+  p + stat_slabinterval(side = "right")  + 
+    labs(subtitle = "side = 'right'")
 )
 ```
 
@@ -376,12 +380,15 @@ The `side` parameter works for horizontal geoms as well. `"top"` and `"right"` a
 ```{r eyeh_side, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
-  panel_border()
+  theme(panel.background = element_rect(color = "grey70"))
 
-plot_grid(ncol = 3, align = "hv",
+(
   # side = "left" would give the same result
-  p + stat_slabinterval(side = "left") + ggtitle("stat_slabinterval()") + labs(subtitle = "side = 'bottom'"),
-  p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'"),
+  p + stat_slabinterval(side = "left") + 
+    ggtitle("stat_slabinterval()") + labs(subtitle = "side = 'bottom'")
+) + (
+  p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'")
+) + (
   # side = "right" would give the same result
   p + stat_slabinterval(side = "right") + labs(subtitle = "side = 'top'")
 )
@@ -606,14 +613,15 @@ In some cases you might prefer histograms to density plots. `stat_histinterval()
 ```{r stat_histinterval_horizontal, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
-  panel_border()
+  theme(panel.background = element_rect(color = "grey70"))
 
 ph = df %>%
   ggplot(aes(y = group, x = value)) +
-  panel_border()
+  theme(panel.background = element_rect(color = "grey70"))
 
-plot_grid(ncol = 2, align = "hv",
-  p + stat_histinterval() + labs(title = "stat_histinterval()", subtitle = "horizontal"),
+(
+  p + stat_histinterval() + labs(title = "stat_histinterval()", subtitle = "horizontal")
+) + (
   ph + stat_histinterval() + labs(subtitle = "vertical")
 )
 ```
@@ -621,9 +629,10 @@ plot_grid(ncol = 2, align = "hv",
 You can use the `slab_color` aesthetic to show the outline of the bars. By default the outlines are only drawn along the tops of the bars, as typical tasks with histograms involve area estimation, so the outlines between bars are not strictly necessary and may be distracting. However, if you wish to include those outlines, you can set `outline_bars = TRUE`:
 
 ```{r stat_histintervalh_outlines, fig.width = med_width, fig.height = small_height}
-plot_grid(ncol = 2, align = "hv",
+(
   ph + stat_histinterval(slab_color = "gray45", outline_bars = FALSE) +
-    labs(title = "stat_histinterval", subtitle = "outline_bars = FALSE (default)"),
+    labs(title = "stat_histinterval", subtitle = "outline_bars = FALSE (default)")
+) + (
   ph + stat_histinterval(slab_color = "gray45", outline_bars = TRUE) +
     labs(subtitle = "outline_bars = TRUE")
 )

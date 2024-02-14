@@ -29,11 +29,10 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
-library(purrr)
 library(ggdist)
 library(ggplot2)
 library(distributional)
-library(cowplot)
+library(patchwork)
 
 theme_set(theme_ggdist())
 ```
@@ -75,7 +74,7 @@ df = tibble(
   intercept = rnorm(n, 3, 1),
   slope = rnorm(n, 1, 0.25),
   x = list(-4:5),
-  y = map2(intercept, slope, ~ .x + .y * -4:5)
+  y = Map(function(x, y) x + y * -4:5, intercept, slope)
 ) %>%
   unnest(c(x, y))
 ```
@@ -439,9 +438,7 @@ curvewise_plot = large_df %>%
   scale_fill_brewer() +
   ggtitle("curve_interval()")
 
-plot_grid(nrow = 2,
-  pointwise_plot, curvewise_plot
-)
+pointwise_plot / curvewise_plot
 ```
 
 Notice how the pointwise intervals miss out on the peaks of this distribution of curves. Even the 95% ribbon, which appears to reach up to the peaks, in fact falls slightly short. While this is a bit of a pathological example, it does demonstrate the potential shortcomings of pointwise intervals.
@@ -459,14 +456,14 @@ mpg = seq(min(mtcars$mpg), max(mtcars$mpg), length.out = 100)
 
 mtcars_boot = tibble(
   .draw = 1:n,
-  m = map(.draw, ~ loess(
+  m = lapply(.draw, function(d) loess(
     hp ~ mpg,
     span = 0.9,
     # this lets us predict outside the range of the data
     control = loess.control(surface = "direct"),
     data = slice_sample(mtcars, prop = 1, replace = TRUE)
   )),
-  hp = map(m, predict, newdata = tibble(mpg)),
+  hp = lapply(m, predict, newdata = tibble(mpg)),
   mpg = list(mpg)
 ) %>%
   select(-m) %>%

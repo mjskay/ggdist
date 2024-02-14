@@ -5,7 +5,6 @@
 
 suppressPackageStartupMessages({
   library(dplyr)
-  library(purrr)
   library(tidyr)
 })
 
