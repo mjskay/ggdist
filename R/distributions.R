@@ -496,9 +496,14 @@ inverse_deriv_at_y = function(trans, y) {
     }, error = function(e) {
       # if analytical approach fails, use numerical approach.
       # we use this (slightly less quick) approach instead of numDeriv::grad()
-      # because numDeriv::grad() errors out if any data point fails while this
-      # will return `NA` for those points
-      vapply(y, numDeriv::jacobian, func = trans$inverse, numeric(1))
+      # on the whole vector because numDeriv::grad() errors out if any data
+      # point fails while this will return `NA` for those points
+      vapply(y, FUN.VALUE = numeric(1), function(y_i) {
+        tryCatch(
+          suppressWarnings(numDeriv::grad(func = trans$inverse, y_i)),
+          error = function(e) NA_real_
+        )
+      })
     })
   }
 }
