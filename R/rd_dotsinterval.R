@@ -14,7 +14,7 @@ rd_dotsinterval_shortcut_geom = function(
   title = TRUE,
   describe = TRUE
 ) {
-  geom = get(paste0("Geom", title_case(geom_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   c(
     if (title) glue_doc('@title <<title_case(chart_type)>> plot (shortcut geom)'),
@@ -63,15 +63,18 @@ rd_dotsinterval_shortcut_geom = function(
 }
 
 rd_dotsinterval_shortcut_stat = function(
-  stat_name, chart_type,
-  geom_name = stat_name
+  stat_name,
+  chart_type,
+  geom_name = stat_name,
+  title = TRUE,
+  describe = TRUE
 ) {
-  stat = get(paste0("Stat", title_case(stat_name)))
-  geom = get(paste0("Geom", title_case(geom_name)))
+  stat = get(paste0("Stat", camel_case(stat_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   c(
-    glue_doc('@title <<title_case(chart_type)>> plot (shortcut stat)'),
-    glue_doc('
+    if (title) glue_doc('@title <<title_case(chart_type)>> plot (shortcut stat)'),
+    if (describe) glue_doc('
       @description
       A combination of [stat_slabinterval()] and [geom_dotsinterval()] with sensible defaults
       for making <<chart_type>> plots. While [geom_dotsinterval()] is intended for use on data

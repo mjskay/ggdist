@@ -12,8 +12,8 @@ rd_lineribbon_shortcut_stat = function(
   geom_name = stat_name,
   from_name = "lineribbon"
 ) {
-  stat = get(paste0("Stat", title_case(stat_name)))
-  geom = get(paste0("Geom", title_case(geom_name)))
+  stat = get(paste0("Stat", camel_case(stat_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   c(
     glue_doc('@title <<title_case(chart_type)>> plot (shortcut stat)'),

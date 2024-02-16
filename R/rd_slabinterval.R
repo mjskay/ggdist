@@ -10,7 +10,7 @@
 rd_slabinterval_shortcut_geom = function(
   geom_name, chart_type
 ) {
-  geom = get(paste0("Geom", title_case(geom_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   default_aes = lapply(geom$default_computed_aes, function(x) deparse0(get_expr(x)))
   default_aes = if (length(default_aes)) paste(names(default_aes), "=", default_aes, collapse = ", ")
@@ -57,8 +57,8 @@ rd_slabinterval_shortcut_stat = function(
   example_layers = NULL,
   describe = TRUE
 ) {
-  stat = get(paste0("Stat", title_case(stat_name)))
-  geom = get(paste0("Geom", title_case(geom_name)))
+  stat = get(paste0("Stat", camel_case(stat_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   example_layers = if (length(example_layers) > 0) {
     paste0(" +\n  ", example_layers, collapse = "")
@@ -165,6 +165,9 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
       - `at`: For spikes, a character vector of names of the functions or expressions used to determine
         the points at which the slab functions were evaluated to create spikes. Values of this computed
         variable are determined by the `at` parameter; see its description above.
+      ',
+    if (inherits(stat, "StatMcseDots")) '
+      - `se`: For dots, the Monte Carlo Standard Error of the quantile corresponding to each dot.
       '
   )
 

@@ -25,8 +25,9 @@
 #'    intervals (rarely useful directly).
 #'  - [stat_dotsinterval()]: dotplot + interval plots on raw data, \pkg{distributional} objects,
 #'    and [posterior::rvar()]s (will calculate intervals for you).
-#'  - [geom_blurdots()]: blurry dotplots that allow the standard deviation of a blur applied to
+#'  - [geom_blur_dots()]: blurry dotplots that allow the standard deviation of a blur applied to
 #'    each dot to be specified using the `blur` aesthetic.
+#'  - [stat_mcse_dots()]: blurry dotplots of quantiles using the Monte Carlo Standard Error of each quantile.
 #'
 #' [stat_dots()] and [stat_dotsinterval()], when used with the `quantiles` argument,
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty

@@ -13,7 +13,8 @@ compute_slab_dots = function(
   self, data, scales, trans, input, orientation,
   quantiles,
   na.rm,
-  ...
+  ...,
+  compute_mcse = FALSE
 ) {
   define_orientation_variables(orientation)
 
@@ -33,29 +34,43 @@ compute_slab_dots = function(
   }
 
   if (distr_is_sample(dist)) {
-    input = map_character(distr_get_sample(dist))
+    .sample = map_character(distr_get_sample(dist))
     .weights = distr_get_sample_weights(dist)
     if (quantiles_provided) {
       # ppoints() with a = 1/2 corresponds to quantile() with type = 5
       # (on continuous samples --- on discrete, we use type = 1)
-      # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
+      # and ensures that if quantiles == length(.sample) then input == .sample
       quantile_type = if (distr_is_discrete(dist)) 1 else 5
+      probs = ppoints(quantiles, a = 0.5)
       input = weighted_quantile(
-        input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm, weights = .weights, names = FALSE
+        .sample, probs, type = quantile_type, na.rm = na.rm, weights = .weights, names = FALSE
       )
+      if (compute_mcse) {
+        stop_if_not_installed("posterior", "{.help stat_mcse_dots}")
+        se = posterior::mcse_quantile(.sample, probs)
+      }
+    } else {
+      input = sort(.sample, na.last = !na.rm || NA)
+      if (compute_mcse) {
+        stop_if_not_installed("posterior", "{.help stat_mcse_dots}")
+        se = posterior::mcse_quantile(input, ppoints(length(input), a = 0.5))
+      }
     }
   } else {
     dist_quantiles = if (quantiles_provided) quantiles else 100
     dist_probs = ppoints(dist_quantiles, a = 1/2)
     quantile_fun = distr_quantile(dist, categorical_okay = TRUE)
     input = map_character(quantile_fun(dist_probs))
+    se = 0
   }
 
-  data.frame(
+  out = data.frame(
     .input = input,
     f = 1,
     n = length(input)
   )
+  if (compute_mcse) out$se = se
+  out
 }
 
 

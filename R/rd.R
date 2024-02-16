@@ -8,8 +8,8 @@
 # stat/geom shortcuts -----------------------------------------------------
 
 rd_shortcut_geom = function(geom_name, from_name = "slabinterval") {
-  from = get(paste0("Geom", title_case(from_name)))
-  geom = get(paste0("Geom", title_case(geom_name)))
+  from = get(paste0("Geom", camel_case(from_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   changed = changed_geom_values(from = from, to = geom)
 
@@ -31,9 +31,9 @@ rd_shortcut_geom = function(geom_name, from_name = "slabinterval") {
 }
 
 rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabinterval") {
-  from = get(paste0("Stat", title_case(from_name)))
-  stat = get(paste0("Stat", title_case(stat_name)))
-  geom = get(paste0("Geom", title_case(geom_name)))
+  from = get(paste0("Stat", camel_case(from_name)))
+  stat = get(paste0("Stat", camel_case(stat_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   changed = changed_geom_values(
     from = from, to = stat,
@@ -69,7 +69,7 @@ rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabi
 rd_aesthetics_sections = function(
   geom_name = "slabinterval", stat = NULL, vignette = geom_name
 ) {
-  geom = get(paste0("Geom", title_case(geom_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   hidden_aes = union(geom$hidden_aes, stat$hidden_aes)
 
@@ -146,7 +146,7 @@ rd_aesthetics_sections = function(
 #' Provides documentation of params for layers containing AbstractGeoms
 #' @noRd
 rd_layer_params = function(geom_name, stat = NULL, as_dots = FALSE) {
-  geom = get(paste0("Geom", title_case(geom_name)))
+  geom = get(paste0("Geom", camel_case(geom_name)))
 
   params = geom$get_param_docs()
 
@@ -221,6 +221,10 @@ glue_doc = function(...) {
 title_case = function(x) {
   substr(x, 1, 1) = toupper(substr(x, 1, 1))
   x
+}
+
+camel_case = function(x) {
+  gsub("(^|_)([a-z])", "\\U\\2", x, perl = TRUE)
 }
 
 snake_case = function(x) {

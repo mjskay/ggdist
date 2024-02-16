@@ -12,7 +12,7 @@
 \alias{GeomSlabinterval}
 \alias{GeomDotsinterval}
 \alias{GeomDots}
-\alias{GeomBlurdots}
+\alias{GeomBlurDots}
 \alias{GeomInterval}
 \alias{GeomLineribbon}
 \alias{GeomPointinterval}

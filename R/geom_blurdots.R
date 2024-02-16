@@ -67,13 +67,13 @@ make_blurry_points_grob = function(
   do.call(grobTree, grobs)
 }
 
-# geom_blurdots ----------------------------------------------------------
+# geom_blur_dots ----------------------------------------------------------
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @import ggplot2
 #' @export
-GeomBlurdots = ggproto("GeomBlurdots", GeomDots,
+GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 
   ## aesthetics --------------------------------------------------------------
 
@@ -138,6 +138,6 @@ GeomBlurdots = ggproto("GeomBlurdots", GeomDots,
 #' aesthetic that gives the standard deviation of the blur applied to the dots.
 #' Requires a graphics engine supporting radial gradients. Unlike [geom_dots()],
 #' all dots must be circular, so this geom does not support the `shape` aesthetic.
-#' @eval rd_dotsinterval_shortcut_geom("blurdots", "blurry dot", title = FALSE, describe = FALSE)
+#' @eval rd_dotsinterval_shortcut_geom("blur_dots", "blurry dot", title = FALSE, describe = FALSE)
 #' @export
-geom_blurdots = make_geom(GeomBlurdots)
+geom_blur_dots = make_geom(GeomBlurDots)

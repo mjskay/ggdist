@@ -110,6 +110,7 @@ Collate:
     "stat.R"
     "stat_slabinterval.R"
     "stat_dotsinterval.R"
+    "stat_mcse_dots.R"
     "stat_pointinterval.R"
     "stat_interval.R"
     "stat_lineribbon.R"

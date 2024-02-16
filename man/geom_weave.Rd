@@ -255,8 +255,9 @@ Used \code{side = "both"} by default, and sets the default dot size to the same 
 intervals (rarely useful directly).
 \item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
 and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you).
-\item \code{\link[=geom_blurdots]{geom_blurdots()}}: blurry dotplots that allow the standard deviation of a blur applied to
+\item \code{\link[=geom_blur_dots]{geom_blur_dots()}}: blurry dotplots that allow the standard deviation of a blur applied to
 each dot to be specified using the \code{blur} aesthetic.
+\item \code{\link[=stat_mcse_dots]{stat_mcse_dots()}}: blurry dotplots of quantiles using the Monte Carlo Standard Error of each quantile.
 }
 
 \code{\link[=stat_dots]{stat_dots()}} and \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, when used with the \code{quantiles} argument,
@@ -439,7 +440,7 @@ See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this 
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
 Other dotsinterval geoms: 
-\code{\link{geom_blurdots}()},
+\code{\link{geom_blur_dots}()},
 \code{\link{geom_dots}()},
 \code{\link{geom_dotsinterval}()},
 \code{\link{geom_swarm}()}
