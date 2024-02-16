@@ -50,10 +50,10 @@ compute_slab_dots = function(
         se = posterior::mcse_quantile(.sample, probs)
       }
     } else {
-      input = sort(.sample, na.last = !na.rm || NA)
+      input = sort(.sample)
       if (compute_mcse) {
         stop_if_not_installed("posterior", "{.help stat_mcse_dots}")
-        se = posterior::mcse_quantile(input, ppoints(length(input), a = 0.5))
+        se = posterior::mcse_quantile(.sample, ppoints(length(input), a = 0.5))
       }
     }
   } else {
