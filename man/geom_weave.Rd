@@ -243,7 +243,7 @@ dots from overlapping each other.
 \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 }
 
-Stat and geoms include in this family include:
+Stats and geoms in this family include:
 \itemize{
 \item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
 of the dots automatically (may result in very small dots).
@@ -252,9 +252,11 @@ Used \code{side = "both"} by default, and sets the default dot size to the same 
 (\code{binwidth = unit(1.5, "mm")}), allowing dots to overlap instead of getting very small.
 \item \code{\link[=stat_dots]{stat_dots()}}: dotplots on raw data, \pkg{distributional} objects, and \code{\link[posterior:rvar]{posterior::rvar()}}s
 \item \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}: dotplot + interval plots on raw data with already-calculated
-intervals (rarely useful directly)
+intervals (rarely useful directly).
 \item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
-and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you)
+and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you).
+\item \code{\link[=geom_blurdots]{geom_blurdots()}}: blurry dotplots that allow the standard deviation of a blur applied to
+each dot to be specified using the \code{blur} aesthetic.
 }
 
 \code{\link[=stat_dots]{stat_dots()}} and \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, when used with the \code{quantiles} argument,
@@ -437,6 +439,7 @@ See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this 
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
 Other dotsinterval geoms: 
+\code{\link{geom_blurdots}()},
 \code{\link{geom_dots}()},
 \code{\link{geom_dotsinterval}()},
 \code{\link{geom_swarm}()}

@@ -13,7 +13,7 @@
 #'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
 #'
-#' Stat and geoms include in this family include:
+#' Stats and geoms in this family include:
 #'
 #'  - [geom_dots()]: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
 #'    of the dots automatically (may result in very small dots).
@@ -22,9 +22,11 @@
 #'    (`binwidth = unit(1.5, "mm")`), allowing dots to overlap instead of getting very small.
 #'  - [stat_dots()]: dotplots on raw data, \pkg{distributional} objects, and [posterior::rvar()]s
 #'  - [geom_dotsinterval()]: dotplot + interval plots on raw data with already-calculated
-#'    intervals (rarely useful directly)
+#'    intervals (rarely useful directly).
 #'  - [stat_dotsinterval()]: dotplot + interval plots on raw data, \pkg{distributional} objects,
-#'    and [posterior::rvar()]s (will calculate intervals for you)
+#'    and [posterior::rvar()]s (will calculate intervals for you).
+#'  - [geom_blurdots()]: blurry dotplots that allow the standard deviation of a blur applied to
+#'    each dot to be specified using the `blur` aesthetic.
 #'
 #' [stat_dots()] and [stat_dotsinterval()], when used with the `quantiles` argument,
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty

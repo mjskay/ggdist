@@ -10,6 +10,8 @@ New features and enhancements:
   intervals, highest density intervals, and highest density continuous intervals),
   and all point summaries (mean, median, and mode) (#41). This includes support
   for the upcoming weighted random variable type in the *posterior* package.
+* Blurry dotplots are now supported using `geom_blurdots()`, which accepts a
+  `blur` aesthetic to set the standard deviation of the blur on each dot (#63).
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).

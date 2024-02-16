@@ -7,12 +7,18 @@
 
 # shortcut stats/geoms ----------------------------------------------------
 
-rd_dotsinterval_shortcut_geom = function(geom_name, chart_type, from_name = "dotsinterval") {
+rd_dotsinterval_shortcut_geom = function(
+  geom_name,
+  chart_type,
+  from_name = "dotsinterval",
+  title = TRUE,
+  describe = TRUE
+) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
   c(
-    glue_doc('@title <<title_case(chart_type)>> plot (shortcut geom)'),
-    glue_doc('
+    if (title) glue_doc('@title <<title_case(chart_type)>> plot (shortcut geom)'),
+    if (describe) glue_doc('
       @description
       Shortcut version of [geom_dotsinterval()] for creating <<chart_type>> plots.
       Geoms based on [geom_dotsinterval()] create dotplots that automatically
@@ -20,7 +26,7 @@ rd_dotsinterval_shortcut_geom = function(geom_name, chart_type, from_name = "dot
 
       Roughly equivalent to:
       '),
-    rd_shortcut_geom(geom_name, from_name),
+    if (describe) rd_shortcut_geom(geom_name, from_name),
     '@inheritParams geom_dotsinterval',
     glue_doc('
       @return A [ggplot2::Geom] representing a <<chart_type>> geometry which can

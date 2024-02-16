@@ -15,7 +15,8 @@ dots_grob = function(data, x, y, xscale = 1,
   overlaps = "nudge", overflow = "keep",
   subguide = "none",
   verbose = FALSE,
-  orientation = "vertical"
+  orientation = "vertical",
+  make_points_grob = make_points_grob
 ) {
   # drop the dist columns because they can be expensive and we don't need them
   # after this point
@@ -32,10 +33,14 @@ dots_grob = function(data, x, y, xscale = 1,
     subguide = subguide,
     verbose = verbose,
     orientation = orientation,
+    make_points_grob = make_points_grob,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
 
+
+dot_size_ratio = 1.07                  # historical fudge factor based on old stackratio
+font_size_ratio = 1.43/dot_size_ratio  # manual fudge factor for point size in ggplot
 
 #' @export
 makeContent.dots_grob = function(x) {
@@ -50,12 +55,10 @@ makeContent.dots_grob = function(x) {
   overlaps = grob_$overlaps
   overflow = grob_$overflow
   subguide = grob_$subguide
+  stackratio = grob_$stackratio
+  make_points_grob = grob_$make_points_grob
 
   define_orientation_variables(orientation)
-
-  dot_size_ratio = 1.07                  # historical fudge factor based on old stackratio
-  font_size_ratio = 1.43/dot_size_ratio  # manual fudge factor for point size in ggplot
-  stackratio = grob_$stackratio
 
   # ratio between width of the bins (binwidth)
   # and the vertical spacing of dots (y_spacing)
@@ -149,16 +152,18 @@ makeContent.dots_grob = function(x) {
     )
 
     # generate grob for this dotplot
-    pointsGrob(
-      dot_positions$x, dot_positions$y, pch = d$shape,
-      gp = gpar(
-        col = alpha(d$colour, d$alpha),
-        fill = alpha(d$fill, d$alpha),
-        fontfamily = d$family,
-        fontsize = dot_fontsize,
-        lwd = lwd,
-        lty = d$linetype
-      )
+    make_points_grob(
+      dot_positions$x,
+      dot_positions$y,
+      pch = d$shape,
+      col = alpha(d$colour, d$alpha),
+      fill = alpha(d$fill, d$alpha),
+      fontfamily = d$family,
+      fontsize = dot_fontsize,
+      lwd = lwd,
+      lty = d$linetype,
+      sd = d[["blur"]],
+      axis = x
     )
   })
 
@@ -210,6 +215,32 @@ makeContent.dots_grob = function(x) {
   setChildren(grob_, do.call(gList, c(dot_grobs, subguide_grobs)))
 }
 
+make_points_grob = function(
+  x,
+  y,
+  pch,
+  col,
+  fill,
+  fontfamily,
+  fontsize,
+  lwd,
+  lty,
+  ...  # ignored
+) {
+  pointsGrob(
+    x = x,
+    y = y,
+    pch = pch,
+    gp = gpar(
+      col = col,
+      fill = fill,
+      fontfamily = fontfamily,
+      fontsize = fontsize,
+      lwd = lwd,
+      lty = lty
+    )
+  )
+}
 
 # panel drawing function -------------------------------------------------------
 
@@ -283,7 +314,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     overflow = overflow,
     subguide = subguide,
     verbose = verbose,
-    orientation = orientation
+    orientation = orientation,
+    make_points_grob = self$make_points_grob
   ))
 }
 
@@ -537,8 +569,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     # apply smooths --- must do this here in case resulting data exceeds boundaries of
     # original data, meaning scales must be adjusted
     smooth = match_function(params$smooth %||% "none", prefix = "smooth_")
-    s_data = data[data$datatype == "slab", c("group", x, y)]
-    data[data$datatype == "slab", x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
+    slab_i = which(data$datatype == "slab")
+    s_data = data[slab_i, c("group", x, y)]
+    data[slab_i, x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
 
     data
   },
@@ -565,7 +598,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       s_key_data$size = 2
       draw_key_point(s_key_data, params, size)
     }
-  }
+  },
+
+  make_points_grob = make_points_grob
 )
 
 #' @rdname geom_dotsinterval
