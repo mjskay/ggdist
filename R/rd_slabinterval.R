@@ -75,7 +75,7 @@ rd_slabinterval_shortcut_stat = function(
 
       Roughly equivalent to:
       '),
-    rd_shortcut_stat(stat_name, geom_name),
+    if (describe) rd_shortcut_stat(stat_name, geom_name),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
     rd_layer_params(geom_name, stat, as_dots = TRUE),

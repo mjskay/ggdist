@@ -256,11 +256,6 @@ A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a half-eye (density
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  
-)
-}\if{html}{\out{</div>}}
-
 Equivalent to \code{\link[=stat_slabinterval]{stat_slabinterval()}}, whose default settings create half-eye (density + interval) plots.
 }
 \details{
