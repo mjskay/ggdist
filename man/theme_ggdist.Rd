@@ -9,9 +9,19 @@
 \alias{facet_title_right_horizontal}
 \title{Simple, light ggplot2 theme for ggdist and tidybayes}
 \usage{
-theme_ggdist()
+theme_ggdist(
+  base_size = 11,
+  base_family = "",
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22
+)
 
-theme_tidybayes()
+theme_tidybayes(
+  base_size = 11,
+  base_family = "",
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22
+)
 
 facet_title_horizontal()
 
@@ -20,6 +30,15 @@ axis_titles_bottom_left()
 facet_title_left_horizontal()
 
 facet_title_right_horizontal()
+}
+\arguments{
+\item{base_size}{base font size, given in pts.}
+
+\item{base_family}{base font family}
+
+\item{base_line_size}{base size for line elements}
+
+\item{base_rect_size}{base size for rect elements}
 }
 \value{
 A named list in the format of \code{\link[ggplot2:theme]{ggplot2::theme()}}
