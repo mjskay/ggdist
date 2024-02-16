@@ -18,6 +18,26 @@ warning0 = function(...) {
   warning(..., call. = FALSE)
 }
 
+#' Raise an error if a package is not installed
+#' @param package package to check for
+#' @param context beginning of error message giving the context (e.g. a
+#' package name and/or argument combination) that requires the package.
+#' @param ... additional messages placed into the `cli_abort()` message.
+#' @noRd
+stop_if_not_installed = function(package, context = "This functionality", ...) {
+  if (!requireNamespace(package, quietly = TRUE)) {
+    cli_abort(
+      c(
+        paste0(context, ' requires the {.pkg {package}} package.'),
+        ">" = 'Install the {.pkg {package}} package with {.run install.packages("{package}")}',
+        ...
+      ),
+      class = "ggdist_missing_package",
+      ggdist_package = package
+    )
+  }
+}
+
 # get all variable names from an expression
 # based on http://adv-r.had.co.nz/dsl.html
 all_names = function(x) {

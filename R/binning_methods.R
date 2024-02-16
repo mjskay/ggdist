@@ -132,12 +132,7 @@ bin_dots = function(x, y, binwidth,
       d$row = NULL
     },
     swarm = {
-      if (!requireNamespace("beeswarm", quietly = TRUE)) {
-        cli_abort(                                                            # nocov
-          'Using {.code layout = "swarm"} with {.help geom_dots} requires the # nocov
-          {.pkg beeswarm} package.'                                           # nocov
-        )                                                                     # nocov
-      }
+      stop_if_not_installed("beeswarm", '{.help geom_dots}(layout = "swarm")')
 
       swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
         xsize = h$binwidth, ysize = h$y_spacing,

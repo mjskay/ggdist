@@ -150,9 +150,7 @@ curve_interval.matrix = function(
   .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
-  if (!requireNamespace("posterior", quietly = TRUE)) {
-    stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
-  }
+  stop_if_not_installed("posterior", "{.help curve_interval}")
   check_along_is_null(.along)
 
   curve_interval(
@@ -184,9 +182,7 @@ curve_interval.data.frame = function(
   .interval = c("mhd", "mbd", "bd", "bd-mbd"),
   .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
-  if (!requireNamespace("posterior", quietly = TRUE)) {
-    stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
-  }
+  stop_if_not_installed("posterior", "{.help curve_interval}")
 
   .interval = match.arg(.interval)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -332,12 +328,11 @@ halfspace_depth = function(x) {
       # mean depth of each draw
       draw_depth = rowMeans(pointwise_depths, na.rm = na.rm)
     } else { # band depth using fbplot
-      if (!requireNamespace("fda", quietly = TRUE)) {
-        stop0(                                                                           # nocov
-          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n', # nocov
-          'Please install the `fda` package or use .interval = "mhd".'                   # nocov
-        )                                                                                # nocov
-      }
+      stop_if_not_installed(
+        "fda",
+        paste0('{.help curve_interval}(interval = "', .interval, '")'),
+        ">" = 'Or use {.code interval = "mhd"} instead.'
+      )
       # depth of each draw
       draw_depth = fda::fbplot(t(draws), plot = FALSE, method = .interval_internal)$depth
     }
