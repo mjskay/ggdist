@@ -344,7 +344,7 @@ test_that("scale transformation works", {
     ggplot(aes(xdist = dist)) +
     scale_x_continuous(trans = scales::trans_new("log", function(x) log(x), function(x) exp(x)))
 
-  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi sym diff",
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale sym diff",
     p_log_sym + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
 
