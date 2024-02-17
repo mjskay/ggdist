@@ -36,6 +36,7 @@ Functions supporting automatic partial application include:
 \item The \link{align} family.
 \item The \link{breaks} family.
 \item The \link{bandwidth} family.
+\item The \link{blur} family.
 }
 
 Partial application makes it easier to supply custom parameters to these

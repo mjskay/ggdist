@@ -162,7 +162,7 @@ makeContent.dots_grob = function(x) {
       fontsize = dot_fontsize,
       lwd = lwd,
       lty = d$linetype,
-      sd = d[["blur"]],
+      sd = d[["sd"]],
       axis = x
     )
   })

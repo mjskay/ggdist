@@ -253,7 +253,7 @@ intervals (rarely useful directly).
 \item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
 and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you).
 \item \code{\link[=geom_blur_dots]{geom_blur_dots()}}: blurry dotplots that allow the standard deviation of a blur applied to
-each dot to be specified using the \code{blur} aesthetic.
+each dot to be specified using the \code{sd} aesthetic.
 \item \code{\link[=stat_mcse_dots]{stat_mcse_dots()}}: blurry dotplots of quantiles using the Monte Carlo Standard Error of each quantile.
 }
 

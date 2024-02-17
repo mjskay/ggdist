@@ -10,7 +10,7 @@ geom_blur_dots(
   stat = "identity",
   position = "identity",
   ...,
-  blur_type = "gaussian",
+  blur = "gaussian",
   binwidth = NA,
   dotsize = 1.07,
   stackratio = 1,
@@ -60,15 +60,15 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{blur_type}{Blur type to apply to dots.
+\item{blur}{Blur function to apply to dots.
 One of: \itemize{
 \item A function that takes a numeric vector of distances from the dot
-center, the dot radius, and the blur standard deviation and returns a
-vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_type_gaussian]{blur_type_gaussian()}}
-or \code{\link[=blur_type_interval]{blur_type_interval()}}.
-\item A string indicating what blur type to use, as the suffix to a function
-name starting with \code{blur_type_}; e.g. \code{"gaussian"} (the default) applies
-\code{\link[=blur_type_gaussian]{blur_type_gaussian()}}.
+center, the dot radius, and the standard deviation of the blur and returns
+a vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_gaussian]{blur_gaussian()}}
+or \code{\link[=blur_interval]{blur_interval()}}.
+\item A string indicating what blur function to use, as the suffix to a
+function name starting with \code{blur_}; e.g. \code{"gaussian"} (the default)
+applies \code{\link[=blur_gaussian]{blur_gaussian()}}.
 }}
 
 \item{binwidth}{The bin width to use for laying out the dots.
@@ -228,7 +228,7 @@ A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a blurry dot geomet
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-Variant of \code{\link[=geom_dots]{geom_dots()}} for creating blurry dotplots. Accepts a \code{blur}
+Variant of \code{\link[=geom_dots]{geom_dots()}} for creating blurry dotplots. Accepts an \code{sd}
 aesthetic that gives the standard deviation of the blur applied to the dots.
 Requires a graphics engine supporting radial gradients. Unlike \code{\link[=geom_dots]{geom_dots()}},
 all dots must be circular, so this geom does not support the \code{shape} aesthetic.
@@ -261,7 +261,7 @@ intervals (rarely useful directly).
 \item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
 and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you).
 \item \code{\link[=geom_blur_dots]{geom_blur_dots()}}: blurry dotplots that allow the standard deviation of a blur applied to
-each dot to be specified using the \code{blur} aesthetic.
+each dot to be specified using the \code{sd} aesthetic.
 \item \code{\link[=stat_mcse_dots]{stat_mcse_dots()}}: blurry dotplots of quantiles using the Monte Carlo Standard Error of each quantile.
 }
 
@@ -285,7 +285,7 @@ the appearance of their three sub-geometries: the \strong{dots} (aka the \strong
 \strong{Dots-specific (aka Slab-specific) aesthetics}
 
 \itemize{
-\item{\code{blur}: The blur associated with each dot, expressed as a standard deviation in data units.}
+\item{\code{sd}: The standard deviation (in data units) of the blur associated with each dot.}
 \item{\code{family}: The font family used to draw the dots.}
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
@@ -427,12 +427,13 @@ df = data.frame(
 )
 
 df \%>\%
-  ggplot(aes(x = q, blur = se)) +
+  ggplot(aes(x = q, sd = se)) +
   geom_blur_dots()
 
 df \%>\%
-  ggplot(aes(x = q, blur = se)) +
-  geom_blur_dots(blur_type = blur_type_interval(.width = 0.95))
+  ggplot(aes(x = q, sd = se)) +
+  # or blur = blur_interval(.width = .95) to set the interval width
+  geom_blur_dots(blur = "interval")
 \dontshow{\}) # examplesIf}
 }
 \references{

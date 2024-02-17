@@ -24,7 +24,7 @@ warning0 = function(...) {
 #' package name and/or argument combination) that requires the package.
 #' @param ... additional messages placed into the `cli_abort()` message.
 #' @noRd
-stop_if_not_installed = function(package, context = "This functionality", ...) {
+stop_if_not_installed = function(package, context = "This functionality", ..., call = caller_env()) {
   if (!requireNamespace(package, quietly = TRUE)) {
     cli_abort(
       c(
@@ -33,7 +33,8 @@ stop_if_not_installed = function(package, context = "This functionality", ...) {
         ...
       ),
       class = "ggdist_missing_package",
-      ggdist_package = package
+      ggdist_package = package,
+      call = call
     )
   }
 }

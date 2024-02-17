@@ -50,15 +50,15 @@ to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \stron
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_blur_dots]{geom_blur_dots()}},
 these include:
 \describe{
-\item{\code{blur_type}}{Blur type to apply to dots.
+\item{\code{blur}}{Blur function to apply to dots.
 One of: \itemize{
 \item A function that takes a numeric vector of distances from the dot
-center, the dot radius, and the blur standard deviation and returns a
-vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_type_gaussian]{blur_type_gaussian()}}
-or \code{\link[=blur_type_interval]{blur_type_interval()}}.
-\item A string indicating what blur type to use, as the suffix to a function
-name starting with \code{blur_type_}; e.g. \code{"gaussian"} (the default) applies
-\code{\link[=blur_type_gaussian]{blur_type_gaussian()}}.
+center, the dot radius, and the standard deviation of the blur and returns
+a vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_gaussian]{blur_gaussian()}}
+or \code{\link[=blur_interval]{blur_interval()}}.
+\item A string indicating what blur function to use, as the suffix to a
+function name starting with \code{blur_}; e.g. \code{"gaussian"} (the default)
+applies \code{\link[=blur_gaussian]{blur_gaussian()}}.
 }}
 \item{\code{binwidth}}{The bin width to use for laying out the dots.
 One of:
@@ -220,7 +220,7 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Variant of \code{\link[=stat_dots]{stat_dots()}} for creating blurry dotplots of quantiles. Uses
 \code{\link[posterior:mcse_quantile]{posterior::mcse_quantile()}} to calculate the Monte Carlo Standard Error
 of each quantile computed for the dotplot, yielding an \code{se} computed variable
-that is by default mapped onto the \code{blur} aesthetic of \code{\link[=geom_blur_dots]{geom_blur_dots()}}.
+that is by default mapped onto the \code{sd} aesthetic of \code{\link[=geom_blur_dots]{geom_blur_dots()}}.
 }
 \details{
 The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
@@ -250,7 +250,7 @@ intervals (rarely useful directly).
 \item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
 and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you).
 \item \code{\link[=geom_blur_dots]{geom_blur_dots()}}: blurry dotplots that allow the standard deviation of a blur applied to
-each dot to be specified using the \code{blur} aesthetic.
+each dot to be specified using the \code{sd} aesthetic.
 \item \code{\link[=stat_mcse_dots]{stat_mcse_dots()}}: blurry dotplots of quantiles using the Monte Carlo Standard Error of each quantile.
 }
 
@@ -346,7 +346,7 @@ the following aesthetics are supported by the underlying geom:
 \strong{Dots-specific (aka Slab-specific) aesthetics}
 
 \itemize{
-\item{\code{blur}: The blur associated with each dot, expressed as a standard deviation in data units.}
+\item{\code{sd}: The standard deviation (in data units) of the blur associated with each dot.}
 \item{\code{family}: The font family used to draw the dots.}
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the

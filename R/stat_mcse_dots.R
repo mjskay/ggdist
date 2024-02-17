@@ -8,7 +8,7 @@
 
 StatMcseDots = ggproto("StatMcseDots", StatDots,
   default_aes = defaults(aes(
-    blur = after_stat(se)
+    sd = after_stat(se)
   ), StatDots$default_aes),
 
   compute_slab = function(self, ...) compute_slab_dots(self, ..., compute_mcse = TRUE)
@@ -19,7 +19,7 @@ StatMcseDots = ggproto("StatMcseDots", StatDots,
 #' Variant of [stat_dots()] for creating blurry dotplots of quantiles. Uses
 #' [posterior::mcse_quantile()] to calculate the Monte Carlo Standard Error
 #' of each quantile computed for the dotplot, yielding an `se` computed variable
-#' that is by default mapped onto the `blur` aesthetic of [geom_blur_dots()].
+#' that is by default mapped onto the `sd` aesthetic of [geom_blur_dots()].
 #' @eval rd_dotsinterval_shortcut_stat(
 #'   "mcse_dots", "blurry MCSE dot", geom_name = "blur_dots",
 #'   title = FALSE, describe = FALSE, examples = FALSE

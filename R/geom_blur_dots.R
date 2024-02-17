@@ -21,7 +21,7 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   axis = "x",
   sd = 0,
   n = 100,
-  blur_type = blur_type_gaussian
+  blur = blur_gaussian
 ) {
   # ensure r and sd are in the same units -- that way when we apply the blur function
   # (which only takes numerics) everything will line up correctly
@@ -31,7 +31,7 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   grobs = .mapply(list(x, y, fill, sd, lwd, lty), NULL, FUN = function(x, y, fill, sd, lwd, lty) {
     blur_width = 2 * sd + r
     blur_x = seq(0, as.numeric(blur_width), length.out = n)
-    grad_colors = alpha(fill, c(blur_type(blur_x, as.numeric(r), as.numeric(sd)), 0))
+    grad_colors = alpha(fill, c(blur(blur_x, as.numeric(r), as.numeric(sd)), 0))
     grad = radialGradient(grad_colors, r2 = blur_width)
 
     h = 2 * r
@@ -67,7 +67,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
     aes_docs = GeomDots$aes_docs
     dots_aes_i = which(startsWith(names(aes_docs), "Dots-specific"))
     aes_docs[[dots_aes_i]] = defaults(list(
-      blur = 'The blur associated with each dot, expressed as a standard deviation in data units.'
+      sd = 'The standard deviation (in data units) of the blur associated with each dot.'
     ), aes_docs[[dots_aes_i]])
     aes_docs
   },
@@ -75,7 +75,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   hidden_aes = union("shape", GeomDots$hidden_aes),
 
   default_aes = defaults(aes(
-    blur = 0
+    sd = 0
   ), GeomDots$default_aes),
 
   default_key_aes = defaults(aes(
@@ -85,29 +85,29 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   ## params ------------------------------------------------------------------
 
   default_params = defaults(list(
-    blur_type = "gaussian"
+    blur = "gaussian"
   ), GeomDots$default_params),
 
   param_docs = defaults(list(
-    blur_type = glue_doc('Blur type to apply to dots.
+    blur = glue_doc('Blur function to apply to dots.
       One of: \\itemize{
         \\item A function that takes a numeric vector of distances from the dot
-          center, the dot radius, and the blur standard deviation and returns a
-          vector of opacities in \\eqn{[0, 1]}, such as [blur_type_gaussian()]
-          or [blur_type_interval()].
-        \\item A string indicating what blur type to use, as the suffix to a function
-          name starting with `blur_type_`; e.g. `"gaussian"` (the default) applies
-          [blur_type_gaussian()].
+          center, the dot radius, and the standard deviation of the blur and returns
+          a vector of opacities in \\eqn{[0, 1]}, such as [blur_gaussian()]
+          or [blur_interval()].
+        \\item A string indicating what blur function to use, as the suffix to a
+          function name starting with `blur_`; e.g. `"gaussian"` (the default)
+          applies [blur_gaussian()].
       }')
   ), GeomDots$param_docs),
 
   setup_params = function(self, data, params) {
     params = ggproto_parent(GeomDots, self)$setup_params(data, params)
 
-    if (is.character(params$blur_type)) {
-      params$blur_type = match_function(params$blur_type, prefix = "blur_type_")
+    if (is.character(params$blur)) {
+      params$blur = match_function(params$blur, prefix = "blur_")
     }
-    stopifnot(is.function(params$blur_type))
+    stopifnot(is.function(params$blur))
 
     params
   },
@@ -121,11 +121,11 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 
     # add an xmin/xmax to dots based on blur sd so that the full extent of
     # blurred dots is drawn
-    data[["blur"]] = data[["blur"]] %||% params$blur
-    if (!is.null(data[["blur"]])) {
+    data[["sd"]] = data[["sd"]] %||% params$sd
+    if (!is.null(data[["sd"]])) {
       slab_i = which(data$datatype == "slab")
-      data[slab_i, xmin] = data[slab_i, x] - 2 * data[slab_i, "blur"]
-      data[slab_i, xmax] = data[slab_i, x] + 2 * data[slab_i, "blur"]
+      data[slab_i, xmin] = data[slab_i, x] - 2 * data[slab_i, "sd"]
+      data[slab_i, xmax] = data[slab_i, x] + 2 * data[slab_i, "sd"]
     }
 
     data
@@ -134,12 +134,12 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   draw_slabs = function(self, s_data, panel_params, coord, orientation, ...) {
     define_orientation_variables(orientation)
 
-    if (!is.null(s_data[["blur"]])) {
-      # blur is expressed in terms of data coordinates, need to translate
+    if (!is.null(s_data[["sd"]])) {
+      # blur sd is expressed in terms of data coordinates, need to translate
       # into standardized space
       xscale = max(panel_params[[x.range]]) - min(panel_params[[x.range]])
-      s_data$blur = s_data$blur / xscale
-      s_data$blur[is.na(s_data$blur)] = 0
+      s_data$sd = s_data$sd / xscale
+      s_data$sd[is.na(s_data$sd)] = 0
     }
 
     ggproto_parent(GeomDots, self)$draw_slabs(s_data, panel_params, coord, orientation, ...)
@@ -150,7 +150,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 
 #' @title Blurry dot plot (geom)
 #' @description
-#' Variant of [geom_dots()] for creating blurry dotplots. Accepts a `blur`
+#' Variant of [geom_dots()] for creating blurry dotplots. Accepts an `sd`
 #' aesthetic that gives the standard deviation of the blur applied to the dots.
 #' Requires a graphics engine supporting radial gradients. Unlike [geom_dots()],
 #' all dots must be circular, so this geom does not support the `shape` aesthetic.
@@ -175,48 +175,49 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 #' )
 #'
 #' df %>%
-#'   ggplot(aes(x = q, blur = se)) +
+#'   ggplot(aes(x = q, sd = se)) +
 #'   geom_blur_dots()
 #'
 #' df %>%
-#'   ggplot(aes(x = q, blur = se)) +
-#'   geom_blur_dots(blur_type = blur_type_interval(.width = 0.95))
+#'   ggplot(aes(x = q, sd = se)) +
+#'   # or blur = blur_interval(.width = .95) to set the interval width
+#'   geom_blur_dots(blur = "interval")
 #' @export
 geom_blur_dots = make_geom(GeomBlurDots)
 
 
 # blur functions ---------------------------------------------------------------
 
-#' Blur types for blurry dot plots
+#' Blur functions for blurry dot plots
 #' @description
-#' Methods for constructing blurs, as used in the `blur_type` argument to
+#' Methods for constructing blurs, as used in the `blur` argument to
 #' [geom_blur_dots()] or [stat_mcse_dots()].
 #' @template description-auto-partial
 #' @param x numeric vector of positive distances from the center of the dot
 #' (assumed to be 0) to evaluate blur function at.
 #' @param r radius of the dot that is being blurred.
 #' @param sd standard deviation of the dot that is being blurred.
-#' @param .width for `blur_type_gaussian()`, a probability giving the width of
+#' @param .width for `blur_interval()`, a probability giving the width of
 #' the interval.
-#' @name blur_type
+#' @name blur
 #' @details
 #' These functions are passed `x`, `r`, and `sd` when [geom_blur_dots()]
 #' draws in order to create a radial gradient representing each dot in the
 #' dotplot. They return values between `0` and `1` giving the opacity of the
 #' dot at each value of `x`.
 #'
-#' `blur_type_gaussian()` creates a Gaussian-blurred dot with radius `r`. It
-#' does this by calculating \eqn{\alpha(x; r, \sigma)}, the opacity at distance
-#' \eqn{x} of the representation of a dot with center \eqn{0} and radius \eqn{r}
-#' that has had a Gaussian blur with standard deviation \eqn{\sigma} = `sd`
-#' applied to it:
+#' `blur_gaussian()` creates a dot with radius `r` that has a Gaussian blur with
+#' standard deviation `sd` applied to it. It does this by calculating
+#' \eqn{\alpha(x; r, \sigma)}, the opacity at distance \eqn{x} from the center
+#' of a dot with radius \eqn{r} that has had a Gaussian blur with standard
+#' deviation \eqn{\sigma} = `sd` applied to it:
 #'
 #' \deqn{
 #' \alpha(x; r, \sigma) = \Phi \left(\frac{x + r}{\sigma} \right) -
 #'   \Phi \left(\frac{x - r}{\sigma} \right)
 #' }
 #'
-#' `blur_type_interval()` creates an interval-type representation around the
+#' `blur_interval()` creates an interval-type representation around the
 #' dot at 50% opacity, where the interval is a Gaussian quantile interval with
 #' mass equal to `.width` and standard deviation `sd`.
 #' @returns
@@ -224,19 +225,19 @@ geom_blur_dots = make_geom(GeomBlurDots)
 #' the dot at each `x` value.
 #' @seealso
 #' [geom_blur_dots()] and [stat_mcse_dots()] for geometries making use of
-#' `blur_type`s.
+#' `blur`s.
 #' @examples
 #' # see examples in geom_blur_dots()
 #' @importFrom stats pnorm
 #' @export
-blur_type_gaussian = auto_partial(name = "blur_type_gaussian", function(x, r, sd) {
+blur_gaussian = auto_partial(name = "blur_gaussian", function(x, r, sd) {
   pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
 })
 
-#' @rdname blur_type
+#' @rdname blur
 #' @importFrom stats qnorm
 #' @export
-blur_type_interval = auto_partial(name = "blur_type_interval", function(x, r, sd, .width = 0.95) {
+blur_interval = auto_partial(name = "blur_interval", function(x, r, sd, .width = 0.95) {
   z = qnorm((1 + .width)/2)
   ifelse(
     x < r, 1,
