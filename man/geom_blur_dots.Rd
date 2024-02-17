@@ -409,7 +409,7 @@ Learn more about the sub-geom override aesthetics (like \code{interval_color}) i
 }
 
 \examples{
-\dontshow{if (requireNamespace("posterior", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (getRversion() >= "4.1" && requireNamespace("posterior", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(dplyr)
 library(ggplot2)
 

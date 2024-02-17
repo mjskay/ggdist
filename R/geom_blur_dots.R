@@ -6,6 +6,9 @@
 
 # grob construction -------------------------------------------------------
 
+# avoid NOTE on R < 4.1 for the use of radialGradient below
+if (getRversion() < "4.1") globalVariables("radialGradient")
+
 make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", function(
   x,
   y,
@@ -154,7 +157,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 #' @eval rd_dotsinterval_shortcut_geom(
 #'   "blur_dots", "blurry dot", title = FALSE, describe = FALSE, examples = FALSE
 #' )
-#' @examplesIf requireNamespace("posterior", quietly = TRUE)
+#' @examplesIf getRversion() >= "4.1" && requireNamespace("posterior", quietly = TRUE)
 #' library(dplyr)
 #' library(ggplot2)
 #'

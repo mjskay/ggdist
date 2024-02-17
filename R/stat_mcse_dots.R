@@ -24,7 +24,7 @@ StatMcseDots = ggproto("StatMcseDots", StatDots,
 #'   "mcse_dots", "blurry MCSE dot", geom_name = "blur_dots",
 #'   title = FALSE, describe = FALSE, examples = FALSE
 #' )
-#' @examplesIf requireNamespace("posterior", quietly = TRUE)
+#' @examplesIf getRversion() >= "4.1" && requireNamespace("posterior", quietly = TRUE)
 #' library(dplyr)
 #' library(ggplot2)
 #'
