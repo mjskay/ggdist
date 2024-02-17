@@ -67,7 +67,7 @@ test_that("dlply_ works properly", {
 
 test_that("stop_if_not_installed works properly", {
   e = tryCatch(stop_if_not_installed("_fake_package"), error = function(e) e)
-  expect_s3_class(e, c("ggdist_missing_package"))
-  expect_s3_class(e, c("error"))
+  expect_s3_class(e, "ggdist_missing_package")
+  expect_s3_class(e, "error")
   expect_equal(e$ggdist_package, "_fake_package")
 })

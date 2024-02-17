@@ -361,13 +361,13 @@ p = df %>%
   theme(panel.background = element_rect(color = "grey70"))
 
 (
-  p + stat_slabinterval(side = "left") + 
+  p + stat_slabinterval(side = "left") +
     labs(title = "stat_slabinterval()", subtitle = "side = 'left'")
 ) + (
-  p + stat_slabinterval(side = "both") + 
+  p + stat_slabinterval(side = "both") +
     labs(subtitle = "side = 'both'")
 ) + (
-  p + stat_slabinterval(side = "right")  + 
+  p + stat_slabinterval(side = "right") +
     labs(subtitle = "side = 'right'")
 )
 ```
@@ -384,7 +384,7 @@ p = df %>%
 
 (
   # side = "left" would give the same result
-  p + stat_slabinterval(side = "left") + 
+  p + stat_slabinterval(side = "left") +
     ggtitle("stat_slabinterval()") + labs(subtitle = "side = 'bottom'")
 ) + (
   p + stat_slabinterval(side = "both") + labs(subtitle = "side = 'both'")
