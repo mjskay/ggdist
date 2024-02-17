@@ -37,9 +37,11 @@ test_that("distribution functions work on weighted sample distributions", {
   expect_equal(mean(x), mean(ref), tolerance = eps)
   expect_equal(median(x), median(ref), tolerance = eps)
   expect_equal(Mode(x), 5, tolerance = 0.01)
+  expect_equal(variance(x), variance(ref), tolerance = eps)
   expect_equal(distr_pdf(x)(2), distr_pdf(ref)(2), tolerance = eps)
   expect_equal(distr_cdf(x)(1), distr_cdf(ref)(1), tolerance = eps)
   expect_equal(distr_quantile(x)(0.5), distr_quantile(ref)(0.5), tolerance = eps)
+  expect_equal(format(x), "weighted_sample[20000]")
 })
 
 

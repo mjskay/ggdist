@@ -214,7 +214,7 @@ test_that("stat_dist_gradientinterval works", {
 
 test_that("fill_type = 'gradient' works", {
   skip_if_no_vdiffr()
-  skip_if_no_linearGradient()
+  skip_if_no_gradient()
 
 
   p = tribble(
@@ -303,6 +303,10 @@ test_that("scale transformation works", {
     p_log + stat_dist_ccdfinterval(n = 20)
   )
 
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
+    p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
+  )
+
 
   p_log_wrap = data.frame(x = dist_wrap("lnorm")) %>%
     ggplot(aes(xdist = x, y = 0))
@@ -325,6 +329,7 @@ test_that("scale transformation works", {
   )
 
 
+  # transform that should require numerical diff
   p_logit = data.frame(dist = dist_beta(2,2)) %>%
     ggplot(aes(xdist = dist)) +
     scale_x_continuous(trans = scales::trans_new("logit", qlogis, plogis))
@@ -333,9 +338,16 @@ test_that("scale transformation works", {
     p_logit + stat_eye(n = 15, slab_color = "gray50")
   )
 
-  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
-    p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
+
+  # transform that should work with symbolic diff
+  p_log_sym = data.frame(dist = dist_lognormal(2,2)) %>%
+    ggplot(aes(xdist = dist)) +
+    scale_x_continuous(trans = scales::trans_new("log", function(x) log(x), function(x) exp(x)))
+
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi sym diff",
+    p_log_sym + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
+
 })
 
 

@@ -19,11 +19,11 @@ skip_if_sensitive_to_density = function() {
   testthat::skip_if(getRversion() >= "4.4", "density() output changed in R 4.4")
 }
 
-#' skip tests if linearGradient support for visual test cases is not available
+#' skip tests if gradient support for visual test cases is not available
 #' (old versions of svglite did not support it and so test cases with
-#' linearGradients would be incorrect)
+#' gradients would be incorrect)
 #' @noRd
-skip_if_no_linearGradient = function() {
+skip_if_no_gradient = function() {
   testthat::skip_if_not(getRversion() >= "4.1")
   testthat::skip_if_not_installed("svglite", "2.1.0")
   testthat::skip_if_not_installed("fontquiver")

@@ -36,7 +36,7 @@ test_that("gradientinterval works", {
 
 test_that("fill_type = 'gradient' works", {
   skip_if_no_vdiffr()
-  skip_if_no_linearGradient()
+  skip_if_no_gradient()
 
 
   set.seed(1234)
