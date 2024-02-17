@@ -215,15 +215,15 @@ analytical distributions, and will perform the summarization using a \code{\link
 function. Geoms based on \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} create dotplots that automatically determine a bin width that
 ensures the plot fits within the available space. They can also ensure dots do not overlap.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_dotsinterval(
+\preformatted{stat_dotsinterval(
   aes(size = NULL),
   geom = "dots",
-  show_point = FALSE, show_interval = FALSE,
+  show_point = FALSE,
+  show_interval = FALSE,
   show.legend = NA
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:

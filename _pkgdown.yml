@@ -52,6 +52,7 @@ reference:
   - stat_spike
   - stat_dotsinterval
   - stat_dots
+  - stat_mcse_dots
   - stat_lineribbon
   - stat_ribbon
 
@@ -66,6 +67,7 @@ reference:
   - geom_spike
   - geom_dotsinterval
   - geom_dots
+  - geom_blur_dots
   - geom_weave
   - geom_swarm
   - geom_lineribbon
@@ -99,6 +101,12 @@ reference:
   - facet_title_left_horizontal
   - facet_title_right_horizontal
   - axis_titles_bottom_left
+
+- title: Sub-guides
+  desc: Sub-guides for labelling the `thickness` axis in `geom_slab()` and
+    dot counts in `geom_dots()`.
+  contents:
+  - starts_with("subguide_")
 
 - title: Dotplot layout algorithms
   desc: Algorithms used by `geom_dotsinterval()` for automatically determining
@@ -135,6 +143,11 @@ reference:
   contents:
   - breaks
   - align
+
+- title: Blur types
+  desc: Blur types for `geom_blur_dots()`
+  contents:
+  - blur_type
 
 - title: Automatic partial functions
   desc: Overview of automatic partial function application (currying) used by

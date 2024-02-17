@@ -20,7 +20,7 @@ GeomSwarm = ggproto("GeomSwarm", GeomDots,
   ), GeomDots$default_params)
 )
 
-#' @eval rd_dotsinterval_shortcut_geom("swarm", "beeswarm")
+#' @eval rd_dotsinterval_shortcut_geom("swarm", "beeswarm", from_name = "dots")
 #' @export
 geom_swarm = make_geom(GeomSwarm)
 
@@ -36,6 +36,6 @@ GeomWeave = ggproto("GeomWeave", GeomSwarm,
   ), GeomSwarm$default_params)
 )
 
-#' @eval rd_dotsinterval_shortcut_geom("weave", "dot-weave")
+#' @eval rd_dotsinterval_shortcut_geom("weave", "dot-weave", from_name = "dots")
 #' @export
 geom_weave = make_geom(GeomWeave)

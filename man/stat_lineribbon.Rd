@@ -116,15 +116,20 @@ frames that have already been summarized using a \code{\link[=point_interval]{po
 analytical distributions, and will perform the summarization using a \code{\link[=point_interval]{point_interval()}}
 function.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(group = after_stat(level), fill = after_stat(level), order = after_stat(level), size = NULL),
+\preformatted{stat_slabinterval(
+  aes(
+    group = after_stat(level),
+    fill = after_stat(level),
+    order = after_stat(level),
+    size = NULL
+  ),
   geom = "lineribbon",
-  .width = c(0.5, 0.8, 0.95), show_slab = FALSE,
+  .width = c(0.5, 0.8, 0.95),
+  show_slab = FALSE,
   show.legend = NA
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

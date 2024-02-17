@@ -26,7 +26,7 @@ rd_lineribbon_shortcut_stat = function(
       analytical distributions, and will perform the summarization using a [point_interval()]
       function.
       '),
-    '@description\n Roughly equivalent to:',
+    '@description\n **Roughly equivalent to:**',
     rd_shortcut_stat(stat_name, geom_name, from_name = from_name),
     '@inheritParams stat_pointinterval',
     '@inheritParams geom_lineribbon',

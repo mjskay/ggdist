@@ -116,12 +116,11 @@ frames that have already been summarized using a \code{\link[=point_interval]{po
 analytical distributions, and will perform the summarization using a \code{\link[=point_interval]{point_interval()}}
 function.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_lineribbon(
+\preformatted{stat_lineribbon(
   show_point = FALSE
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

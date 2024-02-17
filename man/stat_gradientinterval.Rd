@@ -261,14 +261,17 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slabinterval]{geom_slabinterval()}} for
 creating gradient + interval plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(justification = after_stat(0.5), thickness = after_stat(thickness(1)), slab_alpha = after_stat(f)),
+\preformatted{stat_slabinterval(
+  aes(
+    justification = after_stat(0.5),
+    thickness = after_stat(thickness(1)),
+    slab_alpha = after_stat(f)
+  ),
   fill_type = "auto",
   show.legend = c(size = FALSE, slab_alpha = FALSE)
-)
-}\if{html}{\out{</div>}}
+)}
 
 If your graphics device supports it, it is recommended to use this stat
 with \code{fill_type = "gradient"} (see the description of that parameter). On R >= 4.2,

@@ -225,15 +225,15 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slab]{geom_slab()}} for
 creating slab (ridge) plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
+\preformatted{stat_slabinterval(
   aes(size = NULL),
   geom = "slab",
-  show_point = FALSE, show_interval = FALSE,
+  show_point = FALSE,
+  show_interval = FALSE,
   show.legend = NA
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

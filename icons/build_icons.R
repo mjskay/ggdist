@@ -57,6 +57,11 @@ make_icon(stat_dotsinterval, quantiles = 20, names = c("geom_dotsinterval", "sta
 make_icon(stat_dots, quantiles = 20, names = c("geom_dots", "stat_dots"), x_expansion = 0.1)
 make_icon(stat_dots, side = "both", layout = "weave", quantiles = 26, names = c("geom_weave"), x_expansion = 0.1)
 make_icon(stat_dots, side = "both", layout = "swarm", quantiles = 28, names = c("geom_swarm"), x_expansion = 0.1)
+make_icon(
+  stat_mcse_dots,
+  data = data.frame(dist = dist_sample(list(sample(qnorm(ppoints(75)), 75)))),
+  quantiles = 18, names = c("geom_blur_dots", "stat_mcse_dots"), x_expansion = 0.1
+)
 
 
 # lineribbon family

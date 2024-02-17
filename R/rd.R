@@ -21,11 +21,9 @@ rd_shortcut_geom = function(geom_name, from_name = "slabinterval") {
 
   glue_doc('
     @description
-    ```
-    geom_<<from_name>>(
+    \\preformatted{geom_<<from_name>>(
       <<geom_args>>
-    )
-    ```
+    )}
     '
   )
 }
@@ -49,11 +47,9 @@ rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabi
 
   glue_doc('
     @description
-    ```
-    stat_<<from_name>>(
+    \\preformatted{stat_<<from_name>>(
       <<stat_args>>
-    )
-    ```
+    )}
     '
   )
 }
@@ -248,7 +244,7 @@ changed_geom_values = function(
   exclude_args = character()
 ) {
   # find the changed aesthetics and params for this stat
-  changed_values = function(list, exclude) {
+  changed_values = function(list, exclude, sep = ",\n  ", multi_start = "", multi_end = "") {
     # find values changes in the child stat
     values = to[[list]][
       map_lgl_(
@@ -265,11 +261,19 @@ changed_geom_values = function(
     # turn values into strings like x = "foo", y = "bar"
     value_text = lapply(values, function(x) deparse0(get_expr(x)))
     value_text = value_text[!names(value_text) %in% exclude]
-    if (length(value_text)) paste(names(value_text), "=", value_text, collapse = ", ")
+    n = length(value_text)
+    if (n) paste0(
+      if (n > 1) multi_start,
+      paste(names(value_text), "=", value_text, collapse = sep),
+      if (n > 1) multi_end
+    )
   }
 
   list(
-    aes = changed_values("default_aes", exclude = exclude_aes),
+    aes = changed_values(
+      "default_aes", exclude = exclude_aes,
+      sep = ",\n    ", multi_start = "\n    ", multi_end = "\n  "
+    ),
     params = changed_values("default_params", exclude = exclude_params),
     args = changed_values("layer_args", exclude = exclude_args)
   )

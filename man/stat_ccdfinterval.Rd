@@ -261,13 +261,17 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slabinterval]{geom_slabinterval()}} for
 creating CCDF bar plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(thickness = after_stat(thickness(1 - cdf, 0, 1)), justification = after_stat(0.5), side = after_stat("topleft")),
-  normalize = "none", expand = TRUE
-)
-}\if{html}{\out{</div>}}
+\preformatted{stat_slabinterval(
+  aes(
+    thickness = after_stat(thickness(1 - cdf, 0, 1)),
+    justification = after_stat(0.5),
+    side = after_stat("topleft")
+  ),
+  normalize = "none",
+  expand = TRUE
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

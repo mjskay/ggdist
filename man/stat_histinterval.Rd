@@ -259,12 +259,11 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slabinterval]{geom_slabinterval()}} for
 creating histogram + interval plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
+\preformatted{stat_slabinterval(
   density = "histogram"
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

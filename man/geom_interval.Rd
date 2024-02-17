@@ -106,13 +106,17 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 \description{
 Shortcut version of \code{\link[=geom_slabinterval]{geom_slabinterval()}} for creating multiple-interval plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{geom_slabinterval(
-  aes(datatype = "interval", side = "both"),
-  interval_size_range = c(1, 6), show_slab = FALSE, show_point = FALSE
-)
-}\if{html}{\out{</div>}}
+\preformatted{geom_slabinterval(
+  aes(
+    datatype = "interval",
+    side = "both"
+  ),
+  interval_size_range = c(1, 6),
+  show_slab = FALSE,
+  show_point = FALSE
+)}
 }
 \details{
 This geom wraps \code{\link[=geom_slabinterval]{geom_slabinterval()}} with defaults designed to produce

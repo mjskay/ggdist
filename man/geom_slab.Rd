@@ -134,12 +134,12 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 \description{
 Shortcut version of \code{\link[=geom_slabinterval]{geom_slabinterval()}} for creating slab (ridge) plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{geom_slabinterval(
-  show_point = FALSE, show_interval = FALSE
-)
-}\if{html}{\out{</div>}}
+\preformatted{geom_slabinterval(
+  show_point = FALSE,
+  show_interval = FALSE
+)}
 }
 \section{Aesthetics}{
 

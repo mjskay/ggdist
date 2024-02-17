@@ -22,7 +22,7 @@ rd_slabinterval_shortcut_geom = function(
       @description
       Shortcut version of [geom_slabinterval()] for creating <<chart_type>> plots.
 
-      Roughly equivalent to:
+      **Roughly equivalent to:**
       '),
     rd_shortcut_geom(geom_name),
     if (length(default_aes)) glue_doc('
@@ -74,7 +74,7 @@ rd_slabinterval_shortcut_stat = function(
       Shortcut version of [stat_slabinterval()] with [geom_<<geom_name>>()] for
       creating <<chart_type>> plots.
 
-      Roughly equivalent to:
+      **Roughly equivalent to:**
       '),
     if (describe) rd_shortcut_stat(stat_name, geom_name),
     '@inheritParams stat_slabinterval',

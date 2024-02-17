@@ -220,13 +220,14 @@ Shortcut version of \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for cr
 Geoms based on \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} create dotplots that automatically
 ensure the plot fits within the available space.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{geom_dotsinterval(
+\preformatted{geom_dots(
   aes(side = "both"),
-  overflow = "compress", binwidth = unit(1.5, "mm"), layout = "swarm", show_point = FALSE, show_interval = FALSE
-)
-}\if{html}{\out{</div>}}
+  overflow = "compress",
+  binwidth = unit(1.5, "mm"),
+  layout = "swarm"
+)}
 }
 \details{
 The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:

@@ -116,15 +116,19 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_interval]{geom_interval()}} for
 creating multiple-interval plots.
 
-Roughly equivalent to:
+\strong{Roughly equivalent to:}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(colour = after_stat(level), size = NULL),
+\preformatted{stat_slabinterval(
+  aes(
+    colour = after_stat(level),
+    size = NULL
+  ),
   geom = "interval",
-  show_point = FALSE, .width = c(0.5, 0.8, 0.95), show_slab = FALSE,
+  show_point = FALSE,
+  .width = c(0.5, 0.8, 0.95),
+  show_slab = FALSE,
   show.legend = NA
-)
-}\if{html}{\out{</div>}}
+)}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

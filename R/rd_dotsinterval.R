@@ -25,7 +25,7 @@ rd_dotsinterval_shortcut_geom = function(
       Geoms based on [geom_dotsinterval()] create dotplots that automatically
       ensure the plot fits within the available space.
 
-      Roughly equivalent to:
+      **Roughly equivalent to:**
       '),
     if (describe) rd_shortcut_geom(geom_name, from_name),
     '@inheritParams geom_dotsinterval',
@@ -88,7 +88,7 @@ rd_dotsinterval_shortcut_stat = function(
       ensures the plot fits within the available space. They can also ensure dots do not overlap.
       '),
     if (stat_name != "dotsinterval" && describe) c(
-      '@description\n Roughly equivalent to:',
+      '@description\n **Roughly equivalent to:**',
       rd_shortcut_stat(stat_name, geom_name, from_name = "dotsinterval")
     ),
     if (stat_name != "dotsinterval") '@inheritParams stat_dotsinterval',
