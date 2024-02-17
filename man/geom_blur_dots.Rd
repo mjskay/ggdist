@@ -10,6 +10,7 @@ geom_blur_dots(
   stat = "identity",
   position = "identity",
   ...,
+  blur_type = "gaussian",
   binwidth = NA,
   dotsize = 1.07,
   stackratio = 1,
@@ -58,6 +59,17 @@ you have overlapping geometries.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
+
+\item{blur_type}{Blur type to apply to dots.
+One of: \itemize{
+\item A function that takes a numeric vector of distances from the dot
+center, the dot radius, and the blur standard deviation and returns a
+vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_type_gaussian]{blur_type_gaussian()}}
+or \code{\link[=blur_type_interval]{blur_type_interval()}}.
+\item A string indicating what blur type to use, as the suffix to a function
+name starting with \code{blur_type_}; e.g. \code{"gaussian"} (the default) applies
+\code{\link[=blur_type_gaussian]{blur_type_gaussian()}}.
+}}
 
 \item{binwidth}{The bin width to use for laying out the dots.
 One of:
@@ -397,21 +409,31 @@ Learn more about the sub-geom override aesthetics (like \code{interval_color}) i
 }
 
 \examples{
+\dontshow{if (requireNamespace("posterior", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(dplyr)
 library(ggplot2)
 
-data(RankCorr_u_tau, package = "ggdist")
+theme_set(theme_ggdist())
 
-# orientation is detected automatically based on
-# which axis is discrete
+set.seed(1234)
+x = rnorm(1000)
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(x = u_tau)) +
+# manually calculate quantiles and their MCSE
+# this could also be done more succinctly with stat_mcse_dots()
+p = ppoints(100)
+df = data.frame(
+  q = quantile(x, p),
+  se = posterior::mcse_quantile(x, p)
+)
+
+df \%>\%
+  ggplot(aes(x = q, blur = se)) +
   geom_blur_dots()
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(y = u_tau)) +
-  geom_blur_dots()
+df \%>\%
+  ggplot(aes(x = q, blur = se)) +
+  geom_blur_dots(blur_type = blur_type_interval(.width = 0.95))
+\dontshow{\}) # examplesIf}
 }
 \references{
 Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations

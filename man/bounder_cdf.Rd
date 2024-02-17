@@ -21,6 +21,7 @@ of the distribution that \code{x} came from.
 \description{
 Estimate the bounds of the distribution a sample came from using the CDF of
 the order statistics of the sample. Use with the \code{bounder} argument to \code{\link[=density_bounded]{density_bounded()}}.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

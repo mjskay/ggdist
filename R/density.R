@@ -8,7 +8,7 @@
 #' Unbounded density estimator
 #'
 #' Unbounded density estimator using [stats::density()].
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param weights optional numeric vector of weights to apply to `x`.
@@ -119,7 +119,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #' Bounded density estimator using the reflection method
 #'
 #' Bounded density estimator using the reflection method.
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @inheritParams density_unbounded
 #' @param bounds length-2 vector of min and max bounds. If a bound is `NA`, then
@@ -257,7 +257,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' Histogram density estimator
 #'
 #' Histogram density estimator.
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param weights optional numeric vector of weights to apply to `x`.
@@ -389,7 +389,7 @@ density_histogram = auto_partial(name = "density_histogram", function(
 #'
 #' Bandwidth estimators for densities, used in the `bandwidth` argument
 #' to density functions (e.g. [density_bounded()], [density_unbounded()]).
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @inheritDotParams stats::bw.SJ
 #' @param x A numeric vector giving a sample.

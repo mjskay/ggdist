@@ -34,6 +34,7 @@ giving the edges between bins.
 \description{
 Methods for determining breaks (bins) in histograms, as used in the \code{breaks}
 argument to \code{\link[=density_histogram]{density_histogram()}}.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

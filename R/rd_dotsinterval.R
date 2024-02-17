@@ -12,7 +12,8 @@ rd_dotsinterval_shortcut_geom = function(
   chart_type,
   from_name = "dotsinterval",
   title = TRUE,
-  describe = TRUE
+  describe = TRUE,
+  examples = TRUE
 ) {
   geom = get(paste0("Geom", camel_case(geom_name)))
 
@@ -28,6 +29,7 @@ rd_dotsinterval_shortcut_geom = function(
       '),
     if (describe) rd_shortcut_geom(geom_name, from_name),
     '@inheritParams geom_dotsinterval',
+    rd_layer_params(geom_name, as_dots = FALSE),
     glue_doc('
       @return A [ggplot2::Geom] representing a <<chart_type>> geometry which can
       be added to a [ggplot()] object.
@@ -42,7 +44,7 @@ rd_dotsinterval_shortcut_geom = function(
     '@seealso See [geom_dotsinterval()] for the geometry this shortcut is based on.',
     '@seealso See `vignette("dotsinterval")` for a variety of examples of use.',
     '@family dotsinterval geoms',
-    glue_doc('@examples
+    if (examples) glue_doc('@examples
       library(dplyr)
       library(ggplot2)
 
@@ -67,7 +69,8 @@ rd_dotsinterval_shortcut_stat = function(
   chart_type,
   geom_name = stat_name,
   title = TRUE,
-  describe = TRUE
+  describe = TRUE,
+  examples = TRUE
 ) {
   stat = get(paste0("Stat", camel_case(stat_name)))
   geom = get(paste0("Geom", camel_case(geom_name)))
@@ -84,7 +87,7 @@ rd_dotsinterval_shortcut_stat = function(
       function. Geoms based on [geom_dotsinterval()] create dotplots that automatically determine a bin width that
       ensures the plot fits within the available space. They can also ensure dots do not overlap.
       '),
-    if (stat_name != "dotsinterval") c(
+    if (stat_name != "dotsinterval" && describe) c(
       '@description\n Roughly equivalent to:',
       rd_shortcut_stat(stat_name, geom_name, from_name = "dotsinterval")
     ),
@@ -108,7 +111,7 @@ rd_dotsinterval_shortcut_stat = function(
       See `vignette("dotsinterval")` for a variety of examples of use.
       '),
     '@family dotsinterval stats',
-    glue_doc('
+    if (examples) glue_doc('
       @examples
       library(dplyr)
       library(ggplot2)

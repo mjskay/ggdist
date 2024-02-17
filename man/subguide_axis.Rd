@@ -98,6 +98,7 @@ settings that normally apply to axis guides will be followed.}
 This is a sub-guide intended for annotating the \link{thickness} aesthetic
 in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

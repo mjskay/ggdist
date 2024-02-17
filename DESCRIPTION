@@ -85,7 +85,7 @@ Collate:
     "geom.R"
     "geom_slabinterval.R"
     "geom_dotsinterval.R"
-    "geom_blurdots.R"
+    "geom_blur_dots.R"
     "geom_interval.R"
     "geom_lineribbon.R"
     "geom_pointinterval.R"

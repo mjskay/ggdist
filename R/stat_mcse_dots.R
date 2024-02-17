@@ -21,7 +21,18 @@ StatMcseDots = ggproto("StatMcseDots", StatDots,
 #' of each quantile computed for the dotplot, yielding an `se` computed variable
 #' that is by default mapped onto the `blur` aesthetic of [geom_blur_dots()].
 #' @eval rd_dotsinterval_shortcut_stat(
-#'   "mcse_dots", "blurry MCSE dot", geom_name = "blur_dots", title = FALSE, describe = FALSE
+#'   "mcse_dots", "blurry MCSE dot", geom_name = "blur_dots",
+#'   title = FALSE, describe = FALSE, examples = FALSE
 #' )
+#' @examplesIf requireNamespace("posterior", quietly = TRUE)
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' theme_set(theme_ggdist())
+#'
+#' set.seed(1234)
+#' data.frame(x = rnorm(1000)) %>%
+#'   ggplot(aes(x = x)) +
+#'   stat_mcse_dots(quantiles = 100, layout = "weave")
 #' @export
 stat_mcse_dots = make_stat(StatMcseDots, geom = "blur_dots")

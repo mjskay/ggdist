@@ -56,7 +56,7 @@ weighted_hist = function(
 #'
 #' Methods for determining breaks (bins) in histograms, as used in the `breaks`
 #' argument to [density_histogram()].
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @param x A numeric vector giving a sample.
 #' @param weights A numeric vector of `length(x)` giving sample weights.
@@ -198,7 +198,7 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
 #'
 #' Methods for aligning breaks (bins) in histograms, as used in the `align`
 #' argument to [density_histogram()].
-#' Supports [automatic partial function application][automatic-partial-functions].
+#' @template description-auto-partial
 #'
 #' @param breaks A sorted vector of breaks (bin edges).
 #' @param at A scalar numeric giving an alignment point.

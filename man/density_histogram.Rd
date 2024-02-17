@@ -87,6 +87,7 @@ and the \code{\link[=smooth_density]{smooth_}} family of functions.
 }
 \description{
 Histogram density estimator.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \examples{

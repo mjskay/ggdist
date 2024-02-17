@@ -315,7 +315,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     subguide = subguide,
     verbose = verbose,
     orientation = orientation,
-    make_points_grob = self$make_points_grob
+    make_points_grob = self$points_grob_factory(...)
   ))
 }
 
@@ -600,7 +600,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     }
   },
 
-  make_points_grob = make_points_grob
+  points_grob_factory = function(...) make_points_grob(...)
 )
 
 #' @rdname geom_dotsinterval

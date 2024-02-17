@@ -37,6 +37,7 @@ rd_slabinterval_shortcut_geom = function(
       as if its default aesthetics are `aes(<<default_aes>>)`
       '),
     '@inheritParams geom_slabinterval',
+    rd_layer_params(geom_name, as_dots = FALSE),
     glue_doc('
       @return A [ggplot2::Geom] representing a <<chart_type>> geometry which can
       be added to a [ggplot()] object.'),

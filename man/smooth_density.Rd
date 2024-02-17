@@ -61,6 +61,7 @@ If \code{x} is missing, returns a partial application of itself. See \link{autom
 Smooths \code{x} values using a density estimator, returning new \code{x} of the same
 length. Can be used with a dotplot (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create
 "density dotplots".
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

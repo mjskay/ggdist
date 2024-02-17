@@ -18,6 +18,7 @@ If \code{x} is missing, returns a partial application of itself. See \link{autom
 }
 \description{
 Default smooth for dotplots: no smooth. Simply returns the input values.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

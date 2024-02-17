@@ -50,6 +50,16 @@ to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \stron
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_blur_dots]{geom_blur_dots()}},
 these include:
 \describe{
+\item{\code{blur_type}}{Blur type to apply to dots.
+One of: \itemize{
+\item A function that takes a numeric vector of distances from the dot
+center, the dot radius, and the blur standard deviation and returns a
+vector of opacities in \eqn{[0, 1]}, such as \code{\link[=blur_type_gaussian]{blur_type_gaussian()}}
+or \code{\link[=blur_type_interval]{blur_type_interval()}}.
+\item A string indicating what blur type to use, as the suffix to a function
+name starting with \code{blur_type_}; e.g. \code{"gaussian"} (the default) applies
+\code{\link[=blur_type_gaussian]{blur_type_gaussian()}}.
+}}
 \item{\code{binwidth}}{The bin width to use for laying out the dots.
 One of:
 \itemize{
@@ -211,16 +221,6 @@ Variant of \code{\link[=stat_dots]{stat_dots()}} for creating blurry dotplots of
 \code{\link[posterior:mcse_quantile]{posterior::mcse_quantile()}} to calculate the Monte Carlo Standard Error
 of each quantile computed for the dotplot, yielding an \code{se} computed variable
 that is by default mapped onto the \code{blur} aesthetic of \code{\link[=geom_blur_dots]{geom_blur_dots()}}.
-
-Roughly equivalent to:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_dotsinterval(
-  aes(blur = after_stat(se), size = NULL),
-  geom = "blur_dots",
-  show_point = FALSE, show_interval = FALSE,
-  show.legend = NA
-)
-}\if{html}{\out{</div>}}
 }
 \details{
 The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
@@ -470,28 +470,17 @@ Learn more about the sub-geom override aesthetics (like \code{interval_color}) i
 }
 
 \examples{
+\dontshow{if (requireNamespace("posterior", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(dplyr)
 library(ggplot2)
-library(distributional)
 
 theme_set(theme_ggdist())
 
-# ON SAMPLE DATA
-tibble(x = 1:10) \%>\%
-  group_by_all() \%>\%
-  do(tibble(y = rnorm(100, .$x))) \%>\%
-  ggplot(aes(x = x, y = y)) +
-  stat_mcse_dots()
-
-# ON ANALYTICAL DISTRIBUTIONS
-# Vectorized distribution types, like distributional::dist_normal()
-# and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
-tibble(
-  x = 1:10,
-  sd = seq(1, 3, length.out = 10)
-) \%>\%
-  ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
-  stat_mcse_dots(quantiles = 50)
+set.seed(1234)
+data.frame(x = rnorm(1000)) \%>\%
+  ggplot(aes(x = x)) +
+  stat_mcse_dots(quantiles = 100, layout = "weave")
+\dontshow{\}) # examplesIf}
 }
 \references{
 Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations

@@ -45,6 +45,7 @@ of the same length. Both \code{smooth_discrete()} and \code{smooth_bar()} use th
 dataset; \code{smooth_discrete()} uses a kernel density estimator and \code{smooth_bar()}
 places values in an evenly-spaced grid. Can be used with a dotplot
 (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create "bar dotplots".
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{

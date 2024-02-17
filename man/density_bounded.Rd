@@ -100,6 +100,7 @@ and the \code{\link[=smooth_density]{smooth_}} family of functions.
 }
 \description{
 Bounded density estimator using the reflection method.
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \examples{

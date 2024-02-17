@@ -47,6 +47,7 @@ A single number giving the bandwidth
 \description{
 Bandwidth estimators for densities, used in the \code{bandwidth} argument
 to density functions (e.g. \code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}).
+
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{
