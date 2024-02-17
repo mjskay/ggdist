@@ -231,6 +231,7 @@ blur_type_gaussian = auto_partial(name = "blur_type_gaussian", function(x, r, sd
 })
 
 #' @rdname blur_type
+#' @importFrom stats qnorm
 #' @export
 blur_type_interval = auto_partial(name = "blur_type_interval", function(x, r, sd, .width = 0.95) {
   z = qnorm((1 + .width)/2)

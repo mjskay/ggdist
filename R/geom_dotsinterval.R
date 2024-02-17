@@ -600,7 +600,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     }
   },
 
-  points_grob_factory = function(...) make_points_grob(...)
+  points_grob_factory = function(...) make_points_grob
 )
 
 #' @rdname geom_dotsinterval
