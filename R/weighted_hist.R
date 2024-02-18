@@ -65,10 +65,10 @@ weighted_hist = function(
 #'   rounding in the Freedman-Diaconis algorithm. For an explanation of this
 #'   parameter, see the documentation of the corresponding parameter in
 #'   [grDevices::nclass.FD()].
-#' @param n For [breaks_quantiles()], another breaks function (or string giving
-#'   the suffix of the name of a function prefixed with `"breaks_"`) that
-#'   determines the number of bins, from which [breaks_quantiles()] will
-#'   construct breaks at quantiles.
+#' @param n For [breaks_quantiles()], either the target number of bins, or
+#'   another breaks function (or string giving the suffix of the name of a
+#'   function prefixed with `"breaks_"`) that returns the number of bins.
+#'   [breaks_quantiles()] will construct *at most* `n` bins.
 #'
 #' @details
 #' These functions take a sample and its weights and return a valuable suitable for
@@ -80,7 +80,9 @@ weighted_hist = function(
 #'    versions of the corresponding base functions. See [nclass.Sturges()],
 #'    [nclass.scott()], and [nclass.FD()].
 #'  - [breaks_quantiles()] constructs irregularly-sized bins using `n + 1` (possibly
-#'    weighted) quantiles of `x`.
+#'    weighted) quantiles of `x`. The final number of bins is *at most* `n`, as
+#'    very small bins (ones whose bin width is less than half the range of the
+#'    data divided by `n`) will be merged into adjacent bins.
 #' @returns Either a single number (giving the number of bins) or a vector
 #' giving the edges between bins.
 #' @seealso [density_histogram()], [align]
@@ -206,7 +208,22 @@ breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
   n = get_raw_breaks(x, weights, n)
   stopifnot(is.numeric(n), length(n) == 1)
 
-  breaks = unique(weighted_quantile(x, ppoints(n + 1, a = 1), weights = weights, names = FALSE))
+  breaks = weighted_quantile(x, ppoints(n + 1, a = 1), weights = weights, names = FALSE)
+
+  # remove bins that are very small (less than half the bin width of the
+  # bins that would be used in a regular bin spacing with `n` bins).
+  min_binwidth = diff(range(x)) / n / 2
+  next_break = -Inf
+  for (i in seq_along(breaks)) {
+    if (breaks[[i]] >= next_break) {
+      current_break = breaks[[i]]
+      next_break = current_break + min_binwidth
+    } else {
+      breaks[[i]] = current_break
+    }
+  }
+  breaks = vec_unrep(breaks)$key
+
   if (length(breaks) == 1) breaks = 1L
   breaks
 })
