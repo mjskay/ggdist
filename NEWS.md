@@ -14,6 +14,8 @@ New features and enhancements:
   `sd` aesthetic to set the standard deviation of the blur on each dot.
   This geom is used by the new `stat_mcse_dots()` to show quantiles along with
   their error using blur (#63).
+* The new `breaks_quantiles()` histogram breaks function allows the construction
+  of quantile histograms with `density_histogram()`, `stat_histinterval()`, etc.
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).

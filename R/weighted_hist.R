@@ -61,9 +61,14 @@ weighted_hist = function(
 #' @param x A numeric vector giving a sample.
 #' @param weights A numeric vector of `length(x)` giving sample weights.
 #' @param width For [breaks_fixed()], the desired bin width.
-#' @param digits Number of significant digits to keep when rounding in the Freedman-Diaconis
-#'   algorithm ([breaks_FD()]). For an explanation of this parameter, see the documentation
-#'   of the corresponding parameter in [grDevices::nclass.FD()].
+#' @param digits For [breaks_FD()], number of significant digits to keep when
+#'   rounding in the Freedman-Diaconis algorithm. For an explanation of this
+#'   parameter, see the documentation of the corresponding parameter in
+#'   [grDevices::nclass.FD()].
+#' @param n For [breaks_quantiles()], another breaks function (or string giving
+#'   the suffix of the name of a function prefixed with `"breaks_"`) that
+#'   determines the number of bins, from which [breaks_quantiles()] will
+#'   construct breaks at quantiles.
 #'
 #' @details
 #' These functions take a sample and its weights and return a valuable suitable for
@@ -74,6 +79,8 @@ weighted_hist = function(
 #'  - [breaks_Sturges()], [breaks_Scott()], and [breaks_FD()] implement weighted
 #'    versions of the corresponding base functions. See [nclass.Sturges()],
 #'    [nclass.scott()], and [nclass.FD()].
+#'  - [breaks_quantiles()] constructs irregularly-sized bins using `n + 1` (possibly
+#'    weighted) quantiles of `x`.
 #' @returns Either a single number (giving the number of bins) or a vector
 #' giving the edges between bins.
 #' @seealso [density_histogram()], [align]
@@ -191,6 +198,19 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
   }
 })
 
+#' @rdname breaks
+#' @export
+breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
+  x, weights = NULL, n = "Scott"
+) {
+  n = get_raw_breaks(x, weights, n)
+  stopifnot(is.numeric(n), length(n) == 1)
+
+  breaks = unique(weighted_quantile(x, ppoints(n + 1, a = 1), weights = weights, names = FALSE))
+  if (length(breaks) == 1) breaks = 1L
+  breaks
+})
+
 
 # alignment algorithms ----------------------------------------------------
 
@@ -294,21 +314,11 @@ align_center = auto_partial(name = "align_center", function(breaks, at = 0) {
 #'   - `equidist`: logical: are the breaks equidistant from each other?
 #' @noRd
 get_breaks = function(x, weights, breaks) {
-  if (is.character(breaks)) {
-    breaks = match_function(breaks, prefix = "breaks_")
-  }
-  if (is.function(breaks)) {
-    # don't pass NULL weights to breaks function for compatibility with breaks
-    # functions from other packages that don't support weights; e.g. {scales}
-    if (is.null(weights)) {
-      breaks = breaks(x)
-    } else {
-      breaks = breaks(x, weights = weights)
-    }
-  }
+  breaks = get_raw_breaks(x, weights, breaks)
   if (length(breaks) == 1) {
-    if (length(x) == 1) {
-      breaks = c(x - 0.5, x + 0.5)
+    unique_x = unique(x)
+    if (length(unique_x) == 1) {
+      breaks = c(unique_x - 0.5, unique_x + 0.5)
     } else {
       breaks = seq.int(min(x), max(x), length.out = breaks)
     }
@@ -321,6 +331,22 @@ get_breaks = function(x, weights, breaks) {
   }
 
   list(breaks = breaks, binwidths = binwidths, equidist = equidist)
+}
+
+get_raw_breaks = function(x, weights, breaks) {
+  if (is.character(breaks)) {
+    breaks = match_function(breaks, prefix = "breaks_")
+  }
+  if (is.function(breaks)) {
+    # don't pass NULL weights to breaks function for compatibility with breaks
+    # functions from other packages that don't support weights; e.g. {scales}
+    if (is.null(weights)) {
+      breaks = breaks(x)
+    } else {
+      breaks = breaks(x, weights = weights)
+    }
+  }
+  breaks
 }
 
 #' Given a dataset, breaks / binwidths, and an alignment function, returned

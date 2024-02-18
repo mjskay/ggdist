@@ -104,10 +104,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   setup_params = function(self, data, params) {
     params = ggproto_parent(GeomDots, self)$setup_params(data, params)
 
-    if (is.character(params$blur)) {
-      params$blur = match_function(params$blur, prefix = "blur_")
-    }
-    stopifnot(is.function(params$blur))
+    params$blur = match_function(params$blur, prefix = "blur_")
 
     params
   },

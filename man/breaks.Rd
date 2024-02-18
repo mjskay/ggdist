@@ -6,6 +6,7 @@
 \alias{breaks_Sturges}
 \alias{breaks_Scott}
 \alias{breaks_FD}
+\alias{breaks_quantiles}
 \title{Break (bin) selection algorithms for histograms}
 \usage{
 breaks_fixed(x, weights = NULL, width = 1)
@@ -15,6 +16,8 @@ breaks_Sturges(x, weights = NULL)
 breaks_Scott(x, weights = NULL)
 
 breaks_FD(x, weights = NULL, digits = 5)
+
+breaks_quantiles(x, weights = NULL, n = "Scott")
 }
 \arguments{
 \item{x}{A numeric vector giving a sample.}
@@ -23,9 +26,15 @@ breaks_FD(x, weights = NULL, digits = 5)
 
 \item{width}{For \code{\link[=breaks_fixed]{breaks_fixed()}}, the desired bin width.}
 
-\item{digits}{Number of significant digits to keep when rounding in the Freedman-Diaconis
-algorithm (\code{\link[=breaks_FD]{breaks_FD()}}). For an explanation of this parameter, see the documentation
-of the corresponding parameter in \code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
+\item{digits}{For \code{\link[=breaks_FD]{breaks_FD()}}, number of significant digits to keep when
+rounding in the Freedman-Diaconis algorithm. For an explanation of this
+parameter, see the documentation of the corresponding parameter in
+\code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
+
+\item{n}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, another breaks function (or string giving
+the suffix of the name of a function prefixed with \code{"breaks_"}) that
+determines the number of bins, from which \code{\link[=breaks_quantiles]{breaks_quantiles()}} will
+construct breaks at quantiles.}
 }
 \value{
 Either a single number (giving the number of bins) or a vector
@@ -46,6 +55,8 @@ breaks.
 \item \code{\link[=breaks_Sturges]{breaks_Sturges()}}, \code{\link[=breaks_Scott]{breaks_Scott()}}, and \code{\link[=breaks_FD]{breaks_FD()}} implement weighted
 versions of the corresponding base functions. See \code{\link[=nclass.Sturges]{nclass.Sturges()}},
 \code{\link[=nclass.scott]{nclass.scott()}}, and \code{\link[=nclass.FD]{nclass.FD()}}.
+\item \code{\link[=breaks_quantiles]{breaks_quantiles()}} constructs irregularly-sized bins using \code{n + 1} (possibly
+weighted) quantiles of \code{x}.
 }
 }
 \examples{

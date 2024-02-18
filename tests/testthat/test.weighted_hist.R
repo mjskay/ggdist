@@ -8,6 +8,7 @@ test_that("weighted_hist works", {
   expect_error(weighted_hist(numeric()))
 
   expect_equal(weighted_hist(1), hist(1, breaks = c(0.5, 1.5), plot = FALSE))
+  expect_equal(weighted_hist(c(1,1)), hist(c(1,1), breaks = c(0.5, 1.5), plot = FALSE))
 
   x = c(1,1,1,1,1,1,4)
   expect_equal(weighted_hist(x), hist(x, plot = FALSE))
@@ -70,6 +71,21 @@ test_that("weighted_hist is equivalent to hist on weighted samples", {
 
 test_that("breaks_fixed works on n = 1", {
   expect_equal(breaks_fixed(2), c(1.5, 2.5))
+})
+
+
+# breaks_quantiles --------------------------------------------------------
+
+test_that("breaks_quantiles works", {
+  x = c(1,2,3,3,4,5,8,2,7)
+  x1 = c(rep(10,20), 10.1)
+  x2 = c(rep(10,1000), 10.1)
+
+  expect_equal(breaks_quantiles(0), 1)
+  expect_equal(breaks_quantiles(c(0,0)), 1)
+  expect_equal(breaks_quantiles(x, n = 4), quantile(x, ppoints(5, a = 1), names = FALSE))
+  expect_equal(breaks_quantiles(x1), c(10, 10.1))
+  expect_equal(breaks_quantiles(x2), c(10, 10.1))
 })
 
 
