@@ -8,7 +8,10 @@ status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](http
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
+[![Paper
+DOI](https://img.shields.io/badge/DOI-10.1109%2FTVCG.2023.3327195-blue)](https://doi.org/10.1109/TVCG.2023.3327195)
+[![Software
+DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 
 <figure>
 <img src="man/figures/preview.png" alt="Preview of ggdist plots" />
@@ -103,7 +106,7 @@ reproduce the issue. Pull requests should be filed against the
 
 Matthew Kay (2024). ggdist: Visualizations of Distributions and
 Uncertainty in the Grammar of Graphics. *IEEE Transactions on
-Visualization and Computer Graphics*. DOI:
+Visualization and Computer Graphics*, 30(1), 414–424. DOI:
 [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
 
 Matthew Kay (2024). ggdist: Visualizations of Distributions and
