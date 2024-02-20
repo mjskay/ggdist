@@ -6,7 +6,7 @@
 
 # guide_rampbar -------------------------------------------------------
 
-#' Continuous colour ramp guide
+#' Continuous guide for colour ramp scales (ggplot2 guide)
 #'
 #' A colour ramp bar guide that shows continuous colour ramp scales mapped onto
 #' values as a smooth gradient. Designed for use with [scale_fill_ramp_continuous()]

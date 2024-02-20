@@ -18,24 +18,20 @@ figures:
 
 
 reference:
-- title: Package overview
-  desc:  Overview of ggdist.
+- title: "Package overview"
   contents:
   - ggdist-package
 
-- title: Point summaries and intervals
-  desc:  Calculate point summaries and intervals
-  contents:
-  - point_interval
-  - curve_interval
-  - Mode
-  - ends_with("hdci")
-  - ends_with("hdi")
-  - ends_with("qi")
-  - cut_cdf_qi
+- title: "Stats and Geoms for visualizing distributions with ggplot2"
+  desc: >
+    These `{ggplot2}` layers are split into two categories: `stat`s for
+    visualizing sample data and distribution vectors, and the underlying
+    `geom`s for visualizing already-summarized data (e.g., intervals or
+    density values).
 
-- title: Visualizing sample data and distribution vectors
-  desc:  Stats for visualizing tidy data frames of draws (e.g. sample data,
+- subtitle: "Stats for visualizing sample data and distribution vectors"
+  desc: >
+    `stat`s for visualizing tidy data frames of draws (e.g. sample data,
     draws from a bootstrap distributation, draws from a Bayesian posterior) and
     distribution vectors (such as `{distributional}` objects and `posterior::rvar()`s).
   contents:
@@ -56,9 +52,10 @@ reference:
   - stat_lineribbon
   - stat_ribbon
 
-- title: Visualizing already-summarized data
-  desc:  Geoms for visualizing data that has already been summarized (e.g.
-    into density function evaluations, points, intervals, etc).
+- subtitle: "Geoms for visualizing already-summarized data"
+  desc: >
+    `geom`s for visualizing data that has already been summarized (e.g.
+    into density function values, points, intervals, etc).
   contents:
   - geom_slabinterval
   - geom_pointinterval
@@ -72,104 +69,150 @@ reference:
   - geom_swarm
   - geom_lineribbon
 
-- title: Distributions
-  desc:  Helper functions for manipulating and visualizing analytical distributions.
+- title: "Point summaries and intervals"
+  desc: >
+    Functions to calculate point summaries and intervals on tidy data.
+    These functions can be used directly on vectors, on data frames of draws,
+    on distribution vectors (such as `{distributional}` objects and
+    `posterior::rvar()`s), and in `{ggdist}` `stat`s and `geom`s to determine
+    what point summaries and intervals are drawn.
+  contents:
+  - point_interval
+  - curve_interval
+  - Mode
+  - ends_with("hdci")
+  - ends_with("hdi")
+  - ends_with("qi")
+  - cut_cdf_qi
+
+- title: "Distributions"
+  desc: >
+    Helper functions for manipulating and visualizing analytical distributions.
   contents:
   - parse_dist
   - student_t
   - lkjcorr_marginal
   - marginalize_lkjcorr
 
-- title: GGplot scales
-  desc:  Scales for custom aesthetics used by ggdist geoms and stats
-  contents:
-  - scales
-  - scale_colour_ramp
-  - guide_rampbar
-  - scale_thickness
-  - scale_side_mirrored
+- title: "ggplot2 components"
+  desc: >
+    `{ggplot2}` scales, positions, sub-guides, and themes designed for use
+    with `{ggdist}` `stat`s and `geom`s.
 
-- title: GGplot positions
-  desc:  Positions for dodging geoms and stats
+- subtitle: "Scales"
+  desc: >
+    Scales for custom aesthetics used by `{ggdist}` geoms and stats, such
+    as `thickness`, `colour_ramp`, and `side`, as well as sub-geometry-specific
+    aesthetics, such as `slab_colour`, `point_size`, etc.
+  contents:
+  - scale_thickness
+  - scale_colour_ramp
+  - scale_side_mirrored
+  - scales
+
+- subtitle: "Positions"
+  desc: >
+    Positions for dodging `geom`s and `stat`s.
   contents:
   - position_dodgejust
 
-- title: GGplot theme
-  desc:  ggdist theme for ggplot2
+- subtitle: "Guides and sub-guides"
+  desc: >
+    Guide for labeling the `colour_ramp` and `fill_ramp` scales, and
+    sub-guides for labelling the `thickness` axis in `geom_slab()` and
+    dot counts in `geom_dots()`.
+  contents:
+  - guide_rampbar
+  - starts_with("subguide_")
+
+- subtitle: "Themes"
+  desc: >
+    `{ggdist}` theme and helper functions for `{ggplot2}`.
   contents:
   - theme_ggdist
   - facet_title_left_horizontal
   - facet_title_right_horizontal
   - axis_titles_bottom_left
 
-- title: Sub-guides
-  desc: Sub-guides for labelling the `thickness` axis in `geom_slab()` and
-    dot counts in `geom_dots()`.
+- title: "Estimators and algorithms"
+  desc: >
+    Modular and configurable estimators and algorithms used by a variety of
+    `stat`s and `geom`s. Many of these functions use automatic partial function
+    application (aka "currying") provided by `auto_partial()`.
   contents:
-  - starts_with("subguide_")
+  - automatic-partial-functions
 
-- title: Dotplot layout algorithms
-  desc: Algorithms used by `geom_dotsinterval()` for automatically determining
+- subtitle: "Dotplot layout algorithms"
+  desc: >
+    Algorithms used by `geom_dotsinterval()` for automatically determining
     nice-looking dotplot binwidths and laying out dots.
   contents:
   - find_dotplot_binwidth
   - bin_dots
+
+- subtitle: "Dotplot smoothers"
+  desc: >
+    Smoothers for creating "density dotplots" using `geom_dotsinterval()`.
+  contents:
   - smooth_density
   - smooth_discrete
   - smooth_none
 
-- title: Density functions
-  desc: Density functions used by `stat_slabinterval()` and by the density
+- subtitle: "Density estimators"
+  desc: >
+    Density functions used by `stat_slabinterval()` and by the density
     smoothers for dotplot layout.
   contents:
   - density_bounded
   - density_unbounded
   - density_histogram
 
-- title: Bandwidth estimators
-  desc: Bandwidth estimators for use with `density_unbounded()` and `density_bounded()`.
+- subtitle: "Bandwidth estimators"
+  desc: >
+    Bandwidth estimators for use with `density_unbounded()` and `density_bounded()`.
   contents:
   - bandwidth
 
-- title: Distribution bounds estimators
-  desc: Distribution bounds estimators for use with `density_bounded()`.
+- subtitle: "Distribution bounds estimators"
+  desc: >
+    Distribution bounds estimators for use with `density_bounded()`.
   contents:
   - bounder_cdf
   - bounder_cooke
   - bounder_range
 
-- title: Histogram layout algorithms
-  desc: Algorithms for bin selection and alignment for use with `density_histogram()`.
+- subtitle: "Histogram layout algorithms"
+  desc: >
+    Algorithms for bin selection and alignment for use with `density_histogram()`.
   contents:
   - breaks
   - align
 
-- title: Blur types
-  desc: Blur types for `geom_blur_dots()`
+- subtitle: "Blur functions"
+  desc: >
+    Blur functions for use with `geom_blur_dots()`.
   contents:
-  - blur_type
+  - blur
 
-- title: Automatic partial functions
-  desc: Overview of automatic partial function application (currying) used by
-    several ggdist function families
+- subtitle: "Weighted quantiles and CDFs"
+  desc: >
+    Weighted generalizations of `quantile()` and `ecdf()` used internally by
+    several algorithms.
   contents:
-  - automatic-partial-functions
+  - weighted_quantile
+  - weighted_ecdf
 
-- title: Probability expressions
-  desc: Experimental mini-domain-specific language for probability expressions
+- title: "Probability expressions"
+  desc: >
+    Experimental mini-domain-specific language for probability expressions
     in `stat_slabinterval()` aesthetics.
   contents:
   - Pr_
   - p_
 
-- title: Weighted quantiles and CDFs
-  desc: Weighted generalizations of `quantile()` and `ecdf()` used internally by several algorithms.
-  contents:
-  - weighted_quantile
-  - weighted_ecdf
-
-- title: Compatibility with other packages
-  desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to
+- title: "Compatibility with other packages"
+  desc: >
+    Functions to convert the ggdist naming scheme (for `point_interval()`) to
     and from other packages' naming schemes.
   contents:
   - to_broom_names
@@ -177,12 +220,12 @@ reference:
   - to_ggmcmc_names
   - from_ggmcmc_names
 
-- title: Datasets
-  desc:  Datasets used for examples and testing
+- title: "Datasets"
+  desc: >
+    Datasets used for examples and testing
   contents:
   - RankCorr
 
-- title: Deprecated functions
-  desc:  Deprecated functions.
+- title: "Deprecated functions"
   contents:
   - ggdist-deprecated

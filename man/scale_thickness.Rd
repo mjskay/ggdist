@@ -5,7 +5,7 @@
 \alias{scale_thickness_shared}
 \alias{scale_thickness_identity}
 \alias{thickness}
-\title{Scale for slab thickness}
+\title{Slab thickness scale (ggplot2 scale)}
 \usage{
 scale_thickness_shared(
   name = waiver(),

@@ -40,7 +40,7 @@
 \alias{scale_slab_shape_continuous}
 \alias{guide_colourbar2}
 \alias{guide_colorbar2}
-\title{Custom ggplot scales for geom_slabinterval (and derivatives)}
+\title{Sub-geometry scales for geom_slabinterval (ggplot2 scales)}
 \usage{
 scale_point_colour_discrete(..., aesthetics = "point_colour")
 

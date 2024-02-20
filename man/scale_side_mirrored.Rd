@@ -2,7 +2,7 @@
 % Please edit documentation in R/scale_side_mirrored.R
 \name{scale_side_mirrored}
 \alias{scale_side_mirrored}
-\title{Side scale for mirrored slabs}
+\title{Side scale for mirrored slabs (ggplot2 scale)}
 \usage{
 scale_side_mirrored(start = "topright", ..., aesthetics = "side")
 }

@@ -11,7 +11,7 @@
 \alias{scale_fill_ramp_continuous}
 \alias{scale_fill_ramp_discrete}
 \alias{partial_colour_ramp}
-\title{Secondary ggplot color scale that ramps from another color}
+\title{Secondary color scale that ramps from another color (ggplot2 scale)}
 \usage{
 scale_colour_ramp_continuous(
   from = "white",

@@ -31,10 +31,10 @@ rounding in the Freedman-Diaconis algorithm. For an explanation of this
 parameter, see the documentation of the corresponding parameter in
 \code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
 
-\item{n}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, another breaks function (or string giving
-the suffix of the name of a function prefixed with \code{"breaks_"}) that
-determines the number of bins, from which \code{\link[=breaks_quantiles]{breaks_quantiles()}} will
-construct breaks at quantiles.}
+\item{n}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, either the target number of bins, or
+another breaks function (or string giving the suffix of the name of a
+function prefixed with \code{"breaks_"}) that returns the number of bins.
+\code{\link[=breaks_quantiles]{breaks_quantiles()}} will construct \emph{at most} \code{n} bins.}
 }
 \value{
 Either a single number (giving the number of bins) or a vector
@@ -56,7 +56,9 @@ breaks.
 versions of the corresponding base functions. See \code{\link[=nclass.Sturges]{nclass.Sturges()}},
 \code{\link[=nclass.scott]{nclass.scott()}}, and \code{\link[=nclass.FD]{nclass.FD()}}.
 \item \code{\link[=breaks_quantiles]{breaks_quantiles()}} constructs irregularly-sized bins using \code{n + 1} (possibly
-weighted) quantiles of \code{x}.
+weighted) quantiles of \code{x}. The final number of bins is \emph{at most} \code{n}, as
+very small bins (ones whose bin width is less than half the range of the
+data divided by \code{n}) will be merged into adjacent bins.
 }
 }
 \examples{

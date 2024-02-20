@@ -6,7 +6,7 @@
 
 # scale_colour_ramp -------------------------------------------------------
 
-#' Secondary ggplot color scale that ramps from another color
+#' Secondary color scale that ramps from another color (ggplot2 scale)
 #'
 #' This scale creates a secondary scale that modifies the `fill` or `color` scale of
 #' geoms that support it ([geom_lineribbon()] and [geom_slabinterval()]) to "ramp"

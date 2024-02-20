@@ -7,7 +7,7 @@
 
 # shared scale ------------------------------------------------------------
 
-#' Scale for slab thickness
+#' Slab thickness scale (ggplot2 scale)
 #'
 #' This \pkg{ggplot2} scale linearly scales all `thickness` values of geoms
 #' that support the `thickness` aesthetic (such as [geom_slabinterval()]). It

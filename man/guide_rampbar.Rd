@@ -2,7 +2,7 @@
 % Please edit documentation in R/guide_rampbar.R
 \name{guide_rampbar}
 \alias{guide_rampbar}
-\title{Continuous colour ramp guide}
+\title{Continuous guide for colour ramp scales (ggplot2 guide)}
 \usage{
 guide_rampbar(
   ...,

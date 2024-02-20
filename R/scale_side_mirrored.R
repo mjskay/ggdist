@@ -6,7 +6,7 @@
 
 # scale_side_mirrored -------------------------------------------------------
 
-#' Side scale for mirrored slabs
+#' Side scale for mirrored slabs (ggplot2 scale)
 #'
 #' This scale creates mirrored slabs for the `side` aesthetic of the [geom_slabinterval()]
 #' and [geom_dotsinterval()] family of geoms and stats. It works on discrete variables

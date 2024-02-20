@@ -6,7 +6,7 @@
 
 # scale_point_... ---------------------------------------------------------
 
-#' Custom ggplot scales for geom_slabinterval (and derivatives)
+#' Sub-geometry scales for geom_slabinterval (ggplot2 scales)
 #'
 #' These scales allow more specific aesthetic mappings to be made when using [geom_slabinterval()]
 #' and stats/geoms based on it (like eye plots).
