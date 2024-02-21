@@ -28,7 +28,151 @@ if (capabilities("cairo")) {
 [![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 <!-- badges: end -->
 
-![Preview of ggdist plots](man/figures/preview.png)
+```{r setup, include=FALSE}
+library(dplyr)
+library(tidyr)
+library(distributional)
+library(ggdist)
+library(ggplot2)
+library(patchwork)
+
+theme_set(theme_ggdist())
+```
+
+```{r preview_setup, include=FALSE}
+set.seed(12345)
+d = dist_normal(4, 1)
+d_quantiles = dist_sample(list(qnorm(ppoints(1000), 4, 1)))
+q_100 = qnorm(ppoints(100), 4, 1)
+x_samples_100 = rnorm(100, 4, 1)
+d_samples_100 = dist_sample(list(x_samples_100))
+
+dists_xlim = c(0,8)
+```
+
+
+```{r preview_slabinterval, include=FALSE}
+slabinterval_plot = ggplot() +
+  stat_halfeye(aes(y = "01", xdist = d)) +
+  stat_eye(aes(y = "02", xdist = d)) +
+  stat_gradientinterval(aes(y = "03", xdist = d), scale = 0.75, fill_type = "gradient", show_interval = FALSE, show_point = FALSE, position = position_nudge(y = -0.2)) +
+  stat_ccdfinterval(aes(y = "04", xdist = d), scale = .5, justification = 0, position = position_nudge(y = -0.3)) +
+  stat_cdfinterval(aes(y = "05", xdist = d), scale = .5, justification = 0, position = position_nudge(y = -0.2)) +
+  stat_interval(
+    aes(y = "06", xdist = d), color = "gray65", alpha = 1/3, linewidth = 10,
+    position = position_nudge(y = -.1)
+  ) +
+  stat_pointinterval(aes(y = "07", xdist = d)) +
+  stat_slab(aes(y = "08", xdist = d), position = position_nudge(y = - 0.2)) +
+  stat_histinterval(aes(y = "09", xdist = d_quantiles), position = position_nudge(y = - 0.25)) +
+  stat_slab(
+    aes(y = "10", xdist = d, fill_ramp = after_stat(level)), 
+    show.legend = FALSE, .width = c(.5, .8, .95),
+    fill = scales::brewer_pal()(7)[[5]],
+    position = position_nudge(y = -0.5)    
+  ) +
+  stat_spike(
+    aes(y = "10", xdist = d, linetype = after_stat(at)),
+    at = c(mode = Mode, qi = function(...) qi(..., .width = .8)),
+    show.legend = FALSE,
+    position = position_nudge(y = -0.5)
+  ) +
+  scale_x_continuous(limits = dists_xlim, expand = c(0,0), breaks = NULL) +
+  scale_y_discrete(limits = rev, breaks = NULL) +
+  labs(
+    title = "slabinterval",
+    x = NULL,
+    y = NULL
+  ) +
+  theme(plot.margin = margin(5.5, 5.5, 5.5, 0))
+```
+
+```{r preview_dotsinterval, include=FALSE}
+set.seed(123456)
+x1 = rnorm(125, 3, 0.75)
+x2 = rnorm(125, 5, 0.75)
+
+dotsinterval_plot = ggplot() +
+  stat_dotsinterval(aes(y = "01", xdist = d)) +
+  stat_dots(aes(y = "02", xdist = d), layout = "weave", position = position_nudge(y = -0.2)) +
+  geom_weave(aes(y = "03", x = x1, fill = x1 > 4, group = NA), linewidth = NA, alpha = 0.75, binwidth = NA) +
+  geom_swarm(aes(y = "04", x = x2, fill = x2 > 4, group = NA), linewidth = NA, alpha = 0.75, binwidth = NA, position = position_nudge(y = 0.1)) +
+  scale_fill_brewer(palette = "Dark2", guide = "none") +
+  
+  ggnewscale::new_scale_fill() +
+  stat_dotsinterval(aes(y = "05", xdist = d, fill = after_stat(level)), layout = "weave", slab_linewidth = NA, .width = c(.66, .95), quantiles = 200, position = position_nudge(y = -0.3)) +
+  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "fill", guide = "none") +
+  
+  ggnewscale::new_scale_fill() +
+  geom_dots(aes(y = "06", x = x1, fill = "a"), side = "bottom", scale = 0.75, linewidth = NA, position = position_nudge(y = -0.1)) +
+  stat_slabinterval(aes(y = "06", x = x1, fill = "a"), scale = 0.5, position = position_nudge(y = -0.1)) +
+  geom_dots(aes(y = "07", x = x2, fill = "b"), side = "bottom", scale = 0.75, linewidth = NA, position = position_nudge(y = -0.2)) +
+  stat_slabinterval(aes(y = "07", x = x2, fill = "b"), scale = 0.5, position = position_nudge(y = -0.2)) +
+  scale_fill_brewer(palette = "Set2", guide = "none") +
+  
+  
+  scale_x_continuous(limits = dists_xlim, expand = c(0,0), breaks = NULL) +
+  scale_y_discrete(limits = rev, breaks = NULL) +
+  labs(
+    title = "dotsinterval",
+    x = NULL,
+    y = NULL
+  )
+```
+
+```{r preview_lineribbon, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggdist)
+library(broom)
+
+m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
+mtcars_preds = mtcars %>%
+  group_by(cyl) %>%
+  expand(hp = seq(min(hp), max(hp), length.out = 50)) %>%
+  augment(m_mpg, newdata = ., se_fit = TRUE)
+
+mtcars_plot = function(.width = c(.6, .8, .95), alpha = 1/4, ...) {
+  mtcars_preds %>%
+    ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
+    stat_lineribbon(
+      aes(dist = "norm", arg1 = .fitted, arg2 = .se.fit), 
+      .width = .width, alpha = alpha, ...
+    ) +
+    geom_point(aes(y = mpg), data = mtcars) +
+    
+    scale_fill_brewer(palette = "Set2") +
+    scale_color_brewer(palette = "Dark2") +
+    labs(
+      color = "cyl",
+      fill = "cyl",
+      y = "mpg"
+    ) +
+    theme_ggdist()
+}
+
+lineribbon_plot_1 = mtcars_plot() +
+  guides(color = "none", fill = "none", x = "none") +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL) +
+  labs(title = "lineribbon", x = NULL, y = NULL) +
+  theme(plot.margin = margin(5.5, 5.5, 0, 5.5))
+lineribbon_plot_2 = mtcars_plot(.width = ppoints(30), alpha = 1/20) +
+  guides(color = "none", fill = "none") +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL) +
+  labs(x = NULL, y = NULL) +
+  theme(plot.margin = margin(0, 5.5, 5.5, 5.5))
+```
+
+
+```{r preview, echo=FALSE, fig.height=4.5, fig.width=9}
+slabinterval_plot + dotsinterval_plot + (lineribbon_plot_1 / lineribbon_plot_2) +
+  plot_annotation(
+    caption = 'Some examples from the three main families of ggdist geometries'
+  )
+```
 
 [ggdist](https://mjskay.github.io/ggdist/) is an R package that provides a flexible set of `ggplot2` geoms and stats designed
 especially for visualizing distributions and uncertainty. It is designed for both
@@ -70,32 +214,7 @@ The `geom_lineribbon()` / `stat_lineribbon()` family (see `vignette("lineribbon"
 fit lines with an arbitrary number of uncertainty bands:
   
 ```{r lineribbon, echo=FALSE, message=FALSE, warning=FALSE}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(ggdist)
-library(broom)
-
-m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
-mtcars %>%
-  group_by(cyl) %>%
-  expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
-  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
-  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
-  stat_lineribbon(
-    aes(dist = "norm", arg1 = .fitted, arg2 = .se.fit), 
-    alpha = 1/4
-  ) +
-  geom_point(aes(y = mpg), data = mtcars) +
-  
-  scale_fill_brewer(palette = "Set2") +
-  scale_color_brewer(palette = "Dark2") +
-  labs(
-    color = "cyl",
-    fill = "cyl",
-    y = "mpg"
-  ) +
-  theme_ggdist()
+mtcars_plot()
 ```
 
 All stat in `ggdist` also support visualizing analytical distributions and vectorized distribution

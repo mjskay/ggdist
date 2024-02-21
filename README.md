@@ -16,7 +16,7 @@ DOI](https://img.shields.io/badge/DOI-10.1109%2FTVCG.2023.3327195-blue)](https:/
 DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 <!-- badges: end -->
 
-![Preview of ggdist plots](man/figures/preview.png)
+<img src="man/figures/README/preview-1.png" width="864" />
 
 [ggdist](https://mjskay.github.io/ggdist/) is an R package that provides
 a flexible set of `ggplot2` geoms and stats designed especially for
