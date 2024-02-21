@@ -60,29 +60,22 @@ weighted_hist = function(
 #'
 #' @param x A numeric vector giving a sample.
 #' @param weights A numeric vector of `length(x)` giving sample weights.
-#' @param width For [breaks_fixed()], the desired bin width.
-#' @param digits For [breaks_FD()], number of significant digits to keep when
-#'   rounding in the Freedman-Diaconis algorithm. For an explanation of this
-#'   parameter, see the documentation of the corresponding parameter in
-#'   [grDevices::nclass.FD()].
-#' @param n For [breaks_quantiles()], either the target number of bins, or
-#'   another breaks function (or string giving the suffix of the name of a
-#'   function prefixed with `"breaks_"`) that returns the number of bins.
-#'   [breaks_quantiles()] will construct *at most* `n` bins.
 #'
 #' @details
-#' These functions take a sample and its weights and return a valuable suitable for
+#' These functions take a sample and its weights and return a value suitable for
 #' the `breaks` argument to [density_histogram()] that will determine the histogram
 #' breaks.
 #'
 #'  - [breaks_fixed()] allows you to manually specify a fixed bin width.
 #'  - [breaks_Sturges()], [breaks_Scott()], and [breaks_FD()] implement weighted
-#'    versions of the corresponding base functions. See [nclass.Sturges()],
-#'    [nclass.scott()], and [nclass.FD()].
-#'  - [breaks_quantiles()] constructs irregularly-sized bins using `n + 1` (possibly
-#'    weighted) quantiles of `x`. The final number of bins is *at most* `n`, as
-#'    very small bins (ones whose bin width is less than half the range of the
-#'    data divided by `n`) will be merged into adjacent bins.
+#'    versions of their corresponding base functions. They return a scalar
+#'    numeric giving the number of bins. See [nclass.Sturges()], [nclass.scott()],
+#'    and [nclass.FD()].
+#'  - [breaks_quantiles()] constructs irregularly-sized bins using `max_n + 1`
+#'    (possibly weighted) quantiles of `x`. The final number of bins is
+#'    *at most* `max_n`, as small bins (ones whose bin width is less than half
+#'    the range of the data divided by `max_n` times `min_width`) will be merged
+#'    into adjacent bins.
 #' @returns Either a single number (giving the number of bins) or a vector
 #' giving the edges between bins.
 #' @seealso [density_histogram()], [align]
@@ -129,6 +122,11 @@ weighted_hist = function(
 #'     x = NULL
 #'   )
 #' @name breaks
+NULL
+
+## breaks_fixed ---------------------------------------------------------------
+#' @rdname breaks
+#' @param width For [breaks_fixed()], the desired bin width.
 #' @export
 breaks_fixed = auto_partial(name = "breaks_fixed", function(
   x, weights = NULL, width = 1
@@ -142,6 +140,7 @@ breaks_fixed = auto_partial(name = "breaks_fixed", function(
   seq.int(x_range[[1]] - expand, x_range[[2]] + expand, by = width)
 })
 
+## breaks_Sturges ---------------------------------------------------------------
 #' @rdname breaks
 #' @export
 breaks_Sturges = auto_partial(name = "breaks_Sturges", function(
@@ -152,6 +151,7 @@ breaks_Sturges = auto_partial(name = "breaks_Sturges", function(
   ceiling(log2(n) + 1)
 })
 
+## breaks_Scott ---------------------------------------------------------------
 #' @rdname breaks
 #' @export
 breaks_Scott = auto_partial(name = "breaks_Scott", function(
@@ -167,7 +167,12 @@ breaks_Scott = auto_partial(name = "breaks_Scott", function(
   }
 })
 
+## breaks_FD ---------------------------------------------------------------
 #' @rdname breaks
+#' @param digits For [breaks_FD()], the number of significant digits to keep when
+#'   rounding in the Freedman-Diaconis algorithm. For an explanation of this
+#'   parameter, see the documentation of the corresponding parameter in
+#'   [grDevices::nclass.FD()].
 #' @export
 breaks_FD = auto_partial(name = "breaks_FD", function(
   x, weights = NULL, digits = 5
@@ -200,19 +205,27 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
   }
 })
 
+## breaks_quantiles --------------------------------------------------------
 #' @rdname breaks
+#' @param max_n For [breaks_quantiles()], either a scalar numeric giving the
+#'   maximum number of bins, or another breaks function (or string giving the
+#'   suffix of the name of a function prefixed with `"breaks_"`) that will
+#'   return the maximum number of bins. [breaks_quantiles()] will construct
+#'   *at most* `max_n` bins.
+#' @param min_width For [breaks_quantiles()], a scalar numeric between `0` and
+#'   `1` giving the minimum bin width as a proportion of `diff(range(x)) / max_n`.
 #' @export
 breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
-  x, weights = NULL, n = "Scott"
+  x, weights = NULL, max_n = "Scott", min_width = 0.5
 ) {
-  n = get_raw_breaks(x, weights, n)
-  stopifnot(is.numeric(n), length(n) == 1)
+  max_n = get_raw_breaks(x, weights, max_n)
+  stopifnot(is.numeric(max_n), length(max_n) == 1, max_n >= 1)
 
-  breaks = weighted_quantile(x, ppoints(n + 1, a = 1), weights = weights, names = FALSE)
+  breaks = weighted_quantile(x, ppoints(max_n + 1, a = 1), weights = weights, names = FALSE)
 
   # remove bins that are very small (less than half the bin width of the
   # bins that would be used in a regular bin spacing with `n` bins).
-  min_binwidth = diff(range(x)) / n / 2
+  min_binwidth = diff(range(x)) / max_n * min_width
   next_break = -Inf
   for (i in seq_along(breaks)) {
     if (breaks[[i]] >= next_break) {
@@ -304,12 +317,14 @@ align_none = auto_partial(name = "align_none", function(breaks) {
   0
 })
 
+## align_boundary ----------------------------------------------------------
 #' @rdname align
 #' @export
 align_boundary = auto_partial(name = "align_boundary", function(breaks, at = 0) {
   (breaks[[1]] - at) %% diff(breaks[1:2])
 })
 
+## align_center ------------------------------------------------------------
 #' @rdname align
 #' @export
 align_center = auto_partial(name = "align_center", function(breaks, at = 0) {
@@ -337,7 +352,7 @@ get_breaks = function(x, weights, breaks) {
     if (length(unique_x) == 1) {
       breaks = c(unique_x - 0.5, unique_x + 0.5)
     } else {
-      breaks = seq.int(min(x), max(x), length.out = breaks)
+      breaks = seq.int(min(x), max(x), length.out = max(breaks + 1, 2))
     }
     binwidths = diff(breaks)
     equidist = TRUE

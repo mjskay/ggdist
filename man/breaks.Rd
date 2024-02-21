@@ -17,7 +17,7 @@ breaks_Scott(x, weights = NULL)
 
 breaks_FD(x, weights = NULL, digits = 5)
 
-breaks_quantiles(x, weights = NULL, n = "Scott")
+breaks_quantiles(x, weights = NULL, max_n = "Scott", min_width = 0.5)
 }
 \arguments{
 \item{x}{A numeric vector giving a sample.}
@@ -31,10 +31,14 @@ rounding in the Freedman-Diaconis algorithm. For an explanation of this
 parameter, see the documentation of the corresponding parameter in
 \code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
 
-\item{n}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, either the target number of bins, or
-another breaks function (or string giving the suffix of the name of a
-function prefixed with \code{"breaks_"}) that returns the number of bins.
-\code{\link[=breaks_quantiles]{breaks_quantiles()}} will construct \emph{at most} \code{n} bins.}
+\item{max_n}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, either a scalar numeric giving the
+maximum number of bins, or another breaks function (or string giving the
+suffix of the name of a function prefixed with \code{"breaks_"}) that will
+return the maximum number of bins. \code{\link[=breaks_quantiles]{breaks_quantiles()}} will construct
+\emph{at most} \code{max_n} bins.}
+
+\item{min_width}{For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, a scalar numeric between \code{0} and
+\code{1} giving the minimum bin width as a proportion of \code{diff(range(x)) / max_n}.}
 }
 \value{
 Either a single number (giving the number of bins) or a vector
@@ -55,10 +59,11 @@ breaks.
 \item \code{\link[=breaks_Sturges]{breaks_Sturges()}}, \code{\link[=breaks_Scott]{breaks_Scott()}}, and \code{\link[=breaks_FD]{breaks_FD()}} implement weighted
 versions of the corresponding base functions. See \code{\link[=nclass.Sturges]{nclass.Sturges()}},
 \code{\link[=nclass.scott]{nclass.scott()}}, and \code{\link[=nclass.FD]{nclass.FD()}}.
-\item \code{\link[=breaks_quantiles]{breaks_quantiles()}} constructs irregularly-sized bins using \code{n + 1} (possibly
-weighted) quantiles of \code{x}. The final number of bins is \emph{at most} \code{n}, as
-very small bins (ones whose bin width is less than half the range of the
-data divided by \code{n}) will be merged into adjacent bins.
+\item \code{\link[=breaks_quantiles]{breaks_quantiles()}} constructs irregularly-sized bins using \code{max_n + 1}
+(possibly weighted) quantiles of \code{x}. The final number of bins is
+\emph{at most} \code{max_n}, as small bins (ones whose bin width is less than half
+the range of the data divided by \code{max_n} times \code{min_width}) will be merged
+into adjacent bins.
 }
 }
 \examples{
