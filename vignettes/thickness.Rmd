@@ -22,7 +22,7 @@ family of geoms and stats in `ggdist` (see `vignette("slabinterval")` for more o
 that family). 
 
 **Note**: this article makes use of ggdist subguides for labeling purposes, which
-are currently only available in the development version of ggdist (> 3.3.1) on Github.
+requires ggdist ≥ 3.3.2.
 
 ## Setup
   

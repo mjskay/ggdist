@@ -1,6 +1,8 @@
 
 # ggdist: Visualizations of distributions and uncertainty
 
+<!-- badges: start -->
+
 [![R CMD check
 status](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml)
 [![Coverage
@@ -12,11 +14,9 @@ status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org
 DOI](https://img.shields.io/badge/DOI-10.1109%2FTVCG.2023.3327195-blue)](https://doi.org/10.1109/TVCG.2023.3327195)
 [![Software
 DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
+<!-- badges: end -->
 
-<figure>
-<img src="man/figures/preview.png" alt="Preview of ggdist plots" />
-<figcaption aria-hidden="true">Preview of ggdist plots</figcaption>
-</figure>
+![Preview of ggdist plots](man/figures/preview.png)
 
 [ggdist](https://mjskay.github.io/ggdist/) is an R package that provides
 a flexible set of `ggplot2` geoms and stats designed especially for
@@ -35,12 +35,8 @@ The `geom_slabinterval()` / `stat_slabinterval()` family (see
 and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots,
 gradient plots, histograms, and more:
 
-<figure>
-<img src="man/figures/slabinterval_family.png"
-alt="The slabinterval family of geoms and stats" />
-<figcaption aria-hidden="true">The slabinterval family of geoms and
-stats</figcaption>
-</figure>
+![The slabinterval family of geoms and
+stats](man/figures/slabinterval_family.png)
 
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 `vignette("dotsinterval")`) makes it easy to visualize dot+interval

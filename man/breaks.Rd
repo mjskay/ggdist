@@ -26,7 +26,7 @@ breaks_quantiles(x, weights = NULL, max_n = "Scott", min_width = 0.5)
 
 \item{width}{For \code{\link[=breaks_fixed]{breaks_fixed()}}, the desired bin width.}
 
-\item{digits}{For \code{\link[=breaks_FD]{breaks_FD()}}, number of significant digits to keep when
+\item{digits}{For \code{\link[=breaks_FD]{breaks_FD()}}, the number of significant digits to keep when
 rounding in the Freedman-Diaconis algorithm. For an explanation of this
 parameter, see the documentation of the corresponding parameter in
 \code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
@@ -51,14 +51,15 @@ argument to \code{\link[=density_histogram]{density_histogram()}}.
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{
-These functions take a sample and its weights and return a valuable suitable for
+These functions take a sample and its weights and return a value suitable for
 the \code{breaks} argument to \code{\link[=density_histogram]{density_histogram()}} that will determine the histogram
 breaks.
 \itemize{
 \item \code{\link[=breaks_fixed]{breaks_fixed()}} allows you to manually specify a fixed bin width.
 \item \code{\link[=breaks_Sturges]{breaks_Sturges()}}, \code{\link[=breaks_Scott]{breaks_Scott()}}, and \code{\link[=breaks_FD]{breaks_FD()}} implement weighted
-versions of the corresponding base functions. See \code{\link[=nclass.Sturges]{nclass.Sturges()}},
-\code{\link[=nclass.scott]{nclass.scott()}}, and \code{\link[=nclass.FD]{nclass.FD()}}.
+versions of their corresponding base functions. They return a scalar
+numeric giving the number of bins. See \code{\link[=nclass.Sturges]{nclass.Sturges()}}, \code{\link[=nclass.scott]{nclass.scott()}},
+and \code{\link[=nclass.FD]{nclass.FD()}}.
 \item \code{\link[=breaks_quantiles]{breaks_quantiles()}} constructs irregularly-sized bins using \code{max_n + 1}
 (possibly weighted) quantiles of \code{x}. The final number of bins is
 \emph{at most} \code{max_n}, as small bins (ones whose bin width is less than half

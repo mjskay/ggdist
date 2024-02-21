@@ -39,7 +39,7 @@ theme_set(theme_ggdist())
 ```
 
 
-## Roadmap: It all starts with "slabinterval"
+## Roadmap: The `slabinterval` meta-geometry
 
 ```{r slabinterval_family, echo=FALSE, fig.height=5.5, fig.width=6.2}
 dists_df = tibble(

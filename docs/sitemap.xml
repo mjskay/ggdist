@@ -19,6 +19,9 @@
     <loc>http://mjskay.github.io/ggdist/articles/slabinterval.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/articles/thickness.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/authors.html</loc>
   </url>
   <url>
@@ -41,6 +44,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/blur.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/bounder_cdf.html</loc>
@@ -71,6 +77,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/find_dotplot_binwidth.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_blur_dots.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_dots.html</loc>
@@ -190,6 +199,9 @@
     <loc>http://mjskay.github.io/ggdist/reference/stat_lineribbon.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_mcse_dots.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_pointinterval.html</loc>
   </url>
   <url>
@@ -206,6 +218,12 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/student_t.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/subguide_axis.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/subguide_none.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/theme_ggdist.html</loc>

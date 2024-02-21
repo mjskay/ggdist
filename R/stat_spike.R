@@ -109,7 +109,7 @@ compute_slab_spike = function(
   })
   # needs to be a vector (e.g. in cases of interval functions
   # like qi() which return matrices)
-  input = unlist(input_nested, use.names = FALSE, recursive = FALSE)
+  input = unlist(input_nested, use.names = FALSE)
   names(input) = rep(names(at), times = lengths(input_nested))
 
   # evaluate functions

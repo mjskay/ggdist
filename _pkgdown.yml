@@ -2,14 +2,27 @@ url: http://mjskay.github.io/ggdist
 
 
 template:
+  bootstrap: 5
   params:
-    bootswatch: paper
     ganalytics: UA-93322-5
+  bslib:
+    line-height-base: 1.7
+    primary: "#4575B4"
+    base_font:
+      google:
+        family: "Source Sans Pro"
+        wght: [400, 600, 700]
+        ital: [0, 1]
+    code_font:
+      google:
+        family: "Source Code Pro"
+        wght: [400, 700]
+        ital: [0, 1]
 
 
 authors:
   Matthew Kay:
-    href: http://www.mjskay.com
+    href: https://www.mjskay.com
 
 
 figures:
