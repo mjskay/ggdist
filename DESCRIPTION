@@ -21,7 +21,6 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
 Depends:
     R (>= 3.6.0)
 Imports:
-    tidyselect,
     dplyr (>= 1.0.0),
     ggplot2 (>= 3.4.0),
     rlang (>= 0.3.0),
@@ -38,6 +37,7 @@ Imports:
     gtable,
     Rcpp
 Suggests:
+    tidyselect,
     fda,
     posterior,
     beeswarm (>= 0.4.0),
@@ -69,6 +69,7 @@ Encoding: UTF-8
 Collate:
     "ggdist-package.R"
     "util.R"
+    "compat.R"
     "rd.R"
     "RcppExports.R"
     "abstract_geom.R"

@@ -142,8 +142,8 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' [parse_dist()].
 #' @param predicate a bare expression for selecting the rows of `data` to modify. This is useful
 #' if `data` contains more than one row with an LKJ prior in it and you only want to modify some
-#' of the distributions; if this is the case, give row a predicate expression (such as you might supply
-#' to [dplyr::filter()]) that evaluates to `TRUE` on the rows you want to modify.
+#' of the distributions; if this is the case, give row a predicate expression that evaluates to
+#' `TRUE` on the rows you want to modify.
 #' If `NULL` (the default), all `lkjcorr` distributions in `data` are modified.
 #' @param dist The name of the column containing distribution names. See [parse_dist()].
 #' @param args The name of the column containing distribution arguments. See [parse_dist()].

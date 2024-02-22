@@ -22,8 +22,8 @@ and a list column of distribution arguments (\code{".args"} by default), such as
 
 \item{predicate}{a bare expression for selecting the rows of \code{data} to modify. This is useful
 if \code{data} contains more than one row with an LKJ prior in it and you only want to modify some
-of the distributions; if this is the case, give row a predicate expression (such as you might supply
-to \code{\link[dplyr:filter]{dplyr::filter()}}) that evaluates to \code{TRUE} on the rows you want to modify.
+of the distributions; if this is the case, give row a predicate expression that evaluates to
+\code{TRUE} on the rows you want to modify.
 If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} are modified.}
 
 \item{dist}{The name of the column containing distribution names. See \code{\link[=parse_dist]{parse_dist()}}.}

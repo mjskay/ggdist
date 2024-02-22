@@ -136,8 +136,8 @@ rescale_slab_thickness = function(
   })
 
   list(
-    data = bind_rows(lapply(data__params, `[[`, "data")),
-    subguide_params = bind_rows(lapply(data__params, `[[`, "subguide_params"))
+    data = map_dfr_(data__params, `[[`, "data"),
+    subguide_params = map_dfr_(data__params, `[[`, "subguide_params")
   )
 }
 
@@ -984,7 +984,6 @@ get_justification = function(justification, side, orientation) {
 #' @param orientation orientation of the slab
 #' @param side side of the slab
 #' @noRd
-#' @importFrom dplyr lag lead
 group_slab_data_by = function(
   slab_data,
   aesthetics = c("fill", "colour", "alpha"),
@@ -999,8 +998,9 @@ group_slab_data_by = function(
   if (nlevels(groups) > 1) {
     # need to split into groups based on varying aesthetics
 
-    last_in_group = groups != lead(groups, default = groups[[length(groups)]])
-    first_in_group = groups != lag(groups, default = groups[[1]])
+    n = length(groups)
+    last_in_group = groups != c(groups[-1], groups[[n]])
+    first_in_group = groups != c(groups[[1]], groups[-n])
     slab_data$group = cumsum(first_in_group)
 
     # we want the two rows on each side of every cutpoint, row i and row j = i + 1
@@ -1019,7 +1019,7 @@ group_slab_data_by = function(
     # now we bind things with the new j rows at the beginning (they were first in each
     # group) and the new i rows at the end (they were last). This ensures that when the rows
     # are pulled out to draw a given group, they are in order within that group
-    slab_data = bind_rows(
+    slab_data = vec_rbind(
       new_row__j,
       slab_data,
       new_row__i
@@ -1039,7 +1039,7 @@ group_slab_data_by = function(
   switch_side(side, orientation,
     topright = topright(),
     bottomleft = bottomleft(),
-    both = bind_rows(topright(), bottomleft())
+    both = vec_rbind(topright(), bottomleft())
   )
 }
 

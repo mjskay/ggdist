@@ -33,7 +33,7 @@ globalVariables(".value")
 #' This can be numeric columns, list columns containing numeric vectors, or
 #' [posterior::rvar()]s.
 #' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
-#' values). Supports tidyselect syntax, as in [dplyr::select()]. Intervals are calculated jointly with
+#' values). Supports [tidyselect][tidyselect::language] syntax. Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
 #' (`NULL`) causes [curve_interval()] to use all grouping variables in the input data frame as the value
 #' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
@@ -133,9 +133,7 @@ globalVariables(".value")
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr syms enquo
-#' @importFrom tidyselect eval_select
 #' @export
 curve_interval = function(
   .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
@@ -182,7 +180,7 @@ curve_interval.data.frame = function(
   .interval = c("mhd", "mbd", "bd", "bd-mbd"),
   .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
-  stop_if_not_installed("posterior", "{.help curve_interval}")
+  stop_if_not_installed(c("posterior", "dplyr"), "{.help curve_interval}")
 
   .interval = match.arg(.interval)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -191,24 +189,20 @@ curve_interval.data.frame = function(
   # get the grouping variables we will jointly calculate intervals on
   .along = enquo(.along)
   if (is.null(quo_get_expr(.along))) {
-    .along = group_vars(data)
+    .along = group_vars_(data)
   } else {
-    .along = names(data)[eval_select(.along, data)]
+    .along = names(data)[eval_select_(.along, data)]
     data = group_by_at(data, .along, .add = TRUE)
   }
 
   # get the groups we will condition before doing the joint intervals
-  .conditional_groups = setdiff(group_vars(data), .along)
+  .conditional_groups = setdiff(group_vars_(data), .along)
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
     # are not in .exclude
-    col_exprs = names(data) %>%
-      #don't aggregate groups because we aggregate within these
-      setdiff(group_vars(data)) %>%
-      setdiff(.exclude) %>%
-      syms() %>%
-      quos_auto_name()
+    col_names = setdiff(names(data), c(group_vars_(data), .exclude))
+    col_exprs = quos_auto_name(syms(col_names))
 
     if (length(col_exprs) == 0) {
       #still nothing to aggregate? not sure what the user wants
@@ -228,7 +222,7 @@ curve_interval.data.frame = function(
     # if the value we are going to summarise is not already a list column, make it into a list column
     # (making it a list column first is faster than anything else I've tried)
     if (!is.list(data[[col_name]])) {
-      data = summarise_at(data, col_name, list)
+      data = make_list_cols(data, col_name)
     }
 
     .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
@@ -240,7 +234,7 @@ curve_interval.data.frame = function(
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
     if (!all(map_lgl_(data[, names(col_exprs)], is.list))) {
-      data = summarise_at(data, names(col_exprs), list)
+      data = make_list_cols(data, names(col_exprs))
     }
 
     result = NULL
@@ -254,7 +248,7 @@ curve_interval.data.frame = function(
       # actual widths aren't always going to be equal so we'll take the means of them
       actual_widths = cbind(actual_widths, col_result$.actual_width)
 
-      result = bind_cols(
+      result = vec_cbind(
         result[, names(result) != col_name],
         col_result[, names(col_result) == col_name | (!names(col_result) %in% names(result))]
       )
@@ -297,7 +291,7 @@ halfspace_depth = function(x) {
     stop0("Must have the same number of values in each group.")
   }
 
-  dfs = group_split(group_by_at(data, .conditional_groups))
+  dfs = split_df(dplyr::ungroup(data), .conditional_groups)
 
   # translate our names to names fda::fbplot understands
   .interval_internal = switch(.interval,

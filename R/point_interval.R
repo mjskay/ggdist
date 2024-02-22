@@ -147,7 +147,6 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom dplyr bind_cols group_vars summarise_at %>%
 #' @importFrom rlang quos quos_auto_name eval_tidy syms
 #' @importFrom stats median
 #' @importFrom tibble as_tibble
@@ -175,12 +174,8 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
     # are not in .exclude
-    col_exprs = names(data) %>%
-      #don't aggregate groups because we aggregate within these
-      setdiff(group_vars(data)) %>%
-      setdiff(.exclude) %>%
-      syms() %>%
-      quos_auto_name()
+    col_names = setdiff(names(data), c(group_vars_(data), .exclude))
+    col_exprs = quos_auto_name(syms(col_names))
 
     if (length(col_exprs) == 0) {
       #still nothing to aggregate? not sure what the user wants
@@ -200,7 +195,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     # if the value we are going to summarise is not already a list column, make it into a list column
     # (making it a list column first is faster than anything else I've tried)
     if (!is.list(data[[col_name]])) {
-      data = summarise_at(data, col_name, list)
+      data = make_list_cols(data, col_name)
     }
 
     result = map_dfr_(.width, function(p) {
@@ -218,12 +213,12 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         if (inherits(draws, "rvar") && length(draws) > 1) {
           flat_draws = flatten_array(draws)
           draws = flat_draws$x
-          # the line after this (bind_cols()) will have to recycle
+          # the line after this (vec_cbind()) will have to recycle
           # row[[col_name]], which may be expensive because it is an rvar,
           # so we assign NA first to skip that since we're overwriting
           # row[[col_name]] right after anyway
           row[[col_name]] = NA
-          row = bind_cols(row, .index = flat_draws$index_names)
+          row = vec_cbind(row, .index = flat_draws$index_names)
           row[[col_name]] = draws
         }
 
@@ -243,7 +238,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
             flat_point = flatten_array(point_j)
             point_j = flat_point$x
             row_j[[col_name]] = NA
-            row_j = bind_cols(row_j, .index = flat_point$index_names)
+            row_j = vec_cbind(row_j, .index = flat_point$index_names)
           }
           row_j[[col_name]] = as.vector(point_j)
 
@@ -270,7 +265,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     # (making them list columns first is faster than anything else I've tried)
     # this also ensures that rvars and distributional objects are supported (as those act as lists)
     if (!all(map_lgl_(data[, names(col_exprs)], is.list))) {
-      data = summarise_at(data, names(col_exprs), list)
+      data = make_list_cols(data, names(col_exprs))
     }
 
     result = map_dfr_(.width, function(p) {
@@ -316,7 +311,6 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 }
 
 #' @rdname point_interval
-#' @importFrom dplyr rename
 #' @export
 point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
@@ -340,7 +334,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   result[[".interval"]] = interval_name
 
   if (.simple_names) {
-    rename(result, .value = y, .lower = ymin, .upper = ymax)
+    rename_cols(result, list(y = ".value", ymin = ".lower", ymax = ".upper"))
   } else {
     result
   }

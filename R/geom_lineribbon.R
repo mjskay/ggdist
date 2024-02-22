@@ -206,8 +206,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the
     # grouping ourselves
-    grouping_columns = names(data) %>%
-      intersect(c("colour", "fill", "fill_raw", "linetype", "group"))
+    grouping_columns = intersect(names(data), c("colour", "fill", "fill_raw", "linetype", "group"))
 
     # draw as a step function if requested
     if (isTRUE(step)) step = "mid"
@@ -225,33 +224,28 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     }
 
     # draw all the ribbons
-    ribbon_grobs = data %>%
-      dlply_(grouping_columns, function(d) {
-        group_grobs = list(
-          GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes)
-        )
-        list(
-          order = mean(d[["order"]], na.rm = TRUE),
-          grobs = group_grobs
-        )
-      })
-
-    ribbon_grobs = ribbon_grobs[order(map_dbl_(ribbon_grobs, `[[`, "order"))] %>%
-      lapply(`[[`, i = "grobs") %>%
-      unlist(recursive = FALSE) %||%
-      list()
+    ribbon_grobs = dlply_(data, grouping_columns, function(d) {
+      group_grobs = list(
+        GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes)
+      )
+      list(
+        order = mean(d[["order"]], na.rm = TRUE),
+        grobs = group_grobs
+      )
+    })
+    ribbon_grobs = ribbon_grobs[order(map_dbl_(ribbon_grobs, `[[`, "order"))]
+    ribbon_grobs = lapply(ribbon_grobs, `[[`, i = "grobs")
+    ribbon_grobs = unlist(ribbon_grobs, recursive = FALSE, use.names = FALSE) %||% list()
 
     # now draw all the lines
-    line_grobs = data %>%
-      dlply_(grouping_columns, function(d) {
-        if (!is.null(d[[x]])) {
-          list(GeomLine$draw_panel(d, panel_scales, coord))
-        } else {
-          list()
-        }
-      }) %>%
-      unlist(recursive = FALSE) %||%
-      list()
+    line_grobs = dlply_(data, grouping_columns, function(d) {
+      if (!is.null(d[[x]])) {
+        list(GeomLine$draw_panel(d, panel_scales, coord))
+      } else {
+        list()
+      }
+    })
+    line_grobs = unlist(line_grobs, recursive = FALSE, use.names = FALSE) %||% list()
 
     grobs = c(ribbon_grobs, line_grobs)
 
@@ -268,7 +262,6 @@ geom_lineribbon = make_geom(GeomLineribbon)
 
 # helpers -----------------------------------------------------------------
 
-#' @importFrom dplyr lag lead
 stepify = function(df, x = "x", direction = "hv") {
   n = nrow(df)
 
@@ -278,13 +271,17 @@ stepify = function(df, x = "x", direction = "hv") {
   switch(direction,
     hv = {
       # horizontal-to-vertical step => lead x and drop last row
-      step_df[[x]] = lead(step_df[[x]])
-      step_df[-2*n,]
+      lead_x = step_df[[x]][-1]
+      step_df = step_df[-2*n,]
+      step_df[[x]] = lead_x
+      step_df
     },
     vh = {
       # vertical-to-horizontal step => lag x and drop first row
-      step_df[[x]] = lag(step_df[[x]])
-      step_df[-1,]
+      lag_x = step_df[[x]][-2*n]
+      step_df = step_df[-1,]
+      step_df[[x]] = lag_x
+      step_df
     },
     mid = {
       # mid step => last value in each pair is matched with the first value in the next pair,

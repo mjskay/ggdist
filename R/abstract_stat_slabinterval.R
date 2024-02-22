@@ -4,8 +4,6 @@
 ###############################################################################
 
 
-
-#' @importFrom dplyr bind_rows
 #' @importFrom rlang as_function
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -250,7 +248,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       # remove point data if it is not being shown
       if (!show_point) i_data[[x]] = NA_real_
 
-      bind_rows(
+      vec_rbind(
         if (show_slab) s_data,
         if (show_interval) i_data
       )

@@ -57,11 +57,9 @@
 #'   to_broom_names()
 #'
 #' @name tidy-format-translators
-#' @importFrom dplyr select_all
-#' @importFrom rlang %||%
 #' @export
 to_broom_names = function(data) {
-  lookup = c(
+  new_names = c(
     .variable = "term",
     .value = "estimate",
     .prediction = ".fitted",
@@ -69,16 +67,14 @@ to_broom_names = function(data) {
     .upper = "conf.high"
   )
 
-  # this approach, while possibly a little odd seeming, ensures that
-  # group names in grouped data frames are also changed
-  select_all(data, function(col) lookup[col] %||% col)
+  rename_cols(data, new_names)
 }
 
 
 #' @rdname tidy-format-translators
 #' @export
 from_broom_names = function(data) {
-  lookup = c(
+  new_names = c(
     term = ".variable",
     estimate = ".value",
     .fitted = ".prediction",
@@ -86,7 +82,7 @@ from_broom_names = function(data) {
     conf.high = ".upper"
   )
 
-  select_all(data, function(col) lookup[col] %||% col)
+  rename_cols(data, new_names)
 }
 
 
@@ -96,25 +92,25 @@ from_broom_names = function(data) {
 #' @rdname tidy-format-translators
 #' @export
 to_ggmcmc_names = function(data) {
-  lookup = c(
+  new_names = c(
     .chain = "Chain",
     .iteration = "Iteration",
     .variable = "Parameter",
     .value = "value"
   )
 
-  select_all(data, function(col) lookup[col] %||% col)
+  rename_cols(data, new_names)
 }
 
 #' @rdname tidy-format-translators
 #' @export
 from_ggmcmc_names = function(data) {
-  lookup = c(
+  new_names = c(
     Chain = ".chain",
     Iteration = ".iteration",
     Parameter = ".variable",
     value = ".value"
   )
 
-  select_all(data, function(col) lookup[col] %||% col)
+  rename_cols(data, new_names)
 }

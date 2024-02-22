@@ -86,14 +86,15 @@ test_that("curve_interval works with lineribbon", {
 test_that("basic cases on single interval work", {
   df = data.frame(value = ppoints(1000))
 
-  ref = tibble(
+  ref = data.frame(
     value = 0.4995,
     .lower = NA,
     .upper = NA,
     .actual_width = NA,
     .width = NA,
     .point = "mhd",
-    .interval = "mhd"
+    .interval = "mhd",
+    stringsAsFactors = FALSE
   )
 
   expect_equal(
@@ -117,7 +118,7 @@ test_that("basic cases on single interval work", {
 test_that("basic cases on single curve work", {
   df = data.frame(x = 1:3, y = rep(ppoints(1000), each = 3) + 1:3)
 
-  ref = tibble(
+  ref = data.frame(
     x = rep(1:3, 3),
     y = rep(0.4995 + 1:3, 3),
     .lower = rep(c(.0255, 0.4995, 0.0005), each = 3) + rep(1:3, 3),
@@ -125,7 +126,8 @@ test_that("basic cases on single curve work", {
     .actual_width = rep(c(.95, 0.002, 1), each = 3),
     .width = rep(c(.95, 0, 1), each = 3),
     .point = "mhd",
-    .interval = "mhd"
+    .interval = "mhd",
+    stringsAsFactors = FALSE
   )
 
   # data frame of draws
@@ -136,8 +138,8 @@ test_that("basic cases on single curve work", {
   # data frame of rvars
   y_rvar = rep(posterior::rvar(ppoints(1000)), 3) + 1:3
   df = data.frame(x = 1:3, y = y_rvar)
-  expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
-  expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
+  expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), as_tibble(ref))
+  expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), as_tibble(ref))
 
   # rvar
   expect_equal(curve_interval(y_rvar, .width = c(.95, 0, 1)), select(ref, -x, .value = y))
@@ -153,7 +155,7 @@ test_that("basic cases on multiple variables", {
     y2 = rep(rev(ppoints(1000)), each = 3) + 2:4
   )
 
-  ref = tibble(
+  ref = as.data.frame(tibble(
     x = rep(1:3, 3),
     y1 = rep(0.4995 + 1:3, 3),
     y1.lower = rep(c(.0255, 0.4995, 0.0005), each = 3) + rep(1:3, 3),
@@ -165,7 +167,7 @@ test_that("basic cases on multiple variables", {
     y2.upper = y1.upper + 1,
     .point = "mhd",
     .interval = "mhd"
-  )
+  ))
 
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), y1, y2, .width = c(.95, 0, 1)), ref)

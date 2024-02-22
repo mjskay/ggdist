@@ -64,7 +64,7 @@ This can be numeric columns, list columns containing numeric vectors, or
 \code{\link[posterior:rvar]{posterior::rvar()}}s.}
 
 \item{.along}{Which columns are the input values to the function describing the curve (e.g., the "x"
-values). Supports tidyselect syntax, as in \code{\link[dplyr:select]{dplyr::select()}}. Intervals are calculated jointly with
+values). Supports \link[tidyselect:language]{tidyselect} syntax. Intervals are calculated jointly with
 respect to these variables, conditional on all other grouping variables in the data frame. The default
 (\code{NULL}) causes \code{\link[=curve_interval]{curve_interval()}} to use all grouping variables in the input data frame as the value
 for \code{.along}, which will generate the most conservative intervals. However, if you want to calculate

@@ -8,7 +8,6 @@
 # dots_grob ---------------------------------------------------------------
 
 #' @importFrom ggplot2 .stroke .pt
-#' @importFrom dplyr %>% arrange_at group_by_at group_split
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
@@ -21,9 +20,8 @@ dots_grob = function(data, x, y, xscale = 1,
   # drop the dist columns because they can be expensive and we don't need them
   # after this point
   keep_cols = !(names(data) %in% c("xdist", "ydist", "dist"))
-  datas = data[, keep_cols, drop = FALSE] %>%
-    group_by_at(c("group", y)) %>%
-    group_split()
+  data = data[, keep_cols, drop = FALSE]
+  datas = split_df(data, c("group", y))
 
   gTree(
     datas = datas,
@@ -173,7 +171,7 @@ makeContent.dots_grob = function(x) {
     list()
   } else {
     subguide_fun = match_function(subguide, "subguide_")
-    subguide_params = bind_rows(lapply(datas, `[`, i = 1, j = , drop = FALSE))
+    subguide_params = map_dfr_(datas, `[`, i = 1, j = , drop = FALSE)
     dlply_(
       subguide_params[, c(y, ymin, ymax, "side", "justification", "scale")],
       c(y, "side", "justification", "scale"),

@@ -18,7 +18,7 @@ test_that("ggmcmc translators work", {
   result = to_ggmcmc_names(orig)
 
   expect_named(result, c("Parameter", "value", "Chain", "Iteration", ".draw"))
-  expect_equal(group_vars(result), "Parameter")
+  expect_equal(dplyr::group_vars(result), "Parameter")
   expect_equal(from_ggmcmc_names(result), orig)
 })
 
@@ -34,6 +34,6 @@ test_that("broom translators work", {
   result = to_broom_names(orig)
 
   expect_named(result, c("term", "estimate", "conf.low", "conf.high", ".width", ".point", ".interval"))
-  expect_equal(group_vars(result), "term")
+  expect_equal(dplyr::group_vars(result), "term")
   expect_equal(from_broom_names(result), orig)
 })
