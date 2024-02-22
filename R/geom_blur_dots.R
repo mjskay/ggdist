@@ -72,7 +72,10 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
     aes_docs
   },
 
-  hidden_aes = union("shape", GeomDots$hidden_aes),
+  hidden_aes = union(c(
+    "shape",
+    "family"
+  ), GeomDots$hidden_aes),
 
   default_aes = defaults(aes(
     sd = 0

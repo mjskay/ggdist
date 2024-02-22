@@ -347,7 +347,6 @@ the following aesthetics are supported by the underlying geom:
 
 \itemize{
 \item{\code{sd}: The standard deviation (in data units) of the blur associated with each dot.}
-\item{\code{family}: The font family used to draw the dots.}
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
 value of the data points themselves are used to determine stacking order. Only applies when
