@@ -12,3 +12,4 @@ benchmarks.md
 revdep/
 .Rproj.user
 tests/testthat/Rplots.pdf
+docs/reference/Rplot*.png

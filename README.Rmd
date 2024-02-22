@@ -8,10 +8,17 @@ output:
 knitr::opts_chunk$set(
   fig.path = "man/figures/README/"
 )
-if (capabilities("cairo")) {
+knitr::opts_chunk$set(
+  fig.retina = 2
+)
+if (requireNamespace("ragg", quietly = TRUE)) {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo")),
-    fig.retina = 2
+    dev = "ragg_png"
+  )
+} else if (capabilities("cairo")) {
+  knitr::opts_chunk$set(
+    dev = "png",
+    dev.args = list(png = list(type = "cairo"))
   )
 }
 ```

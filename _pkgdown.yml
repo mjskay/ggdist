@@ -25,11 +25,6 @@ authors:
     href: https://www.mjskay.com
 
 
-figures:
-  dev: grDevices::png
-  dev.args: [{cairo: true}]
-
-
 reference:
 - title: "Package overview"
   contents:

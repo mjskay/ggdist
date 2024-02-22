@@ -30,7 +30,11 @@ knitr::opts_chunk$set(
   fig.width = small_width,
   fig.height = small_height
 )
-if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
+if (requireNamespace("ragg", quietly = TRUE)) {
+  knitr::opts_chunk$set(
+    dev = "ragg_png"
+  )
+} else if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
     dev = "png",
     dev.args = list(type = "cairo")

@@ -56,6 +56,7 @@ Suggests:
     modelr,
     patchwork,
     tidyr (>= 1.0.0),
+    ragg,
     pkgdown
 License: GPL (>= 3)
 Language: en-US
