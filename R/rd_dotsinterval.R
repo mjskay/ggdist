@@ -48,17 +48,23 @@ rd_dotsinterval_shortcut_geom = function(
       library(dplyr)
       library(ggplot2)
 
-      data(RankCorr_u_tau, package = "ggdist")
+      theme_set(theme_ggdist())
+
+      set.seed(12345)
+      df = tibble(
+        g = rep(c("a", "b"), 200),
+        value = rnorm(400, c(0, 3), c(0.75, 1))
+      )
 
       # orientation is detected automatically based on
       # which axis is discrete
 
-      RankCorr_u_tau %>%
-        ggplot(aes(x = u_tau)) +
+      df %>%
+        ggplot(aes(x = value, y = g)) +
         geom_<<geom_name>>()
 
-      RankCorr_u_tau %>%
-        ggplot(aes(y = u_tau)) +
+      df %>%
+        ggplot(aes(y = value, x = g)) +
         geom_<<geom_name>>()
       ')
   )
@@ -120,9 +126,11 @@ rd_dotsinterval_shortcut_stat = function(
       theme_set(theme_ggdist())
 
       # ON SAMPLE DATA
-      tibble(x = 1:10) %>%
-        group_by_all() %>%
-        do(tibble(y = rnorm(100, .$x))) %>%
+      set.seed(12345)
+      tibble(
+        x = rep(1:10, 100),
+        y = rnorm(1000, x)
+      ) %>%
         ggplot(aes(x = x, y = y)) +
         stat_<<stat_name>>()
 

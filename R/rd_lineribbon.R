@@ -58,9 +58,11 @@ rd_lineribbon_shortcut_stat = function(
       theme_set(theme_ggdist())
 
       # ON SAMPLE DATA
-      tibble(x = 1:10) %>%
-        group_by_all() %>%
-        do(tibble(y = rnorm(100, .$x))) %>%
+      set.seed(12345)
+      tibble(
+        x = rep(1:10, 100),
+        y = rnorm(1000, x)
+      ) %>%
         ggplot(aes(x = x, y = y)) +
         stat_<<stat_name>>() +
         scale_fill_brewer()

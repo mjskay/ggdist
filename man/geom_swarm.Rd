@@ -413,17 +413,23 @@ Learn more about the sub-geom override aesthetics (like \code{interval_color}) i
 library(dplyr)
 library(ggplot2)
 
-data(RankCorr_u_tau, package = "ggdist")
+theme_set(theme_ggdist())
+
+set.seed(12345)
+df = tibble(
+  g = rep(c("a", "b"), 200),
+  value = rnorm(400, c(0, 3), c(0.75, 1))
+)
 
 # orientation is detected automatically based on
 # which axis is discrete
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(x = u_tau)) +
+df \%>\%
+  ggplot(aes(x = value, y = g)) +
   geom_swarm()
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(y = u_tau)) +
+df \%>\%
+  ggplot(aes(y = value, x = g)) +
   geom_swarm()
 }
 \references{
