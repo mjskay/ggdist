@@ -276,3 +276,27 @@ get_subguide_axis_position = function(side, position, orientation) {
     stop0("Unknown orientation: ", deparse0(orientation))  # nocov
   )
 }
+
+# modified version of ggplot2:::draw_axis for use by subguide_axis
+draw_axis = function(
+  break_positions, break_labels, aes, opp, axis_position, theme,
+  check.overlap = FALSE, angle = NULL, n.dodge = 1
+) {
+  guide = guide_axis(
+    check.overlap = check.overlap,
+    angle = angle,
+    n.dodge = n.dodge,
+    position = axis_position
+  )
+  params = guide$params
+  params$key = data_frame(
+    !!aes := break_positions,
+    .value = break_positions,
+    .label = break_labels
+  )
+  params$decor = data_frame0(
+    !!aes := c(0, 1),
+    !!opp := if (axis_position %in% c("top", "right")) 0 else 1
+  )
+  guide$draw(theme, params = params)
+}
