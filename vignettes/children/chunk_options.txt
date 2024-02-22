@@ -8,7 +8,10 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
-if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
+in_pkgdown = requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()
+
+# image dimensions
+if (in_pkgdown) {
   tiny_width = 5.5
   tiny_height = 3 + 2/3
   small_width = med_width = 6.75
@@ -25,12 +28,13 @@ if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
   large_width = 5.5
   large_height = 2/3
 }
-
 knitr::opts_chunk$set(
   fig.width = small_width,
   fig.height = small_height
 )
-if (requireNamespace("ragg", quietly = TRUE)) {
+
+# graphics device
+if (requireNamespace("ragg", quietly = TRUE) && in_pkgdown) {
   knitr::opts_chunk$set(
     dev = "ragg_png"
   )
@@ -39,5 +43,11 @@ if (requireNamespace("ragg", quietly = TRUE)) {
     dev = "png",
     dev.args = list(type = "cairo")
   )
+}
+
+# png compression for CRAN
+if (!in_pkgdown) {
+  knitr::knit_hooks$set(pngquant = knitr::hook_pngquant)
+  knitr::opts_chunk$set(pngquant = "--speed=1 --quality=50")
 }
 ```
