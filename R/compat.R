@@ -37,7 +37,8 @@ eval_select_ = function(expr, data, env = caller_env(), ..., error_call = caller
           "Column names must select exactly 1 column.",
           "x" = "Found {length(i)} columns named {.val {as_name(expr)}}."
         ),
-        call = error_call
+        call = error_call,
+        class = "ggdist_invalid_column_selection"
       )
     }
     i

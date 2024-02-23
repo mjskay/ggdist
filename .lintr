@@ -11,7 +11,7 @@ linters: all_linters(
     infix_spaces_linter(exclude_operators = c("/", "*")),
     keyword_quote_linter = NULL,
     line_length_linter(120L),
-    missing_argument_linter(except = c("alist", "quote", "switch", "pairlist2", "lapply")),
+    missing_argument_linter(except = c("alist", "quote", "switch", "pairlist2", "lapply", "map_dfr_")),
     nested_ifelse_linter = NULL,
     nested_pipe_linter = NULL,
     nonportable_path_linter = NULL,
@@ -22,7 +22,7 @@ linters: all_linters(
       regexes = c(
         misc = "^(F_x|f_X|x_1_hat,x_n_hat|R_inv|Amat|Aind|.*ABC.*|)$",
         CamelCase = "^(RankCorr.*|.*Geom.*|.*Stat.*|Scale.*|Position.*|K|Mode.*|.*Pr.*|.*linearGradient.*|\\.Deprecated.*)$",
-        dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p|width\\.cutoff)$",
+        dot.case = "^(na\\.rm|na\\.translate|na\\.value|lower\\.tail|log\\.p|width\\.cutoff|check\\.overlap|n\\.dodge)$",
         bandwidth = "^(bandwidth_.*)$",
         breaks = "^breaks_.*$"
       )

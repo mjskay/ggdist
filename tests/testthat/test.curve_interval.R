@@ -171,6 +171,10 @@ test_that("basic cases on multiple variables", {
 
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), y1, y2, .width = c(.95, 0, 1)), ref)
+  expect_equal(
+    curve_interval(mutate(df, y = x + 1), .along = c(x, y), .width = c(.95, 0, 1)),
+    mutate(ref, y = x + 1, .after = 1)
+  )
 })
 
 
@@ -179,6 +183,12 @@ test_that("basic cases on multiple variables", {
 test_that("error is thrown when no columns found to summarize", {
   df = data.frame(value = ppoints(10))
   expect_error(curve_interval(df, .exclude = "value"), "No columns found to calculate point and interval summaries for")
+  expect_error(curve_interval(df, .along = x))
+})
+
+test_that("error is thrown when along does not match a column", {
+  df = data.frame(value = ppoints(10))
+  expect_error(curve_interval(df, .along = x), class = "ggdist_invalid_column_selection")
 })
 
 test_that("error is thrown with groups of different sizes", {
