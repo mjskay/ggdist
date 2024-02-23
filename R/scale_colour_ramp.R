@@ -72,7 +72,7 @@ scale_colour_ramp_continuous = function(
 ) {
   scale = ggproto(NULL, ScaleColourRampContinuous, from = from)
   continuous_scale(
-    aesthetics, "colour_ramp_c", rescale_pal(range), limits = limits, guide = guide, ..., super = scale
+    aesthetics, palette = rescale_pal(range), limits = limits, guide = guide, ..., super = scale
   )
 }
 #' @rdname scale_colour_ramp
@@ -86,7 +86,7 @@ scale_colour_ramp_discrete = function(
 ) {
   scale = ggproto(NULL, ScaleColourRampDiscrete, from = from)
   discrete_scale(
-    aesthetics, "colour_ramp_d", function(n) seq(range[1], range[2], length.out = n), ..., super = scale
+    aesthetics, palette = function(n) seq(range[1], range[2], length.out = n), ..., super = scale
   )
 }
 #' @rdname scale_colour_ramp

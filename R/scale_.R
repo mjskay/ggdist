@@ -132,12 +132,12 @@ scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = g
 #' @importFrom scales rescale_pal
 #' @export
 scale_point_alpha_continuous = function(..., range = c(0.1, 1)) {
-  continuous_scale("point_alpha", "point_alpha_c", rescale_pal(range), ...)
+  continuous_scale("point_alpha", palette = rescale_pal(range), ...)
 }
 #' @rdname scales
 #' @export
 scale_point_alpha_discrete = function(..., range = c(0.1, 1)) {
-  discrete_scale("point_alpha", "point_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+  discrete_scale("point_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
@@ -145,13 +145,13 @@ scale_point_alpha_discrete = function(..., range = c(0.1, 1)) {
 #' @importFrom scales area_pal
 #' @export
 scale_point_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("point_size", "point_size_c", area_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("point_size", palette = area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale(
-    "point_size", "point_size_d", function(n) seq(range[1], range[2], length.out = n),
+    "point_size", palette = function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...
   )
 }
@@ -180,12 +180,12 @@ scale_interval_color_continuous = scale_interval_colour_continuous
 #' @importFrom scales rescale_pal
 #' @export
 scale_interval_alpha_continuous = function(..., range = c(0.1, 1)) {
-  continuous_scale("interval_alpha", "interval_alpha_c", rescale_pal(range), ...)
+  continuous_scale("interval_alpha", palette = rescale_pal(range), ...)
 }
 #' @rdname scales
 #' @export
 scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
-  discrete_scale("interval_alpha", "interval_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+  discrete_scale("interval_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
@@ -193,13 +193,13 @@ scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
 #' @importFrom scales area_pal
 #' @export
 scale_interval_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("interval_size", palette = area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale(
-    "interval_size", "interval_size_d", function(n) seq(range[1], range[2], length.out = n),
+    "interval_size", palette = function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...
   )
 }
@@ -209,7 +209,7 @@ scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FAL
 #' @importFrom scales linetype_pal
 #' @export
 scale_interval_linetype_discrete = function(..., na.value = "blank") {
-  discrete_scale("interval_linetype", "interval_linetype_d", linetype_pal(), na.value = na.value, ...)
+  discrete_scale("interval_linetype", palette = linetype_pal(), na.value = na.value, ...)
 }
 #' @rdname scales
 #' @export
@@ -252,12 +252,12 @@ scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = gui
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_alpha_continuous = function(..., limits = function(l) c(min(0, l[[1]]), l[[2]]), range = c(0, 1)) {
-  continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), limits = limits, ...)
+  continuous_scale("slab_alpha", palette = rescale_pal(range), limits = limits, ...)
 }
 #' @rdname scales
 #' @export
 scale_slab_alpha_discrete = function(..., range = c(0.1, 1)) {
-  discrete_scale("slab_alpha", "slab_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+  discrete_scale("slab_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
@@ -265,13 +265,13 @@ scale_slab_alpha_discrete = function(..., range = c(0.1, 1)) {
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("slab_size", "slab_size_c", rescale_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("slab_size", palette = rescale_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale(
-    "slab_size", "slab_size_d", function(n) seq(range[1], range[2], length.out = n),
+    "slab_size", palette = function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...
   )
 }
@@ -281,13 +281,13 @@ scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) 
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_linewidth_continuous =
-  function(..., range = c(1, 6)) continuous_scale("slab_linewidth", "slab_linewidth_c", rescale_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("slab_linewidth", palette = rescale_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale(
-    "slab_linewidth", "slab_linewidth_d", function(n) seq(range[1], range[2], length.out = n),
+    "slab_linewidth", palette = function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...
   )
 }
@@ -297,7 +297,7 @@ scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FA
 #' @importFrom scales linetype_pal
 #' @export
 scale_slab_linetype_discrete = function(..., na.value = "blank") {
-  discrete_scale("slab_linetype", "slab_linetype_d", linetype_pal(), na.value = na.value, ...)
+  discrete_scale("slab_linetype", palette = linetype_pal(), na.value = na.value, ...)
 }
 #' @rdname scales
 #' @export
@@ -310,7 +310,7 @@ scale_slab_linetype_continuous = function(...) {
 #' @importFrom scales shape_pal
 #' @export
 scale_slab_shape_discrete = function(..., solid = TRUE) {
-  discrete_scale("slab_shape", "slab_shape_d", shape_pal(solid), ...)
+  discrete_scale("slab_shape", palette = shape_pal(solid), ...)
 }
 #' @rdname scales
 #' @export

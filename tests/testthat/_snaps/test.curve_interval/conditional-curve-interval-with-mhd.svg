@@ -117,13 +117,13 @@
 <polyline points='37.39,62.42 40.13,62.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <text x='354.35' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>x</text>
 <text transform='translate(13.05,292.27) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
-<rect x='679.53' y='272.25' width='34.99' height='40.04' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='679.53' y='277.73' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='679.53' y='277.73' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #DEEBF7;' />
-<rect x='679.53' y='295.01' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='679.53' y='295.01' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #9ECAE1;' />
-<text x='702.29' y='289.40' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.8</text>
-<text x='702.29' y='306.68' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<rect x='679.53' y='274.99' width='34.99' height='34.56' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='679.53' y='274.99' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='679.53' y='274.99' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #DEEBF7;' />
+<rect x='679.53' y='292.27' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='679.53' y='292.27' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #9ECAE1;' />
+<text x='702.29' y='286.66' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.8</text>
+<text x='702.29' y='303.94' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.5</text>
 <text x='40.13' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='205.46px' lengthAdjust='spacingAndGlyphs'>conditional curve_interval with mhd</text>
 </g>
 </svg>

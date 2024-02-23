@@ -3,10 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-suppressPackageStartupMessages({
+suppressPackageStartupMessages(suppressWarnings({
   library(dplyr)
   library(tidyr)
-})
+}))
 
 
 test_that("curve_interval works with lineribbon", {

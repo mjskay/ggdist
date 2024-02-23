@@ -249,7 +249,7 @@ find_dotplot_binwidth = function(
   layout = c("bin", "weave", "hex", "swarm", "bar")
 ) {
   layout = match.arg(layout)
-  x = sort(x, na.last = TRUE)
+  x = sort(as.numeric(x), na.last = TRUE)
 
   # figure out a reasonable minimum number of bins based on histogram binning
   min_nbins = if (length(x) <= 1) {
@@ -633,7 +633,8 @@ select_bin_method = function(x, layout = "bin") {
 #' @noRd
 bar_bin = function(x, width, bar_scale = 0.9) {
   # determine the amount of space that each bar will take up
-  max_bar_width = resolution(x, zero = FALSE) * bar_scale
+  # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
+  max_bar_width = resolution(as.numeric(x), zero = FALSE) * bar_scale
   n_bins = max(floor(max_bar_width / width), 1)
   actual_bar_width = n_bins * width
 

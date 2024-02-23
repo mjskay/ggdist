@@ -766,7 +766,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # this is necessary so that the bounding box is correct for
     # positions to work (e.g. position_dodge, etc)
     data[[height]] = params[[height]] %||% data[[height]] %||%
-      resolution(data[[y]], FALSE)
+      # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
+      resolution(as.numeric(data[[y]]), FALSE)
 
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct

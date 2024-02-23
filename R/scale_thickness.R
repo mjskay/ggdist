@@ -105,7 +105,7 @@ scale_thickness_shared = function(
   ...
 ) {
   sc = continuous_scale(
-    "thickness", "thickness_c", identity_pal(),
+    "thickness", palette = identity_pal(),
     name = name, breaks = breaks, labels = labels,
     limits = limits,
     oob = oob,
@@ -149,7 +149,7 @@ ScaleThicknessShared = ggproto("ScaleThicknessShared", ScaleContinuous,
 #' @export
 scale_thickness_identity = function(..., guide = "none") {
   continuous_scale(
-    "thickness", "identity", identity_pal(),
+    "thickness", palette = identity_pal(),
     ...,
     guide = guide, super = ScaleContinuousIdentity
   )

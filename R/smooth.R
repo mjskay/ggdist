@@ -219,7 +219,8 @@ smooth_discrete = auto_partial(name = "smooth_discrete", function(
     cosine = 0.18,
     optcosine = 0.20
   )
-  bandwidth = resolution(x, zero = FALSE) * bw_mult * width
+  # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
+  bandwidth = resolution(as.numeric(x), zero = FALSE) * bw_mult * width
   smooth_unbounded(x, kernel = kernel, bandwidth = bandwidth, ...)
 })
 
@@ -228,7 +229,8 @@ smooth_discrete = auto_partial(name = "smooth_discrete", function(
 smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
   if (length(x) < 2) return(x)
 
-  x_width = resolution(x, zero = FALSE) * width
+  # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
+  x_width = resolution(as.numeric(x), zero = FALSE) * width
   split(x, x) = lapply(split(x, x), function(x) {
     (ppoints(length(x), 0.5) - 0.5) * x_width + x[[1]]
   })

@@ -64,10 +64,24 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
     new_guide = ggproto(
       "GuideRampbar", guide,
       params = c(list(to = to), guide$params),
-      extract_decor = function(scale, aesthetic, nbin = 300,
-                               reverse = FALSE, to = "gray65", ...) {
-        bar = guide$extract_decor(scale, aesthetic, nbin, reverse, ...)
-        bar$colour = apply_colour_ramp(to, bar$colour)
+      extract_decor = function(
+        scale, aesthetic, nbin = 300, reverse = FALSE, alpha = NA,
+        to = "gray65", ...
+      ) {
+        limits <- scale$get_limits()
+        bar <- seq(limits[1], limits[2], length.out = nbin)
+        if (length(bar) == 0) {
+          bar <- unique(limits)
+        }
+        bar <- data_frame(
+          colour = scale$map(bar),
+          value  = bar,
+          .size  = length(bar)
+        )
+        if (reverse) {
+          bar <- bar[nrow(bar):1, , drop = FALSE]
+        }
+        bar$colour = alpha(apply_colour_ramp(to, bar$colour), alpha)
         bar
       }
     )

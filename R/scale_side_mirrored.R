@@ -41,7 +41,7 @@ scale_side_mirrored = function(
   start = "topright", ..., aesthetics = "side"
 ) {
   discrete_scale(
-    aesthetics, "side_d", side_mirrored_pal(start), ...
+    aesthetics, palette = side_mirrored_pal(start), ...
   )
 }
 

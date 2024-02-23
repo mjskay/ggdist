@@ -38,7 +38,7 @@ Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabint
 \itemize{
 \item \code{NULL} for no breaks
 \item \code{waiver()} for the default breaks computed by the
-\link[scales:trans_new]{transformation object}
+\link[scales:new_transform]{transformation object}
 \item A numeric vector of positions
 \item A function that takes the limits as input and returns breaks
 as output (e.g., a function returned by \code{\link[scales:breaks_extended]{scales::extended_breaks()}}).

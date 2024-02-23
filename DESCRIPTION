@@ -21,7 +21,7 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
 Depends:
     R (>= 3.6.0)
 Imports:
-    ggplot2 (>= 3.4.0),
+    ggplot2 (>= 3.5.0),
     rlang (>= 0.3.0),
     cli,
     scales,
