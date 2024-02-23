@@ -21,7 +21,6 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
 Depends:
     R (>= 3.6.0)
 Imports:
-    dplyr (>= 1.0.0),
     ggplot2 (>= 3.4.0),
     rlang (>= 0.3.0),
     cli,
@@ -38,6 +37,7 @@ Imports:
     Rcpp
 Suggests:
     tidyselect,
+    dplyr (>= 1.0.0),
     fda,
     posterior,
     beeswarm (>= 0.4.0),

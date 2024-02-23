@@ -192,7 +192,7 @@ curve_interval.data.frame = function(
     .along = group_vars_(data)
   } else {
     .along = names(data)[eval_select_(.along, data)]
-    data = group_by_at(data, .along, .add = TRUE)
+    data = dplyr::group_by_at(data, .along, .add = TRUE)
   }
 
   # get the groups we will condition before doing the joint intervals

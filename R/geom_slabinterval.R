@@ -993,11 +993,12 @@ group_slab_data_by = function(
   define_orientation_variables(orientation)
 
   aesthetics = intersect(aesthetics, names(slab_data))
-  groups = factor(do.call(paste, slab_data[, aesthetics]))
+  groups_factor = factor(do.call(paste, slab_data[, aesthetics]))
 
-  if (nlevels(groups) > 1) {
+  if (nlevels(groups_factor) > 1) {
     # need to split into groups based on varying aesthetics
 
+    groups = as.integer(groups_factor)
     n = length(groups)
     last_in_group = groups != c(groups[-1], groups[[n]])
     first_in_group = groups != c(groups[[1]], groups[-n])

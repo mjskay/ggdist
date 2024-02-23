@@ -277,7 +277,9 @@ get_subguide_axis_position = function(side, position, orientation) {
   )
 }
 
-# modified version of ggplot2:::draw_axis for use by subguide_axis
+#' modified version of ggplot2:::draw_axis for use by subguide_axis
+#' @importFrom rlang :=
+#' @noRd
 draw_axis = function(
   break_positions, break_labels, aes, opp, axis_position, theme,
   check.overlap = FALSE, angle = NULL, n.dodge = 1
@@ -294,7 +296,7 @@ draw_axis = function(
     .value = break_positions,
     .label = break_labels
   )
-  params$decor = data_frame0(
+  params$decor = data_frame(
     !!aes := c(0, 1),
     !!opp := if (axis_position %in% c("top", "right")) 0 else 1
   )
