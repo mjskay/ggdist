@@ -58,43 +58,29 @@
 #' @export
 guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "colour_ramp")) {
   guide = guide_colourbar(..., available_aes = available_aes)
-  if (inherits(guide, "GuideColourbar")) {
-    # If ggplot2 >3.4.2, guides are written ggproto, so here we inherit from
-    # the colourbar guide
-    new_guide = ggproto(
-      "GuideRampbar", guide,
-      params = c(list(to = to), guide$params),
-      extract_decor = function(
-        scale, aesthetic, nbin = 300, reverse = FALSE, alpha = NA,
-        to = "gray65", ...
-      ) {
-        limits <- scale$get_limits()
-        bar <- seq(limits[1], limits[2], length.out = nbin)
-        if (length(bar) == 0) {
-          bar <- unique(limits)
-        }
-        bar <- data_frame(
-          colour = scale$map(bar),
-          value  = bar,
-          .size  = length(bar)
-        )
-        if (reverse) {
-          bar <- bar[nrow(bar):1, , drop = FALSE]
-        }
-        bar$colour = alpha(apply_colour_ramp(to, bar$colour), alpha)
-        bar
-      }
-    )
-    return(new_guide)
-  }
-  guide$to = to
-  class(guide) = c("guide", "rampbar", "colorbar")
-  guide
-}
 
-#' @export
-guide_train.rampbar = function(guide, scale, aesthetic = NULL) {
-  guide = NextMethod()
-  guide$bar$colour = apply_colour_ramp(guide$to, guide$bar$colour)
-  guide
+  ggproto(
+    "GuideRampbar", guide,
+    params = c(list(to = to), guide$params),
+    extract_decor = function(
+      scale, aesthetic, nbin = 300, reverse = FALSE, alpha = NA,
+      to = "gray65", ...
+    ) {
+      limits <- scale$get_limits()
+      bar <- seq(limits[1], limits[2], length.out = nbin)
+      if (length(bar) == 0) {
+        bar <- unique(limits)
+      }
+      bar <- data_frame(
+        colour = scale$map(bar),
+        value  = bar,
+        .size  = length(bar)
+      )
+      if (reverse) {
+        bar <- bar[nrow(bar):1, , drop = FALSE]
+      }
+      bar$colour = alpha(apply_colour_ramp(to, bar$colour), alpha)
+      bar
+    }
+  )
 }

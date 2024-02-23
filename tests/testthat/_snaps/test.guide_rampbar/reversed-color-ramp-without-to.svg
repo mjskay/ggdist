@@ -75,22 +75,22 @@
 <text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
 <rect x='674.63' y='233.08' width='39.89' height='101.73' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='674.63' y='241.79' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>x</text>
-<image width='17.28' height='86.40' x='674.63' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAAyElEQVQ4jZWRQRaEMAhDQxfe/xRecsZmFmorNLTOxlcgfAJi33cWACig4X4BhbDrFas+5CmZienJSsxHdZQsALBmY9wjViN55v5RTXnxai8WzHZbz9CGkgtJQOp5/vcjL5kRf2PPTQ/BF1B5iAQanIZlYphd4z+osubbhkHL9SXUW1OUITdSBnKY63LqJLrNQWVb7xASPfcmK8obSRjUQlJQQpu3xrWkyjZrha67JdXnzrC6sH+Oau0FlIN2vb4EyqcC2IwEQP4AA8YmcYxT1jAAAAAASUVORK5CYII='/>
-<polyline points='688.46,334.67 691.91,334.67 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='688.46,313.14 691.91,313.14 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='688.46,291.61 691.91,291.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='688.46,270.09 691.91,270.09 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<image width='17.28' height='86.40' x='674.63' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAAwUlEQVQ4jZWS0RbDIAhDY7rt//+YPbRTsIl2Lz0S8BKwACL4aQA/DPBNgK8G8CDAo8V14qnFdcqfABtr2LMNRUuJoeEXspcMrSVtCk0JUraX9BA11NcEZV8ClIlGI7hGkxcMsoAurkUFKG2CCn+zNWMXe7uW4m84qAaoRmUYT/kbqrZ2arLkPr6H1nDR1zl1w6htJO1Jj4I/T/WXWgM0xSxiZJXnRQ9jKPFSVv1r963ZFe82tHrGDeCJ+1Wxen0A+AJvnF5IuhrBWQAAAABJRU5ErkJggg=='/>
 <polyline points='688.46,248.56 691.91,248.56 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='678.09,334.67 674.63,334.67 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='678.09,313.14 674.63,313.14 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='678.09,291.61 674.63,291.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='678.09,270.09 674.63,270.09 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='688.46,270.09 691.91,270.09 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='688.46,291.61 691.91,291.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='688.46,313.14 691.91,313.14 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='688.46,334.67 691.91,334.67 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
 <polyline points='678.09,248.56 674.63,248.56 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
-<text x='697.39' y='337.70' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.00</text>
-<text x='697.39' y='316.17' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.25</text>
+<polyline points='678.09,270.09 674.63,270.09 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='678.09,291.61 674.63,291.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='678.09,313.14 674.63,313.14 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='678.09,334.67 674.63,334.67 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
+<text x='697.39' y='251.59' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.00</text>
+<text x='697.39' y='273.11' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.25</text>
 <text x='697.39' y='294.64' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.50</text>
-<text x='697.39' y='273.11' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.75</text>
-<text x='697.39' y='251.59' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>1.00</text>
-<text x='40.13' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='135.00px' lengthAdjust='spacingAndGlyphs'>color_ramp without `to`</text>
+<text x='697.39' y='316.17' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.75</text>
+<text x='697.39' y='337.70' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>1.00</text>
+<text x='40.13' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='190.03px' lengthAdjust='spacingAndGlyphs'>reversed color_ramp without `to`</text>
 </g>
 </svg>

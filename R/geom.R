@@ -20,8 +20,6 @@ add_default_computed_aesthetics = function(l, default_mapping) {
     setup_layer = function(self, data, plot) {
       data = ggproto_parent(l, self)$setup_layer(data, plot)
 
-      mapping = computed_mapping(self)
-
       for (aesthetic in names(default_mapping)) {
         # we don't use exact matching here because if someone is using ggnewscale
         # then aesthetic "x" will be replaced with "x_new" and we don't want to
@@ -31,8 +29,8 @@ add_default_computed_aesthetics = function(l, default_mapping) {
         if (
           # only add the aesthetic if it isn't already set and if the variables it uses
           # are in the provided data and none of them are NA
-          is.null(mapping[[aesthetic, exact = FALSE]]) &&
-            (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
+          is.null(self$computed_mapping[[aesthetic, exact = FALSE]]) &&
+            (!isTRUE(self$inherit.aes) || is.null(plot$computed_mapping[[aesthetic, exact = FALSE]])) &&
             all(vars_in_mapping %in% names(data)) &&
             !anyNA(data[, vars_in_mapping])
         ) {
@@ -41,41 +39,18 @@ add_default_computed_aesthetics = function(l, default_mapping) {
           # gets mangled. So we need to recreate it from the underlying expression
           # and the environment (which in this case should be the package
           # environment, which is the same as environment(add_default_computed_aesthetics))
-          mapping[[aesthetic]] = as_quosure(
+          self$computed_mapping[[aesthetic]] = as_quosure(
             default_aes_mapping,
             env = environment(add_default_computed_aesthetics)
           )
         }
       }
 
-      computed_mapping(self) = mapping
-
       data
     }
   )
 }
 
-#' the mapping property of layers changed to computed_mapping in ggplot 3.3.4
-#' to avoid statefulness; this function encapsulates that change
-#' see https://github.com/tidyverse/ggplot2/pull/4475
-#' @importFrom utils packageVersion
-#' @noRd
-computed_mapping = function(x) {
-  mapping = if (packageVersion("ggplot2") >= "3.3.3.9000") {
-    x$computed_mapping
-  } else {
-    x$mapping     # nocov
-  }
-  mapping %||% list()
-}
-`computed_mapping<-` = function(x, value) {
-  if (packageVersion("ggplot2") >= "3.3.3.9000") {
-    x$computed_mapping = value
-  } else {
-    x$mapping = value     # nocov
-  }
-  x
-}
 
 # orientation detection ---------------------------------------------------
 
