@@ -44,6 +44,6 @@ eval_select_ = function(expr, data, env = caller_env(), ..., error_call = caller
     i
   } else {
     stop_if_not_installed("tidyselect", "{.topic [tidyselect syntax](tidyselect::language)}", call = error_call)
-    tidyselect::eval_select(expr, data, ...)
+    tidyselect::eval_select(expr, data, ..., error_call = error_call)
   }
 }
