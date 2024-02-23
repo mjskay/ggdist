@@ -21,7 +21,7 @@ globalVariables(".value")
 #' to data depth and curve boxplots / functional boxplots.
 #'
 #' @param .data One of:
-#'   - A data frame (or grouped data frame as returned by [group_by()])
+#'   - A data frame (or grouped data frame as returned by [dplyr::group_by()])
 #'     that contains draws to summarize.
 #'   - A [posterior::rvar] vector.
 #'   - A matrix; in which case the first dimension should be draws and the second

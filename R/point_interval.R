@@ -61,7 +61,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' `ll` and `ul` yield lower limits and upper limits, respectively (where the opposite
 #' limit is set to either `Inf` or `-Inf`).
 #'
-#' @param .data Data frame (or grouped data frame as returned by [group_by()])
+#' @param .data Data frame (or grouped data frame as returned by [dplyr::group_by()])
 #' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all

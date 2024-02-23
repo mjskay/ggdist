@@ -152,7 +152,7 @@ median_hdci(.data, ..., .width = 0.95)
 mode_hdci(.data, ..., .width = 0.95)
 }
 \arguments{
-\item{.data}{Data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
+\item{.data}{Data frame (or grouped data frame as returned by \code{\link[dplyr:group_by]{dplyr::group_by()}})
 that contains draws to summarize.}
 
 \item{...}{Bare column names or expressions that, when evaluated in the context of

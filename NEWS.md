@@ -35,6 +35,16 @@ Bug fixes:
 
 * Ensure `Mode()` works on analytical constant distributions.
 
+Minor changes:
+
+* Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
+  from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
+  The latter two are only strictly necessary for `curve_interval()` due to its
+  use of grouped data frames and tidy selection to specify which columns are
+  conditional and which are joint (the use of grouped data frames with
+  `point_interval()` is less strictly necessary, and not used by stats, so
+  is easier to avoid as an absolute dependency).
+
 
 # ggdist 3.3.1
 

@@ -49,7 +49,7 @@ curve_interval(
 \arguments{
 \item{.data}{One of:
 \itemize{
-\item A data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
+\item A data frame (or grouped data frame as returned by \code{\link[dplyr:group_by]{dplyr::group_by()}})
 that contains draws to summarize.
 \item A \link[posterior:rvar]{posterior::rvar} vector.
 \item A matrix; in which case the first dimension should be draws and the second
