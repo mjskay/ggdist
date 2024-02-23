@@ -34,6 +34,7 @@ Documentation:
 Bug fixes:
 
 * Ensure `Mode()` works on analytical constant distributions.
+* Various fixes to ensure compatibility with {ggplot2} 3.5.0.
 
 Minor changes:
 

@@ -95,9 +95,13 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
 
   axis_position = get_subguide_axis_position(label_side, position, orientation)
   axis_is_topleft = axis_position %in% c("left", "top")
-  #TODO: can't use unexported function here
-  axis_grob = ggplot2:::draw_axis(
-    break_positions = break_positions, break_labels = break_labels, axis_position = axis_position, theme = theme
+  axis_grob = draw_subguide_axis(
+    break_positions = break_positions,
+    break_labels = break_labels,
+    aes = y,
+    opp = x,
+    axis_position = axis_position,
+    theme = theme
   )
   axis_width = grob_width(axis_grob)
 
@@ -280,7 +284,7 @@ get_subguide_axis_position = function(side, position, orientation) {
 #' modified version of ggplot2:::draw_axis for use by subguide_axis
 #' @importFrom rlang :=
 #' @noRd
-draw_axis = function(
+draw_subguide_axis = function(
   break_positions, break_labels, aes, opp, axis_position, theme,
   check.overlap = FALSE, angle = NULL, n.dodge = 1
 ) {
