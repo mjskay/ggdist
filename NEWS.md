@@ -17,6 +17,12 @@ Major changes:
   their error using blur (#63).
 * The new `breaks_quantiles()` histogram breaks function allows the construction
   of quantile histograms with `density_histogram()`, `stat_histinterval()`, etc.
+* The color ramp scales (e.g. `scale_colour_ramp_continuous()`, ...) now use
+  an explicit data type, `partial_colour_ramp()`, to encode color ramps and 
+  their origin colors, and provide the `ramp_colours()` function for applying
+  colour ramps. This should make it easier to pass explicit color ramps
+  without using scale functions, and for packages building on {ggdist} to
+  use the colour ramp scales (#209).
   
 Minor changes:
   
@@ -27,10 +33,6 @@ Minor changes:
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
 * The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
   (#206; thanks to @ASKurz for the suggestion).
-* The color ramp scales (e.g. `scale_colour_ramp_continuous()`, ...) now use
-  an explicit data type, `partial_colour_ramp()`, to encode color ramps and 
-  their origin colors. This should make it easier to apply explicit color ramps
-  without using scale functions, if needed (#209).
 * Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
   from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
   The latter two are only strictly necessary for `curve_interval()` due to its
