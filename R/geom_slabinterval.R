@@ -1114,53 +1114,68 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
 }
 
 #'@importFrom cli cli_warn cli_abort
-switch_fill_type = function(fill_type, segments, gradient) {
-  if (getRversion() < "4.1.0" && fill_type == "gradient") {             # nocov start
-    cli_warn(c(
-      '{.code fill_type = "gradient"} is not supported in R < 4.1.0.',
-      'i' = 'Falling back to {.code fill_type = "segments"}.',
-      'i' = 'See the documentation for {.arg fill_type} in
-             {.fun ggdist::geom_slabinterval} for more information.'
-    ))
-    fill_type = "segments"
-  } else if (getRversion() < "4.2.0" && fill_type == "auto") {
-    cli_warn(c(
-      '{.arg fill_type} cannot be auto-detected in R < 4.2.0.',
-      'i' = 'Falling back to {.code fill_type = "segments"}.',
-      'i' = 'For best results, if you are using a graphics device that
-             supports gradients, set {.code fill_type = "gradient"}.',
-      'i' = 'See the documentation for {.arg fill_type} in
-             {.fun ggdist::geom_slabinterval} for more information.'
-    ))
-    fill_type = "segments"
-  } else if (fill_type == "auto") {
-    if ("LinearGradient" %in% grDevices::dev.capabilities()$patterns) {
-      fill_type = "gradient"
-    } else {
-      cli_warn(c(
-        '{.code fill_type = "gradient"} is not supported by the current graphics device,
-         which is {.code {deparse0(names(dev.cur()))}}.',
-        'i' = 'Falling back to {.code fill_type = "segments"}.',
-        'i' = 'If you believe your current graphics device {.emph does} support
-           {.code fill_type = "gradient"} but auto-detection failed, try setting
-           {.code fill_type = "gradient"} explicitly. If this causes the gradient to display
-           correctly, then this warning is likely a false positive caused by
-           the graphics device failing to properly report its support for the
-           {.code "LinearGradient"} pattern via {.fun grDevices::dev.capabilities}.
-           Consider reporting a bug to the author of the graphics device.',
-        'i' = 'See the documentation for {.arg fill_type} in
-             {.fun ggdist::geom_slabinterval} for more information.'
-      ))
-      fill_type = "segments"
-    }
-  }                                                                     # nocov end
-
+switch_fill_type = function(fill_type, segments, gradient, call = caller_env()) {
   switch(fill_type,
     segments = segments,
-    gradient = gradient,
+    gradient = {
+      tryCatch({
+        check_device("gradients", maybe = TRUE, call = call)
+      }, warning = function(e) {
+        cli_warn(
+          c(
+            '{.code fill_type = "gradient"} does not appear to be supported by the
+              current graphics device.',
+            'i' = 'Attempting to use gradient fill type anyway.',
+            '>' = 'If the gradient is displayed correctly, then this warning is
+              likely a false positive caused by the graphics device failing to
+              properly report its support for the {.code "LinearGradient"} pattern
+              via {.fun grDevices::dev.capabilities}. Consider reporting a bug to
+              the author of the graphics device.',
+            '>' = 'If the gradient is not displayed correctly, consider switching
+              to a graphics device that supports gradients, or use
+              {.code fill_type = "segments"} instead.',
+            'i' = 'For more information, see the documentation for {.arg fill_type} in
+              {.fun ggdist::geom_slabinterval} or the documentation for
+              {.fun ggplot2::check_device}.'
+          ),
+          call = call,
+          class = "ggdist_gradients_not_supported",
+          parent = e
+        )
+      })
+      gradient
+    },
+    auto = {
+      tryCatch({
+        check_device("gradients", maybe = FALSE, call = call)
+        gradient
+      }, warning = function(e) {
+        cli_warn(
+          c(
+            '{.code fill_type = "gradient"} is not supported by the current graphics device.',
+            'i' = 'Falling back to {.code fill_type = "segments"}.',
+            '>' = 'If you believe your current graphics device {.emph does} support
+              {.code fill_type = "gradient"} but auto-detection failed, try setting
+              {.code fill_type = "gradient"} explicitly. If this causes the gradient to display
+              correctly, then this warning is likely a false positive caused by
+              the graphics device failing to properly report its support for the
+              {.code "LinearGradient"} pattern via {.fun grDevices::dev.capabilities}.
+              Consider reporting a bug to the author of the graphics device.',
+            'i' = 'For more information, see the documentation for {.arg fill_type} in
+              {.fun ggdist::geom_slabinterval} or the documentation for
+              {.fun ggplot2::check_device}.'
+          ),
+          call = call,
+          class = "ggdist_gradients_not_supported",
+          parent = e
+        )
+        segments
+      })
+    },
     cli_abort(c(
       'Unknown {.arg fill_type}: {.code {deparse0(fill_type)}}',
-      'i' = '{.arg fill_type} should be {.code "segments"} or {.code "gradient"}.'
+      'i' = '{.arg fill_type} should be {.code "segments"}, {.code "gradient"}, or
+        {.code "auto"}.'
     ))
   )
 }

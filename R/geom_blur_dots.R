@@ -23,6 +23,8 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   n = 100,
   blur = blur_gaussian
 ) {
+  check_device("gradients")
+
   # ensure r and sd are in the same units -- that way when we apply the blur function
   # (which only takes numerics) everything will line up correctly
   r = unit(fontsize / font_size_ratio / 2, "points")
