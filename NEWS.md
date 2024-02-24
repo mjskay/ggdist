@@ -1,6 +1,6 @@
-# ggdist (development version)
+# ggdist 3.3.2
 
-New features and enhancements:
+Major changes:
 
 * The `geom_slabinterval()` and `geom_dotsinterval()` families gain "sub-guides",
   which can be passed to the `subguide` parameter to create axis annotations for
@@ -12,10 +12,16 @@ New features and enhancements:
   for the upcoming weighted random variable type in the *posterior* package.
 * Blurry dotplots are now supported using `geom_blur_dots()`, which accepts an
   `sd` aesthetic to set the standard deviation of the blur on each dot.
+  Intervals can also be used in place of blur by passing `blur = "interval"`.
   This geom is used by the new `stat_mcse_dots()` to show quantiles along with
   their error using blur (#63).
 * The new `breaks_quantiles()` histogram breaks function allows the construction
   of quantile histograms with `density_histogram()`, `stat_histinterval()`, etc.
+  
+Minor changes:
+  
+* The default histogram bin selection algorithm is now `"Scott"` instead of
+  `"Sturges"`, as `"Sturges"` tends to be too conservative (#214).
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
   an `at` computed variable, which can be mapped onto aesthetics via `after_stat()`
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
@@ -25,6 +31,13 @@ New features and enhancements:
   an explicit data type, `partial_colour_ramp()`, to encode color ramps and 
   their origin colors. This should make it easier to apply explicit color ramps
   without using scale functions, if needed (#209).
+* Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
+  from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
+  The latter two are only strictly necessary for `curve_interval()` due to its
+  use of grouped data frames and tidy selection to specify which columns are
+  conditional and which are joint (the use of grouped data frames with
+  `point_interval()` is less strictly necessary, and not used by stats, so
+  is easier to avoid as an absolute dependency).
 
 Documentation:
 
@@ -35,18 +48,6 @@ Bug fixes:
 
 * Ensure `Mode()` works on analytical constant distributions.
 * Various fixes to ensure compatibility with {ggplot2} 3.5.0.
-
-Minor changes:
-
-* The default histogram bin selection algorithm is now `"Scott"` instead of
-  `"Sturges"`, as `"Sturges"` tends to be too conservative (#214).
-* Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
-  from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
-  The latter two are only strictly necessary for `curve_interval()` due to its
-  use of grouped data frames and tidy selection to specify which columns are
-  conditional and which are joint (the use of grouped data frames with
-  `point_interval()` is less strictly necessary, and not used by stats, so
-  is easier to avoid as an absolute dependency).
 
 
 # ggdist 3.3.1

@@ -116,7 +116,9 @@ reference:
   - scale_thickness
   - scale_colour_ramp
   - scale_side_mirrored
-  - scales
+  - sub-geometry-scales
+  - partial_colour_ramp
+  - ramp_colours
 
 - subtitle: "Positions"
   desc: >

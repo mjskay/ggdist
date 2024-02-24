@@ -717,8 +717,7 @@ dist_df %>%
 
 This example also shows the use of sub-guides to label dot counts. See the documentation
 of `subguide_axis()` and its shortcuts (particularly `subguide_integer()` and `subguide_count()`)
-for more examples. **Note**: subguides are currently only available in the development version
-of ggdist (> 3.3.1) on Github.
+for more examples.
 
 Analytical distributions are shown by default using 100 quantiles, sometimes
 referred to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 

@@ -21,9 +21,6 @@ This vignette describes the `thickness` scale / aesthetic used by the slab+inter
 family of geoms and stats in `ggdist` (see `vignette("slabinterval")` for more on 
 that family). 
 
-**Note**: this article makes use of ggdist subguides for labeling purposes, which
-requires ggdist ≥ 3.3.2.
-
 ## Setup
   
 The following libraries are required to run this vignette:

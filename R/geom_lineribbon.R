@@ -65,7 +65,7 @@ draw_key_lineribbon = function(self, data, params, size) {
   if (is.null(data[["fill"]]) && (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))) {
     data$fill = self$default_key_aes$fill
   }
-  data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
+  data$fill = ramp_colours(data$fill, data$fill_ramp)
 
   if (!is.null(data[["colour"]]) || !is.null(data[["linewidth"]])) {
     data$colour = data[["colour"]] %||% self$default_key_aes$colour
@@ -201,7 +201,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     # colors ramp to the same fill (e.g. both ramp to 100% white) they will get
     # grouped together erroneously
     data$fill_raw = data$fill
-    data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
+    data$fill = ramp_colours(data$fill, data$fill_ramp)
 
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the

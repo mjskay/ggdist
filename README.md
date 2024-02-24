@@ -3,8 +3,7 @@
 
 <!-- badges: start -->
 
-[![R CMD check
-status](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml)
 [![Coverage
 status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://app.codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN

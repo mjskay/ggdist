@@ -10,7 +10,6 @@
 \alias{scale_color_ramp_discrete}
 \alias{scale_fill_ramp_continuous}
 \alias{scale_fill_ramp_discrete}
-\alias{partial_colour_ramp}
 \title{Secondary color scale that ramps from another color (ggplot2 scale)}
 \usage{
 scale_colour_ramp_continuous(
@@ -48,15 +47,14 @@ scale_color_ramp_discrete(
 scale_fill_ramp_continuous(..., aesthetics = "fill_ramp")
 
 scale_fill_ramp_discrete(..., aesthetics = "fill_ramp")
-
-partial_colour_ramp(amount = double(), from = "white")
 }
 \arguments{
 \item{from}{The color to ramp from. Corresponds to \code{0} on the scale.}
 
-\item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{\link[=scale_colour_ramp_discrete]{scale_colour_ramp_discrete()}},
-passes arguments to \code{\link[=discrete_scale]{discrete_scale()}}, \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} passes arguments
-to \code{\link[=continuous_scale]{continuous_scale()}}. See those functions for more details.}
+\item{...}{Arguments passed to underlying scale or guide functions. E.g.
+\code{\link[=scale_colour_ramp_discrete]{scale_colour_ramp_discrete()}} passes arguments to \code{\link[=discrete_scale]{discrete_scale()}},
+\code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} passes arguments to \code{\link[=continuous_scale]{continuous_scale()}}.
+See those functions for more details.}
 
 \item{limits}{One of:
 \itemize{
@@ -75,14 +73,12 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 values after the scale transformation. These values should be between \code{0}
 (the \code{from} color) and \code{1} (the color determined by the \code{fill} aesthetic).}
 
-\item{guide}{A function used to create a guide or its name. For \code{scale_colour_ramp_continuous()}
-and \code{scale_fill_ramp_continuous()}, \code{guide_rampbar()} can be used to create gradient
-color bars. See \code{guides()} for information on other guides.}
+\item{guide}{A function used to create a guide or its name. For
+\code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} and \code{\link[=scale_fill_ramp_continuous]{scale_fill_ramp_continuous()}},
+\code{\link[=guide_rampbar]{guide_rampbar()}} can be used to create gradient color bars. See
+\code{\link[=guides]{guides()}} for information on other guides.}
 
 \item{aesthetics}{Names of aesthetics to set scales for.}
-
-\item{amount}{double in \verb{[0, 1]} giving the amount to ramp from
-the \code{from} colour (\code{0} == \code{from} and \code{1} == the other endpoint).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{colour_ramp} and/or \code{fill_ramp}
@@ -92,18 +88,26 @@ aesthetics for \code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplo
 This scale creates a secondary scale that modifies the \code{fill} or \code{color} scale of
 geoms that support it (\code{\link[=geom_lineribbon]{geom_lineribbon()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}) to "ramp"
 from a secondary color (by default white) to the primary fill color (determined
-by the standard \code{color} or \code{fill} aesthetics).
+by the standard \code{color} or \code{fill} aesthetics). It uses the
+\code{\link[=partial_colour_ramp]{partial_colour_ramp()}} data type.
 }
 \details{
-These scales transform data into values between \code{0} and \code{1} that represent a
-color between \code{from} and the target color. The target color is determined by
-the aesthetic: for example, the \code{colour_ramp} aesthetic creates ramps between
-\code{from} and whatever the value of the \code{colour} aesthetic is. Then, if the
-\code{colour_ramp} aesthetic is set, \pkg{ggdist} geometries will modify their
-\code{colour} by applying the colour ramp between \code{from} and \code{colour}.
+These scales transform data into \code{\link{partial_colour_ramp}}s. Each \code{\link{partial_colour_ramp}}
+is a pair of two values: a \code{from} colour and a numeric \code{amount} between \code{0}
+and \code{1} representing a distance between \code{from} and the target color (where \code{0}
+indicates the \code{from} color and \code{1} the target color).
 
-\code{\link[=partial_colour_ramp]{partial_colour_ramp()}} is used by these scales to create \code{numeric()}-like
-objects marked as being a partial colour ramp from the colour \code{from}.
+The target color is determined by the corresponding aesthetic: for example,
+the \code{colour_ramp} aesthetic creates ramps between \code{from} and whatever the
+value of the \code{colour} aesthetic is; the \code{fill_ramp} aesthetic creates ramps
+between \code{from} and whatever the value of the \code{fill} aesthetic is. When the
+\code{colour_ramp} aesthetic is set, \pkg{ggdist} geometries will modify their
+\code{colour} by applying the colour ramp between \code{from} and \code{colour} (and
+similarly for \code{fill_ramp} and \code{fill}).
+
+Colour ramps can be applied (i.e. translated into colours) using
+\code{\link[=ramp_colours]{ramp_colours()}}, which can be used with \code{\link[=partial_colour_ramp]{partial_colour_ramp()}}
+to implement geoms that make use of \code{colour_ramp} or \code{fill_ramp} scales.
 }
 \examples{
 
@@ -128,14 +132,18 @@ tibble(d = dist_normal(0, 1)) \%>\%
 
 }
 \seealso{
-\code{\link[=guide_rampbar]{guide_rampbar()}}
-
 Other ggdist scales: 
 \code{\link{scale_side_mirrored}()},
 \code{\link{scale_thickness}},
-\code{\link{scales}}
+\code{\link{sub-geometry-scales}}
+
+Other colour ramp functions: 
+\code{\link{guide_rampbar}()},
+\code{\link{partial_colour_ramp}()},
+\code{\link{ramp_colours}()}
 }
 \author{
 Matthew Kay
 }
+\concept{colour ramp functions}
 \concept{ggdist scales}

@@ -154,8 +154,8 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
   ), GeomSlab$hidden_aes),
 
   override_slab_aesthetics = function(self, s_data) {
-    s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
-    s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+    s_data$colour = ramp_colours(s_data[["colour"]], s_data[["colour_ramp"]])
+    s_data$fill = ramp_colours(s_data[["fill"]], s_data[["fill_ramp"]])
     s_data
   },
 

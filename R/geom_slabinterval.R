@@ -334,7 +334,7 @@ draw_path = function(data, panel_params, coord) {
 override_slab_aesthetics = function(self, s_data) {
   s_data$colour = s_data[["slab_colour"]]
   s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
-  s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+  s_data$fill = ramp_colours(s_data[["fill"]], s_data[["fill_ramp"]])
   s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
   #TODO: insert slab_size deprecation warning?
   s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]]
@@ -344,7 +344,7 @@ override_slab_aesthetics = function(self, s_data) {
 
 override_point_aesthetics = function(self, p_data, size_domain, size_range, fatten_point) {
   p_data$colour = p_data[["point_colour"]] %||% p_data[["colour"]]
-  p_data$colour = apply_colour_ramp(p_data[["colour"]], p_data[["colour_ramp"]])
+  p_data$colour = ramp_colours(p_data[["colour"]], p_data[["colour_ramp"]])
   p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
   p_data$alpha = p_data[["point_alpha"]] %||% p_data[["alpha"]]
   # TODO: insert fatten_point deprecation warning
@@ -355,7 +355,7 @@ override_point_aesthetics = function(self, p_data, size_domain, size_range, fatt
 
 override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
   i_data$colour = i_data[["interval_colour"]] %||% i_data[["colour"]]
-  i_data$colour = apply_colour_ramp(i_data[["colour"]], i_data[["colour_ramp"]])
+  i_data$colour = ramp_colours(i_data[["colour"]], i_data[["colour_ramp"]])
   i_data$alpha = i_data[["interval_alpha"]] %||% i_data[["alpha"]]
   # TODO: insert interval_size deprecation warning
   i_data$linewidth = transform_size(
@@ -695,7 +695,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
       that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
       size of the interval or points separately, you can also use the `linewidth` or `point_size`
-      aesthetics; see [scales].
+      aesthetics; see [sub-geometry-scales].
       '),
     fatten_point = glue_doc('
       A multiplicative factor used to adjust the size of the point relative to the size of the

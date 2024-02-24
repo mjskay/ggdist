@@ -66,7 +66,8 @@
 #' @return
 #' A [ggplot2::Scale] representing one of the aesthetics used to target the appearance of specific parts of composite
 #' `ggdist` geoms. Can be added to a [ggplot()] object.
-#' @name scales
+#' @name sub-geometry-scales
+#' @aliases scales
 #' @author Matthew Kay
 #' @family ggdist scales
 #' @seealso Other ggplot2 scales: [scale_color_discrete()], [scale_color_continuous()], etc.
@@ -104,49 +105,49 @@
 #' @export
 scale_point_colour_discrete =
   function(..., aesthetics = "point_colour") scale_colour_hue(..., aesthetics = aesthetics)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_color_discrete = scale_point_colour_discrete
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_color_continuous = scale_point_colour_continuous
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_fill_discrete =
   function(..., aesthetics = "point_fill") scale_colour_hue(..., aesthetics = aesthetics)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales rescale_pal
 #' @export
 scale_point_alpha_continuous = function(..., range = c(0.1, 1)) {
   continuous_scale("point_alpha", palette = rescale_pal(range), ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_alpha_discrete = function(..., range = c(0.1, 1)) {
   discrete_scale("point_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales area_pal
 #' @export
 scale_point_size_continuous =
   function(..., range = c(1, 6)) continuous_scale("point_size", palette = area_pal(range), ...)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -160,41 +161,41 @@ scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE)
 # scale_interval_... ------------------------------------------------------
 
 #' @export
-#' @rdname scales
+#' @rdname sub-geometry-scales
 scale_interval_colour_discrete =
   function(..., aesthetics = "interval_colour") scale_colour_hue(..., aesthetics = aesthetics)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_color_discrete = scale_interval_colour_discrete
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_color_continuous = scale_interval_colour_continuous
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales rescale_pal
 #' @export
 scale_interval_alpha_continuous = function(..., range = c(0.1, 1)) {
   continuous_scale("interval_alpha", palette = rescale_pal(range), ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
   discrete_scale("interval_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales area_pal
 #' @export
 scale_interval_size_continuous =
   function(..., range = c(1, 6)) continuous_scale("interval_size", palette = area_pal(range), ...)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -205,13 +206,13 @@ scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FAL
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales linetype_pal
 #' @export
 scale_interval_linetype_discrete = function(..., na.value = "blank") {
   discrete_scale("interval_linetype", palette = linetype_pal(), na.value = na.value, ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_interval_linetype_continuous = function(...) {
   stop0("A continuous variable cannot be mapped to linetype")
@@ -221,52 +222,52 @@ scale_interval_linetype_continuous = function(...) {
 # scale_slab_... ----------------------------------------------------------
 
 #' @export
-#' @rdname scales
+#' @rdname sub-geometry-scales
 scale_slab_colour_discrete =
   function(..., aesthetics = "slab_colour") scale_colour_hue(..., aesthetics = aesthetics)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_color_discrete = scale_slab_colour_discrete
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_colour_continuous = function(..., aesthetics = "slab_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_color_continuous = scale_slab_colour_continuous
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_fill_discrete =
   function(..., aesthetics = "slab_fill") scale_colour_hue(..., aesthetics = aesthetics)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_alpha_continuous = function(..., limits = function(l) c(min(0, l[[1]]), l[[2]]), range = c(0, 1)) {
   continuous_scale("slab_alpha", palette = rescale_pal(range), limits = limits, ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_alpha_discrete = function(..., range = c(0.1, 1)) {
   discrete_scale("slab_alpha", palette = function(n) seq(range[1], range[2], length.out = n), ...)
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_size_continuous =
   function(..., range = c(1, 6)) continuous_scale("slab_size", palette = rescale_pal(range), ...)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -277,12 +278,12 @@ scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) 
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales rescale_pal
 #' @export
 scale_slab_linewidth_continuous =
   function(..., range = c(1, 6)) continuous_scale("slab_linewidth", palette = rescale_pal(range), ...)
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -293,26 +294,26 @@ scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FA
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales linetype_pal
 #' @export
 scale_slab_linetype_discrete = function(..., na.value = "blank") {
   discrete_scale("slab_linetype", palette = linetype_pal(), na.value = na.value, ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_linetype_continuous = function(...) {
   stop0("A continuous variable cannot be mapped to linetype")
 }
 
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @importFrom scales shape_pal
 #' @export
 scale_slab_shape_discrete = function(..., solid = TRUE) {
   discrete_scale("slab_shape", palette = shape_pal(solid), ...)
 }
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 scale_slab_shape_continuous = function(...) {
   stop0("A continuous variable cannot be mapped to shape")
@@ -321,7 +322,7 @@ scale_slab_shape_continuous = function(...) {
 
 # guide_colorbar2 ---------------------------------------------------------
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 guide_colourbar2 = function(...) {
   # the default colourbar throws an error when asked to draw color bars for these aesthetics
@@ -335,6 +336,6 @@ guide_colourbar2 = function(...) {
   )))
 }
 
-#' @rdname scales
+#' @rdname sub-geometry-scales
 #' @export
 guide_colorbar2 = guide_colourbar2

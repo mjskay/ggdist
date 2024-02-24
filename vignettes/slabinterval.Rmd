@@ -534,8 +534,6 @@ priors %>%
 ```
 
 This example also demonstrates the use of subguides to label the `thickness` axis.
-**Note**: subguides are currently only available in the development version
-of ggdist (> 3.3.1) on Github.
 For more on subguides, see the documentation for the `subguide_axis()` function, and
 for more on scaling of the `thickness` aesthetic, see the [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html).
 
@@ -581,7 +579,7 @@ separate_scale_plot + shared_scale_plot + plot_annotation(title = "prior (slab) 
 
 With `scale_thickness_shared()` applied, both densities have the same area under
 their curves. 
-Futher details of scaling of the `thickness` aesthetic are discussed in the
+Further details of scaling of the `thickness` aesthetic are discussed in the
 [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html)
 
 ### Scale transformations of densities

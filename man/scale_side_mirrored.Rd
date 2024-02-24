@@ -104,7 +104,7 @@ data.frame(
 Other ggdist scales: 
 \code{\link{scale_colour_ramp}},
 \code{\link{scale_thickness}},
-\code{\link{scales}}
+\code{\link{sub-geometry-scales}}
 }
 \author{
 Matthew Kay

@@ -230,7 +230,7 @@ The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinter
 Other ggdist scales: 
 \code{\link{scale_colour_ramp}},
 \code{\link{scale_side_mirrored}()},
-\code{\link{scales}}
+\code{\link{sub-geometry-scales}}
 }
 \author{
 Matthew Kay

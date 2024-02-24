@@ -106,8 +106,12 @@ tibble(d = dist_uniform(0, 1)) \%>\%
 
 }
 \seealso{
-\code{\link[=scale_fill_ramp_continuous]{scale_fill_ramp_continuous()}}, \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}}.
+Other colour ramp functions: 
+\code{\link{partial_colour_ramp}()},
+\code{\link{ramp_colours}()},
+\code{\link{scale_colour_ramp}}
 }
 \author{
 Matthew Kay
 }
+\concept{colour ramp functions}

@@ -28,7 +28,7 @@
 #' @return
 #' A guide object.
 #' @author Matthew Kay
-#' @seealso [scale_fill_ramp_continuous()], [scale_colour_ramp_continuous()].
+#' @family colour ramp functions
 #' @examples
 #'
 #' library(dplyr)
@@ -79,7 +79,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
       if (reverse) {
         bar = bar[rev(seq_len(nrow(bar))), , drop = FALSE]
       }
-      bar$colour = alpha(apply_colour_ramp(to, bar$colour), alpha)
+      bar$colour = alpha(ramp_colours(to, bar$colour), alpha)
       bar
     }
   )
