@@ -1115,6 +1115,18 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
 
 #'@importFrom cli cli_warn cli_abort
 switch_fill_type = function(fill_type, segments, gradient, call = caller_env()) {
+  if (getRversion() < "4.1.0" && fill_type == "gradient") {           # nocov start
+    cli_warn(c(
+      '{.code fill_type = "gradient"} is not supported in R < 4.1.0.',
+      'i' = 'Falling back to {.code fill_type = "segments"}.',
+      'i' = 'See the documentation for {.arg fill_type} in
+             {.fun ggdist::geom_slabinterval} for more information.'
+    ))
+    fill_type = "segments"
+  } else if (getRversion() < "4.1.0" && fill_type == "auto") {
+    fill_type = "segments"
+  }                                                                   # nocov end
+
   switch(fill_type,
     segments = segments,
     gradient = {
