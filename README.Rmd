@@ -84,14 +84,14 @@ slabinterval_plot = ggplot() +
     show.legend = FALSE,
     position = position_nudge(y = -0.5)
   ) +
-  scale_x_continuous(limits = dists_xlim, expand = c(0,0), breaks = NULL) +
-  scale_y_discrete(limits = rev, breaks = NULL) +
+  scale_x_continuous(limits = dists_xlim, expand = c(0,0), labels = NULL) +
+  scale_y_discrete(limits = rev, labels = NULL) +
   labs(
     title = "slabinterval",
     x = NULL,
     y = NULL
   ) +
-  theme(plot.margin = margin(5.5, 5.5, 5.5, 0))
+  theme(plot.margin = margin(5.5, 5.5, 5.5, 0), axis.ticks = element_blank())
 ```
 
 ```{r preview_dotsinterval, include=FALSE}
@@ -118,13 +118,14 @@ dotsinterval_plot = ggplot() +
   scale_fill_brewer(palette = "Set2", guide = "none") +
   
   
-  scale_x_continuous(limits = dists_xlim, expand = c(0,0), breaks = NULL) +
-  scale_y_discrete(limits = rev, breaks = NULL) +
+  scale_x_continuous(limits = dists_xlim, expand = c(0,0), labels = NULL) +
+  scale_y_discrete(limits = rev, labels = NULL) +
   labs(
     title = "dotsinterval",
     x = NULL,
     y = NULL
-  )
+  ) +
+  theme(axis.ticks = element_blank())
 ```
 
 ```{r preview_lineribbon, include=FALSE}
@@ -161,16 +162,16 @@ mtcars_plot = function(.width = c(.6, .8, .95), alpha = 1/4, ...) {
 
 lineribbon_plot_1 = mtcars_plot() +
   guides(color = "none", fill = "none", x = "none") +
-  scale_x_continuous(breaks = NULL) +
-  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL) +
   labs(title = "lineribbon", x = NULL, y = NULL) +
-  theme(plot.margin = margin(5.5, 5.5, 0, 5.5))
+  theme(plot.margin = margin(5.5, 5.5, 0, 5.5), axis.ticks = element_blank())
 lineribbon_plot_2 = mtcars_plot(.width = ppoints(30), alpha = 1/20) +
   guides(color = "none", fill = "none") +
-  scale_x_continuous(breaks = NULL) +
-  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL) +
   labs(x = NULL, y = NULL) +
-  theme(plot.margin = margin(0, 5.5, 5.5, 5.5))
+  theme(plot.margin = margin(0, 5.5, 5.5, 5.5), axis.ticks = element_blank())
 ```
 
 

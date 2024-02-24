@@ -66,18 +66,18 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
       scale, aesthetic, nbin = 300, reverse = FALSE, alpha = NA,
       to = "gray65", ...
     ) {
-      limits <- scale$get_limits()
-      bar <- seq(limits[1], limits[2], length.out = nbin)
+      limits = scale$get_limits()
+      bar = seq(limits[1], limits[2], length.out = nbin)
       if (length(bar) == 0) {
-        bar <- unique(limits)
+        bar = unique(limits)
       }
-      bar <- data_frame(
+      bar = data_frame(
         colour = scale$map(bar),
         value  = bar,
         .size  = length(bar)
       )
       if (reverse) {
-        bar <- bar[nrow(bar):1, , drop = FALSE]
+        bar = bar[rev(seq_len(nrow(bar))), , drop = FALSE]
       }
       bar$colour = alpha(apply_colour_ramp(to, bar$colour), alpha)
       bar
