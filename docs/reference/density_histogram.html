@@ -18,7 +18,7 @@ Supports automatic partial function application."><meta property="og:image" cont
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@ Supports automatic partial function application."><meta property="og:image" cont
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">density_histogram</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  breaks <span class="op">=</span> <span class="st">"Sturges"</span>,</span>
+<span>  breaks <span class="op">=</span> <span class="st">"Scott"</span>,</span>
 <span>  align <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  outline_bars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -185,15 +185,15 @@ the format expected by the <code>density</code> argument of the <code><a href="s
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	density_histogram(x = x)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (5000 obs.);	Bandwidth 'bw' = 0.07285</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: x (5000 obs.);	Bandwidth 'bw' = 0.03788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        x                   y          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000338   Min.   :0.02196  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.2277000   1st Qu.:0.31845  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.4735795   Median :0.86475  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000338   Min.   :0.02112  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.2320712   1st Qu.:0.30620  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.4735795   Median :0.90804  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.4735795   Mean   :1.05586  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.7194591   3rd Qu.:1.62244  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.9471253   Max.   :2.82486  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.7150879   3rd Qu.:1.63131  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.9471253   Max.   :2.88251  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... thus, while designed for use with the `density` argument of</span></span></span>
 <span class="r-in"><span><span class="co"># stat_slabinterval(), output from density_histogram() can also be used with</span></span></span>

@@ -36,7 +36,7 @@ geom_slabinterval(
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -186,13 +186,13 @@ the actual sizes used to draw intervals). Most of the time it is not recommended
 argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
 that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
 size of the interval or points separately, you can also use the <code>linewidth</code> or <code>point_size</code>
-aesthetics; see <a href="scales.html">scales</a>.</p></dd>
+aesthetics; see <a href="sub-geometry-scales.html">sub-geometry-scales</a>.</p></dd>
 
 
 <dt>fatten_point</dt>
 <dd><p>A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the <code>point_size</code>
-aesthetic and <code><a href="scales.html">scale_point_size_continuous()</a></code> or <code><a href="scales.html">scale_point_size_discrete()</a></code>; sizes
+aesthetic and <code><a href="sub-geometry-scales.html">scale_point_size_continuous()</a></code> or <code><a href="sub-geometry-scales.html">scale_point_size_discrete()</a></code>; sizes
 specified with that aesthetic will not be adjusted using <code>fatten_point</code>.</p></dd>
 
 
@@ -298,7 +298,7 @@ and the outline of the <strong>slab</strong> (if it is visible). Use the <code>s
 <li><p><code>group</code></p></li>
 </ul><p>See examples of some of these aesthetics in action in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.
 Learn more about the sub-geom override aesthetics (like <code>interval_color</code>) in the
-<a href="scales.html">scales</a> documentation. Learn more about basic ggplot aesthetics in
+<a href="sub-geometry-scales.html">scales</a> documentation. Learn more about basic ggplot aesthetics in
 <code><a href="https://ggplot2.tidyverse.org/articles/ggplot2-specs.html" class="external-link">vignette("ggplot2-specs")</a></code>.</p>
     </div>
     <div class="section level2">

@@ -20,7 +20,7 @@ of two or three levels."><meta property="og:image" content="http://mjskay.github
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,13 +85,13 @@ except <code>"both"</code>.</p></dd>
 
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="https://ggplot2.tidyverse.org/reference/discrete_scale.html" class="external-link">ggplot2::discrete_scale</a></code></p><dl><dt><code>scale_name</code></dt>
-<dd><p>The name of the scale that should be used for error messages
-associated with this scale.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> The name of the scale
+that should be used for error messages associated with this scale.</p></dd>
 
     <dt><code>palette</code></dt>
 <dd><p>A palette function that when called with a single integer
 argument (the number of levels in the scale) returns the values that
-they should take (e.g., <code><a href="https://scales.r-lib.org/reference/pal_hue.html" class="external-link">scales::hue_pal()</a></code>).</p></dd>
+they should take (e.g., <code><a href="https://scales.r-lib.org/reference/pal_hue.html" class="external-link">scales::pal_hue()</a></code>).</p></dd>
 
     <dt><code>name</code></dt>
 <dd><p>The name of the scale. Used as the axis or legend title. If
@@ -159,6 +159,9 @@ The default, <code>TRUE</code>, uses the levels that appear in the data;
 <dd><p>For position scales, The position of the axis.
 <code>left</code> or <code>right</code> for y axes, <code>top</code> or <code>bottom</code> for x axes.</p></dd>
 
+    <dt><code>call</code></dt>
+<dd><p>The <code>call</code> used to construct the scale for reporting messages.</p></dd>
+
     <dt><code>super</code></dt>
 <dd><p>The super class to use for the constructed scale</p></dd>
 
@@ -184,7 +187,7 @@ The default, <code>TRUE</code>, uses the levels that appear in the data;
     <div class="dont-index"><p>Other ggdist scales: 
 <code><a href="scale_colour_ramp.html">scale_colour_ramp</a></code>,
 <code><a href="scale_thickness.html">scale_thickness</a></code>,
-<code><a href="scales.html">scales</a></code></p></div>
+<code><a href="sub-geometry-scales.html">sub-geometry-scales</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

@@ -136,6 +136,9 @@
     <loc>http://mjskay.github.io/ggdist/reference/parse_dist.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/partial_colour_ramp.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/point_interval.html</loc>
   </url>
   <url>
@@ -145,10 +148,10 @@
     <loc>http://mjskay.github.io/ggdist/reference/Pr_.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/RankCorr.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/ramp_colours.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/scales.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/RankCorr.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc>
@@ -218,6 +221,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/student_t.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/sub-geometry-scales.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/subguide_axis.html</loc>

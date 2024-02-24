@@ -41,7 +41,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2024-02-21</h4>
+            <h4 data-toc-skip class="date">2024-02-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/slabinterval.Rmd" class="external-link"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="d-none name"><code>slabinterval.Rmd</code></div>
@@ -475,11 +475,9 @@ or <code>ydist</code> aesthetic in ggdist:</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="648"></p>
 <p>This example also demonstrates the use of subguides to label the
-<code>thickness</code> axis. <strong>Note</strong>: subguides are
-currently only available in the development version of ggdist (&gt;
-3.3.1) on Github. For more on subguides, see the documentation for the
-<code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> function, and for more on scaling of the
-<code>thickness</code> aesthetic, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+<code>thickness</code> axis. For more on subguides, see the
+documentation for the <code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> function, and for
+more on scaling of the <code>thickness</code> aesthetic, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
 article</a>.</p>
 <p>The <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> function in <code>format(.dist_obj)</code>
 generates a string containing a human-readable name for the distribution
@@ -524,7 +522,7 @@ plot. The difference is illustrated below:</p>
 <span><span class="va">separate_scale_plot</span> <span class="op">+</span> <span class="va">shared_scale_plot</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"prior (slab) + posterior (halfeye)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/prior_post-1.png" width="648"></p>
 <p>With <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> applied, both densities
-have the same area under their curves. Futher details of scaling of the
+have the same area under their curves. Further details of scaling of the
 <code>thickness</code> aesthetic are discussed in the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
 article</a></p>
 </div>
@@ -738,7 +736,7 @@ values of the slab portion of <code><a href="../reference/geom_slabinterval.html
 aesthetic has default ranges and limits that are a little different from
 the base ggplot <code>alpha</code> scale and which ensure that densities
 of 0 are mapped onto opacities of 0. You can use
-<code><a href="../reference/scales.html">scale_slab_alpha_continuous()</a></code> to adjust this scale’s
+<code><a href="../reference/sub-geometry-scales.html">scale_slab_alpha_continuous()</a></code> to adjust this scale’s
 settings.</p>
 </div>
 <div class="section level3">
@@ -947,7 +945,7 @@ CDF):</p>
 <span>  <span class="fu"><a href="../reference/stat_gradientinterval.html">stat_gradientinterval</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>slab_alpha <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">2</span><span class="op">*</span><span class="va">cdf</span><span class="op">)</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    fill_type <span class="op">=</span> <span class="st">"gradient"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/scales.html">scale_slab_alpha_continuous</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/sub-geometry-scales.html">scale_slab_alpha_continuous</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_gradientinterval(fill_type = 'gradient')"</span>,</span>
 <span>    <span class="st">"aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"</span></span>
@@ -962,7 +960,7 @@ al.</em></a>:</p>
 <code class="sourceCode R"><span><span class="va">priors</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span>, xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_eye.html">stat_eye</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>slab_alpha <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">2</span><span class="op">*</span><span class="va">cdf</span><span class="op">)</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, fill_type <span class="op">=</span> <span class="st">"gradient"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/scales.html">scale_slab_alpha_continuous</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/sub-geometry-scales.html">scale_slab_alpha_continuous</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_eye(fill_type = 'gradient')"</span>,</span>
 <span>    <span class="st">"aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"</span></span>

@@ -105,6 +105,6 @@ Visualization and Computer Graphics*, 30(1), 414–424. DOI:
 [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
 
 Matthew Kay (2024). ggdist: Visualizations of Distributions and
-Uncertainty. R package version 3.3.1.9000,
+Uncertainty. R package version 3.3.2,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

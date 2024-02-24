@@ -18,7 +18,7 @@ interval summaries using a curve boxplot-inspired approach."><meta property="og:
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,7 +115,7 @@ interval summaries using a curve boxplot-inspired approach.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.data</dt>
-<dd><p>One of:</p><ul><li><p>A data frame (or grouped data frame as returned by <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>)
+<dd><p>One of:</p><ul><li><p>A data frame (or grouped data frame as returned by <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by()</a></code>)
 that contains draws to summarize.</p></li>
 <li><p>A <a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar</a> vector.</p></li>
 <li><p>A matrix; in which case the first dimension should be draws and the second
@@ -134,7 +134,7 @@ This can be numeric columns, list columns containing numeric vectors, or
 
 <dt>.along</dt>
 <dd><p>Which columns are the input values to the function describing the curve (e.g., the "x"
-values). Supports tidyselect syntax, as in <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code>. Intervals are calculated jointly with
+values). Supports <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect</a> syntax. Intervals are calculated jointly with
 respect to these variables, conditional on all other grouping variables in the data frame. The default
 (<code>NULL</code>) causes <code>curve_interval()</code> to use all grouping variables in the input data frame as the value
 for <code>.along</code>, which will generate the most conservative intervals. However, if you want to calculate

@@ -22,7 +22,7 @@ Useful for visualizing prior correlations from LKJ distributions."><meta propert
     
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,8 +101,8 @@ and a list column of distribution arguments (<code>".args"</code> by default), s
 <dt>predicate</dt>
 <dd><p>a bare expression for selecting the rows of <code>data</code> to modify. This is useful
 if <code>data</code> contains more than one row with an LKJ prior in it and you only want to modify some
-of the distributions; if this is the case, give row a predicate expression (such as you might supply
-to <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>) that evaluates to <code>TRUE</code> on the rows you want to modify.
+of the distributions; if this is the case, give row a predicate expression that evaluates to
+<code>TRUE</code> on the rows you want to modify.
 If <code>NULL</code> (the default), all <code>lkjcorr</code> distributions in <code>data</code> are modified.</p></dd>
 
 
