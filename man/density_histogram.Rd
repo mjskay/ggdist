@@ -7,7 +7,7 @@
 density_histogram(
   x,
   weights = NULL,
-  breaks = "Sturges",
+  breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
   na.rm = FALSE,

@@ -16,7 +16,7 @@ stat_cdfinterval(
   density = "bounded",
   adjust = 1,
   trim = TRUE,
-  breaks = "Sturges",
+  breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
   point_interval = "median_qi",

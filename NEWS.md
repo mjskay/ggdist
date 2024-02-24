@@ -38,6 +38,8 @@ Bug fixes:
 
 Minor changes:
 
+* The default histogram bin selection algorithm is now `"Scott"` instead of
+  `"Sturges"`, as `"Sturges"` tends to be too conservative (#214).
 * Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
   from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
   The latter two are only strictly necessary for `curve_interval()` due to its

@@ -6,7 +6,7 @@
 
 #' @importFrom rlang as_label enexpr get_expr
 weighted_hist = function(
-  x, weights = NULL, breaks = "Sturges", align = "none"
+  x, weights = NULL, breaks = "Scott", align = "none"
 ) {
   x_label = as_label(enexpr(x))
   weights_label = as_label(enexpr(weights))

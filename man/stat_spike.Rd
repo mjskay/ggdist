@@ -16,7 +16,7 @@ stat_spike(
   adjust = 1,
   trim = TRUE,
   expand = FALSE,
-  breaks = "Sturges",
+  breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
   slab_type = NULL,

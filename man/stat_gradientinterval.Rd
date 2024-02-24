@@ -16,7 +16,7 @@ stat_gradientinterval(
   adjust = 1,
   trim = TRUE,
   expand = FALSE,
-  breaks = "Sturges",
+  breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
   point_interval = "median_qi",

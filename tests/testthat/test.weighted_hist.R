@@ -11,11 +11,11 @@ test_that("weighted_hist works", {
   expect_equal(weighted_hist(c(1,1)), hist(c(1,1), breaks = c(0.5, 1.5), plot = FALSE))
 
   x = c(1,1,1,4)
-  expect_equal(weighted_hist(x), hist(x, plot = FALSE))
+  expect_equal(weighted_hist(x, breaks = "Sturges"), hist(x, plot = FALSE))
 
   xw = c(1, 4)
   w = c(3, 1)
-  wh = weighted_hist(xw, w)
+  wh = weighted_hist(xw, w, breaks = "Sturges")
   expect_equal(wh$xname, "[xw, w]")
   wh$xname = "x"
   expect_equal(wh, hist(x, plot = FALSE))

@@ -329,7 +329,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' @export
 density_histogram = auto_partial(name = "density_histogram", function(
   x, weights = NULL,
-  breaks = "Sturges",
+  breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
   na.rm = FALSE,

@@ -492,7 +492,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     adjust = 1,
     trim = TRUE,
     expand = FALSE,
-    breaks = "Sturges",
+    breaks = "Scott",
     align = "none",
     outline_bars = FALSE,
 
