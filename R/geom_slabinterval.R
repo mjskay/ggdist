@@ -1132,7 +1132,7 @@ switch_fill_type = function(fill_type, segments, gradient, call = caller_env()) 
     gradient = {
       tryCatch({
         check_device("gradients", maybe = TRUE, call = call)
-      }, warning = function(e) {
+      }, warning = function(e) {                                      # nocov start
         cli_warn(
           c(
             '{.code fill_type = "gradient"} does not appear to be supported by the
@@ -1154,14 +1154,14 @@ switch_fill_type = function(fill_type, segments, gradient, call = caller_env()) 
           class = "ggdist_gradients_not_supported",
           parent = e
         )
-      })
+      })                                                              # nocov end
       gradient
     },
     auto = {
       tryCatch({
         check_device("gradients", maybe = FALSE, call = call)
         gradient
-      }, warning = function(e) {
+      }, warning = function(e) {                                      # nocov start
         cli_warn(
           c(
             '{.code fill_type = "gradient"} is not supported by the current graphics device.',
@@ -1182,7 +1182,7 @@ switch_fill_type = function(fill_type, segments, gradient, call = caller_env()) 
           parent = e
         )
         segments
-      })
+      })                                                              # nocov end
     },
     cli_abort(c(
       'Unknown {.arg fill_type}: {.code {deparse0(fill_type)}}',

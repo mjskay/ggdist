@@ -53,8 +53,8 @@ test_that("fill_type = 'gradient' works", {
     p + stat_gradientinterval(aes(x = dist, y = x), n = 15, fill_type = "gradient"),
     writer = write_svg_with_gradient
   )
-  vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
-    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "gradient"),
+  vdiffr::expect_doppelganger("fill_type = auto with two groups, h",
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "auto"),
     writer = write_svg_with_gradient
   )
 
