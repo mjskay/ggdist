@@ -410,6 +410,33 @@ test_that("logical conditions at bin edges on histograms work", {
 })
 
 
+# weights -----------------------------------------------------------------
+
+test_that("sample weights work", {
+  df = data.frame(
+    x = 1:9/10,
+    w = 0:8
+  )
+
+  p = ggplot(df, aes(x, weight = w))
+
+  ld_slab = layer_data(p + stat_slab(n = 9, density = "unbounded", .width = .5))
+  expect_equal(
+    ld_slab$pdf,
+    density(df$x, weights = df$w/36, bw = bandwidth_dpi(df$x), n = 9, cut = 0)$y
+  )
+  expect_equal(ld_slab$cdf, cumsum(df$w/36))
+  expect_equal(ld_slab$.width, c(rep(NA, 5), rep(0.5, 3), NA))
+
+  ld_interval = layer_data(p + stat_pointinterval(.width = .5))
+  expect_equal(ld_interval$x, 0.7)
+  expect_equal(ld_interval$xmin, weighted_quantile(df$x, 0.25, weights = df$w, names = FALSE))
+  expect_equal(ld_interval$xmax, weighted_quantile(df$x, 0.75, weights = df$w, names = FALSE))
+  ld_interval_mean = layer_data(p + stat_pointinterval(.width = .5, point_interval = mean_qi))
+  expect_equal(ld_interval_mean$x, 2/3)
+})
+
+
 # deprecated params -------------------------------------------------------
 
 test_that("slab_type throws appropriate warnings and errors", {

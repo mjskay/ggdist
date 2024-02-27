@@ -454,6 +454,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     (when `orientation = "horizontal"` with sample data).',
     y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
     (when `orientation = "vertical"` with sample data).',
+    weight = 'When using samples (i.e. the `x` and `y` aesthetics, not `xdist` or `ydist`), optional
+    weights to be applied to each draw.',
     xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
     object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
     ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
@@ -476,7 +478,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     arg6 = NULL,
     arg7 = NULL,
     arg8 = NULL,
-    arg9 = NULL
+    arg9 = NULL,
+    weight = NULL
   ), AbstractStatSlabinterval$default_aes),
 
   # interval parameter used to determine if the stat re-groups

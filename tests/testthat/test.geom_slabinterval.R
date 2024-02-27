@@ -3,9 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-
-
+suppressPackageStartupMessages(suppressWarnings({
+  library(dplyr)
+}))
 
 
 # group_slab_data_by -------------------------------------------------
