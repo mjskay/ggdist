@@ -227,7 +227,7 @@ breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
   # bins that would be used in a regular bin spacing with `n` bins).
   min_binwidth = diff(range(x)) / max_n * min_width
   next_break = -Inf
-  for (i in seq_along(breaks)) {
+  for (i in seq_len(max_n)) {
     if (breaks[[i]] >= next_break) {
       current_break = breaks[[i]]
       next_break = current_break + min_binwidth
