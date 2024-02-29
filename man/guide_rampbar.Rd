@@ -91,8 +91,8 @@ tibble(d = dist_uniform(0, 1)) \%>\%
   stat_slab(aes(fill_ramp = after_stat(x)), fill = "blue") +
   scale_fill_ramp_continuous(from = "red")
 
-# We can guide_rampbar() to instead create a continuous guide, but
-# it does not know what ccolor to ramp to (defaults to "gray65"):
+# We can use guide_rampbar() to instead create a continuous guide, but
+# it does not know what color to ramp to (defaults to "gray65"):
 tibble(d = dist_uniform(0, 1)) \%>\%
   ggplot(aes(y = 0, xdist = d)) +
   stat_slab(aes(fill_ramp = after_stat(x)), fill = "blue") +
