@@ -140,7 +140,7 @@ mtcars_preds = mtcars %>%
   expand(hp = seq(min(hp), max(hp), length.out = 50)) %>%
   bind_cols(predict(m_mpg, newdata = ., se.fit = TRUE))
 
-mtcars_plot = function(.width = c(.6, .8, .95), alpha = 1/4, ...) {
+mtcars_plot = function(.width = c(.5, .8, .95), alpha = 1/4, ...) {
   mtcars_preds %>%
     ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
     stat_lineribbon(
