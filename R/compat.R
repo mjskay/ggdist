@@ -9,12 +9,17 @@
 # dplyr -------------------------------------------------------------------
 #' Wrapper around dplyr::group_vars()
 #' @noRd
-group_vars_ = function(x) {
+group_vars_ = function(x, call = caller_env()) {
   if (requireNamespace("dplyr", quietly = TRUE)) {
     dplyr::group_vars(x)
   } else {
     # can't have grouped data frames without dplyr, so if dplyr isn't installed
-    # assume we aren't getting grouped dfs
+    # we most likely aren't getting grouped dfs --- but still double-check and
+    # fail in the most common case, grouped_df (maybe someone loaded an rds of a
+    # grouped df into a setup without dplyr or something...)
+    if (inherits(x, "grouped_df")) {
+      stop_not_installed("dplyr", context = "Using grouped data frames", call = call)
+    }
     character()
   }
 }

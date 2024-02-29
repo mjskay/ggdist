@@ -23,22 +23,26 @@ warning0 = function(...) {
 #' @param context beginning of error message giving the context (e.g. a
 #' package name and/or argument combination) that requires the package.
 #' @param ... additional messages placed into the `cli_abort()` message.
+#' @importFrom rlang caller_env
 #' @noRd
 stop_if_not_installed = function(packages, context = "This functionality", ..., call = caller_env()) {
   for (package in packages) {
     if (!requireNamespace(package, quietly = TRUE)) {
-      cli_abort(
-        c(
-          paste0(context, ' requires the {.pkg {package}} package.'),
-          ">" = 'Install the {.pkg {package}} package with {.run install.packages("{package}")}',
-          ...
-        ),
-        class = "ggdist_missing_package",
-        ggdist_package = package,
-        call = call
-      )
+      stop_not_installed(package, context = context, ..., call = call)
     }
   }
+}
+stop_not_installed = function(package, context = "This functionality", ..., call = caller_env()) {
+  cli_abort(
+    c(
+      paste0(context, ' requires the {.pkg {package}} package.'),
+      ">" = 'Install the {.pkg {package}} package with {.run install.packages("{package}")}',
+      ...
+    ),
+    class = "ggdist_missing_package",
+    ggdist_package = package,
+    call = call
+  )
 }
 
 # get all variable names from an expression
