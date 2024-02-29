@@ -30,7 +30,6 @@ library(distributional)
 library(ggdist)
 library(ggplot2)
 library(patchwork)
-library(palmerpenguins)
 
 theme_set(theme_ggdist())
 ```
@@ -852,34 +851,35 @@ tibble(
 ## Logit dotplots
 
 To demonstrate another useful plot type, the *logit dotplot* (courtesy [Ladislas Nalborczyk](https://lnalborczyk.github.io/post/glm/)), we'll fit a 
-logistic regression to some data on the sex and body mass of Gentoo penguins.
+logistic regression to some data on the petal length of the *Iris versicolor* 
+and *Iris virginica* flowers.
 
 First, we'll demo varying the `side` aesthetic to create two dotplots that are
 "facing" each other: `scale_side_mirrored()` will set the `side` aesthetic to 
 `"top"` or `"bottom"` if two categories are assigned to `side`". We also adjust 
 the `scale` so that the dots don't overlap:
 
-```{r gentoo_raw, fig.width = med_width, fig.height = med_height}
-gentoo = penguins %>%
-  filter(species == "Gentoo", !is.na(sex))
+```{r iris_v, fig.width = med_width, fig.height = med_height}
+iris_v = iris %>%
+  filter(Species != "setosa")
 
-gentoo %>%
-  ggplot(aes(x = body_mass_g, y = sex, side = sex)) +
+iris_v %>%
+  ggplot(aes(x = Petal.Length, y = Species, side = Species)) +
   geom_dots(scale = 0.5) +
   scale_side_mirrored(guide = "none") +
   ggtitle(
     "geom_dots(scale = 0.5)",
-    'aes(side = sex) + scale_side_mirrored()'
+    'aes(side = Species) + scale_side_mirrored()'
   )
 ```
 
 This can also be accomplished by setting side directly and omitting
-`scale_side_mirrored()`; e.g. via `aes(side = ifelse(sex == "male", "bottom", "top"))`.
+`scale_side_mirrored()`; e.g. via `aes(side = ifelse(Species == "virginica", "bottom", "top"))`.
 
-Now we fit a logistic regression predicting sex based on body mass:
+Now we fit a logistic regression predicting species based on petal length:
 
-```{r m_gentoo}
-m = glm(sex == "male" ~ body_mass_g, data = gentoo, family = binomial)
+```{r m_iris_v}
+m = glm(Species == "virginica" ~ Petal.Length, data = iris_v, family = binomial)
 m
 ```
 
@@ -888,8 +888,8 @@ on top of the mirrored dotplots to create a *logit dotplot*:
 
 ```{r logit_dotplot, fig.width = med_width, fig.height = med_height/1.5}
 # construct a prediction grid for the fit line
-prediction_grid = with(gentoo,
-  data.frame(body_mass_g = seq(min(body_mass_g), max(body_mass_g), length.out = 100))
+prediction_grid = with(iris_v,
+  data.frame(Petal.Length = seq(min(Petal.Length), max(Petal.Length), length.out = 100))
 )
 
 prediction_grid %>%
@@ -898,25 +898,25 @@ prediction_grid %>%
     # distribution describing uncertainty in log odds
     log_odds = dist_normal(fit, se.fit),
     # inverse-logit transform the log odds to get
-    # distribution describing uncertainty in Pr(sex == "male")
-    p_male = dist_transformed(log_odds, plogis, qlogis)
+    # distribution describing uncertainty in Pr(Species == "virginica")
+    p_virginica = dist_transformed(log_odds, plogis, qlogis)
   ) %>%
-  ggplot(aes(x = body_mass_g)) +
+  ggplot(aes(x = Petal.Length)) +
   geom_dots(
-    aes(y = as.numeric(sex == "male"), side = sex),
+    aes(y = as.numeric(Species == "virginica"), side = Species),
     scale = 0.4,
-    data = gentoo
+    data = iris_v
   ) +
   stat_lineribbon(
-    aes(ydist = p_male), alpha = 1/4, fill = "#08306b"
+    aes(ydist = p_virginica), alpha = 1/4, fill = "#08306b"
   ) +
   scale_side_mirrored(guide = "none") +
   coord_cartesian(ylim = c(0, 1)) +
   labs(
-    title = "logit dotplot: stat_dots() with stat_lineribbon()",
-    subtitle = 'aes(side = sex) + scale_side_mirrored()',
-    x = "Body mass (g) of Gentoo penguins",
-    y = "Pr(sex = male)"
+    title = "logit dotplot: geom_dots() with stat_lineribbon()",
+    subtitle = 'aes(side = Species) + scale_side_mirrored()',
+    x = "Petal Length",
+    y = "Pr(Species = virginica)"
   )
 ```
 

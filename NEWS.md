@@ -33,13 +33,13 @@ Minor changes:
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
 * The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
   (#206; thanks to @ASKurz for the suggestion).
-* Several dependency reductions: removed {cowplot}, {purrr}, and {forcats}
-  from *Suggests*; moved {tidyselect} and {dplyr} from *Imports* to *Suggests*.
-  The latter two are only strictly necessary for `curve_interval()` due to its
-  use of grouped data frames and tidy selection to specify which columns are
-  conditional and which are joint (the use of grouped data frames with
-  `point_interval()` is less strictly necessary, and not used by stats, so
-  is easier to avoid as an absolute dependency).
+* Several dependency reductions: removed {cowplot}, {purrr}, {forcats}, 
+  {palmerpenguins}, and {modelr} from *Suggests*; moved {tidyselect} and {dplyr}
+  from *Imports* to *Suggests*. The latter two are only strictly necessary for 
+  `curve_interval()` due to its use of grouped data frames and tidy selection to 
+  specify which columns are conditional and which are joint (the use of grouped
+  data frames with `point_interval()` is less strictly necessary, and not used 
+  by stats, so is easier to avoid as an absolute dependency).
 
 Documentation:
 

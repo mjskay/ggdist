@@ -133,19 +133,18 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(ggdist)
-library(broom)
 
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 mtcars_preds = mtcars %>%
   group_by(cyl) %>%
   expand(hp = seq(min(hp), max(hp), length.out = 50)) %>%
-  augment(m_mpg, newdata = ., se_fit = TRUE)
+  bind_cols(predict(m_mpg, newdata = ., se.fit = TRUE))
 
 mtcars_plot = function(.width = c(.6, .8, .95), alpha = 1/4, ...) {
   mtcars_preds %>%
     ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
     stat_lineribbon(
-      aes(dist = "norm", arg1 = .fitted, arg2 = .se.fit), 
+      aes(ydist = dist_student_t(df, fit, se.fit)), 
       .width = .width, alpha = alpha, ...
     ) +
     geom_point(aes(y = mpg), data = mtcars) +

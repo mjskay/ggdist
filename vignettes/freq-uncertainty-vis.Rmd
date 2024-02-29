@@ -33,7 +33,6 @@ library(tidyr)
 library(ggdist)
 library(ggplot2)
 library(broom)
-library(modelr)
 library(distributional)
 
 theme_set(theme_ggdist())
@@ -114,7 +113,7 @@ m_ABC %>%
   )
 ```
 
-If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we can use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the confidence distribution for the mean in condition $c$, $\tilde\mu_c$:
+If we would rather see uncertainty in conditional means, we can instead use `tidyr::expand()` along with `broom::augment()` (similar to how we can use `tidyr::expand()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the confidence distribution for the mean in condition $c$, $\tilde\mu_c$:
 
 $$
 \tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\hat\mu_c} \right)
@@ -130,7 +129,7 @@ Putting everything together, we have:
 
 ```{r halfeye_with_data, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
-  data_grid(condition) %>%
+  expand(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_halfeye(
@@ -146,7 +145,7 @@ Of course, this works with the entire `stat_slabinterval()` family. Here are gra
 
 ```{r gradientinterval, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
-  data_grid(condition) %>%
+  expand(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_gradientinterval(
@@ -163,7 +162,7 @@ Or complementary cumulative distribution function (CCDF) bar plots:
 
 ```{r ccdfinterval, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
-  data_grid(condition) %>%
+  expand(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_ccdfinterval(
@@ -175,7 +174,7 @@ We can also create quantile dotplots by using the `dots` family of geoms. Quanti
 
 ```{r dotplot, fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
-  data_grid(condition) %>%
+  expand(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dots(
@@ -194,12 +193,12 @@ The same principle of reconstructing the confidence distribution allows us to us
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 ```
 
-Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_lineribbon()`:
+Again we'll use `tidyr::expand()` with `broom::tidy()`, but now we'll employ `stat_lineribbon()`:
 
 ```{r lineribbon, fig.width = tiny_width, fig.height = tiny_height}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 101)) %>%
+  expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_lineribbon(
@@ -226,7 +225,7 @@ variable is computed by `stat_lineribbon()` and is an ordered factor version of
 ```{r lineribbon_lightened, fig.width = tiny_width, fig.height = tiny_height}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 101)) %>%
+  expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, color = ordered(cyl))) +
   stat_lineribbon(aes(
