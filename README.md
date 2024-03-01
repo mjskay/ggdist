@@ -8,8 +8,7 @@
 status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://app.codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
-![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
-[![Paper
+![Download count](https://cranlogs.r-pkg.org/badges/ggdist) [![Paper
 DOI](https://img.shields.io/badge/DOI-10.1109%2FTVCG.2023.3327195-blue)](https://doi.org/10.1109/TVCG.2023.3327195)
 [![Software
 DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
