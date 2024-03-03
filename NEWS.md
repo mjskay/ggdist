@@ -33,6 +33,8 @@ Minor changes:
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
 * The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
   (#206; thanks to @ASKurz for the suggestion).
+* Optional arguments to automatically partially-applied functions can now be 
+  passed a `waiver()` to use their default value (see `auto_partial()`).
 * Several dependency reductions: removed {cowplot}, {purrr}, {forcats}, 
   {palmerpenguins}, and {modelr} from *Suggests*; moved {tidyselect} and {dplyr}
   from *Imports* to *Suggests*. The latter two are only strictly necessary for 

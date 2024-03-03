@@ -163,14 +163,12 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
   required_arg_names = required_arg_names[required_arg_names != "..."]
 
   # build an expression to apply waivers to optional args
-  if (waivable) {
+  process_waivers = if (waivable) {
     optional_args = f_args[!is_required_arg]
-    process_waivers = map2_(optional_args, names(optional_args), function(arg_expr, arg_name) {
+    map2_(optional_args, names(optional_args), function(arg_expr, arg_name) {
       arg_sym = as.symbol(arg_name)
-      expr(if (inherits(!!arg_sym, "waiver")) !!arg_sym = !!arg_expr)
+      expr(if (inherits(!!arg_sym, "waiver")) (!!arg_name) = !!arg_expr)
     })
-  } else {
-    process_waivers = list()
   }
 
   # build a logical expression testing to see if any required args are missing
@@ -189,18 +187,19 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
     partial_self
   }
 
-  if (length(required_arg_names) == 0) {
-    partial_self_if_missing_args = list()
-  } else {
-    partial_self_if_missing_args = list(expr(
+  partial_self_if_missing_args = if (length(required_arg_names) > 0) {
+    expr({
       if (!!any_required_args_missing) return((!!partial_self_f)(!!name, waivable = !!waivable))
-    ))
+    })
   }
 
   new_f = new_function(
     f_args,
     expr({
-      !!!process_waivers
+      # no idea why, but covr::package_coverage() fails if the next line doesn't
+      # have { } around it. It is not necessary for normal execution. Must have
+      # something to do with how covr adds hooks for tracing execution.
+      { !!!process_waivers }
       !!!partial_self_if_missing_args
       !!!f_body
     }),
