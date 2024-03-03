@@ -38,7 +38,7 @@ test_that("functions inside the ggdist namespace do not inline partial_self", {
     x + 1
   }
   environment(f) = asNamespace("ggdist")
-  expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f")', fixed = TRUE)
+  expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f", waivable = TRUE)', fixed = TRUE)
 })
 
 test_that("wrapper functions work", {
@@ -50,4 +50,24 @@ test_that("wrapper functions work", {
   expect_output(print(g(y = 2)), "<partial_function>:.*f\\(y = y\\)")
   expect_equal(g(1), f(1, y = 2))
   expect_equal(g(1, y = 3, z = 4), f(1, y = 3, z = 4))
+})
+
+test_that("original function names are preserved in match.call after multiple partial applications", {
+  foo = auto_partial(function(x) as.call(lapply(match.call(), get_expr)))
+
+  expect_equal(foo()()(1), quote(foo(x = 1)))
+})
+
+test_that("waivers work", {
+  foo = auto_partial(function(x, a = 2) c(x, a))
+
+  expect_equal(foo(a = waiver())(1), c(1, 2))
+  expect_equal(foo(1, a = waiver()), c(1, 2))
+  expect_equal(foo(a = waiver())(x = 1), c(1, 2))
+  expect_equal(foo(a = waiver())(a = 4)(x = 1), c(1, 4))
+  expect_equal(foo(a = 4)(a = waiver())(x = 1), c(1, 4))
+
+  foo = auto_partial(function(x, y, a = 3, b = 4) c(x, y, a, b))
+
+  expect_equal(foo(a = waiver(), b = 5)(1)(y = -2, b = waiver()), c(1, -2, 3, 5))
 })

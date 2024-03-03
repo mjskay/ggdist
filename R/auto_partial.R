@@ -48,6 +48,11 @@
 #' Many other common arguments for \pkg{ggdist} functions work similarly; e.g.
 #' `density`, `align`, `breaks`, `bandwidth`, and `point_interval` arguments.
 #'
+#' These function families (except [point_interval()]) also support passing
+#' [waiver]s to their optional arguments: if [waiver()] is passed to any
+#' of these arguments, their default value (or the most
+#' recently-partially-applied non-`waiver` value) is used instead.
+#'
 #' Use the [auto_partial()] function to create new functions that support
 #' automatic partial application.
 #'
@@ -83,21 +88,35 @@ NULL
 #' function with the arguments that were supplied replacing the defaults.
 #' Can be called multiple times
 #' @noRd
-#' @importFrom rlang as_quosure enquos eval_tidy expr get_expr
-partial_self = function(name = NULL) {
+#' @importFrom rlang as_quosure enquos0 eval_tidy expr get_expr
+partial_self = function(name = NULL, waivable = TRUE) {
   f = sys.function(-1L)
   call_expr = match.call(f, sys.call(-1L), TRUE, parent.frame(2L))
   f_quo = as_quosure(call_expr[[1]], parent.frame(2L))
-  default_args = lapply(call_expr[-1], as_quosure, env = parent.frame(2L))
+  provided_args = lapply(call_expr[-1], as_quosure, env = parent.frame(2L))
   name = name %||% deparse0(get_expr(call_expr[[1]]))
 
+  waivable_arg_names = if (waivable) {
+    f_args = formals(f)
+    is_required_arg = vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))
+    names(f_args)[!is_required_arg]
+  }
+
   partial_f = function(...) {
-    new_args = enquos(...)
-    all_args = defaults(new_args, default_args)
+    new_args = enquos0(...)
+    if (waivable) {
+      is_waivable = rlang::names2(new_args) %in% waivable_arg_names
+      is_waived = is_waivable
+      is_waived[is_waivable] = map_lgl_(new_args[is_waivable], function(arg_expr) {
+        inherits(eval_tidy(arg_expr), "waiver")
+      })
+      new_args = new_args[!is_waived]
+    }
+    all_args = defaults(new_args, provided_args)
     eval_tidy(expr((!!f_quo)(!!!all_args)))
   }
 
-  attr(partial_f, "default_args") = default_args
+  attr(partial_f, "provided_args") = provided_args
   attr(partial_f, "name") = name
   class(partial_f) = c("ggdist_partial_function", "function")
   partial_f
@@ -107,10 +126,12 @@ partial_self = function(name = NULL) {
 #' @param f A function
 #' @param name A character string giving the name of the function, to be used
 #' when printing.
+#' @param waivable logical: if `TRUE`, optional arguments that get
+#' passed a [waiver()] will keep their default value (or whatever
+#' non-`waiver` value has been most recently partially applied for that
+#' argument).
 #' @returns A modified version of `f` that will automatically be partially
 #' applied if all of its required arguments are not given.
-#' @export
-#' @importFrom rlang new_function expr
 #' @examples
 #' # create a custom automatically partially applied function
 #' f = auto_partial(function(x, y, z = 3) (x + y) * z)
@@ -119,7 +140,13 @@ partial_self = function(name = NULL) {
 #' g = f(y = 2)(z = 4)
 #' g
 #' g(1)
-auto_partial = function(f, name = NULL) {
+#'
+#' # pass waiver() to optional arguments to use existing values
+#' f(z = waiver())(1, 2)  # uses default z = 3
+#' f(z = 4)(z = waiver())(1, 2)  # uses z = 4
+#' @export
+#' @importFrom rlang new_function expr
+auto_partial = function(f, name = NULL, waivable = TRUE) {
   f_body = body(f)
   # must ensure the function body is a { ... } block, not a single expression,
   # so we can splice it in later with !!!f_body
@@ -131,17 +158,25 @@ auto_partial = function(f, name = NULL) {
   f_args = formals(f)
 
   # find the required arguments
-  required_args = f_args[vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))]
-  required_arg_names = names(required_args)
+  is_required_arg = vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))
+  required_arg_names = names(f_args)[is_required_arg]
   required_arg_names = required_arg_names[required_arg_names != "..."]
 
-  # no required arguments => function will always fully evaluate when called
-  if (length(required_arg_names) == 0) return(f)
+  # build an expression to apply waivers to optional args
+  if (waivable) {
+    optional_args = f_args[!is_required_arg]
+    process_waivers = map2_(optional_args, names(optional_args), function(arg_expr, arg_name) {
+      arg_sym = as.symbol(arg_name)
+      expr(if (inherits(!!arg_sym, "waiver")) !!arg_sym = !!arg_expr)
+    })
+  } else {
+    process_waivers = list()
+  }
 
   # build a logical expression testing to see if any required args are missing
   any_required_args_missing = Reduce(
     function(x, y) expr(!!x || !!y),
-    lapply(required_arg_names, function(arg_name) expr(missing(!!as.name(arg_name))))
+    lapply(required_arg_names, function(arg_name) expr(missing(!!as.symbol(arg_name))))
   )
 
   partial_self_f = if (identical(environment(f), environment(partial_self))) {
@@ -154,11 +189,19 @@ auto_partial = function(f, name = NULL) {
     partial_self
   }
 
+  if (length(required_arg_names) == 0) {
+    partial_self_if_missing_args = list()
+  } else {
+    partial_self_if_missing_args = list(expr(
+      if (!!any_required_args_missing) return((!!partial_self_f)(!!name, waivable = !!waivable))
+    ))
+  }
+
   new_f = new_function(
     f_args,
     expr({
-      if (!!any_required_args_missing) return((!!partial_self_f)(!!name))
-
+      !!!process_waivers
+      !!!partial_self_if_missing_args
       !!!f_body
     }),
     env = environment(f)
@@ -172,7 +215,7 @@ auto_partial = function(f, name = NULL) {
 #' @export
 print.ggdist_partial_function = function(x, ...) {
   f_sym = as.name(attr(x, "name"))
-  f_args = lapply(attr(x, "default_args"), get_expr)
+  f_args = lapply(attr(x, "provided_args"), get_expr)
 
   cat(sep = "\n",
     "<partial_function>: ",
@@ -184,3 +227,6 @@ print.ggdist_partial_function = function(x, ...) {
 
   invisible(x)
 }
+
+#' @export
+ggplot2::waiver

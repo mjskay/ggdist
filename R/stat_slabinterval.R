@@ -336,6 +336,7 @@ compute_interval_slabinterval = function(
 #'    the data and then uses a bounded density estimator based on the reflection method.
 #' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data
 #' is adjusted by multiplying it by this value. See e.g. [density_bounded()] for more information.
+#' Default (`waiver()`) defers to the default of the density estimator, which is usually `1`.
 #' @param trim For sample data, should the density estimate be trimmed to the range of the
 #' data? Passed on to the density estimator; see the `density` parameter. Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
@@ -492,10 +493,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
   default_params = defaults(list(
     p_limits = c(NA, NA),
     density = "bounded",
-    adjust = 1,
+    adjust = waiver(),
     trim = TRUE,
     expand = FALSE,
-    breaks = "Scott",
+    breaks = waiver(),
     align = "none",
     outline_bars = FALSE,
 

@@ -261,8 +261,9 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param weights optional numeric vector of weights to apply to `x`.
-#' @param breaks Determines the breakpoints defining bins. Similar to (but not
-#' exactly the same as) the `breaks` argument to [graphics::hist()]. One of:
+#' @param breaks Determines the breakpoints defining bins. Defaults to `"Scott"`.
+#' Similar to (but not exactly the same as) the `breaks` argument to [graphics::hist()].
+#' One of:
 #'   - A scalar (length-1) numeric giving the number of bins
 #'   - A vector numeric giving the breakpoints between histogram bins
 #'   - A function taking `x` and `weights` and returning either the
@@ -276,7 +277,8 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' For example, `breaks = "Sturges"` will use the [breaks_Sturges()] algorithm,
 #' `breaks = 9` will create 9 bins, and `breaks = breaks_fixed(width = 1)` will
 #' set the bin width to `1`.
-#' @param align Determines how to align the breakpoints defining bins. One of:
+#' @param align Determines how to align the breakpoints defining bins. Default
+#' (`"none"`) performs no alignment. One of:
 #'   - A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 #'     The offset must be between `0` and the bin width.
 #'   - A function taking a sorted vector of `breaks` (bin edges) and returning

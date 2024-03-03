@@ -155,7 +155,7 @@ point_interval = function(
   .data, ..., .width = 0.95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
-  if (missing(.data)) return(partial_self("point_interval"))
+  if (missing(.data)) return(partial_self("point_interval", waivable = FALSE))
 
   UseMethod("point_interval")
 }

@@ -235,5 +235,9 @@ make_geom = function(geom,
 #' (which will be expressions) match the formals of the generated code.
 #' @noRd
 to_expression = function(x) {
-  parse(text = deparse(x), keep.source = FALSE)[[1L]]
+  if (inherits(x, "waiver")) {
+    quote(waiver())
+  } else {
+    parse(text = deparse(x), keep.source = FALSE)[[1L]]
+  }
 }

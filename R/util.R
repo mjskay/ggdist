@@ -241,8 +241,12 @@ map_lgl_ = function(.x, .f, ...) {
   vapply(.x, .f, FUN.VALUE = logical(1), ...)
 }
 
+map2_ = function(.x, .y, .f) {
+  .mapply(.f, list(.x, .y), NULL)
+}
+
 map2_chr_ = function(.x, .y, .f) {
-  vctrs::list_unchop(.mapply(.f, list(.x, .y), NULL), ptype = character())
+  vctrs::list_unchop(map2_(.x, .y, .f), ptype = character())
 }
 
 fct_rev_ = function(x) {

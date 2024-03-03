@@ -14,9 +14,9 @@ stat_ccdfinterval(
   expand = TRUE,
   p_limits = c(NA, NA),
   density = "bounded",
-  adjust = 1,
+  adjust = waiver(),
   trim = TRUE,
-  breaks = "Scott",
+  breaks = waiver(),
   align = "none",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -154,13 +154,15 @@ the data and then uses a bounded density estimator based on the reflection metho
 }}
 
 \item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bounded]{density_bounded()}} for more information.}
+is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bounded]{density_bounded()}} for more information.
+Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{1}.}
 
 \item{trim}{For sample data, should the density estimate be trimmed to the range of the
 data? Passed on to the density estimator; see the \code{density} parameter. Default \code{TRUE}.}
 
-\item{breaks}{Determines the breakpoints defining bins. Similar to (but not
-exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
+\item{breaks}{Determines the breakpoints defining bins. Defaults to \code{"Scott"}.
+Similar to (but not exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}.
+One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
 \item A vector numeric giving the breakpoints between histogram bins
@@ -177,7 +179,8 @@ For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]
 \code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
 set the bin width to \code{1}.}
 
-\item{align}{Determines how to align the breakpoints defining bins. One of:
+\item{align}{Determines how to align the breakpoints defining bins. Default
+(\code{"none"}) performs no alignment. One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 The offset must be between \code{0} and the bin width.

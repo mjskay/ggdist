@@ -5,13 +5,18 @@
 \alias{automatic-partial-functions}
 \title{Automatic partial function application in ggdist}
 \usage{
-auto_partial(f, name = NULL)
+auto_partial(f, name = NULL, waivable = TRUE)
 }
 \arguments{
 \item{f}{A function}
 
 \item{name}{A character string giving the name of the function, to be used
 when printing.}
+
+\item{waivable}{logical: if \code{TRUE}, optional arguments that get
+passed a \code{\link[=waiver]{waiver()}} will keep their default value (or whatever
+non-\code{waiver} value has been most recently partially applied for that
+argument).}
 }
 \value{
 A modified version of \code{f} that will automatically be partially
@@ -53,6 +58,11 @@ ways:
 Many other common arguments for \pkg{ggdist} functions work similarly; e.g.
 \code{density}, \code{align}, \code{breaks}, \code{bandwidth}, and \code{point_interval} arguments.
 
+These function families (except \code{\link[=point_interval]{point_interval()}}) also support passing
+\link{waiver}s to their optional arguments: if \code{\link[=waiver]{waiver()}} is passed to any
+of these arguments, their default value (or the most
+recently-partially-applied non-\code{waiver} value) is used instead.
+
 Use the \code{\link[=auto_partial]{auto_partial()}} function to create new functions that support
 automatic partial application.
 }
@@ -84,4 +94,8 @@ f(1)
 g = f(y = 2)(z = 4)
 g
 g(1)
+
+# pass waiver() to optional arguments to use existing values
+f(z = waiver())(1, 2)  # uses default z = 3
+f(z = 4)(z = waiver())(1, 2)  # uses z = 4
 }
