@@ -167,7 +167,7 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
     optional_args = f_args[!is_required_arg]
     map2_(optional_args, names(optional_args), function(arg_expr, arg_name) {
       arg_sym = as.symbol(arg_name)
-      expr(if (inherits(!!arg_sym, "waiver")) (!!arg_name) = !!arg_expr)
+      expr(if (inherits(!!arg_sym, "waiver")) assign(!!arg_name, !!arg_expr))
     })
   }
 
