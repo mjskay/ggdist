@@ -33,6 +33,9 @@ Minor changes:
   to more easily label spikes. (#203; thanks @mattansb for the suggestion).
 * The `arrow` parameter is now supported for intervals in `geom_slabinterval()`
   (#206; thanks to @ASKurz for the suggestion).
+* The default value of `overflow` in `geom_dotsinterval()` is now the new
+  `"warn"` mode, which works the same as `"keep"` except that it warns users
+  if the dots will overflow the geometry bounds and suggests solutions (#213).
 * Optional arguments to automatically partially-applied functions can now be 
   passed a `waiver()` to use their default value (see `auto_partial()`).
 * Several dependency reductions: removed {cowplot}, {purrr}, {forcats}, 

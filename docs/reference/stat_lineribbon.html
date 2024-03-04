@@ -306,6 +306,8 @@ the appearance of their two sub-geometries: the <strong>line</strong> and the <s
 (when <code>orientation = "horizontal"</code> with sample data).</p></li>
 <li><p><code>y</code>: y position of the geometry (when orientation = <code>"horizontal"</code>); or sample data to be summarized
 (when <code>orientation = "vertical"</code> with sample data).</p></li>
+<li><p><code>weight</code>: When using samples (i.e. the <code>x</code> and <code>y</code> aesthetics, not <code>xdist</code> or <code>ydist</code>), optional
+weights to be applied to each draw.</p></li>
 <li><p><code>xdist</code>: When using analytical distributions, distribution to map on the x axis: a <span class="pkg">distributional</span>
 object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>) or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
 <li><p><code>ydist</code>: When using analytical distributions, distribution to map on the y axis: a <span class="pkg">distributional</span>

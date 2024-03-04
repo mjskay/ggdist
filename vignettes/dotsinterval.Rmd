@@ -537,10 +537,10 @@ set.seed(1234)
 
 ns = c(50, 200, 500, 5000)
 increasing_samples = data.frame(
-  x = rgamma(sum(ns), 2, 2), 
+  x = rgamma(sum(ns), 2, 2),
   n = rep(ns, ns)
 )
-  
+
 increasing_samples %>%
   ggplot(aes(x = x)) +
   geom_dots() +
@@ -838,7 +838,7 @@ dotplot:
 
 ```{r mcse_blur_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
 increasing_samples %>%
-  ggplot(aes(x = x)) + 
+  ggplot(aes(x = x)) +
   stat_mcse_dots(quantiles = 100) +
   facet_wrap(~ n) +
   labs(
@@ -852,7 +852,7 @@ built-in `blur_interval()`, which draws an interval with a default width of 95%:
 
 ```{r mcse_interval_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
 increasing_samples %>%
-  ggplot(aes(x = x)) + 
+  ggplot(aes(x = x)) +
   stat_mcse_dots(quantiles = 100, blur = "interval") +
   facet_wrap(~ n) +
   labs(

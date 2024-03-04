@@ -192,6 +192,8 @@ rectangular bars.</p></li>
 <dd><p>How to handle overflow of dots beyond the extent of the geom
 when a minimum <code>binwidth</code> (or an exact <code>binwidth</code>) is supplied.
 One of:</p><ul><li><p><code>"keep"</code>: Keep the overflow, drawing dots outside the geom bounds.</p></li>
+<li><p><code>"warn"</code>: Keep the overflow, but produce a warning suggesting solutions,
+such as setting <code>binwidth = NA</code> or <code>overflow = "compress"</code>.</p></li>
 <li><p><code>"compress"</code>: Compress the layout. Reduces the <code>binwidth</code> to the size necessary
 to keep the dots within bounds, then adjusts <code>stackratio</code> and <code>dotsize</code> so that
 the apparent dot size is the user-specified minimum <code>binwidth</code> times the

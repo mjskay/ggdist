@@ -93,8 +93,9 @@ Supports automatic partial function application."><meta property="og:image" cont
 
 
 <dt>breaks</dt>
-<dd><p>Determines the breakpoints defining bins. Similar to (but not
-exactly the same as) the <code>breaks</code> argument to <code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>. One of:</p><ul><li><p>A scalar (length-1) numeric giving the number of bins</p></li>
+<dd><p>Determines the breakpoints defining bins. Defaults to <code>"Scott"</code>.
+Similar to (but not exactly the same as) the <code>breaks</code> argument to <code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>.
+One of:</p><ul><li><p>A scalar (length-1) numeric giving the number of bins</p></li>
 <li><p>A vector numeric giving the breakpoints between histogram bins</p></li>
 <li><p>A function taking <code>x</code> and <code>weights</code> and returning either the
 number of bins or a vector of breakpoints</p></li>
@@ -109,7 +110,8 @@ set the bin width to <code>1</code>.</p></dd>
 
 
 <dt>align</dt>
-<dd><p>Determines how to align the breakpoints defining bins. One of:</p><ul><li><p>A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+<dd><p>Determines how to align the breakpoints defining bins. Default
+(<code>"none"</code>) performs no alignment. One of:</p><ul><li><p>A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 The offset must be between <code>0</code> and the bin width.</p></li>
 <li><p>A function taking a sorted vector of <code>breaks</code> (bin edges) and returning
 an offset to subtract from the breaks.</p></li>

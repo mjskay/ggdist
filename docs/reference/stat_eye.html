@@ -93,10 +93,10 @@ creating eye (violin + interval) plots.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  p_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  density <span class="op">=</span> <span class="st">"bounded"</span>,</span>
-<span>  adjust <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  adjust <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  breaks <span class="op">=</span> <span class="st">"Scott"</span>,</span>
+<span>  breaks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  align <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  outline_bars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  point_interval <span class="op">=</span> <span class="st">"median_qi"</span>,</span>
@@ -248,7 +248,8 @@ the data and then uses a bounded density estimator based on the reflection metho
 
 <dt>adjust</dt>
 <dd><p>Passed to <code>density</code>: the bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See e.g. <code><a href="density_bounded.html">density_bounded()</a></code> for more information.</p></dd>
+is adjusted by multiplying it by this value. See e.g. <code><a href="density_bounded.html">density_bounded()</a></code> for more information.
+Default (<code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>) defers to the default of the density estimator, which is usually <code>1</code>.</p></dd>
 
 
 <dt>trim</dt>
@@ -262,8 +263,9 @@ Can be length two to control expansion to the lower and upper limit respectively
 
 
 <dt>breaks</dt>
-<dd><p>Determines the breakpoints defining bins. Similar to (but not
-exactly the same as) the <code>breaks</code> argument to <code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>. One of:</p><ul><li><p>A scalar (length-1) numeric giving the number of bins</p></li>
+<dd><p>Determines the breakpoints defining bins. Defaults to <code>"Scott"</code>.
+Similar to (but not exactly the same as) the <code>breaks</code> argument to <code><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">graphics::hist()</a></code>.
+One of:</p><ul><li><p>A scalar (length-1) numeric giving the number of bins</p></li>
 <li><p>A vector numeric giving the breakpoints between histogram bins</p></li>
 <li><p>A function taking <code>x</code> and <code>weights</code> and returning either the
 number of bins or a vector of breakpoints</p></li>
@@ -278,7 +280,8 @@ set the bin width to <code>1</code>.</p></dd>
 
 
 <dt>align</dt>
-<dd><p>Determines how to align the breakpoints defining bins. One of:</p><ul><li><p>A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+<dd><p>Determines how to align the breakpoints defining bins. Default
+(<code>"none"</code>) performs no alignment. One of:</p><ul><li><p>A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 The offset must be between <code>0</code> and the bin width.</p></li>
 <li><p>A function taking a sorted vector of <code>breaks</code> (bin edges) and returning
 an offset to subtract from the breaks.</p></li>
@@ -441,6 +444,8 @@ the <strong>interval</strong>.</p>
 (when <code>orientation = "horizontal"</code> with sample data).</p></li>
 <li><p><code>y</code>: y position of the geometry (when orientation = <code>"horizontal"</code>); or sample data to be summarized
 (when <code>orientation = "vertical"</code> with sample data).</p></li>
+<li><p><code>weight</code>: When using samples (i.e. the <code>x</code> and <code>y</code> aesthetics, not <code>xdist</code> or <code>ydist</code>), optional
+weights to be applied to each draw.</p></li>
 <li><p><code>xdist</code>: When using analytical distributions, distribution to map on the x axis: a <span class="pkg">distributional</span>
 object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>) or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
 <li><p><code>ydist</code>: When using analytical distributions, distribution to map on the y axis: a <span class="pkg">distributional</span>
