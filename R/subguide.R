@@ -71,6 +71,7 @@
 #'   scale_y_discrete(expand = expansion(add = 0.1)) +
 #'   scale_x_continuous(expand = expansion(add = 0.5))
 #'
+#' @importFrom scales oob_discard
 #' @export
 subguide_axis = auto_partial(name = "subguide_axis", function(
   values,
@@ -87,11 +88,13 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   grob_width = switch(width., width = grobWidth, height = grobHeight)
   position = get_subguide_position(position, orientation)
 
-  scale = scale_thickness_shared(breaks = breaks, labels = labels, limits = range(values))
+  limits = range(values)
+  scale = scale_thickness_shared(breaks = breaks, labels = labels, limits = limits)
   scale$train(values)
 
-  break_positions = as.numeric(scale$map(scale$get_breaks()))
-  break_labels = scale$get_labels()
+  breaks = oob_discard(scale$get_breaks(), limits)
+  break_positions = as.numeric(scale$map(breaks))
+  break_labels = scale$get_labels(breaks)
 
   axis_position = get_subguide_axis_position(label_side, position, orientation)
   axis_is_topleft = axis_position %in% c("left", "top")

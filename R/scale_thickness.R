@@ -110,6 +110,7 @@ scale_thickness_shared = function(
     limits = limits,
     oob = oob,
     guide = guide,
+    expand = expansion(0, 0),
     ...,
     super = ScaleThicknessShared
   )
