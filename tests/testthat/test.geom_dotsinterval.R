@@ -213,14 +213,11 @@ test_that("geom_dots binwidth can be specified in unit()s", {
 
 
   # these dots should be the same size (10% of facet height)
-  expect_warning(
-    vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
-      mtcars %>%
-        ggplot(aes(y = mpg)) +
-        geom_dots(binwidth = unit(0.1, "native")) +
-        facet_grid(~ am, scales = "free")
-    ),
-    class = "ggdist_dots_overflow_warning"
+  vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
+    mtcars %>%
+      ggplot(aes(y = mpg)) +
+      geom_dots(binwidth = unit(0.1, "native"), overflow = "keep") +
+      facet_grid(~ am, scales = "free")
   )
 })
 
