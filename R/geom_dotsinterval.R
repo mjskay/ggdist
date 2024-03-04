@@ -11,7 +11,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  overlaps = "nudge", overflow = "keep",
+  overlaps = "nudge", overflow = "warn",
   subguide = "none",
   verbose = FALSE,
   orientation = "vertical",
@@ -87,7 +87,7 @@ makeContent.dots_grob = function(x) {
     user_max_binwidth = binwidth
   }
 
-  if (isTRUE(is.na(binwidth)) || overflow == "compress") {
+  if (isTRUE(is.na(binwidth)) || overflow != "keep") {
     # find the best bin widths across all the dotplots we are going to draw
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
@@ -101,6 +101,25 @@ makeContent.dots_grob = function(x) {
           s = user_min_binwidth / binwidth
           dotsize = dotsize * s
           stackratio = stackratio / s
+        },
+        warn = {
+          cli_warn(
+            c(
+              "The provided binwidth will cause dots to overflow the boundaries of the geometry.",
+              ">" = 'Set `binwidth = NA` to automatically determine a binwidth that ensures
+                     dots fit within the bounds,',
+              ">" = 'OR set `overflow = "compress"` to automatically reduce the spacing between
+                     dots to ensure the dots fit within the bounds,',
+              ">" = 'OR set `overflow = "keep"` to allow dots to overflow the bounds of the
+                     geometry without producing a warning.',
+              "i" = 'For more information, see the documentation of the {.arg binwidth} and
+                     {.arg overflow} arguments of {.help ggdist::geom_dots} or the section
+                     on constraining dot sizes in
+                     {.vignette [vignette("dotsinterval")](ggdist::dotsinterval)}.'
+            ),
+            class = "ggdist_dots_overflow_warning"
+          )
+          binwidth = user_min_binwidth
         },
         keep = {
           binwidth = user_min_binwidth
@@ -488,6 +507,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       when a minimum `binwidth` (or an exact `binwidth`) is supplied.
       One of:
         - `"keep"`: Keep the overflow, drawing dots outside the geom bounds.
+        - `"warn"`: Keep the overflow, but produce a warning suggesting solutions,
+          such as setting `binwidth = NA` or `overflow = "compress"`.
         - `"compress"`: Compress the layout. Reduces the `binwidth` to the size necessary
           to keep the dots within bounds, then adjusts `stackratio` and `dotsize` so that
           the apparent dot size is the user-specified minimum `binwidth` times the
@@ -554,7 +575,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     layout = "bin",
     overlaps = "nudge",
     smooth = "none",
-    overflow = "keep",
+    overflow = "warn",
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 

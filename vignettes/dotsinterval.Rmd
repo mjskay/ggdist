@@ -35,7 +35,7 @@ theme_set(theme_ggdist())
 ```
 
 ```{r hidden_options, include=FALSE}
-.old_options = options(width = 110)
+.old_options = options(width = 100)
 ```
 
 
@@ -573,9 +573,10 @@ increasing_samples %>%
   )
 ```
 
-Notice how the dots now go off the page. If we set `overflow = "compress"`, if the
-layout would overflow, it instead compresses spacing between dots to keep them within
-the geometry's bounds:
+Notice how the dots now go off the page and we receive a warning with suggestions on
+how to fix the layout. If we set `overflow = "compress"`, instead of overflowing,
+the layout will compress the spacing between dots to keep them within the geometry's
+bounds:
 
 ```{r increasing_samples_min_binwidth_compress, fig.width = med_width, fig.height = med_height}
 increasing_samples %>%

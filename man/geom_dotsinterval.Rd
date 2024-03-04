@@ -16,7 +16,7 @@ geom_dotsinterval(
   layout = "bin",
   overlaps = "nudge",
   smooth = "none",
-  overflow = "keep",
+  overflow = "warn",
   verbose = FALSE,
   orientation = NA,
   interval_size_domain = c(1, 6),
@@ -159,6 +159,8 @@ when a minimum \code{binwidth} (or an exact \code{binwidth}) is supplied.
 One of:
 \itemize{
 \item \code{"keep"}: Keep the overflow, drawing dots outside the geom bounds.
+\item \code{"warn"}: Keep the overflow, but produce a warning suggesting solutions,
+such as setting \code{binwidth = NA} or \code{overflow = "compress"}.
 \item \code{"compress"}: Compress the layout. Reduces the \code{binwidth} to the size necessary
 to keep the dots within bounds, then adjusts \code{stackratio} and \code{dotsize} so that
 the apparent dot size is the user-specified minimum \code{binwidth} times the

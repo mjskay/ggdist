@@ -213,11 +213,14 @@ test_that("geom_dots binwidth can be specified in unit()s", {
 
 
   # these dots should be the same size (10% of facet height)
-  vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
-    mtcars %>%
-      ggplot(aes(y = mpg)) +
-      geom_dots(binwidth = unit(0.1, "native")) +
-      facet_grid(~ am, scales = "free")
+  expect_warning(
+    vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
+      mtcars %>%
+        ggplot(aes(y = mpg)) +
+        geom_dots(binwidth = unit(0.1, "native")) +
+        facet_grid(~ am, scales = "free")
+    ),
+    class = "ggdist_dots_overflow_warning"
   )
 })
 
@@ -236,11 +239,15 @@ test_that("geom_dots allows constraints on binwidth", {
 
   # min width of 1/4th of the viewport should give us four giant bins
   # also test that verbose = TRUE outputs the binwidth
-  expect_message(
-    vdiffr::expect_doppelganger("min binwidth",
-      p + geom_dots(binwidth = unit(c(1/4, Inf), "npc"), verbose = TRUE)
+  # and overflow = "warn" gives us a warning
+  expect_warning(
+    expect_message(
+      vdiffr::expect_doppelganger("min binwidth",
+        p + geom_dots(binwidth = unit(c(1/4, Inf), "npc"), verbose = TRUE)
+      ),
+      'binwidth = 0\\.5 data units.*unit\\(0\\.25, "npc"\\)'
     ),
-    'binwidth = 0\\.5 data units.*unit\\(0\\.25, "npc"\\)'
+    class = "ggdist_dots_overflow_warning"
   )
 
 })
