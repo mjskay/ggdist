@@ -522,94 +522,80 @@ abcc_df %>%
   )
 ```
 
-## On large samples
+## Constraining dot size
 
-### Setting a minimum dot size
+When sample sizes can vary widely (and dynamically), it can be difficult to set
+a reasonable dot size that works on all charts. In this case, it can be useful
+to set constraints on the dot sizes picked by the automatic bin width selection
+algorithm.
 
-On very large samples, the dots may become smaller than desired. To avoid this, you can set 
-a desired dot size / bin width using the `binwidth` argument. To set a specific bin width,
-pass a 1-element vector; to set a minimum bin width, pass a 2-element vector, where the first
-element is the min and the second the max. The bin width can be in data units (if `numeric`)
-or in plotting units (using `grid::unit()`). 
+For example, on very large samples, dots may become smaller than desired. 
+Consider the following increasingly large samples:
 
-For example, we could set the minimum dot size
-to `unit(1.5, "mm")`, which is the default size of points in `ggplot2::geom_point()`. We'll
-also set `overflow = "compress"`, which allows dots to overlap if necessary to maintain
-the specified dot size (rather than having the tallest stacks of dots leave the top
-of the screen):
-
-```{r large_sample_min_binwidth, fig.width = small_width, fig.height = small_width/2}
+```{r increasing_samples, fig.width = med_width, fig.height = med_height}
 set.seed(1234)
-x = rnorm(2000)
 
-ggplot() +
-  geom_dots(aes(x), binwidth = unit(c(1.5, Inf), "mm"), overflow = "compress", alpha = 0.5) +
+ns = c(50, 200, 500, 5000)
+increasing_samples = data.frame(
+  x = rgamma(sum(ns), 2, 2), 
+  n = rep(ns, ns)
+)
+  
+increasing_samples %>%
+  ggplot(aes(x = x)) +
+  geom_dots() +
+  facet_wrap(~ n) +
   labs(
-    title = 'geom_dots()',
-    subtitle = 'binwidth = unit(c(1.5, Inf), "mm"), overflow = "compress")'
+    title = "geom_dots()",
+    subtitle = "on large samples, dots may get too small"
   )
 ```
 
-### "density" dotplots
+The dots become quite small on the 5000-dot dotplot, making it harder to read.
 
-The dotplot above on a sample of size 2000 is quite noisy. When applied to large 
-samples where you do not care too much about individual dot positions,
-you may want to apply some smoothing to make the layout more appealing.
+You can set constraints on the desired dot size / bin width by using the `binwidth` 
+argument. To set a specific bin width, pass a single value; to set constraints,
+pass a length-2 vector, where the first element is the min and the second the max. 
+The min can be `0` and the max can be `Inf` if you only want to constrain the
+other value (max or min, respectively). The bin width can be in data units 
+(using `numeric` values) or in plotting units (using `grid::unit()`s).
 
-`geom_dots()` supports a handful of *smoothers* which can be applied using the
-`smooth = ` parameter. These all correspond to functions that start with `smooth_`,
-like `smooth_bounded()`, `smooth_unbounded()`, and `smooth_discrete()`, and can be
-applied either by passing the suffix as a string (e.g. `smooth = "bounded"`)
-or by passing the function itself, to set specific options on it (e.g. 
-`smooth = smooth_bonuded(adjust = 0.5)`). For continuous distributions with
-unbounded support, `smooth_unbounded()` is a good choice; it applies a kernel density estimator
-the assumes infinite bounds (see `density_unbounded()`):
+For example, we could constrain the dot size to be greater than 1mm:
 
-
-```{r large_sample_smooth, fig.width = small_width, fig.height = small_width/2}
-ggplot() +
-  geom_dots(aes(x), smooth = "unbounded") +
+```{r increasing_samples_min_binwidth, fig.width = med_width, fig.height = med_height}
+increasing_samples %>%
+  ggplot(aes(x = x)) +
+  geom_dots(binwidth = unit(c(1, Inf), "mm")) +
+  facet_wrap(~ n) +
   labs(
-    title = 'geom_dots() with 2000 dots',
-    subtitle = 'smooth = "unbounded"',
-    x = NULL
-  ) +
-  scale_y_continuous(breaks = NULL)
-```
-
-Note that dot positions in the resulting plot will no longer be as accurate as before.
-With a large sample this may be an acceptable compromise. With a small sample, I **do
-not** recommend using this technique.
-
-On bounded distributions, you should use `smooth_bounded()`, providing 
-the bounds of the distribution. Otherwise, the dotplot will be smoothed incorrectly. 
-For example, on a Beta(0.5, 0.5) distribution, which is bounded between 0 and 1,
-we should use `smooth = smooth_bounded(bounds = c(0, 1))`:
-
-```{r smooth_bounded_versus_unbounded, fig.width = small_width, fig.height = small_height}
-set.seed(1234)
-x = rbeta(2000, 0.5, 0.5)
-
-ggplot(data.frame(x), aes(x)) +
-  geom_dots(aes(y = "bounded"), smooth = smooth_bounded(bounds = c(0, 1))) +
-  geom_dots(aes(y = "unbounded"), smooth = "unbounded") +
-  geom_vline(xintercept = c(0, 1), alpha = 0.25) +
-  scale_x_continuous(breaks = c(0, 0.5, 1)) +
-  labs(
-    title = "geom_dots(smooth = ...) on x ~ Beta(0.5, 0.5)",
-    y = "smooth ="
+    title = "geom_dots()",
+    subtitle = 'binwidth = unit(c(1.5, Inf), "mm")'
   )
 ```
 
-Notice how `smooth = "unbounded"` incorrectly smooths data points to be outside the
-range of the data when the data are bounded.
+Notice how the dots now go off the page. If we set `overflow = "compress"`, if the
+layout would overflow, it instead compresses spacing between dots to keep them within
+the geometry's bounds:
+
+```{r increasing_samples_min_binwidth_compress, fig.width = med_width, fig.height = med_height}
+increasing_samples %>%
+  ggplot(aes(x = x)) +
+  geom_dots(binwidth = unit(c(1, Inf), "mm"), overflow = "compress", alpha = 0.75) +
+  facet_wrap(~ n) +
+  labs(
+    title = "geom_dots()",
+    subtitle = 'binwidth = unit(c(1, Inf), "mm"), overflow = "compress"'
+  )
+```
+
+These settings give reasonable displays in small sample sizes and scale up
+to larger sample sizes without changing settings.
 
 ## On discrete distributions
 
 The dots family includes a variety of features to make visualizing discrete and categorical
-distributions easier. Dotplot smoothing can be particularly useful in for these distributions,
-particularly when bin counts are very high. For example, these distributions are hard to
-visualize under the default settings, because the dots become very small:
+distributions easier. These distributions can be hard to visualize under the default settings
+if the dots become very small:
 
 ```{r discrete_dots_too_small, fig.width = small_width, fig.height = small_height}
 set.seed(1234)
@@ -631,23 +617,7 @@ abcd_df %>%
 The automatic bin width algorithm selects a dot size that is very small in order to ensure
 the tallest bin fits in the plot, but this means the dots are hard to see.
 
-Using the `smooth_discrete()` smoother, we can spread the dots in each bin out into
-rectangular shapes:
-
-```{r discrete_dots_rect, fig.width = small_width, fig.height = small_height}
-abcd_df %>%
-  ggplot(aes(x = x)) +
-  geom_dots(smooth = "discrete") +
-  scale_y_continuous(breaks = NULL) +
-  labs(
-    title = 'geom_dots(smooth = "discrete")',
-    subtitle = "on a large discrete sample"
-  )
-```
-
-More regular bar-like shapes can be achieved by using `layout = "bar"`, so long
-as you override the default `ggplot2` behavior of grouping data by all discrete
-variables. This allows the layout to be calculated taking all groups into account:
+Bar-like layouts can be achieved by using `layout = "bar"`:
 
 ```{r discrete_dots_bar, fig.width = small_width, fig.height = small_height}
 abcd_df %>%
@@ -659,6 +629,16 @@ abcd_df %>%
     subtitle = "on a large discrete sample"
   )
 ```
+
+Notice how we set `group = NA` to override the default `ggplot2` behavior of 
+grouping data by all discrete variables. This allows the layout to be calculated 
+taking all groups into account.
+
+We can also use the `smooth` parameter to improve the display of discrete distributions,
+for which `geom_dots()` supports a handful of *smoothers*. These all correspond to 
+functions that start with `smooth_`, like `smooth_bounded()`, `smooth_unbounded()`, and `smooth_discrete()`, and can be applied either by passing the suffix as a string 
+(e.g. `smooth = "bounded"`) or by passing the function itself, to set specific options
+on it (e.g. `smooth = smooth_bounded(adjust = 0.5)`).
 
 `smooth_discrete()` applies a kernel density smoother whose default bandwidth is 
 less than the distances between bins. We can use the `kernel` argument (passed to
@@ -847,6 +827,39 @@ tibble(
     'aes(fill = abc)'
   )
 ```
+
+## Dotplots with Monte Carlo Standard Error
+
+A specialized variant of `geom_dots()`, `geom_blur_dots()`, supports visualizing
+dotplots with blur applied to each dot. `stat_mcse_dots()` uses `geom_blur_dots()`
+with `posterior::mcse_quantile()` to show the error in each quantile of a quantile
+dotplot:
+
+```{r mcse_blur_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
+increasing_samples %>%
+  ggplot(aes(x = x)) + 
+  stat_mcse_dots(quantiles = 100) +
+  facet_wrap(~ n) +
+  labs(
+    title = "stat_mcse_dots(quantiles = 100)",
+    subtitle = "Monte Carlo Standard Error of each quantile shown as blur"
+  )
+```
+
+Custom blur functions can be selected using the `blur` parameter, including the
+built-in `blur_interval()`, which draws an interval with a default width of 95%:
+
+```{r mcse_interval_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
+increasing_samples %>%
+  ggplot(aes(x = x)) + 
+  stat_mcse_dots(quantiles = 100, blur = "interval") +
+  facet_wrap(~ n) +
+  labs(
+    title = 'stat_mcse_dots(quantiles = 100, blur = "interval")',
+    subtitle = "Monte Carlo Standard Error of each quantile shown as 95% intervals"
+  )
+```
+
 
 ## Logit dotplots
 
