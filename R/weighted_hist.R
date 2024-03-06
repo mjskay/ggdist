@@ -83,7 +83,7 @@ weighted_hist = function(
 #' library(ggplot2)
 #'
 #' set.seed(1234)
-#' x = rnorm(200, 1, 2)
+#' x = rnorm(2000, 1, 2)
 #'
 #' # Let's compare the different break-selection algorithms on this data:
 #' ggplot(data.frame(x), aes(x)) +
@@ -112,6 +112,13 @@ weighted_hist = function(
 #'     aes(y = "breaks_FD()\nor 'FD'"),
 #'     density = "histogram",
 #'     breaks = "FD",
+#'     outline_bars = TRUE,
+#'     color = "black",
+#'   ) +
+#'   stat_slab(
+#'     aes(y = "breaks_quantiles()\nor 'quantiles'"),
+#'     density = "histogram",
+#'     breaks = "quantiles",
 #'     outline_bars = TRUE,
 #'     color = "black",
 #'   ) +
