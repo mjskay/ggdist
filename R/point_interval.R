@@ -560,12 +560,13 @@ Mode.distribution = function(x, na.rm = FALSE, ...) {
       d = density(x, at = at)[[1]]
       at[which.max(d)]
     } else {
+      #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile below
+      limits = range(quantile(x, c(0, 1)))
       optim(
         median(x, na.rm = na.rm),
         function(q) -density(x, at = q, na.rm = na.rm),
-        #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile below
-        lower = quantile(x, 0),
-        upper = quantile(x, 1),
+        lower = limits[[1]],
+        upper = limits[[2]],
         method = "L-BFGS-B"
       )$par
     }

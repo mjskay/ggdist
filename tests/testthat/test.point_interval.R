@@ -648,6 +648,12 @@ test_that("Mode on discrete distributions works", {
   expect_equal(Mode(x), c(3, 4))
 })
 
+test_that("Mode on transformed distributions works", {
+  x = c(log(dist_lognormal(3, 2)), 0 - dist_gamma(2, 2))
+
+  expect_equal(Mode(x), c(3, -0.5), tolerance = 0.00001)
+})
+
 test_that("non-scalar distributions throw appropriate warnings", {
   x = dist_normal(0:1)
   expect_error(hdi(x), "HDI for non-scalar distribution objects is not implemented")
