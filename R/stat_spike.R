@@ -113,15 +113,15 @@ compute_slab_spike = function(
   # needs to be a vector (e.g. in cases of interval functions
   # like qi() which return matrices)
   input = unlist(input_nested, use.names = FALSE, recursive = FALSE)
-  names(input) = rep(names(at), times = lengths(input_nested))
+  input_names = rep(names(at), times = lengths(input_nested))
 
   # evaluate functions
   pdf = pdf_fun(input)
   cdf = cdf_fun(input)
 
-  data.frame(
+  data_frame0(
     .input = input,
-    at = names(input),
+    at = input_names,
     f = if (length(input) > 0) get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
     pdf = pdf,
     cdf = cdf,

@@ -226,7 +226,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         map_dfr_(seq_len(nrow(row)), function(j) {
           # get row of `data` with grouping factors
           # faster version of row_j = row[j, , drop = FALSE]
-          row_j = tibble::new_tibble(lapply(row, vctrs::vec_slice, j), nrow = 1)
+          row_j = new_data_frame(lapply(row, vctrs::vec_slice, j), n = 1L)
           row.names(row_j) = NULL
           draws_j = draws[[j]]
 
@@ -322,7 +322,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 
   result = map_dfr_(.width, function(p) {
     interval = .interval(data, .width = p, na.rm = na.rm)
-    data.frame(
+    data_frame0(
       y = .point(data, na.rm = na.rm),
       ymin = interval[, 1],
       ymax = interval[, 2],

@@ -71,7 +71,7 @@ guide_rampbar = function(..., to = "gray65", available_aes = c("fill_ramp", "col
       if (length(bar) == 0) {
         bar = unique(limits)
       }
-      bar = data_frame(
+      bar = data_frame0(
         colour = scale$map(bar),
         value  = bar,
         .size  = length(bar)

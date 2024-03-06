@@ -152,7 +152,7 @@ curve_interval.matrix = function(
   check_along_is_null(.along)
 
   curve_interval(
-    data.frame(.value = posterior::rvar(.data)), .value,
+    data_frame0(.value = posterior::rvar(.data)), .value,
     .width = .width, na.rm = na.rm,
     .interval = .interval
   )
@@ -167,7 +167,7 @@ curve_interval.rvar = function(
   check_along_is_null(.along)
 
   curve_interval(
-    data.frame(.value = .data), .value,
+    data_frame0(.value = .data), .value,
     .width = .width, na.rm = na.rm,
     .interval = .interval
   )

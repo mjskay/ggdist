@@ -3,7 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
+suppressPackageStartupMessages(suppressWarnings({
+  library(dplyr)
+}))
 
 
 test_that("all_names works", {
@@ -51,12 +53,21 @@ test_that("fct_rev_ works properly", {
 # dlply_ ------------------------------------------------------------------
 
 test_that("dlply_ works properly", {
-  df = tibble(
+  df = data.frame(
     x = 1:8,
-    g = c(rep("a", 2), rep("(Missing)", 2), rep("(Missing)+", 2), rep(NA, 2))
+    g = c(rep("a", 2), rep("(Missing)", 2), rep("(Missing)+", 2), rep(NA, 2)),
+    stringsAsFactors = FALSE
   )
 
-  expect_equal(dlply_(df, "g", identity), list(df[3:4,], df[5:6,], df[1:2,], df[7:8,]))
+  expect_equal(
+    dlply_(df, "g", identity),
+    list(
+      new_data_frame(df[3:4,]),
+      new_data_frame(df[5:6,]),
+      new_data_frame(df[1:2,]),
+      new_data_frame(df[7:8,])
+    )
+  )
 
   expect_equal(dlply_(df, NULL, identity), list(df))
 

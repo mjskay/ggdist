@@ -136,6 +136,12 @@ check_na = function(x, na.rm) {
 
 # data frames -------------------------------------------------------------
 
+#' fast data frame creation
+#' @noRd
+data_frame0 = function(...) {
+  vctrs::data_frame(..., .name_repair = "minimal")
+}
+
 #' rename columns using a lookup table
 #' @param data data frame
 #' @param new_names lookup table of new column names, where names are
@@ -182,7 +188,7 @@ map_dfr_ = function(data, fun, ...) {
 row_map_dfr_ = function(data, fun, ...) {
   map_dfr_(seq_len(nrow(data)), function(row_i) {
     # faster version of row_df = data[row_i, , drop = FALSE]
-    row_df = tibble::new_tibble(lapply(data, vctrs::vec_slice, row_i), nrow = 1)
+    row_df = new_data_frame(lapply(data, vctrs::vec_slice, row_i), n = 1L)
     fun(row_df, ...)
   })
 }
@@ -221,7 +227,7 @@ dlply_ = function(data, groups, fun, ...) {
 
     lapply(group_is, function(group_i) {
       # faster version of row_df = data[group_i, , drop = FALSE]
-      row_df = tibble::new_tibble(lapply(data, vctrs::vec_slice, group_i), nrow = length(group_i))
+      row_df = new_data_frame(lapply(data, vctrs::vec_slice, group_i), n = length(group_i))
       fun(row_df, ...)
     })
   } else {

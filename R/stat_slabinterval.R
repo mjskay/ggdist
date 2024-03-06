@@ -16,19 +16,19 @@ compute_limits_slabinterval = function(
 ) {
   dist = check_one_dist(data$dist)
   if (distr_is_missing(dist)) {
-    return(data.frame(.lower = NA, .upper = NA))
+    return(data_frame0(.lower = NA, .upper = NA))
   }
 
   if (distr_is_factor_like(dist)) {
     # limits on factor-like dists are determined by the scale, which will
     # have been set earlier (in layer_slabinterval()), so we don't have to
     # do it here
-    return(data.frame(.lower = NA, .upper = NA))
+    return(data_frame0(.lower = NA, .upper = NA))
   }
 
   if (distr_is_constant(dist)) {
     .median = distr_quantile(dist)(0.5)
-    return(data.frame(.lower = .median, .upper = .median))
+    return(data_frame0(.lower = .median, .upper = .median))
   }
 
   if (distr_is_sample(dist)) {
@@ -57,7 +57,7 @@ compute_limits_slabinterval = function(
   lower_limit = min(quantile_fun(p_limits[[1]]))
   upper_limit = max(quantile_fun(p_limits[[2]]))
 
-  data.frame(
+  data_frame0(
     .lower = lower_limit,
     .upper = upper_limit
   )
@@ -74,7 +74,7 @@ compute_limits_sample = function(x, trans, trim, adjust, ..., density = "bounded
   # determine limits of data based on the density estimator
   x = trans$transform(x)
   x_range = range(density(x, n = 2, range_only = TRUE, trim = trim, adjust = adjust, weights = weights)$x)
-  data.frame(
+  data_frame0(
     .lower = trans$inverse(x_range[[1]]),
     .upper = trans$inverse(x_range[[2]])
   )
@@ -94,7 +94,7 @@ compute_slab_slabinterval = function(
   dist = data$dist
   # TODO: add support for multivariate distributions
   if (distr_is_missing(dist) || distr_is_multivariate(dist)) {
-    return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
+    return(data_frame0(.input = NA_real_, f = NA_real_, n = NA_integer_))
   }
 
   # calculate pdf and cdf
@@ -167,7 +167,7 @@ compute_slab_slabinterval = function(
     cdf = cdf_fun(input)
   }
 
-  data.frame(
+  data_frame0(
     .input = input,
     f = get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
     pdf = pdf,
@@ -191,7 +191,6 @@ compute_slab_sample = function(
   ...,
   weights = NULL
 ) {
-
   if (is.integer(x) || inherits(x, "mapped_discrete")) {
     # discrete variables are always displayed as histograms
     slab_type = "histogram"
@@ -207,7 +206,7 @@ compute_slab_sample = function(
     breaks = breaks, align = align, outline_bars = outline_bars,
     weights = weights
   )
-  slab_df = data.frame(
+  slab_df = data_frame0(
     .input = trans$inverse(d$x),
     pdf = d$y,
     cdf = d$cdf %||% weighted_ecdf(x, weights = weights)(d$x)
@@ -221,7 +220,7 @@ compute_slab_sample = function(
   if (expand[[1]]) {
     input_below_slab = input[input < min(slab_df$.input) - .Machine$double.eps]
     if (length(input_below_slab) > 0) {
-      slab_df = rbind(data.frame(
+      slab_df = rbind(data_frame0(
         .input = input_below_slab,
         pdf = 0,
         cdf = 0
@@ -231,7 +230,7 @@ compute_slab_sample = function(
   if (expand[[2]]) {
     input_above_slab = input[input > max(slab_df$.input) + .Machine$double.eps]
     if (length(input_above_slab) > 0) {
-      slab_df = rbind(slab_df, data.frame(
+      slab_df = rbind(slab_df, data_frame0(
         .input = input_above_slab,
         pdf = 0,
         cdf = 1
@@ -255,10 +254,10 @@ compute_interval_slabinterval = function(
   .width, na.rm,
   ...
 ) {
-  if (is.null(point_interval)) return(data.frame())
+  if (is.null(point_interval)) return(data_frame0())
   dist = data$dist
   if (distr_is_missing(dist)) {
-    return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
+    return(data_frame0(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
   }
 
   distr_point_interval(dist, point_interval, trans = trans, .width = .width, na.rm = na.rm)
@@ -624,7 +623,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a weighted dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
-        data.frame(dist = .dist_weighted_sample(list(trans$inverse(d[[x]])), list(d[["weight"]])))
+        data_frame0(dist = .dist_weighted_sample(list(trans$inverse(d[[x]])), list(d[["weight"]])))
       })
       data[[x]] = median(data$dist)
     }

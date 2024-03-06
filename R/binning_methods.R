@@ -75,7 +75,7 @@ bin_dots = function(x, y, binwidth,
   side = match.arg(side)
   orientation = match.arg(orientation)
 
-  d = data.frame(x = x, y = y)
+  d = data_frame0(x = x, y = y)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation

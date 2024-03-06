@@ -20,7 +20,7 @@ compute_slab_dots = function(
 
   dist = data$dist
   if (distr_is_missing(dist)) {
-    return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
+    return(data_frame0(.input = NA_real_, f = NA_real_, n = NA_integer_))
   }
 
   quantiles = quantiles %||% NA
@@ -64,7 +64,7 @@ compute_slab_dots = function(
     se = 0
   }
 
-  out = data.frame(
+  out = data_frame0(
     .input = input,
     f = 1,
     n = length(input)

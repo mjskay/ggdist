@@ -67,7 +67,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   # @param trans the scale transformation object applied to the coordinate space
   # @param ... other stat parameters created by children of stat_slabinterval
   compute_limits = function(self, data, trans, ...) {
-    data.frame(.lower = NA, .upper = NA)
+    data_frame0(.lower = NA, .upper = NA)
   },
 
   # Compute the function that defines the slab. That takes a data frame of
@@ -81,7 +81,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   # @param trans the scale transformation object applied to the coordinate space
   # @param ... other stat parameters created by children of stat_slabinterval
   compute_slab = function(self, data, scales, trans, input, ...) {
-    data.frame()
+    data_frame0()
   },
 
   # Compute interval(s). Takes a data frame of aesthetics and a `.width`
@@ -99,7 +99,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     .width, na.rm,
     ...
   ) {
-    if (is.null(point_interval)) return(data.frame())
+    if (is.null(point_interval)) return(data_frame0())
 
     define_orientation_variables(orientation)
 
@@ -128,9 +128,9 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     is_missing = is.na(data$dist)
     if (any(is_missing)) {
       data = data[!is_missing, ]
-      remove_missing(data.frame(dist = ifelse(is_missing, NA_real_, 0)), na.rm, "dist", name = "stat_slabinterval")
+      remove_missing(data_frame0(dist = ifelse(is_missing, NA_real_, 0)), na.rm, "dist", name = "stat_slabinterval")
     }
-    if (nrow(data) == 0) return(data.frame())
+    if (nrow(data) == 0) return(data_frame0())
 
 
     # figure out coordinate transformation
@@ -181,7 +181,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
           ...
         )
       } else {
-        data.frame(.input = numeric())
+        data_frame0(.input = numeric())
       }
       i_data = self$compute_interval(d,
         trans = trans,

@@ -298,12 +298,12 @@ draw_subguide_axis = function(
     position = axis_position
   )
   params = guide$params
-  params$key = data_frame(
+  params$key = data_frame0(
     !!aes := break_positions,
     .value = break_positions,
     .label = break_labels
   )
-  params$decor = data_frame(
+  params$decor = data_frame0(
     !!aes := c(0, 1),
     !!opp := if (axis_position %in% c("top", "right")) 0 else 1
   )

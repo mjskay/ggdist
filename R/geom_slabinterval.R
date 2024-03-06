@@ -81,7 +81,7 @@ rescale_slab_thickness = function(
   s_data = ggplot2::remove_missing(s_data, na.rm, c(height, "justification", "scale"), name = name, finite = TRUE)
   # side is a character vector, thus need finite = FALSE for it; x/y can be Inf here
   s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "side"), name = name)
-  if (nrow(s_data) == 0) return(list(data = s_data, subguide_params = data.frame()))
+  if (nrow(s_data) == 0) return(list(data = s_data, subguide_params = data_frame0()))
 
   min_height = min(s_data[[height]])
 
@@ -100,7 +100,7 @@ rescale_slab_thickness = function(
 
     thickness_scale = d$scale[[1]] * min_height
 
-    subguide_params = data.frame(
+    subguide_params = data_frame0(
       group = d$group[[1]],
       side = d$size[[1]],
       justification = d$justification[[1]],
