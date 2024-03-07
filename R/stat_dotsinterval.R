@@ -46,13 +46,13 @@ compute_slab_dots = function(
         .sample, probs, type = quantile_type, na.rm = na.rm, weights = .weights, names = FALSE
       )
       if (compute_mcse) {
-        stop_if_not_installed("posterior", "{.help stat_mcse_dots}")
+        stop_if_not_installed("posterior", "{.help ggdist::stat_mcse_dots}")
         se = posterior::mcse_quantile(.sample, probs, names = FALSE)
       }
     } else {
       input = sort(.sample)
       if (compute_mcse) {
-        stop_if_not_installed("posterior", "{.help stat_mcse_dots}")
+        stop_if_not_installed("posterior", "{.help ggdist::stat_mcse_dots}")
         se = posterior::mcse_quantile(.sample, ppoints(length(input), a = 0.5), names = FALSE)
       }
     }

@@ -284,10 +284,10 @@ check_dist_name = function(dist) {
     cli_warn(
       c(
         "The following distribution names were not recognized and were ignored: {failed_names}",
-        "i" = "See {.emph Details} in the {.help stat_slabinterval} documentation for information
+        "i" = "See {.emph Details} in the {.help ggdist::stat_slabinterval} documentation for information
           on specifying distribution names.",
         if ("lkjcorr" %in% failed_names) c(
-          "i" = "See the {.help marginalize_lkjcorr} documentation for help visualizing LKJ
+          "i" = "See the {.help ggdist::marginalize_lkjcorr} documentation for help visualizing LKJ
             distributions."
         )
       ),

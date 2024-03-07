@@ -1,3 +1,8 @@
+# ggdist (development version)
+
+* Allow use of square `shape`s in `geom_blur_dots()`.
+
+
 # ggdist 3.3.2
 
 Major changes:

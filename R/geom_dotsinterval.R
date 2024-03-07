@@ -17,6 +17,7 @@ dots_grob = function(data, x, y, xscale = 1,
   orientation = "vertical",
   make_points_grob = make_points_grob
 ) {
+  data$shape = translate_shape(data$shape)
   # drop the dist columns because they can be expensive and we don't need them
   # after this point
   keep_cols = !(names(data) %in% c("xdist", "ydist", "dist"))
@@ -36,6 +37,13 @@ dots_grob = function(data, x, y, xscale = 1,
   )
 }
 
+translate_shape = function(shape) {
+  if (is.character(shape)) {
+    translate_shape_string(shape)
+  } else {
+    shape
+  }
+}
 
 dot_size_ratio = 1.07                  # historical fudge factor based on old stackratio
 font_size_ratio = 1.43/dot_size_ratio  # manual fudge factor for point size in ggplot

@@ -148,7 +148,7 @@ curve_interval.matrix = function(
   .data, ..., .along = NULL, .width = 0.5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
-  stop_if_not_installed("posterior", "{.help curve_interval}")
+  stop_if_not_installed("posterior", "{.help ggdist::curve_interval}")
   check_along_is_null(.along)
 
   curve_interval(
@@ -180,7 +180,7 @@ curve_interval.data.frame = function(
   .interval = c("mhd", "mbd", "bd", "bd-mbd"),
   .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
-  stop_if_not_installed(c("posterior", "dplyr"), "{.help curve_interval}")
+  stop_if_not_installed(c("posterior", "dplyr"), "{.help ggdist::curve_interval}")
 
   .interval = match.arg(.interval)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -324,7 +324,7 @@ halfspace_depth = function(x) {
     } else { # band depth using fbplot
       stop_if_not_installed(
         "fda",
-        paste0('{.help curve_interval}(interval = "', .interval, '")'),
+        paste0('{.help ggdist::curve_interval}(interval = "', .interval, '")'),
         ">" = 'Or use {.code interval = "mhd"} instead.'
       )
       # depth of each draw

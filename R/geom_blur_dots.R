@@ -9,10 +9,12 @@
 # avoid NOTE on R < 4.1 for the use of radialGradient below
 if (getRversion() < "4.1") globalVariables("radialGradient")
 
+## make_blurry_points_grob -------------------------------------------------
 make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", function(
   x,
   y,
   ...,  # ignored
+  pch = 21,
   col = "gray65",
   fill = "gray65",
   fontsize = 11,
@@ -30,11 +32,29 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   r = unit(fontsize / font_size_ratio / 2, "points")
   sd = convertUnit(unit(sd %||% 0, "native"), unitTo = "points", axisFrom = axis, typeFrom = "dimension")
 
-  grobs = .mapply(list(x, y, fill, sd, lwd, lty), NULL, FUN = function(x, y, fill, sd, lwd, lty) {
+  grobs = .mapply(list(x, y, fill, sd, lwd, lty, pch), NULL, FUN = function(x, y, fill, sd, lwd, lty, pch) {
+    shape = translate_blur_shape(pch)
+    if (shape == "square") r = r * 0.9
     blur_width = 2 * sd + r
     blur_x = seq(0, as.numeric(blur_width), length.out = n)
     grad_colors = alpha(fill, c(blur(blur_x, as.numeric(r), as.numeric(sd)), 0))
-    grad = radialGradient(grad_colors, r2 = blur_width)
+    grad = switch(shape,
+      circle = {
+        radialGradient(grad_colors, r2 = blur_width)
+      },
+      square = {
+        x2. = paste0(axis, "2")
+        y2. = paste0(if (axis == "x") "y" else "x", "2")
+        rlang::exec(linearGradient,
+          grad_colors,
+          x1 = unit(0.5, "npc"),
+          y1 = unit(0.5, "npc"),
+          !!x2. := unit(1, "npc"),
+          !!y2. := unit(0.5, "npc"),
+          extend = "reflect"
+        )
+      }
+    )
 
     h = 2 * r
     w = 2 * blur_width
@@ -44,9 +64,15 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
       width = if (axis == "x") w else h,
       gp = gpar(fill = grad, col = NA)
     )
-    outline = circleGrob(
-      x = x, y = y, r = r,
-      gp = gpar(col = col, fill = NA, lwd = lwd, lty = lty)
+    outline = switch(shape,
+      circle = circleGrob(
+        x = x, y = y, r = r,
+        gp = gpar(col = col, fill = NA, lwd = lwd, lty = lty)
+      ),
+      square = rectGrob(
+        x = x, y = y, width = h, height = h,
+        gp = gpar(col = col, fill = NA, lwd = lwd, lty = lty)
+      )
     )
 
     grobTree(blurry_fill, outline)
@@ -54,6 +80,24 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
 
   do.call(grobTree, grobs)
 })
+
+#' Translate a pch into a shape for use with a blurry dotplot
+#' @param shape a `pch`-style shape (number or single letter)
+#' @returns `"square"` or `"circle"`
+#' @noRd
+translate_blur_shape = function(shape) {
+  if (shape %in% c(0, 15, 22)) {
+    "square"
+  } else if (shape %in% c(1, 16, 19, 20, 21)) {
+    "circle"
+  } else {
+    cli_abort(
+      "Only circle (1, 16, 19, 20, 21) and square (0, 15, 22)
+      shapes are supported by {.help ggdist::geom_blur_dots}.",
+      class = "ggdist_invalid_blur_dot_shape"
+    )
+  }
+}
 
 # geom_blur_dots ----------------------------------------------------------
 #' @rdname ggdist-ggproto
@@ -75,7 +119,6 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   },
 
   hidden_aes = union(c(
-    "shape",
     "family"
   ), GeomDots$hidden_aes),
 
@@ -155,7 +198,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
 #' Variant of [geom_dots()] for creating blurry dotplots. Accepts an `sd`
 #' aesthetic that gives the standard deviation of the blur applied to the dots.
 #' Requires a graphics engine supporting radial gradients. Unlike [geom_dots()],
-#' all dots must be circular, so this geom does not support the `shape` aesthetic.
+#' this geom only supports circular and square `shape`s.
 #' @eval rd_dotsinterval_shortcut_geom(
 #'   "blur_dots", "blurry dot", title = FALSE, describe = FALSE, examples = FALSE
 #' )

@@ -132,7 +132,7 @@ bin_dots = function(x, y, binwidth,
       d$row = NULL
     },
     swarm = {
-      stop_if_not_installed("beeswarm", '{.help geom_dots}(layout = "swarm")')
+      stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
 
       swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
         xsize = h$binwidth, ysize = h$y_spacing,
