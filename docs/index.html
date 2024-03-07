@@ -61,7 +61,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,7 @@
 <!-- badges: start -->
 
 <p><img src="reference/figures/README/preview-1.png" width="864"></p>
-<p><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package, which builds on top of <code>ggdist</code>).</p>
+<p><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> is an R package that provides a flexible set of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package, which builds on top of <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a>).</p>
 <p>The <code><a href="reference/geom_slabinterval.html">geom_slabinterval()</a></code> / <code><a href="reference/stat_slabinterval.html">stat_slabinterval()</a></code> family (see <code><a href="articles/slabinterval.html">vignette("slabinterval")</a></code>) makes it easy to visualize point summaries and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots, gradient plots, histograms, and more:</p>
 <div class="float">
 <img src="reference/figures/slabinterval_family.png" alt="The slabinterval family of geoms and stats"><div class="figcaption">The slabinterval family of geoms and stats</div>
@@ -122,11 +122,12 @@
 <p><img src="reference/figures/README/halfeye_dotplot-1.png" width="672"></p>
 <p>The <code><a href="reference/geom_lineribbon.html">geom_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_lineribbon()</a></code> family (see <code><a href="articles/lineribbon.html">vignette("lineribbon")</a></code>) makes it easy to visualize fit lines with an arbitrary number of uncertainty bands:</p>
 <p><img src="reference/figures/README/lineribbon-1.png" width="672"></p>
-<p>All stat in <code>ggdist</code> also support visualizing analytical distributions and vectorized distribution data types like <a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a> objects or <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> objects. This is particularly useful when visualizing uncertainty in frequentist models (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>) or when visualizing priors in a Bayesian analysis.</p>
-<p>The <code>ggdist</code> geoms and stats also form a core part of the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package (in fact, they originally were part of <code>tidybayes</code>). For examples of the use of <code>ggdist</code> geoms and stats for visualizing uncertainty in Bayesian models, see the vignettes in tidybayes, such as <code><a href="http://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">vignette("tidybayes", package = "tidybayes")</a></code> or <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html" class="external-link">vignette("tidy-brms", package = "tidybayes")</a></code>.</p>
+<p>All stats in <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> also support visualizing analytical distributions and vectorized distribution data types like <a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a> objects or <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> objects. This is particularly useful when visualizing uncertainty in frequentist models (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>) or when visualizing priors in a Bayesian analysis.</p>
+<p>The <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> geoms and stats also form a core part of the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package (in fact, they originally were part of <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a>). For examples of the use of <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> geoms and stats for visualizing uncertainty in Bayesian models, see the vignettes in <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a>, such as <code><a href="http://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">vignette("tidybayes", package = "tidybayes")</a></code> or <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html" class="external-link">vignette("tidy-brms", package = "tidybayes")</a></code>.</p>
 <div class="section level2">
 <h2 id="cheat-sheets">Cheat sheets<a class="anchor" aria-label="anchor" href="#cheat-sheets"></a>
 </h2>
+<p>These cheat sheets focus on the <code>slabinterval</code> family of geometries:</p>
 <p><a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf" class="external-link"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630"></a></p>
 </div>
 <div class="section level2">
@@ -141,9 +142,31 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mjskay/ggdist"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
+</h2>
+<p><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> aims to have minimal additional dependencies beyond those already required by <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>. The <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> dependencies fall into the following categories:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>.</p></li>
+<li><p>Packages that <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> also depends on. These packages add no additional dependency cost because <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> already requires them: <a href="https://rlang.r-lib.org" class="external-link">rlang</a>, <a href="https://cli.r-lib.org" class="external-link">cli</a>, <a href="https://scales.r-lib.org" class="external-link">scales</a>, <a href="https://tibble.tidyverse.org/" class="external-link">tibble</a>, <a href="https://vctrs.r-lib.org/" class="external-link">vctrs</a>, <a href="https://withr.r-lib.org" class="external-link">withr</a>, <a href="https://gtable.r-lib.org" class="external-link">gtable</a>, and <a href="https://glue.tidyverse.org/" class="external-link">glue</a>.</p></li>
+<li>
+<p>Packages that <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> does not depend on. These are all well-maintained packages with few dependencies and a clear need within <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a>:</p>
+<ul>
+<li>
+<a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a>: this implementation of distribution vectors powers much of <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a>. This package adds minimal additional cost, as its only dependency that is not also a dependency of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is <a href="http://optimizer.r-forge.r-project.org/" class="external-link">numDeriv</a>, which is needed by <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> anyway (see below).</li>
+<li>
+<a href="http://optimizer.r-forge.r-project.org/" class="external-link">numDeriv</a>: used for calculating Jacobians of scale transformations. Needed because testing has revealed common situations where <code><a href="https://rdrr.io/r/stats/numericDeriv.html" class="external-link">stats::numericDeriv()</a></code> fails but <a href="http://optimizer.r-forge.r-project.org/" class="external-link">numDeriv</a> does not. Widely used by other CRAN packages and has no additional dependencies.</li>
+<li>
+<code>{quadprog}</code>: Used to solve constrained optimization problems during different parts of dotplot layout, particularly to avoid dot overlaps in the <code>"bin"</code> and <code>"weave"</code> layouts. Widely used by other CRAN packages and has no additional dependencies.</li>
+<li>
+<a href="https://www.rcpp.org" class="external-link">Rcpp</a>: Used to implement faster dotplot layout. Widely used by other CRAN packages and has no additional dependencies.</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level2">
 <h2 id="feedback-issues-and-contributions">Feedback, issues, and contributions<a class="anchor" aria-label="anchor" href="#feedback-issues-and-contributions"></a>
 </h2>
-<p>I welcome feedback, suggestions, issues, and contributions! I am not particularly reliable over email, though you can contact me at <a href="mailto:mjskay@northwestern.edu" class="email">mjskay@northwestern.edu</a>. On <a href="https://twitter.com/mjskay" class="external-link">Twitter</a> I am more reliable. If you have found a bug, please file it <a href="https://github.com/mjskay/ggdist/issues/new" class="external-link">here</a> with minimal code to reproduce the issue. Pull requests should be filed against the <a href="https://github.com/mjskay/ggdist/tree/dev" class="external-link"><code>dev</code></a> branch.</p>
+<p>I welcome feedback, suggestions, issues, and contributions! If you have found a bug, please file it <a href="https://github.com/mjskay/ggdist/issues/new" class="external-link">here</a> with minimal code to reproduce the issue. Pull requests should be filed against the <a href="https://github.com/mjskay/ggdist/tree/dev" class="external-link"><code>dev</code></a> branch. I am not particularly reliable over email, though you can try to contact me at <a href="mailto:mjskay@northwestern.edu" class="email">mjskay@northwestern.edu</a>. A <a href="https://twitter.com/mjskay" class="external-link">Twitter</a> DM is more likely to elicit a response.</p>
 </div>
 <div class="section level2">
 <h2 id="citing-ggdist">Citing <code>ggdist</code>
