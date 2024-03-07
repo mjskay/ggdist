@@ -1,7 +1,5 @@
 ---
-output:
-  github_document:
-    md_extensions: -implicit_figures
+output: github_document
 ---
 
 ```{r chunk_options, include=FALSE}
@@ -191,7 +189,7 @@ The `geom_slabinterval()` / `stat_slabinterval()` family (see `vignette("slabint
 easy to visualize point summaries and intervals, eye plots, half-eye plots, ridge plots,
 CCDF bar plots, gradient plots, histograms, and more:
 
-![The slabinterval family of geoms and stats](man/figures/slabinterval_family.png)
+<img src="man/figures/slabinterval_family.png" alt="The slabinterval family of geoms and stats">
 
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see `vignette("dotsinterval")`) makes
 it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots

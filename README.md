@@ -33,8 +33,7 @@ The `geom_slabinterval()` / `stat_slabinterval()` family (see
 and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots,
 gradient plots, histograms, and more:
 
-![The slabinterval family of geoms and
-stats](man/figures/slabinterval_family.png)
+<img src="man/figures/slabinterval_family.png" alt="The slabinterval family of geoms and stats">
 
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 `vignette("dotsinterval")`) makes it easy to visualize dot+interval
