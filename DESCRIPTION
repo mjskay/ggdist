@@ -21,19 +21,19 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
 Depends:
     R (>= 3.6.0)
 Imports:
+    grid,
     ggplot2 (>= 3.5.0),
+    scales,
     rlang (>= 0.3.0),
     cli,
-    scales,
-    grid,
     tibble,
     vctrs,
     withr,
+    glue,
+    gtable,
     distributional (>= 0.3.2),
     numDeriv,
-    glue,
     quadprog,
-    gtable,
     Rcpp
 Suggests:
     tidyselect,
