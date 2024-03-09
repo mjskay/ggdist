@@ -32,7 +32,7 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   r = unit(fontsize / font_size_ratio / 2, "points")
   sd = convertUnit(unit(sd %||% 0, "native"), unitTo = "points", axisFrom = axis, typeFrom = "dimension")
 
-  grobs = .mapply(list(x, y, fill, sd, lwd, lty, pch), NULL, FUN = function(x, y, fill, sd, lwd, lty, pch) {
+  grobs = pmap_(list(x, y, fill, sd, lwd, lty, pch), function(x, y, fill, sd, lwd, lty, pch) {
     shape = translate_blur_shape(pch)
     if (shape == "square") r = r * 0.9
     blur_width = 2 * sd + r

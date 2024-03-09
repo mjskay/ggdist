@@ -546,7 +546,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 
       # convert character/factor dist aesthetic into distributional objects
       arg_cols = names(data)[startsWith(names(data), "arg")]
-      data$dist = pmap_(data[, c("dist", arg_cols)], function(dist, ...) {
+      data$dist = pmap_(data[, c("dist", arg_cols), drop = FALSE], function(dist, ...) {
         if (is.na(dist)) {
           dist_missing()
         } else {

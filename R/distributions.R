@@ -393,7 +393,7 @@ generate.ggdist__wrapped_categorical = function(x, ...) {
   x = vec_cast(x, list_of(x[[1]]))
   weights = vec_cast(weights, list_of(numeric()))
 
-  weight_is_null = vapply(weights, is.null, logical(1))
+  weight_is_null = map_lgl_(weights, is.null)
   stopifnot(lengths(x) == lengths(weights) | weight_is_null)
 
   # only allow univariate samples since that's all we should ever end
@@ -498,7 +498,7 @@ inverse_deriv_at_y = function(trans, y) {
       # we use this (slightly less quick) approach instead of numDeriv::grad()
       # on the whole vector because numDeriv::grad() errors out if any data
       # point fails while this will return `NA` for those points
-      vapply(y, FUN.VALUE = numeric(1), function(y_i) {
+      map_dbl_(y, function(y_i) {
         tryCatch(
           suppressWarnings(numDeriv::grad(func = trans$inverse, y_i)),
           error = function(e) NA_real_

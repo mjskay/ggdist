@@ -193,9 +193,8 @@ row_map_dfr_ = function(data, fun, ...) {
   })
 }
 
-pmap_ = function(data, fun) {
-  # this is roughly equivalent to purrr::pmap
-  lapply(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
+pmap_ = function(.l, .f, ...) {
+  .mapply(.f, .l, list(...))
 }
 
 ddply_ = function(data, groups, fun, ...) {
@@ -240,15 +239,15 @@ split_df = function(data, groups) {
 }
 
 map_dbl_ = function(.x, .f, ...) {
-  vapply(.x, .f, FUN.VALUE = numeric(1), ...)
+  vapply(.x, .f, FUN.VALUE = NA_real_, ...)
 }
 
 map_lgl_ = function(.x, .f, ...) {
-  vapply(.x, .f, FUN.VALUE = logical(1), ...)
+  vapply(.x, .f, FUN.VALUE = NA, ...)
 }
 
-map2_ = function(.x, .y, .f) {
-  .mapply(.f, list(.x, .y), NULL)
+map2_ = function(.x, .y, .f, ...) {
+  .mapply(.f, list(.x, .y), list(...))
 }
 
 map2_chr_ = function(.x, .y, .f) {

@@ -189,7 +189,7 @@ check_at = function(at, call = parent.frame()) {
     )
   }
 
-  is_wrong_type = !vapply(at, function(x) is.function(x) || is.numeric(x) || is.character(x), logical(1))
+  is_wrong_type = !map_lgl_(at, function(x) is.function(x) || is.numeric(x) || is.character(x))
   if (any(is_wrong_type)) {
     wrong_type_i = which(is_wrong_type)
     i = wrong_type_i[[1]]
@@ -207,7 +207,7 @@ check_at = function(at, call = parent.frame()) {
 
   # push names down into vectors --- we do this so that when we unnest into a list
   # of scalars, if a name was provided for a vector it is retained
-  is_not_function = !vapply(at, is.function, logical(1))
+  is_not_function = !map_lgl_(at, is.function)
   named_vectors = which(rlang::have_name(at) & is_not_function)
   for (i in named_vectors) {
     if (!any(rlang::have_name(at[[i]]))) {
@@ -235,7 +235,7 @@ check_at = function(at, call = parent.frame()) {
   }
 
   # find functions for strings
-  is_character = vapply(at, is.character, logical(1))
+  is_character = map_lgl_(at, is.character)
   at[is_character] = lapply(at[is_character], match_function)
 
   at

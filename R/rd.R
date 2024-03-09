@@ -153,7 +153,7 @@ rd_layer_params = function(geom_name, stat = NULL, as_dots = FALSE) {
   )
   params = params[param_names]
 
-  missing_docs = vapply(params, is.null, logical(1))
+  missing_docs = map_lgl_(params, is.null)
   if (any(missing_docs)) {
     cli_abort("Missing docs for params: {param_names[missing_docs]}")
   }

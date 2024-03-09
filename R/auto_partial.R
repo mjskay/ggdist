@@ -98,7 +98,7 @@ partial_self = function(name = NULL, waivable = TRUE) {
 
   waivable_arg_names = if (waivable) {
     f_args = formals(f)
-    is_required_arg = vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))
+    is_required_arg = map_lgl_(f_args, rlang::is_missing)
     names(f_args)[!is_required_arg]
   }
 
@@ -158,7 +158,7 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
   f_args = formals(f)
 
   # find the required arguments
-  is_required_arg = vapply(f_args, rlang::is_missing, FUN.VALUE = logical(1))
+  is_required_arg = map_lgl_(f_args, rlang::is_missing)
   required_arg_names = names(f_args)[is_required_arg]
   required_arg_names = required_arg_names[required_arg_names != "..."]
 
