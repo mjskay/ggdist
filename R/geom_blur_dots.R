@@ -43,14 +43,14 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
         radialGradient(grad_colors, r2 = blur_width)
       },
       square = {
-        x2. = paste0(axis, "2")
-        y2. = paste0(if (axis == "x") "y" else "x", "2")
+        x2_ = paste0(axis, "2")
+        y2_ = paste0(if (axis == "x") "y" else "x", "2")
         rlang::exec(linearGradient,
           grad_colors,
           x1 = unit(0.5, "npc"),
           y1 = unit(0.5, "npc"),
-          !!x2. := unit(1, "npc"),
-          !!y2. := unit(0.5, "npc"),
+          !!x2_ := unit(1, "npc"),
+          !!y2_ := unit(0.5, "npc"),
           extend = "reflect"
         )
       }
@@ -118,9 +118,7 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
     aes_docs
   },
 
-  hidden_aes = union(c(
-    "family"
-  ), GeomDots$hidden_aes),
+  hidden_aes = union("family", GeomDots$hidden_aes),
 
   default_aes = defaults(aes(
     sd = 0

@@ -3,10 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-suppressPackageStartupMessages(suppressWarnings({
-  library(dplyr)
-}))
-
 
 test_that("all_names works", {
   expect_equal(all_names(1), NULL)
