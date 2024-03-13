@@ -149,6 +149,7 @@ makeContent.dots_grob = function(x) {
     # bin the dots
     dot_positions = bin_dots(
       d$x, d$y,
+      weight = d[["weight"]],
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
       overlaps = overlaps,
       layout = layout, side = d$side[[1]], orientation = orientation
@@ -188,6 +189,7 @@ makeContent.dots_grob = function(x) {
       lwd = lwd,
       lty = d$linetype,
       sd = d[["sd"]],
+      weight = d[["weight"]],
       axis = x
     )
   })
@@ -227,7 +229,6 @@ makeContent.dots_grob = function(x) {
         vp[[y]] = unit(d[[y]] + dot_height / 2 * not_both * direction, "native")
         vp[[width.]] = unit(1, "npc")
         vp[[height]] = unit(guide_height - dot_height / both_adjust, "native") * direction
-
 
         grobTree(
           subguide_fun(c(1, max_count), orientation = orientation),

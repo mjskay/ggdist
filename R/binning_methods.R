@@ -64,6 +64,7 @@
 #'
 #' @export
 bin_dots = function(x, y, binwidth,
+  weight = NULL,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar"),
@@ -75,7 +76,7 @@ bin_dots = function(x, y, binwidth,
   side = match.arg(side)
   orientation = match.arg(orientation)
 
-  d = data_frame0(x = x, y = y)
+  d = data_frame0(x = x, y = y, weight = weight)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation
@@ -149,7 +150,14 @@ bin_dots = function(x, y, binwidth,
   # determine y positions (for bin/weave/bar) and also x offsets (for hex)
   if (layout %in% c("bin", "weave", "hex", "bar")) {
     d = ddply_(d, "bin", function(bin_df) {
-      y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+      if (is.null(bin_df[["weight"]])) {
+        y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+      } else {
+        y_start = 0
+        y_offset = h$y_spacing * (
+          cumsum(bin_df$weight) + cumsum(c(0, bin_df$weight[-nrow(bin_df)]))
+        ) / 2
+      }
       row_offset = 0
       switch_side(side, orientation,
         topright = {},

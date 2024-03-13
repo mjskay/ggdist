@@ -92,6 +92,7 @@ Collate:
     "geom_slab.R"
     "geom_spike.R"
     "geom_swarm.R"
+    "geom_weighted_dots.R"
     "guide_rampbar.R"
     "lkjcorr_marginal.R"
     "parse_dist.R"
