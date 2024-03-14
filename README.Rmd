@@ -126,11 +126,6 @@ dotsinterval_plot = ggplot() +
 ```
 
 ```{r preview_lineribbon, include=FALSE}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(ggdist)
-
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 mtcars_preds = mtcars %>%
   group_by(cyl) %>%
@@ -196,10 +191,6 @@ it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and
 (and combined with half-eyes, composite plots like rain cloud plots):
 
 ```{r halfeye_dotplot, echo=FALSE, message=FALSE, warning=FALSE}
-library(ggplot2)
-library(dplyr)
-library(ggdist)
-
 set.seed(12345) # for reproducibility
 
 data.frame(
