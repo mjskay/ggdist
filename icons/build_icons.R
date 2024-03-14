@@ -20,7 +20,7 @@ make_icon = function(
   y_expansion = 0.4
 ) {
   for (name in names) tryCatch({
-    agg_png(here::here("icons", paste0(name, ".png")), width = 60, height = 60) #, type = "cairo")
+    agg_png(here::here("icons", paste0(name, ".png")), width = 60, height = 60)
 
     p = ggplot(data, mapping) +
       geom(..., interval_size_range = c(0.6, 1.4) * 1.5) +

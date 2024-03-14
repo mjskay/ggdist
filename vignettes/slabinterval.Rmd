@@ -749,8 +749,8 @@ df %>%
 ```
 
 As of this writing, in R version 4.1 or greater the graphics devices that support
-gradients --- i.e. device that support the `grid::linearGradient()` function ---
-include `pdf()`, `svg()`, and `png(type = "cairo")`. See [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/) for more about the changes to the R graphics engine.
+gradients --- i.e. devices that support the `grid::linearGradient()` function ---
+include `pdf()`, `svg()`, `png(type = "cairo")`, and `ragg::agg_png()`. See [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/) for more about the changes to the R graphics engine.
 
 ### On analytical distributions
 

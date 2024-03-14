@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
 )
 
 # graphics device
-if (requireNamespace("ragg", quietly = TRUE) && in_pkgdown) {
+if (requireNamespace("ragg", quietly = TRUE)) {
   knitr::opts_chunk$set(
     dev = "ragg_png"
   )
