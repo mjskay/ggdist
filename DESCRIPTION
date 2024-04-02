@@ -120,6 +120,7 @@ Collate:
     "subguide.R"
     "testthat.R"
     "theme_ggdist.R"
+    "thickness.R"
     "tidy_format_translators.R"
     "weighted_ecdf.R"
     "weighted_hist.R"
