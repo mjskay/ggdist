@@ -6,35 +6,6 @@
 
 # thickness handling functions -------------------------------------------------------
 
-#' normalize thickness values to between 0 and 1
-#' @noRd
-normalize_thickness = function(x, ...) UseMethod("normalize_thickness")
-
-#' @export
-normalize_thickness.NULL = function(x, ...) {
-  NULL
-}
-
-#' @export
-normalize_thickness.default = function(x, subscale = subscale_thickness) {
-  subscale(x)
-}
-
-#' @importFrom scales oob_squish_infinite
-#' @export
-normalize_thickness.ggdist_thickness = function(x, ...) {
-  # thickness values passed directly into the geom (e.g. by
-  # scale_thickness_shared()) are not normalized again.
-  x
-}
-
-#' @export
-normalize_thickness.data.frame = function(x, ...) {
-  x$thickness = normalize_thickness(x$thickness, ...)
-  x
-}
-
-
 #' rescale the slab data (ymin / ymax) to be within the confines of the bounding box
 #' we do this *again* here (rather than in setup_data) because
 #' position_dodge doesn't work if we only do it up there:
@@ -622,8 +593,21 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
   param_docs = defaults(list(
     # SLAB PARAMS
+    subscale = glue_doc('
+      Sub-scale used to scale values of the `thickness` aesthetic within
+      the groups determined by `normalize`. One of:
+      \\itemize{
+        \\item A function that takes an `x` argument giving a numeric vector
+          of values to be scaled and then returns a [thickness] vector representing
+          the scaled values, such as [subscale_thickness()] or [subscale_identity()].
+        \\item A string giving the name of such a function when prefixed
+          with `"subscale_"`; e.g. `"thickness"` or `"identity"`.
+      }
+      For a comprehensive discussion and examples of slab scaling and normalization, see the
+      [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
+      '),
     normalize = glue_doc('
-      How to normalize heights of functions input to the `thickness` aesthetic. One of:
+      Groups within which to scale values of the `thickness` aesthetic. One of:
       \\itemize{
         \\item `"all"`: normalize so that the maximum height across all data is `1`.
         \\item `"panels"`: normalize within panels so that the maximum height in each panel is `1`.
@@ -700,13 +684,14 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
           [subguide_none()] (to draw no annotation). See [subguide_axis()]
           for a list of possibilities and examples.
         \\item A string giving the name of such a function when prefixed
-          with `"subguide"`; e.g. `"axis"` or `"none"`.
+          with `"subguide_"`; e.g. `"axis"` or `"none"`.
       }
       ')
   ), AbstractGeom$param_docs),
 
   default_params = list(
     orientation = NA,
+    subscale = "thickness",
     normalize = "all",
     fill_type = "segments",
     interval_size_domain = c(1, 6),
@@ -779,11 +764,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # must do this here: not setup_data, so it happens after the thickness scale
     # has been applied; and not draw_panel, because normalization may be applied
     # across panels.
+    subscale_fun = match_function(params$subscale, "subscale_")
     switch(params$normalize,
       all = {
         # normalize so max height across all data is 1
         # this preserves slabs across groups in slab plots
-        data = normalize_thickness(data)
+        data = apply_subscale(data, subscale = subscale_fun)
       },
       panels = ,
       xy = ,
@@ -794,11 +780,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
           xy = c("PANEL", y),
           groups = c("PANEL", y, "group")
         )
-        data = ddply_(data, normalization_groups, normalize_thickness)
+        data = ddply_(data, normalization_groups, apply_subscale, subscale = subscale_fun)
       },
       none = {
         # ensure thickness is a thickness-type vector so it is not normalized again
-        data$thickness = normalize_thickness(data$thickness, subscale = subscale_identity)
+        # TODO: deprecate this and direct people to use `subscale = "identity"` to turn off scaling
+        data$thickness = apply_subscale(data$thickness, subscale = subscale_identity)
       },
       stop0('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
     )

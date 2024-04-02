@@ -577,6 +577,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   ), GeomSlabinterval$param_docs),
 
   default_params = defaults(list(
+    subscale = "thickness",
     normalize = "none",
     binwidth = NA,
     dotsize = 1.07,
@@ -589,7 +590,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   ), GeomSlabinterval$default_params),
 
   hidden_params = union(c(
-    "normalize", "fill_type"
+    "subscale", "normalize", "fill_type"
   ), GeomSlabinterval$hidden_params),
 
 

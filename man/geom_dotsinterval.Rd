@@ -231,7 +231,7 @@ annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a tra
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
 \item A string giving the name of such a function when prefixed
-with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
+with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}.
 }}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing

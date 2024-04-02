@@ -60,7 +60,18 @@ to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \stron
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slab]{geom_slab()}},
 these include:
 \describe{
-\item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
+\item{\code{subscale}}{Sub-scale used to scale values of the \code{thickness} aesthetic within
+the groups determined by \code{normalize}. One of:
+\itemize{
+\item A function that takes an \code{x} argument giving a numeric vector
+of values to be scaled and then returns a \link{thickness} vector representing
+the scaled values, such as \code{\link[=subscale_thickness]{subscale_thickness()}} or \code{\link[=subscale_identity]{subscale_identity()}}.
+\item A string giving the name of such a function when prefixed
+with \code{"subscale_"}; e.g. \code{"thickness"} or \code{"identity"}.
+}
+For a comprehensive discussion and examples of slab scaling and normalization, see the
+\href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
+\item{\code{normalize}}{Groups within which to scale values of the \code{thickness} aesthetic. One of:
 \itemize{
 \item \code{"all"}: normalize so that the maximum height across all data is \code{1}.
 \item \code{"panels"}: normalize within panels so that the maximum height in each panel is \code{1}.
@@ -100,7 +111,7 @@ annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a tra
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
 \item A string giving the name of such a function when prefixed
-with \code{"subguide"}; e.g. \code{"axis"} or \code{"none"}.
+with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}.
 }}
 }}
 

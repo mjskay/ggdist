@@ -74,6 +74,37 @@ subscale_identity = function(x) {
 }
 
 
+# apply a thickness subscale ----------------------------------------------
+
+#' apply a thickness subscale to an object
+#' @noRd
+apply_subscale = function(x, subscale) UseMethod("apply_subscale")
+
+#' @export
+apply_subscale.NULL = function(x, subscale) {
+  NULL
+}
+
+#' @export
+apply_subscale.default = function(x, subscale) {
+  subscale(x)
+}
+
+#' @importFrom scales oob_squish_infinite
+#' @export
+apply_subscale.ggdist_thickness = function(x, subscale) {
+  # thickness values passed directly into the geom (e.g. by
+  # scale_thickness_shared()) are not normalized again.
+  x
+}
+
+#' @export
+apply_subscale.data.frame = function(x, subscale) {
+  x$thickness = apply_subscale(x$thickness, subscale = subscale)
+  x
+}
+
+
 # helpers -----------------------------------------------------------------
 
 #' Validate an `expand` argument and return a canonical version

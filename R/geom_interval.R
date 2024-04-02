@@ -76,7 +76,7 @@ GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
 
   hidden_params = union(c(
     "show_slab", "show_point", "show_interval",
-    "normalize", "fill_type",
+    "subscale", "normalize", "fill_type",
     "subguide",
     "fatten_point"
   ), GeomSlabinterval$hidden_params)
