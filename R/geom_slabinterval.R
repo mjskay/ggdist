@@ -70,7 +70,7 @@ normalize_thickness.data.frame = function(x) {
 #'     in the output giving the parameters of the transformation
 #' @noRd
 rescale_slab_thickness = function(
-  s_data, orientation, normalize, na.rm,
+  s_data, orientation, na.rm,
   name = "geom_slabinterval"
 ) {
   define_orientation_variables(orientation)
@@ -144,14 +144,15 @@ rescale_slab_thickness = function(
 
 # drawing functions -------------------------------------------------------
 
-draw_slabs = function(self, s_data, panel_params, coord,
-  orientation, normalize, fill_type, na.rm, subguide,
-  ...
+draw_slabs = function(
+  self, s_data, panel_params, coord, orientation,
+  ...,
+  fill_type, na.rm, subguide
 ) {
   define_orientation_variables(orientation)
 
   c(s_data, subguide_params) %<-% rescale_slab_thickness(
-    s_data, orientation, normalize, na.rm, name = "geom_slabinterval"
+    s_data, orientation, na.rm, name = "geom_slabinterval"
   )
   s_data = self$override_slab_aesthetics(s_data)
 
@@ -857,10 +858,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       # thickness values were provided, draw the slabs
       s_data = data[data$datatype == "slab",]
       if (nrow(s_data) > 0) {
-        self$draw_slabs(s_data, panel_params, coord,
-          orientation = orientation,
-          na.rm = na.rm,
-          ...
+        self$draw_slabs(
+          s_data, panel_params, coord, orientation,
+          ...,
+          na.rm = na.rm
         )
       }
     }

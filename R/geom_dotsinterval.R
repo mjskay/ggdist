@@ -269,13 +269,14 @@ make_points_grob = function(
 
 # panel drawing function -------------------------------------------------------
 
-draw_slabs_dots = function(self, s_data, panel_params, coord,
-  orientation, normalize, fill_type, na.rm,
+draw_slabs_dots = function(
+  self, s_data, panel_params, coord, orientation,
+  ...,
+  fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
   overlaps, overflow,
   subguide,
-  verbose,
-  ...
+  verbose
 ) {
   define_orientation_variables(orientation)
 
@@ -283,7 +284,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   s_data$thickness = 1
   subguide_params = NULL
   c(s_data, subguide_params) %<-% rescale_slab_thickness(
-    s_data, orientation, normalize, na.rm, name = "geom_dotsinterval"
+    s_data, orientation, na.rm, name = "geom_dotsinterval"
   )
   s_data = self$override_slab_aesthetics(s_data)
   if (nrow(s_data) == 0) return(list())
