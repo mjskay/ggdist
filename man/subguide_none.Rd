@@ -10,7 +10,7 @@ subguide_none(...)
 \item{...}{ignored.}
 }
 \description{
-This is a blank sub-guide that omits annotations for the \link{thickness} aesthetic
+This is a blank sub-guide that omits annotations for the \code{thickness} aesthetic
 in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 }

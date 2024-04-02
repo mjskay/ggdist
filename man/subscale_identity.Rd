@@ -15,7 +15,7 @@ A \link{thickness} vector of the same length as \code{x}, with infinite
 values in \code{x} squished into the data range.
 }
 \description{
-This is an identity sub-scale for the \link{thickness} aesthetic
+This is an identity sub-scale for the \code{thickness} aesthetic
 in \pkg{ggdist}. It returns its input as a \link{thickness} vector without
 rescaling (though it does squish infinite values). It can be used with the
 \code{subscale} parameter of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.

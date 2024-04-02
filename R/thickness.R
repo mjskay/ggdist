@@ -6,6 +6,49 @@
 
 # constructors ---------------------------------------------------------------
 
+#' Thickness (datatype)
+#'
+#' A representation of the thickness of a slab: a scaled value (`x`) where
+#' `0` is the base of the slab and `1` is its maximum extent, and the lower
+#' (`lower`) and upper (`upper`) limits of the slab values in their original
+#' data units.
+#'
+#' @param x An object (typically a `numeric()`) representing scaled values
+#' to be converted to a `thickness()` object.
+#' @param lower The original lower bounds of thickness values before scaling.
+#' May be `NA` to indicate that this bound is not known.
+#' @param upper The original upper bounds of thickness values before scaling.
+#' May be `NA` to indicate that this bound is not known.
+#'
+#' @details
+#' This datatype is used by [scale_thickness_shared()] and [subscale_thickness()]
+#' to represent `numeric()`-like objects marked as being in units of slab "thickness".
+#'
+#' Unlike regular `numeric()`s, `thickness()` values mapped onto the `thickness`
+#' aesthetic are not rescaled by [scale_thickness_shared()] or [geom_slabinterval()].
+#' In most cases `thickness()` is not useful directly; though it can be used to
+#' mark values that should not be rescaled---see the definitions of
+#' [stat_ccdfinterval()] and [stat_gradientinterval()] for some example usages.
+#'
+#' [thickness] objects with unequal lower or upper limits may not be combined.
+#' However, [thickness] objects with `NA` limits may be combined with
+#' [thickness] objects with non-`NA` limits. This allows (e.g.) specifying
+#' locations on the [thickness] scale that are independent of data limits.
+#' @return
+#' A [vctrs::rcrd] of class `"ggdist_thickness"` with fields
+#' `"x"`, `"lower"`, and `"upper"`.
+#' @author Matthew Kay
+#' @seealso The `thickness` aesthetic of [geom_slabinterval()].
+#' @seealso [scale_thickness_shared()], for setting a `thickness` scale across
+#' all geometries using the `thickness` aesthetic.
+#' @seealso [subscale_thickness()], for setting a `thickness` sub-scale within
+#' a single [geom_slabinterval()].
+#' @examples
+#' thickness(0:1)
+#' thickness(0:1, 0, 10)
+#' @name thickness
+NULL
+
 new_thickness = function(x = double(), lower = NA_real_, upper = NA_real_) {
   if (length(x) < 1) x = double()
   stopifnot(is.double(x))
@@ -14,11 +57,7 @@ new_thickness = function(x = double(), lower = NA_real_, upper = NA_real_) {
   new_rcrd(list(x = x, lower = lower, upper = upper), class = "ggdist_thickness")
 }
 
-#' @rdname scale_thickness
-#' @param x An object (typically a `numeric()`) to be converted to a `thickness()`
-#' object.
-#' @param lower The original lower bounds of thickness values before scaling.
-#' @param upper The original upper bounds of thickness values before scaling.
+#' @rdname thickness
 #' @export
 thickness = function(x = double(), lower = NA_real_, upper = NA_real_) {
   x = vec_cast(x, double())

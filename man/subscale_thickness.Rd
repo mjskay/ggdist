@@ -19,7 +19,7 @@ Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabint
 \code{\link[=continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
 You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
 expansion values; expanding the lower limit is usually not recommended
-(because with most \link{thickness} scales the lower limit is the baseline
+(because with most \code{thickness} scales the lower limit is the baseline
 and represents \code{0}), so a typical usage might be something like
 \code{expand = expansion(c(0, 0.05))} to expand the top end of the subscale
 by 5\%.}
@@ -29,7 +29,7 @@ A \link{thickness} vector of the same length as \code{x} scaled to be between
 \code{0} and \code{1}.
 }
 \description{
-This is a sub-scale intended for adjusting the scaling of the \link{thickness}
+This is a sub-scale intended for adjusting the scaling of the \code{thickness}
 aesthetic at a geometry (or sub-geometry) level in \pkg{ggdist}. It can be
 used with the \code{subscale} parameter of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
@@ -39,6 +39,13 @@ Supports \link[=automatic-partial-functions]{automatic partial function applicat
 # TODO
 }
 \seealso{
+The \link{thickness} datatype.
+
+The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+
+\code{\link[=scale_thickness_shared]{scale_thickness_shared()}}, for setting a \code{thickness} scale across
+all geometries using the \code{thickness} aesthetic.
+
 Other sub-scales: 
 \code{\link{subscale_identity}()}
 }

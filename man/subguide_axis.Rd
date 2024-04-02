@@ -95,7 +95,7 @@ settings that normally apply to axis guides will be followed.}
 \code{subguide_axis()} itself.}
 }
 \description{
-This is a sub-guide intended for annotating the \link{thickness} aesthetic
+This is a sub-guide intended for annotating the \code{thickness} aesthetic
 in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
@@ -147,6 +147,16 @@ ggplot(df, aes(xdist = d, y = g)) +
 
 }
 \seealso{
+The \link{thickness} datatype.
+
+The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+
+\code{\link[=scale_thickness_shared]{scale_thickness_shared()}}, for setting a \code{thickness} scale across
+all geometries using the \code{thickness} aesthetic.
+
+\code{\link[=subscale_thickness]{subscale_thickness()}}, for setting a \code{thickness} sub-scale within
+a single \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+
 Other sub-guides: 
 \code{\link{subguide_none}()}
 }

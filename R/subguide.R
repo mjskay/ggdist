@@ -1,6 +1,6 @@
 #' Axis sub-guide for thickness scales
 #'
-#' This is a sub-guide intended for annotating the [thickness] aesthetic
+#' This is a sub-guide intended for annotating the `thickness` aesthetic
 #' in \pkg{ggdist}. It can be used with the `subguide` parameter of
 #' [geom_slabinterval()].
 #' @template description-auto-partial
@@ -41,6 +41,12 @@
 #' @param ... Arguments passed to other functions, typically back to
 #'    `subguide_axis()` itself.
 #' @family sub-guides
+#' @seealso The [thickness] datatype.
+#' @seealso The `thickness` aesthetic of [geom_slabinterval()].
+#' @seealso [scale_thickness_shared()], for setting a `thickness` scale across
+#' all geometries using the `thickness` aesthetic.
+#' @seealso [subscale_thickness()], for setting a `thickness` sub-scale within
+#' a single [geom_slabinterval()].
 #' @examples
 #' # example code
 #' library(ggplot2)
@@ -187,7 +193,7 @@ subguide_count = function(..., breaks = scales::breaks_width(1)) {
 
 #' Empty sub-guide for thickness scales
 #'
-#' This is a blank sub-guide that omits annotations for the [thickness] aesthetic
+#' This is a blank sub-guide that omits annotations for the `thickness` aesthetic
 #' in \pkg{ggdist}. It can be used with the `subguide` parameter of
 #' [geom_slabinterval()].
 #'

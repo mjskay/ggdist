@@ -42,14 +42,6 @@
 #' normalized by wrapping them in the [thickness()] data type (this can be
 #' disabled by setting `renormalize = TRUE`).
 #'
-#' [thickness()] is used by [scale_thickness_shared()] to create `numeric()`-like
-#' objects marked as being in units of slab "thickness". Unlike regular `numeric()`s,
-#' `thickness()` values mapped onto the `thickness` aesthetic are not rescaled by
-#' [scale_thickness_shared()] or [geom_slabinterval()]. In most cases `thickness()`
-#' is not useful directly; though it can be used to mark values that should not be
-#' rescaled---see the definitions of [stat_ccdfinterval()] and [stat_gradientinterval()]
-#' for some usages.
-#'
 #' Note: while a slightly more typical name for `scale_thickness_shared()` might
 #' be `scale_thickness_continuous()`, the latter name would cause this scale
 #' to be applied to all `thickness` aesthetics by default according to the rules
@@ -63,7 +55,10 @@
 #' @name scale_thickness
 #' @author Matthew Kay
 #' @family ggdist scales
+#' @seealso The [thickness] datatype.
 #' @seealso The `thickness` aesthetic of [geom_slabinterval()].
+#' @seealso [subscale_thickness()], for setting a `thickness` sub-scale within
+#' a single [geom_slabinterval()].
 #' @examples
 #' library(distributional)
 #' library(ggplot2)
