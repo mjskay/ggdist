@@ -233,7 +233,7 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 Variant of \code{\link[=geom_dots]{geom_dots()}} for creating blurry dotplots. Accepts an \code{sd}
 aesthetic that gives the standard deviation of the blur applied to the dots.
 Requires a graphics engine supporting radial gradients. Unlike \code{\link[=geom_dots]{geom_dots()}},
-all dots must be circular, so this geom does not support the \code{shape} aesthetic.
+this geom only supports circular and square \code{shape}s.
 }
 \details{
 The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
@@ -321,6 +321,12 @@ the geometry. This is set automatically when using ggdist \code{stat}s.}
 \item{\code{xmax}: Right end of the interval sub-geometry (if \code{orientation = "horizontal"}).}
 \item{\code{ymin}: Lower end of the interval sub-geometry (if \code{orientation = "vertical"}).}
 \item{\code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).}
+}
+
+\strong{Point-specific aesthetics}
+
+\itemize{
+\item{\code{shape}: Shape type used to draw the \strong{point} sub-geometry.}
 }
 
 \strong{Color aesthetics}

@@ -8,51 +8,29 @@
 
 #' normalize thickness values to between 0 and 1
 #' @noRd
-normalize_thickness = function(x) UseMethod("normalize_thickness")
+normalize_thickness = function(x, ...) UseMethod("normalize_thickness")
 
 #' @export
-normalize_thickness.NULL = function(x) {
+normalize_thickness.NULL = function(x, ...) {
   NULL
 }
 
 #' @export
-normalize_thickness.default = function(x) {
-  lower = NA_real_
-  upper = NA_real_
-
-  finite_thickness = x[is.finite(x)]
-  if (length(finite_thickness) > 0) {
-    max_finite_thickness = max(finite_thickness)
-    min_finite_thickness = min(finite_thickness, 0)
-    if (max_finite_thickness > min_finite_thickness) {
-      lower = min_finite_thickness
-      upper = max_finite_thickness
-      x = (x - lower) / (upper - lower)
-    }
-  }
-  # infinite values get plotted at the max height (e.g. for point masses)
-  if (length(x) > 0) {
-    x[x == Inf] = 1
-  }
-
-  thickness(x, lower, upper)
+normalize_thickness.default = function(x, subscale = subscale_thickness) {
+  subscale(x)
 }
 
+#' @importFrom scales oob_squish_infinite
 #' @export
-normalize_thickness.ggdist_thickness = function(x) {
+normalize_thickness.ggdist_thickness = function(x, ...) {
   # thickness values passed directly into the geom (e.g. by
   # scale_thickness_shared()) are not normalized again.
-
-  # infinite values get plotted at the max height (e.g. for point masses)
-  if (length(x) > 0) {
-    field(x, "x")[field(x, "x") == Inf] = 1
-  }
   x
 }
 
 #' @export
-normalize_thickness.data.frame = function(x) {
-  x$thickness = normalize_thickness(x$thickness)
+normalize_thickness.data.frame = function(x, ...) {
+  x$thickness = normalize_thickness(x$thickness, ...)
   x
 }
 
@@ -820,7 +798,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       },
       none = {
         # ensure thickness is a thickness-type vector so it is not normalized again
-        data$thickness = normalize_thickness(as_thickness(data$thickness))
+        data$thickness = normalize_thickness(data$thickness, subscale = subscale_identity)
       },
       stop0('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
     )

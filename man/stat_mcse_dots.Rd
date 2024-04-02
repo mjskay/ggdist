@@ -386,6 +386,12 @@ the geometry. This is set automatically when using ggdist \code{stat}s.}
 \item{\code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).}
 }
 
+\strong{Point-specific aesthetics}
+
+\itemize{
+\item{\code{shape}: Shape type used to draw the \strong{point} sub-geometry.}
+}
+
 \strong{Color aesthetics}
 
 \itemize{

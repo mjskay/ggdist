@@ -118,6 +118,7 @@ Collate:
     "stat_spike.R"
     "student_t.R"
     "subguide.R"
+    "subscale.R"
     "testthat.R"
     "theme_ggdist.R"
     "thickness.R"
