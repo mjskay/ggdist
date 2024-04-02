@@ -42,11 +42,8 @@ However, \link{thickness} objects with \code{NA} limits may be combined with
 locations on the \link{thickness} scale that are independent of data limits.
 }
 \examples{
-thk = thickness(0:1)
-thk
-
-thk = thickness(0:1, 0, 10)
-thk
+thickness(0:1)
+thickness(0:1, 0, 10)
 }
 \seealso{
 The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.

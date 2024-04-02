@@ -5,7 +5,7 @@
 #' used with the `subscale` parameter of [geom_slabinterval()].
 #' @template description-auto-partial
 #'
-#' @param x a [numeric] or [thickness] vector to be rescaled.
+#' @param x a [numeric] vector to be rescaled.
 #'    Typically provided automatically by [geom_slabinterval()].
 #' @param expand A numeric vector of limit expansion constants of length
 #'    2 or 4, following the same format used by the `expand` argument of
@@ -69,10 +69,8 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
 #' @family sub-scales
 #' @export
 subscale_identity = function(x) {
-  x = as_thickness(x)
-  limits = range(0, 1, field(x, "x"), na.rm = TRUE, finite = TRUE)
-  field(x, "x") = oob_squish_infinite(field(x, "x"), range = limits)
-  x
+  limits = range(0, 1, x, na.rm = TRUE, finite = TRUE)
+  thickness(oob_squish_infinite(x, range = limits))
 }
 
 

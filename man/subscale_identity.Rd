@@ -7,7 +7,7 @@
 subscale_identity(x)
 }
 \arguments{
-\item{x}{a \link{numeric} or \link{thickness} vector to be rescaled.
+\item{x}{a \link{numeric} vector to be rescaled.
 Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 }
 \value{
