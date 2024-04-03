@@ -36,7 +36,27 @@ used with the \code{subscale} parameter of \code{\link[=geom_slabinterval]{geom_
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \examples{
-# TODO
+library(ggplot2)
+library(distributional)
+
+df = data.frame(d = dist_normal(2:3, 1), g = c("a", "b"))
+
+# breaks on thickness subguides are always limited to the bounds of the
+# subscale, which may leave labels off near the edge of the subscale
+# (e.g. here `0.4` is omitted because the max value is approx `0.39`)
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_slabinterval(
+    subguide = "inside"
+  )
+
+# We can use the subscale to expand the upper limit of the thickness scale
+# by 5\% (similar to the default for positional scales), allowing bounds near
+# (but just less than) the limit, like `0.4`, to be shown.
+ggplot(df, aes(xdist = d, y = g)) +
+  stat_slabinterval(
+    subguide = "inside",
+    subscale = subscale_thickness(expand = expansion(c(0, 0.5)))
+  )
 }
 \seealso{
 The \link{thickness} datatype.

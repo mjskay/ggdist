@@ -24,7 +24,27 @@
 #' @seealso [scale_thickness_shared()], for setting a `thickness` scale across
 #' all geometries using the `thickness` aesthetic.
 #' @examples
-#' # TODO
+#' library(ggplot2)
+#' library(distributional)
+#'
+#' df = data.frame(d = dist_normal(2:3, 1), g = c("a", "b"))
+#'
+#' # breaks on thickness subguides are always limited to the bounds of the
+#' # subscale, which may leave labels off near the edge of the subscale
+#' # (e.g. here `0.4` is omitted because the max value is approx `0.39`)
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_slabinterval(
+#'     subguide = "inside"
+#'   )
+#'
+#' # We can use the subscale to expand the upper limit of the thickness scale
+#' # by 5% (similar to the default for positional scales), allowing bounds near
+#' # (but just less than) the limit, like `0.4`, to be shown.
+#' ggplot(df, aes(xdist = d, y = g)) +
+#'   stat_slabinterval(
+#'     subguide = "inside",
+#'     subscale = subscale_thickness(expand = expansion(c(0, 0.5)))
+#'   )
 #' @importFrom scales rescale oob_squish_infinite expand_range
 #' @export
 subscale_thickness = auto_partial(name = "subscale_thickness", function(
@@ -33,14 +53,16 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
   expand = c(0, 0)
 ) {
   expand = validate_expand(expand)
-  limits = validate_limits(limits)
+  limits_fun = validate_limits(limits)
 
   finite_x = x[is.finite(x)]
   if (length(finite_x) > 0) {
-    limits = limits(range(finite_x))
+    limits = limits_fun(range(finite_x))
     stopifnot(is.finite(limits))
-    limits[1] = expand_range(limits, expand[1], expand[2])[1]
-    limits[2] = expand_range(limits, expand[3], expand[4])[2]
+    limits = c(
+      expand_range(limits, expand[1], expand[2])[1],
+      expand_range(limits, expand[3], expand[4])[2]
+    )
     if (limits[1] == limits[2]) {
       limits = c(NA_real_, NA_real_)
     } else {

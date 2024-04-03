@@ -48,7 +48,6 @@
 #' @seealso [subscale_thickness()], for setting a `thickness` sub-scale within
 #' a single [geom_slabinterval()].
 #' @examples
-#' # example code
 #' library(ggplot2)
 #' library(distributional)
 #'

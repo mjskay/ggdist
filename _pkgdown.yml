@@ -107,13 +107,14 @@ reference:
     `{ggplot2}` scales, positions, sub-guides, and themes designed for use
     with `{ggdist}` `stat`s and `geom`s.
 
-- subtitle: "Scales"
+- subtitle: "Scales and sub-scales"
   desc: >
     Scales for custom aesthetics used by `{ggdist}` geoms and stats, such
     as `thickness`, `colour_ramp`, and `side`, as well as sub-geometry-specific
     aesthetics, such as `slab_colour`, `point_size`, etc.
   contents:
   - scale_thickness
+  - subscale_thickness
   - scale_colour_ramp
   - scale_side_mirrored
   - sub-geometry-scales

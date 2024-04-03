@@ -116,7 +116,6 @@ is labeled, useful for labeling counts in \code{\link[=geom_dots]{geom_dots()}}.
 large, \code{\link[=subguide_integer]{subguide_integer()}} may be better.
 }
 \examples{
-# example code
 library(ggplot2)
 library(distributional)
 
