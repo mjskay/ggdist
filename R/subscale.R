@@ -7,6 +7,13 @@
 #'
 #' @param x a [numeric] vector to be rescaled.
 #'    Typically provided automatically by [geom_slabinterval()].
+#' @param limits One of:
+#'  - `NULL` to use the range of the data
+#'  - A [numeric] vector of length two providing the limits of the scale. Use
+#'    `NA` to use the default minimum or maximum.
+#'  - A function that accepts a length-2 [numeric] vector of the automatic
+#'    limits and returns new limits. Unlike positional scales. Unlike
+#'    positional scales, these limits will not remove data.
 #' @param expand A numeric vector of limit expansion constants of length
 #'    2 or 4, following the same format used by the `expand` argument of
 #'    [continuous_scale()]. The default is not to expand the limits.

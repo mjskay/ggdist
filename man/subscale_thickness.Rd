@@ -14,6 +14,16 @@ subscale_thickness(
 \item{x}{a \link{numeric} vector to be rescaled.
 Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 
+\item{limits}{One of:
+\itemize{
+\item \code{NULL} to use the range of the data
+\item A \link{numeric} vector of length two providing the limits of the scale. Use
+\code{NA} to use the default minimum or maximum.
+\item A function that accepts a length-2 \link{numeric} vector of the automatic
+limits and returns new limits. Unlike positional scales. Unlike
+positional scales, these limits will not remove data.
+}}
+
 \item{expand}{A numeric vector of limit expansion constants of length
 2 or 4, following the same format used by the \code{expand} argument of
 \code{\link[=continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
