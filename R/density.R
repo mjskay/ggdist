@@ -4,7 +4,9 @@
 ###############################################################################
 
 
+# density estimators ------------------------------------------------------
 
+## density_unbounded -------------------------------------------------------
 #' Unbounded density estimator
 #'
 #' Unbounded density estimator using [stats::density()].
@@ -116,6 +118,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 })
 
 
+## density_bounded -------------------------------------------------------
 #' Bounded density estimator using the reflection method
 #'
 #' Bounded density estimator using the reflection method.
@@ -254,6 +257,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 })
 
 
+## density_histogram -------------------------------------------------------
 #' Histogram density estimator
 #'
 #' Histogram density estimator.
@@ -370,23 +374,41 @@ density_histogram = auto_partial(name = "density_histogram", function(
     cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2))
   }
 
-  structure(list(
-    x = input,
-    y = pdf,
-    bw = if (h$equidist) diff(h$breaks[1:2]) else mean(diff(h$breaks)),
-    n = length(x),
-    # need to apply get_expr over match.call() instead of just using match.call()
-    # to remove tildes from the call created by partial application
-    call = as.call(lapply(match.call(), get_expr)),
-    data.name = x_label,
-    has.na = FALSE,
-    cdf = cdf
-  ), class = "density")
+  structure(
+    list(
+      x = input,
+      y = pdf,
+      bw = if (h$equidist) diff(h$breaks[1:2]) else mean(diff(h$breaks)),
+      n = length(x),
+      # need to apply get_expr over match.call() instead of just using match.call()
+      # to remove tildes from the call created by partial application
+      call = as.call(lapply(match.call(), get_expr)),
+      data.name = x_label,
+      has.na = FALSE,
+      cdf = cdf
+    ),
+    class = c("ggdist_density", "density")
+  )
 })
+
+
+# density object methods --------------------------------------------------
+
+#' @export
+plot.ggdist_density = function(x, ..., ylim = c(0, NA)) {
+  if (is.null(ylim)) {
+    ylim = range(x$y)
+  } else {
+    missing_limit = is.na(ylim)
+    ylim[missing_limit] = range(x$y)[missing_limit]
+  }
+  NextMethod(ylim = ylim)
+}
 
 
 # bandwidth estimators ----------------------------------------------------
 
+## bandwidth_nrd0 ----------------------------------------------------------
 #' Bandwidth estimators
 #'
 #' Bandwidth estimators for densities, used in the `bandwidth` argument
@@ -411,6 +433,7 @@ bandwidth_nrd0 = auto_partial(name = "bandwidth_nrd0", function(x, ...) {
   bw.nrd0(x)
 })
 
+## bandwidth_nrd ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.nrd
 #' @export
@@ -418,6 +441,7 @@ bandwidth_nrd = auto_partial(name = "bandwidth_nrd", function(x, ...) {
   bw_fallback(bw.nrd, x, ..., call = call("bandwidth_nrd"))
 })
 
+## bandwidth_ucv ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.ucv
 #' @export
@@ -425,6 +449,7 @@ bandwidth_ucv = auto_partial(name = "bandwidth_ucv", function(x, ...) {
   bw_fallback(bw.ucv, x, ..., call = call("bandwidth_ucv"))
 })
 
+## bandwidth_bcv ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.bcv
 #' @export
@@ -432,6 +457,7 @@ bandwidth_bcv = auto_partial(name = "bandwidth_bcv", function(x, ...) {
   bw_fallback(bw.bcv, x, ..., call = call("bandwidth_bcv"))
 })
 
+## bandwidth_SJ ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.SJ
 #' @export
@@ -439,6 +465,7 @@ bandwidth_SJ = auto_partial(name = "bandwidth_SJ", function(x, ...) {
   bw_fallback(bw.SJ, x, ..., call = call("bandwidth_SJ"))
 })
 
+## bandwidth_dpi ----------------------------------------------------------
 #' @rdname bandwidth
 #' @export
 bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
@@ -468,12 +495,14 @@ bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
 
   if (adapt == 1) {
     # quick exit: just return the non-adaptive density
-    return(density(
+    d = density(
       x, weights = weights,
       n = n, bw = bw,
       kernel = kernel,
       from = from, to = to
-    ))
+    )
+    class(d) = c("ggdist_density", "density")
+    return(d)
   }
 
   # determine local adaptive bandwidth
@@ -516,15 +545,18 @@ bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
   })
   f = rowSums(vapply(densities, `[[`, "y", FUN.VALUE = numeric(n)))
 
-  structure(list(
-    x = densities[[1]]$x,
-    y = f,
-    bw = bw,
-    n = n_x,
-    call = match.call(),
-    data.name = "x",
-    has.na = FALSE
-  ), class = "density")
+  structure(
+    list(
+      x = densities[[1]]$x,
+      y = f,
+      bw = bw,
+      n = n_x,
+      call = match.call(),
+      data.name = "x",
+      has.na = FALSE
+    ),
+    class = c("ggdist_density", "density")
+  )
 }
 
 get_local_bandwidth = function(x, bandwidth, kernel, n) {
