@@ -9,7 +9,7 @@
 test_that("thickness subscale works", {
   expect_equal(
     subscale_thickness(c(0, NA, Inf, -Inf)),
-    thickness(c(0, NA_real_, 1, 0), NA_real_, NA_real_)
+    thickness(c(0, NA_real_, Inf, -Inf), NA_real_, NA_real_)
   )
 
   expect_equal(
@@ -36,11 +36,11 @@ test_that("thickness subscale works", {
 test_that("identity subscale works", {
   expect_equal(
     subscale_identity(c(0, NA, Inf, -Inf)),
-    thickness(c(0, NA_real_, 1, 0), NA_real_, NA_real_)
+    thickness(c(0, NA_real_, Inf, -Inf), NA_real_, NA_real_)
   )
 
   expect_equal(
     subscale_identity(c(-3:3, NA_real_, Inf, -Inf)),
-    thickness(c(-3:3, NA_real_, 3, -3), NA_real_, NA_real_)
+    thickness(c(-3:3, NA_real_, Inf, -Inf), NA_real_, NA_real_)
   )
 })

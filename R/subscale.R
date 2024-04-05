@@ -52,7 +52,7 @@
 #'     subguide = "inside",
 #'     subscale = subscale_thickness(expand = expansion(c(0, 0.5)))
 #'   )
-#' @importFrom scales rescale oob_squish_infinite expand_range
+#' @importFrom scales rescale expand_range
 #' @export
 subscale_thickness = auto_partial(name = "subscale_thickness", function(
   x,
@@ -79,9 +79,6 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
     limits = c(NA_real_, NA_real_)
   }
 
-  # infinite values get plotted at the max height (e.g. for point masses)
-  x = oob_squish_infinite(x)
-
   thickness(x, limits[1], limits[2])
 })
 
@@ -89,8 +86,8 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
 #'
 #' This is an identity sub-scale for the `thickness` aesthetic
 #' in \pkg{ggdist}. It returns its input as a [thickness] vector without
-#' rescaling (though it does squish infinite values). It can be used with the
-#' `subscale` parameter of [geom_slabinterval()].
+#' rescaling. It can be used with the `subscale` parameter of
+#' [geom_slabinterval()].
 #'
 #' @inheritParams subscale_thickness
 #' @returns A [thickness] vector of the same length as `x`, with infinite
@@ -98,12 +95,23 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
 #' @family sub-scales
 #' @export
 subscale_identity = function(x) {
-  limits = range(0, 1, x, na.rm = TRUE, finite = TRUE)
-  thickness(oob_squish_infinite(x, range = limits))
+  thickness(x)
 }
 
 
 # apply a thickness subscale ----------------------------------------------
+
+#' Squish infinite values in a [thickness] vector
+#' @importFrom scale oob_squish_infinite
+#' @noRd
+squish_infinite_thickness = function(x) {
+  limits = range(
+    0, 1, field(x, "x"), thickness_lower(x), thickness_upper(x),
+    na.rm = TRUE, finite = TRUE
+  )
+  field(x, "x") = oob_squish_infinite(field(x, "x"), range = limits)
+  x
+}
 
 #' apply a thickness subscale to an object
 #' @noRd
@@ -116,15 +124,14 @@ apply_subscale.NULL = function(x, subscale) {
 
 #' @export
 apply_subscale.default = function(x, subscale) {
-  subscale(x)
+  squish_infinite_thickness(subscale(x))
 }
 
-#' @importFrom scales oob_squish_infinite
 #' @export
 apply_subscale.ggdist_thickness = function(x, subscale) {
   # thickness values passed directly into the geom (e.g. by
-  # scale_thickness_shared()) are not normalized again.
-  x
+  # scale_thickness_shared()) are not scaled again.
+  squish_infinite_thickness(x)
 }
 
 #' @export
