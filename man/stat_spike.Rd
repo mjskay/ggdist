@@ -14,7 +14,7 @@ stat_spike(
   p_limits = c(NA, NA),
   density = "bounded",
   adjust = waiver(),
-  trim = TRUE,
+  trim = waiver(),
   expand = FALSE,
   breaks = waiver(),
   align = "none",
@@ -146,7 +146,8 @@ is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bound
 Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{1}.}
 
 \item{trim}{For sample data, should the density estimate be trimmed to the range of the
-data? Passed on to the density estimator; see the \code{density} parameter. Default \code{TRUE}.}
+data? Passed on to the density estimator; see the \code{density} parameter.
+Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{TRUE}.}
 
 \item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
 Can be length two to control expansion to the lower and upper limit respectively.}

@@ -11,7 +11,7 @@ density_unbounded(
   bandwidth = "dpi",
   adjust = 1,
   kernel = "gaussian",
-  trim = FALSE,
+  trim = TRUE,
   adapt = 1,
   na.rm = FALSE,
   ...,

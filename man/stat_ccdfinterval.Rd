@@ -15,7 +15,7 @@ stat_ccdfinterval(
   p_limits = c(NA, NA),
   density = "bounded",
   adjust = waiver(),
-  trim = TRUE,
+  trim = waiver(),
   breaks = waiver(),
   align = "none",
   outline_bars = FALSE,
@@ -169,7 +169,8 @@ is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bound
 Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{1}.}
 
 \item{trim}{For sample data, should the density estimate be trimmed to the range of the
-data? Passed on to the density estimator; see the \code{density} parameter. Default \code{TRUE}.}
+data? Passed on to the density estimator; see the \code{density} parameter.
+Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{TRUE}.}
 
 \item{breaks}{Determines the breakpoints defining bins. Defaults to \code{"Scott"}.
 Similar to (but not exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}.

@@ -337,7 +337,8 @@ compute_interval_slabinterval = function(
 #' is adjusted by multiplying it by this value. See e.g. [density_bounded()] for more information.
 #' Default (`waiver()`) defers to the default of the density estimator, which is usually `1`.
 #' @param trim For sample data, should the density estimate be trimmed to the range of the
-#' data? Passed on to the density estimator; see the `density` parameter. Default `TRUE`.
+#' data? Passed on to the density estimator; see the `density` parameter.
+#' Default (`waiver()`) defers to the default of the density estimator, which is usually `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
@@ -493,7 +494,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     p_limits = c(NA, NA),
     density = "bounded",
     adjust = waiver(),
-    trim = TRUE,
+    trim = waiver(),
     expand = FALSE,
     breaks = waiver(),
     align = "none",

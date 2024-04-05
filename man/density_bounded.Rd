@@ -11,7 +11,7 @@ density_bounded(
   bandwidth = "dpi",
   adjust = 1,
   kernel = "gaussian",
-  trim = FALSE,
+  trim = TRUE,
   bounds = c(NA, NA),
   bounder = "cdf",
   adapt = 1,
