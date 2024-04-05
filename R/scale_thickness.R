@@ -96,6 +96,7 @@ scale_thickness_shared = function(
   renormalize = FALSE,
   oob = scales::oob_keep,
   guide = "none",
+  expand = c(0, 0),
   ...
 ) {
   sc = continuous_scale(
@@ -104,7 +105,7 @@ scale_thickness_shared = function(
     limits = limits,
     oob = oob,
     guide = guide,
-    expand = expansion(0, 0),
+    expand = expand,
     ...,
     super = ScaleThicknessShared
   )
@@ -115,7 +116,7 @@ scale_thickness_shared = function(
 ScaleThicknessShared = ggproto("ScaleThicknessShared", ScaleContinuous,
   renormalize = FALSE,
 
-  map = function(self, x, limits = self$get_limits()) {
+  map = function(self, x, limits = self$dimension(expand = self$expand)) {
     out = if (is_thickness(x)) {
       x
     } else {

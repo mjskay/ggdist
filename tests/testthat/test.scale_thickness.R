@@ -44,6 +44,14 @@ test_that("infinite thickness is squished", {
   expect_equal(slab_grob$y, unit(c(0, 0.9, 0, 0, 0, 0), "native"))
 })
 
+test_that("expand works", {
+  p = ggplot() +
+    geom_slab(aes(x = 1:2, thickness = 1:2)) +
+    scale_thickness_shared(expand = expansion(c(0,0.25)))
+
+  expect_equal(layer_data(p)$thickness, thickness(1:2 / 2.5, 0, 2.5))
+})
+
 
 # scale_type --------------------------------------------------------------
 

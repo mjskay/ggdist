@@ -1,5 +1,11 @@
 # ggdist (development version)
 
+New features and enhancements:
+
+* To complement the `subguide`s for `geom_slab()`, there are now `subscale`s,
+  which can be used to adjust the `limits` or the `expand` parameter of the 
+  `thickness` per-geometry sub-scales (in much the same way those 
+  parameters can be set on `scale_thickness_shared()`) (#219).
 * Allow use of square `shape`s in `geom_blur_dots()`.
 
 
