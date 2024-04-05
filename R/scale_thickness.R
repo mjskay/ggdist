@@ -26,6 +26,15 @@
 #' Note that if you set renormalize to `TRUE`, subguides created via the
 #' `subguide` parameter to [geom_slabinterval()] will display the scaled values
 #' output by this scale, not the original data values.
+#' @param expand A numeric vector of limit expansion constants of length
+#' 2 or 4, following the same format used by the `expand` argument of
+#' [continuous_scale()]. The default is not to expand the limits.
+#' You can use the convenience function [expansion()] to generate the
+#' expansion values; expanding the lower limit is usually not recommended
+#' (because with most `thickness` scales the lower limit is the baseline
+#' and represents `0`), so a typical usage might be something like
+#' `expand = expansion(c(0, 0.05))` to expand the top end of the scale
+#' by 5%.
 #' @details
 #' By default, normalization/scaling of slab thicknesses is controlled by geometries,
 #' not by a \pkg{ggplot2} scale function. This allows various functionality not

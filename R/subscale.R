@@ -5,6 +5,7 @@
 #' used with the `subscale` parameter of [geom_slabinterval()].
 #' @template description-auto-partial
 #'
+#' @inheritParams scale_thickness
 #' @param x a [numeric] vector to be rescaled.
 #'    Typically provided automatically by [geom_slabinterval()].
 #' @param limits One of:
@@ -14,15 +15,6 @@
 #'  - A function that accepts a length-2 [numeric] vector of the automatic
 #'    limits and returns new limits. Unlike positional scales. Unlike
 #'    positional scales, these limits will not remove data.
-#' @param expand A numeric vector of limit expansion constants of length
-#'    2 or 4, following the same format used by the `expand` argument of
-#'    [continuous_scale()]. The default is not to expand the limits.
-#'    You can use the convenience function [expansion()] to generate the
-#'    expansion values; expanding the lower limit is usually not recommended
-#'    (because with most `thickness` scales the lower limit is the baseline
-#'    and represents `0`), so a typical usage might be something like
-#'    `expand = expansion(c(0, 0.05))` to expand the top end of the subscale
-#'    by 5%.
 #' @returns A [thickness] vector of the same length as `x` scaled to be between
 #' `0` and `1`.
 #' @family sub-scales
@@ -102,7 +94,7 @@ subscale_identity = function(x) {
 # apply a thickness subscale ----------------------------------------------
 
 #' Squish infinite values in a [thickness] vector
-#' @importFrom scale oob_squish_infinite
+#' @importFrom scales oob_squish_infinite
 #' @noRd
 squish_infinite_thickness = function(x) {
   limits = range(

@@ -14,6 +14,7 @@ scale_thickness_shared(
   renormalize = FALSE,
   oob = scales::oob_keep,
   guide = "none",
+  expand = c(0, 0),
   ...
 )
 
@@ -85,6 +86,16 @@ bounds values with \code{NA}.
 \item{guide}{A function used to create a guide or its name. See
 \code{\link[ggplot2:guides]{guides()}} for more information.}
 
+\item{expand}{A numeric vector of limit expansion constants of length
+2 or 4, following the same format used by the \code{expand} argument of
+\code{\link[=continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
+You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
+expansion values; expanding the lower limit is usually not recommended
+(because with most \code{thickness} scales the lower limit is the baseline
+and represents \code{0}), so a typical usage might be something like
+\code{expand = expansion(c(0, 0.05))} to expand the top end of the scale
+by 5\%.}
+
 \item{...}{
   Arguments passed on to \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale}}
   \describe{
@@ -115,12 +126,6 @@ diverging and n colour gradients (i.e., \code{\link[ggplot2:scale_colour_gradien
 \code{\link[ggplot2:scale_colour_gradientn]{scale_colour_gradientn()}}). The \code{rescaler} is ignored by position
 scales, which always use \code{\link[scales:rescale]{scales::rescale()}}. Also accepts rlang
 \link[rlang:as_function]{lambda} function notation.}
-    \item{\code{expand}}{For position scales, a vector of range expansion constants used to add some
-padding around the data to ensure that they are placed some distance
-away from the axes. Use the convenience function \code{\link[ggplot2:expansion]{expansion()}}
-to generate the values for the \code{expand} argument. The defaults are to
-expand the scale by 5\% on each side for continuous variables, and by
-0.6 units on each side for discrete variables.}
     \item{\code{na.value}}{Missing values will be replaced with this value.}
     \item{\code{transform}}{For continuous scales, the name of a transformation object
 or the object itself. Built-in transformations include "asn", "atanh",

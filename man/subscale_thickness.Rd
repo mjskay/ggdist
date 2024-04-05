@@ -31,7 +31,7 @@ You can use the convenience function \code{\link[=expansion]{expansion()}} to ge
 expansion values; expanding the lower limit is usually not recommended
 (because with most \code{thickness} scales the lower limit is the baseline
 and represents \code{0}), so a typical usage might be something like
-\code{expand = expansion(c(0, 0.05))} to expand the top end of the subscale
+\code{expand = expansion(c(0, 0.05))} to expand the top end of the scale
 by 5\%.}
 }
 \value{
