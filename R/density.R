@@ -78,7 +78,7 @@
 density_unbounded = auto_partial(name = "density_unbounded", function(
   x, weights = NULL,
   n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
-  trim = FALSE,
+  trim = TRUE,
   adapt = 1,
   na.rm = FALSE,
   ...,
@@ -192,7 +192,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 density_bounded = auto_partial(name = "density_bounded", function(
   x, weights = NULL,
   n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
-  trim = FALSE, bounds = c(NA, NA), bounder = "cdf",
+  trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
   adapt = 1,
   na.rm = FALSE,
   ...,
