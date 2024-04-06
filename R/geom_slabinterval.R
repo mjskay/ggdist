@@ -603,7 +603,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
         \\item A string giving the name of such a function when prefixed
           with `"subscale_"`; e.g. `"thickness"` or `"identity"`. The value
           `"thickness"` using the default subscale, which can be modified by
-          setting [`subguide_thickness`]; see the documentation for that
+          setting [`subscale_thickness`]; see the documentation for that
           function.
       }
       For a comprehensive discussion and examples of slab scaling and normalization, see the

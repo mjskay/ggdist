@@ -68,7 +68,7 @@ the scaled values, such as \code{\link[=subscale_thickness]{subscale_thickness()
 \item A string giving the name of such a function when prefixed
 with \code{"subscale_"}; e.g. \code{"thickness"} or \code{"identity"}. The value
 \code{"thickness"} using the default subscale, which can be modified by
-setting \code{\link{subguide_thickness}}; see the documentation for that
+setting \code{\link{subscale_thickness}}; see the documentation for that
 function.
 }
 For a comprehensive discussion and examples of slab scaling and normalization, see the

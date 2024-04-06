@@ -7,6 +7,9 @@
 subguide_none(values, ...)
 }
 \arguments{
+\item{values}{Values used to construct the scale used for this guide.
+Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
+
 \item{...}{ignored.}
 }
 \description{

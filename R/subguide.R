@@ -199,6 +199,7 @@ subguide_count = function(..., breaks = scales::breaks_width(1)) {
 #' parameter of [geom_slabinterval()] and [geom_dotsinterval()].
 #' @template description-auto-partial-waivable
 #'
+#' @inheritParams subguide_axis
 #' @param ... ignored.
 #' @family sub-guides
 #' @export
