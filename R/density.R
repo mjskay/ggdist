@@ -20,12 +20,11 @@
 #'   - a function: a function taking `x` (the sample) and returning the bandwidth
 #'   - a string: the suffix of the name of a function starting with `"bandwidth_"` that
 #'     will be used to determine the bandwidth. See [bandwidth] for a list.
-#' @param adjust numeric: the bandwidth for the density estimator is multiplied
-#' by this value. See [stats::density()].
+#' @eval rd_param_density_adjust()
 #' @param kernel string: the smoothing kernel to be used. This must partially
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
-#' @param trim Should the density estimate be trimmed to the bounds of the data?
+#' @eval rd_param_density_trim()
 #' @param adapt (**very experimental**) The name and interpretation of this argument
 #' are subject to change without notice. Positive integer. If `adapt > 1`, uses
 #' an adaptive approach to calculate the density. First, uses the
@@ -77,7 +76,7 @@
 #' @export
 density_unbounded = auto_partial(name = "density_unbounded", function(
   x, weights = NULL,
-  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
+  n = 501, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = TRUE,
   adapt = 1,
   na.rm = FALSE,
@@ -191,7 +190,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #' @export
 density_bounded = auto_partial(name = "density_bounded", function(
   x, weights = NULL,
-  n = 512, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
+  n = 501, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
   adapt = 1,
   na.rm = FALSE,
@@ -265,35 +264,8 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param weights optional numeric vector of weights to apply to `x`.
-#' @param breaks Determines the breakpoints defining bins. Defaults to `"Scott"`.
-#' Similar to (but not exactly the same as) the `breaks` argument to [graphics::hist()].
-#' One of:
-#'   - A scalar (length-1) numeric giving the number of bins
-#'   - A vector numeric giving the breakpoints between histogram bins
-#'   - A function taking `x` and `weights` and returning either the
-#'     number of bins or a vector of breakpoints
-#'   - A string giving the suffix of a function that starts with
-#'     `"breaks_"`. \pkg{ggdist} provides weighted implementations of the
-#'     `"Sturges"`, `"Scott"`, and `"FD"` break-finding algorithms from
-#'     [graphics::hist()], as well as [breaks_fixed()] for manually setting
-#'     the bin width. See [breaks].
-#'
-#' For example, `breaks = "Sturges"` will use the [breaks_Sturges()] algorithm,
-#' `breaks = 9` will create 9 bins, and `breaks = breaks_fixed(width = 1)` will
-#' set the bin width to `1`.
-#' @param align Determines how to align the breakpoints defining bins. Default
-#' (`"none"`) performs no alignment. One of:
-#'   - A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
-#'     The offset must be between `0` and the bin width.
-#'   - A function taking a sorted vector of `breaks` (bin edges) and returning
-#'     an offset to subtract from the breaks.
-#'   - A string giving the suffix of a function that starts with
-#'     `"align_"` used to determine the alignment, such as [align_none()],
-#'     [align_boundary()], or [align_center()].
-#'
-#' For example, `align = "none"` will provide no alignment, `align = align_center(at = 0)`
-#' will center a bin on `0`, and `align = align_boundary(at = 0)` will align a bin
-#' edge on `0`.
+#' @eval rd_param_density_breaks()
+#' @eval rd_param_density_align()
 #' @param outline_bars Should outlines in between the bars (i.e. density values of
 #' 0) be included?
 #' @param na.rm Should missing (`NA`) values in `x` be removed?
@@ -360,7 +332,7 @@ density_histogram = auto_partial(name = "density_histogram", function(
   # work as expected if 1 is a bin edge.
   eps = min(diff(h$breaks)/4, 2*.Machine$double.eps)
 
-  if (outline_bars) {
+  if (isTRUE(outline_bars)) {
     # have to return to 0 in between each bar so that bar outlines are drawn
     input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
     pdf = as.vector(rbind(0, h$density, h$density, h$density, h$density, h$density, h$density, 0))
@@ -481,7 +453,7 @@ bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
 #' @importFrom stats bw.nrd0 kmeans
 .density_adaptive = function(
   x, weights = NULL,
-  n = 512,
+  n = 501,
   bw = bw.nrd0(x),
   adapt = 1,
   kernel = "gaussian",

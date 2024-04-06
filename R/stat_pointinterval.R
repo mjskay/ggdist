@@ -18,8 +18,7 @@ StatPointinterval = ggproto("StatPointinterval", StatSlabinterval,
   ), StatSlabinterval$default_params),
 
   hidden_params = union(c(
-    "slab_type", "density", "adjust", "trim", "expand", "breaks", "align", "outline_bars", "limits", "n", "p_limits",
-    "show_slab", "show_point", "show_interval"
+    "density", "adjust", "trim", "expand", "breaks", "align", "outline_bars", "limits", "n", "p_limits"
   ), StatSlabinterval$hidden_params)
 )
 

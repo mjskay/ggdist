@@ -7,7 +7,7 @@
 density_bounded(
   x,
   weights = NULL,
-  n = 512,
+  n = 501,
   bandwidth = "dpi",
   adjust = 1,
   kernel = "gaussian",
@@ -35,14 +35,13 @@ density_bounded(
 will be used to determine the bandwidth. See \link{bandwidth} for a list.
 }}
 
-\item{adjust}{numeric: the bandwidth for the density estimator is multiplied
-by this value. See \code{\link[stats:density]{stats::density()}}.}
+\item{adjust}{Scalar numeric that the bandwidth of the density estimator is multiplied by. Default \code{1}.}
 
 \item{kernel}{string: the smoothing kernel to be used. This must partially
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
+\item{trim}{Should the density estimate be trimmed to the range of the data? Default \code{TRUE}.}
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
 that bound is estimated from the data using the method specified by \code{bounder}.}

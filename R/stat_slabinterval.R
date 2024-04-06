@@ -142,7 +142,7 @@ compute_slab_slabinterval = function(
       # work as expected if 1 is a bin edge.
       eps = 2*.Machine$double.eps
 
-      if (outline_bars) {
+      if (isTRUE(outline_bars)) {
         # have to return to 0 in between each bar so that bar outlines are drawn
         input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
         pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, pdf, pdf, 0))
@@ -304,24 +304,16 @@ compute_interval_slabinterval = function(
 #' @inheritParams density_histogram
 #' @param geom Use to override the default connection between
 #' [stat_slabinterval()] and [geom_slabinterval()]
-#' @param slab_type (deprecated) The type of slab function to calculate: probability density (or mass) function
-#' (`"pdf"`), cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`). Instead of using
-#' `slab_type` to change `f` and then mapping `f` onto an aesthetic, it is now recommended to simply map the
-#' corresponding computed variable (e.g. `pdf`, `cdf`, or  `1 - cdf`) directly onto the desired aesthetic.
-#' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
-#' limits of *theoretical* distributions (distributions from *samples* ignore this parameter and determine
-#' their limits based on the limits of the sample). E.g., if this is `c(.001, .999)`, then a slab is drawn
+#' @param p_limits Probability limits (numeric vector of size 2). Used to determine the lower and upper
+#' limits of *analytical* distributions (distributions from *samples* ignore this parameter and determine
+#' their limits based on the limits of the sample and the value of the `trim` parameter).
+#' E.g., if this is `c(.001, .999)`, then a slab is drawn
 #' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`. If the lower
 #' (respectively upper) limit is `NA`, then the lower (upper) limit will be the minimum (maximum) of the
 #' distribution's support if it is finite, and `0.001` (`0.999`) if it is not finite. E.g., if
 #' `p_limits` is `c(NA, NA)`, on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
-#' @param outline_bars For sample data (if `density` is `"histogram"`) and for discrete analytical
-#' distributions (whose slabs are drawn as histograms), determines
-#' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
-#' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
-#' bars are also drawn. See [density_histogram()].
 #' @param density Density estimator for sample data. One of:
 #'  - A function which takes a numeric vector and returns a list with elements
 #'    `x` (giving grid points for the density estimator) and `y` (the
@@ -333,21 +325,28 @@ compute_interval_slabinterval = function(
 #'    or `"histogram"` for [density_histogram()].
 #'    Defaults to `"bounded"`, i.e. [density_bounded()], which estimates the bounds from
 #'    the data and then uses a bounded density estimator based on the reflection method.
-#' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data
-#' is adjusted by multiplying it by this value. See e.g. [density_bounded()] for more information.
-#' Default (`waiver()`) defers to the default of the density estimator, which is usually `1`.
-#' @param trim For sample data, should the density estimate be trimmed to the range of the
-#' data? Passed on to the density estimator; see the `density` parameter.
-#' Default (`waiver()`) defers to the default of the density estimator, which is usually `TRUE`.
+#' @eval rd_param_density_adjust(passed_to = "density_bounded")
+#' @eval rd_param_density_trim(passed_to = "density_bounded")
+#' @eval rd_param_density_breaks(passed_to = "density_histogram")
+#' @eval rd_param_density_align(passed_to = "density_histogram")
+#' @param outline_bars Passed to `density` (e.g. [density_histogram()]) and also
+#' used for discrete analytical distributions (whose slabs are drawn as histograms). Determines
+#' if outlines in between the bars are drawn. If [waiver()] or `FALSE`
+#' (the default), the outline is drawn only along the tops of the bars. If `TRUE`, outlines in between
+#' bars are also drawn (though you may have to set the `slab_color` or `color` aesthetic to
+#' see the outlines).
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
-#' Can be length two to control expansion to the lower and upper limit respectively.
+#' Can be a length-two logical vector to control expansion to the lower and upper limit respectively.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param n Number of points at which to evaluate the function that defines the slab.
+#' @param n Number of points at which to evaluate the function that defines the slab. Also
+#' passed to `density` (e.g. [density_bounded()]). Default `waiver()` uses the value `501`
+#' for analytical distributions and defers to the default of the density estimator for
+#' sample-based distributions, which is also usually `501`.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
 #'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc; if a string, the caller's environment is searched
@@ -495,16 +494,18 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     density = "bounded",
     adjust = waiver(),
     trim = waiver(),
-    expand = FALSE,
     breaks = waiver(),
-    align = "none",
-    outline_bars = FALSE,
+    align = waiver(),
+    outline_bars = waiver(),
+    expand = FALSE,
 
     point_interval = "median_qi",
 
     # deprecated parameters
     slab_type = NULL   # deprecated, set by default_slab_type (below)
   ), AbstractStatSlabinterval$default_params),
+
+  hidden_params = union("slab_type", AbstractStatSlabinterval$hidden_params),
 
   layer_function = "layer_slabinterval",
 
@@ -585,10 +586,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
         'i' = 'Instead of using {.arg slab_type}, use {.fun ggplot2::after_stat} to
           map the desired computed variable, e.g. {.code pdf} or {.code cdf}, onto
           an aesthetic, e.g. {.code aes(thickness = after_stat(pdf))}. Specifically:',
-        '*' = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic.',
-        '*' = 'To replace {.code slab_type = "cdf"}, map {.code after_stat(cdf)} onto an aesthetic.',
-        '*' = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic.',
-        '*' = 'To replace {.code slab_type = "histogram"}, map {.code after_stat(pdf)} onto an aesthetic and
+        '>' = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic.',
+        '>' = 'To replace {.code slab_type = "cdf"}, map {.code after_stat(cdf)} onto an aesthetic.',
+        '>' = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic.',
+        '>' = 'To replace {.code slab_type = "histogram"}, map {.code after_stat(pdf)} onto an aesthetic and
           pass {.code density = "histogram"} to the stat.',
         'i' = 'For more information, see the {.emph Computed Variables} section of {.fun ggdist::stat_slabinterval}.'
       ))
@@ -807,7 +808,6 @@ StatSlab = ggproto("StatSlab", StatSlabinterval,
   ), StatSlabinterval$layer_args),
 
   hidden_params = union(c(
-    "show_slab", "show_point", "show_interval",
     "point_interval", ".width"
   ), StatSlabinterval$hidden_params)
 )

@@ -20,7 +20,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
   default_params = defaults(list(
     limits = NULL,
-    n = 501,
+    n = waiver(),
 
     point_interval = NULL,
     .width = c(0.66, 0.95),
@@ -146,7 +146,9 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
     # figure out the points at which values the slab functions should be evaluated
     # we set up the grid in the transformed space
-    input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
+    input = trans$inverse(
+      seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n %|W|% 501)
+    )
 
 
     # POINT/INTERVAL PRE-CALCULATIONS

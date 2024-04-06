@@ -14,13 +14,12 @@ stat_slab(
   density = "bounded",
   adjust = waiver(),
   trim = waiver(),
-  expand = FALSE,
   breaks = waiver(),
-  align = "none",
-  outline_bars = FALSE,
-  slab_type = NULL,
+  align = waiver(),
+  outline_bars = waiver(),
+  expand = FALSE,
   limits = NULL,
-  n = 501,
+  n = waiver(),
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -115,9 +114,10 @@ with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}.
 }}
 }}
 
-\item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of \emph{theoretical} distributions (distributions from \emph{samples} ignore this parameter and determine
-their limits based on the limits of the sample). E.g., if this is \code{c(.001, .999)}, then a slab is drawn
+\item{p_limits}{Probability limits (numeric vector of size 2). Used to determine the lower and upper
+limits of \emph{analytical} distributions (distributions from \emph{samples} ignore this parameter and determine
+their limits based on the limits of the sample and the value of the \code{trim} parameter).
+E.g., if this is \code{c(.001, .999)}, then a slab is drawn
 for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
 (respectively upper) limit is \code{NA}, then the lower (upper) limit will be the minimum (maximum) of the
 distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is not finite. E.g., if
@@ -139,20 +139,12 @@ Defaults to \code{"bounded"}, i.e. \code{\link[=density_bounded]{density_bounded
 the data and then uses a bounded density estimator based on the reflection method.
 }}
 
-\item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See e.g. \code{\link[=density_bounded]{density_bounded()}} for more information.
-Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{1}.}
+\item{adjust}{Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Scalar numeric that the bandwidth of the density estimator is multiplied by. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{1}.}
 
-\item{trim}{For sample data, should the density estimate be trimmed to the range of the
-data? Passed on to the density estimator; see the \code{density} parameter.
-Default (\code{waiver()}) defers to the default of the density estimator, which is usually \code{TRUE}.}
+\item{trim}{Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Should the density estimate be trimmed to the range of the data? Default \code{waiver()} defers to the default of the density estimator, which is usually \code{TRUE}.}
 
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
-Can be length two to control expansion to the lower and upper limit respectively.}
-
-\item{breaks}{Determines the breakpoints defining bins. Defaults to \code{"Scott"}.
-Similar to (but not exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}.
-One of:
+\item{breaks}{Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines the breakpoints defining bins. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{"Scott"}. Similar to (but not exactly the
+same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
 \item A vector numeric giving the breakpoints between histogram bins
@@ -164,37 +156,33 @@ number of bins or a vector of breakpoints
 \code{\link[graphics:hist]{graphics::hist()}}, as well as \code{\link[=breaks_fixed]{breaks_fixed()}} for manually setting
 the bin width. See \link{breaks}.
 }
-
 For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]{breaks_Sturges()}} algorithm,
 \code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
 set the bin width to \code{1}.}
 
-\item{align}{Determines how to align the breakpoints defining bins. Default
-(\code{"none"}) performs no alignment. One of:
+\item{align}{Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines how to align the breakpoints defining bins. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{"none"} (performs no alignment). One of:
 \itemize{
-\item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
-The offset must be between \code{0} and the bin width.
-\item A function taking a sorted vector of \code{breaks} (bin edges) and returning
-an offset to subtract from the breaks.
+\item A scalar (length-1) numeric giving an offset that is subtracted
+from the breaks. The offset must be between \code{0} and the bin width.
+\item A function taking a sorted vector of \code{breaks} (bin edges) and
+returning an offset to subtract from the breaks.
 \item A string giving the suffix of a function that starts with
 \code{"align_"} used to determine the alignment, such as \code{\link[=align_none]{align_none()}},
 \code{\link[=align_boundary]{align_boundary()}}, or \code{\link[=align_center]{align_center()}}.
 }
+For example, \code{align = "none"} will provide no alignment,
+\code{align = align_center(at = 0)} will center a bin on \code{0}, and
+\code{align = align_boundary(at = 0)} will align a bin edge on \code{0}.}
 
-For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}
-will center a bin on \code{0}, and \code{align = align_boundary(at = 0)} will align a bin
-edge on \code{0}.}
+\item{outline_bars}{Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}) and also
+used for discrete analytical distributions (whose slabs are drawn as histograms). Determines
+if outlines in between the bars are drawn. If \code{\link[=waiver]{waiver()}} or \code{FALSE}
+(the default), the outline is drawn only along the tops of the bars. If \code{TRUE}, outlines in between
+bars are also drawn (though you may have to set the \code{slab_color} or \code{color} aesthetic to
+see the outlines).}
 
-\item{outline_bars}{For sample data (if \code{density} is \code{"histogram"}) and for discrete analytical
-distributions (whose slabs are drawn as histograms), determines
-if outlines in between the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE}
-(the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
-bars are also drawn. See \code{\link[=density_histogram]{density_histogram()}}.}
-
-\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function
-(\code{"pdf"}), cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using
-\code{slab_type} to change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the
-corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
+\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
+Can be a length-two logical vector to control expansion to the lower and upper limit respectively.}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
@@ -203,7 +191,10 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 be determined by either \code{p_limits} or the scale settings.}
 
-\item{n}{Number of points at which to evaluate the function that defines the slab.}
+\item{n}{Number of points at which to evaluate the function that defines the slab. Also
+passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}). Default \code{waiver()} uses the value \code{501}
+for analytical distributions and defers to the default of the density estimator for
+sample-based distributions, which is also usually \code{501}.}
 
 \item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
 \itemize{

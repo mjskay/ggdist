@@ -47,7 +47,8 @@ See \code{\link[=bounder_cooke]{bounder_cooke()}}.
 \item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}). See \code{\link[=bounder_range]{bounder_range()}}.
 }}
 
-\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
+\item{trim}{Passed to \code{density}: Should the density estimate be trimmed to the
+range of the data? Default \code{FALSE}.}
 
 \item{...}{Arguments passed to the density estimator specified by \code{density}.}
 }

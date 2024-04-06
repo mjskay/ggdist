@@ -228,6 +228,8 @@ print.ggdist_partial_function = function(x, ...) {
 }
 
 
+# waiver ------------------------------------------------------------------
+
 #' A waived argument
 #'
 #' A flag indicating that the default value of an argument should be used.
@@ -270,3 +272,10 @@ print.ggdist_partial_function = function(x, ...) {
 #' @importFrom ggplot2 waiver
 #' @export
 waiver = ggplot2::waiver
+
+#' waiver-coalescing operator
+#' @noRd
+`%|W|%` = function (x, y) {
+  if (inherits(x, "waiver")) y
+  else x
+}

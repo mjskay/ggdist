@@ -20,6 +20,8 @@
 #'    [density_bounded()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
 #'    e.g. `"bounded"` for `[density_bounded()]`.
+#' @param trim Passed to `density`: Should the density estimate be trimmed to the
+#' range of the data? Default `FALSE`.
 #' @param ... Arguments passed to the density estimator specified by `density`.
 #' @inheritParams density_bounded
 #'

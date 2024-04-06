@@ -99,6 +99,7 @@ Collate:
     "point_interval.R"
     "position_dodgejust.R"
     "pr.R"
+    "rd_density.R"
     "rd_dotsinterval.R"
     "rd_slabinterval.R"
     "rd_spike.R"

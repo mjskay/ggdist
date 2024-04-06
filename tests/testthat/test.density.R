@@ -36,7 +36,7 @@ test_that("density_unbounded works", {
 
   ref = density(x, bw = bw.SJ(x, method = "dpi"))
   ref$cdf = ecdf(x)(ref$x)
-  expect_equal(drop_call(density_unbounded(x, trim = FALSE)), drop_call(ref))
+  expect_equal(drop_call(density_unbounded(x, trim = FALSE, n = 512)), drop_call(ref))
 
   expect_error(density_unbounded(1:2, n = 0), "`n` of at least 1")
   expect_error(density_unbounded(c(1, 2, NA)), "must not contain missing \\(NA\\) values")
@@ -136,7 +136,7 @@ test_that("weighted density estimator works", {
   x = c(x1, x2)
   w = c(w1, w2)
 
-  du = density_unbounded(x, weights = w, bandwidth = 0.5, trim = FALSE)
+  du = density_unbounded(x, weights = w, bandwidth = 0.5, trim = FALSE, n = 512)
   d = density(x, weights = w/sum(w), bw = 0.5)
 
   expect_equal(du$x, d$x)

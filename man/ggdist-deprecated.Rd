@@ -40,7 +40,7 @@ The old \code{stat_dist_...} names are currently kept as aliases, but may be rem
 \section{Deprecated arguments}{
 
 
-Parameters for \code{\link[=stat_slabinterval]{stat_slabinterval()}} and family deprecated as of ggdist 3.1 are:
+Deprecated parameters for \code{\link[=stat_slabinterval]{stat_slabinterval()}} and family:
 \itemize{
 \item The \code{.prob} argument, which is a long-deprecated alias for \code{.width}, was
 removed in ggdist 3.1.
@@ -60,6 +60,11 @@ so it was replaced with \code{AbstractStatSlabInterval$compute_slab()}.
 \item The \code{slab_args} argument: extra stat parameters are now passed through to
 the \code{...} arguments to \code{AbstractStatSlabInterval$compute_slab()}; use
 these instead.
+\item The \code{slab_type} argument: instead of setting the slab type, either adjust
+the \code{density} argument (e.g. use \code{density = "histogram"} to replace
+\code{slab_type = "histogram"}) or use the \code{pdf} or \code{cdf} computed variables
+mapped onto an appropriate aesthetic (e.g. use \code{aes(thickness = after_stat(cdf))}
+to create a CDF).
 \item The \code{interval_function} and \code{fun.data} arguments: these were parameters for determining the
 function to compute intervals in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and its
 derived stats. This function is really an internal function only needed by
@@ -70,7 +75,7 @@ a \code{point_interval} replace the value of the \code{point_interval} argument 
 a simple wrapper; e.g. \verb{stat_halfeye(point_interval = \\(...) point_interval(..., extra_arg = XXX))}
 }
 
-Parameters for \code{\link[=geom_slabinterval]{geom_slabinterval()}} and family deprecated as of ggdist 3.1 are:
+Deprecated parameters for \code{\link[=geom_slabinterval]{geom_slabinterval()}} and family:
 \itemize{
 \item The \code{size_domain} and \code{size_range} arguments, which are long-deprecated aliases
 for \code{interval_size_domain} and \code{interval_size_range}, were removed in ggdist 3.1.
