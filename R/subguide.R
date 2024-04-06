@@ -3,7 +3,7 @@
 #' This is a sub-guide intended for annotating the `thickness` aesthetic
 #' in \pkg{ggdist}. It can be used with the `subguide` parameter of
 #' [geom_slabinterval()].
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #'
 #' @inheritParams scale_thickness
 #' @param values Values used to construct the scale used for this guide.

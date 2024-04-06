@@ -48,7 +48,8 @@ A single number giving the bandwidth
 Bandwidth estimators for densities, used in the \code{bandwidth} argument
 to density functions (e.g. \code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}).
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 These are loose wrappers around the corresponding \code{bw.}-prefixed functions

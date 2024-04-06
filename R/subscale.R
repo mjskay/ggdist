@@ -3,7 +3,7 @@
 #' This is a sub-scale intended for adjusting the scaling of the `thickness`
 #' aesthetic at a geometry (or sub-geometry) level in \pkg{ggdist}. It can be
 #' used with the `subscale` parameter of [geom_slabinterval()].
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #'
 #' @inheritParams scale_thickness
 #' @param x a [numeric] vector to be rescaled.

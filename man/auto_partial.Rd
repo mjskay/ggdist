@@ -61,7 +61,7 @@ Many other common arguments for \pkg{ggdist} functions work similarly; e.g.
 These function families (except \code{\link[=point_interval]{point_interval()}}) also support passing
 \link{waiver}s to their optional arguments: if \code{\link[=waiver]{waiver()}} is passed to any
 of these arguments, their default value (or the most
-recently-partially-applied non-\code{waiver} value) is used instead.
+recently-partially-applied non-\link{waiver} value) is used instead.
 
 Use the \code{\link[=auto_partial]{auto_partial()}} function to create new functions that support
 automatic partial application.

@@ -51,7 +51,7 @@
 #' These function families (except [point_interval()]) also support passing
 #' [waiver]s to their optional arguments: if [waiver()] is passed to any
 #' of these arguments, their default value (or the most
-#' recently-partially-applied non-`waiver` value) is used instead.
+#' recently-partially-applied non-[waiver] value) is used instead.
 #'
 #' Use the [auto_partial()] function to create new functions that support
 #' automatic partial application.
@@ -227,5 +227,46 @@ print.ggdist_partial_function = function(x, ...) {
   invisible(x)
 }
 
+
+#' A waived argument
+#'
+#' A flag indicating that the default value of an argument should be used.
+#'
+#' @details
+#' A [waiver()] is a flag passed to a function argument that indicates the
+#' function should use the default value of that argument. It is used in two
+#' cases:
+#'
+#' - \pkg{ggplot2} functions use it to distinguish between "nothing" (`NULL`)
+#'    and a default value calculated elsewhere ([waiver()]).
+#'
+#' - \pkg{ggdist} turns \pkg{ggplot2}'s convention into a standardized method of
+#'    argument-passing: any named argument with a default value in an
+#'    [automatically partially-applied function][auto_partial] can be passed
+#'    [waiver()] when calling the function. This will cause the default value
+#'    (or the most recently partially-applied value) of that argument to be used
+#'    instead.
+#'
+#'    **Note:** due to historical limitations, [waiver()] cannot currently be
+#'    used on arguments to the [point_interval()] family of functions.
+#'
+#' @seealso [auto_partial()], [ggplot2::waiver()]
+#' @examples
+#' f = auto_partial(function(x, y = "b") {
+#'   c(x = x, y = y)
+#' })
+#'
+#' f("a")
+#'
+#' # uses the default value of `y` ("b")
+#' f("a", y = waiver())
+#'
+#' # partially apply `f`
+#' g = f(y = "c")
+#' g
+#'
+#' # uses the last partially-applied value of `y` ("c")
+#' g("a", y = waiver())
+#' @importFrom ggplot2 waiver
 #' @export
-ggplot2::waiver
+waiver = ggplot2::waiver

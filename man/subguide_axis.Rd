@@ -99,7 +99,8 @@ This is a sub-guide intended for annotating the \code{thickness} aesthetic
 in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 \code{\link[=subguide_inside]{subguide_inside()}} is a shortcut for drawing labels inside of the chart

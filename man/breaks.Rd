@@ -48,7 +48,8 @@ giving the edges between bins.
 Methods for determining breaks (bins) in histograms, as used in the \code{breaks}
 argument to \code{\link[=density_histogram]{density_histogram()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 These functions take a sample and its weights and return a value suitable for

@@ -29,7 +29,8 @@ A scalar numeric returning an offset to be subtracted from \code{breaks}.
 Methods for aligning breaks (bins) in histograms, as used in the \code{align}
 argument to \code{\link[=density_histogram]{density_histogram()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 These functions take a sorted vector of equally-spaced \code{breaks} giving

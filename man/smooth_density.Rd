@@ -62,7 +62,8 @@ Smooths \code{x} values using a density estimator, returning new \code{x} of the
 length. Can be used with a dotplot (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create
 "density dotplots".
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 Applies a kernel density estimator (KDE) to \code{x}, then uses weighted quantiles

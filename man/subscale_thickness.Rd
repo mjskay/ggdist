@@ -43,7 +43,8 @@ This is a sub-scale intended for adjusting the scaling of the \code{thickness}
 aesthetic at a geometry (or sub-geometry) level in \pkg{ggdist}. It can be
 used with the \code{subscale} parameter of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \examples{
 library(ggplot2)

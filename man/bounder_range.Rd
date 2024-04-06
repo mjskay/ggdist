@@ -17,7 +17,8 @@ of the distribution that \code{x} came from.
 Estimate the bounds of the distribution a sample came from using the range of the sample.
 Use with the \code{bounder} argument to \code{\link[=density_bounded]{density_bounded()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 Estimate the bounds of a distribution using \code{range(x)}.

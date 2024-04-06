@@ -83,7 +83,8 @@ and the \code{\link[=smooth_density]{smooth_}} family of functions.
 \description{
 Unbounded density estimator using \code{\link[stats:density]{stats::density()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \examples{
 library(distributional)

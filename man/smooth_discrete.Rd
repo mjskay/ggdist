@@ -46,7 +46,8 @@ dataset; \code{smooth_discrete()} uses a kernel density estimator and \code{smoo
 places values in an evenly-spaced grid. Can be used with a dotplot
 (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create "bar dotplots".
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 \code{smooth_discrete()} applies a kernel density estimator (default: rectangular)

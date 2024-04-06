@@ -235,7 +235,7 @@ geom_blur_dots = make_geom(GeomBlurDots)
 #' @description
 #' Methods for constructing blurs, as used in the `blur` argument to
 #' [geom_blur_dots()] or [stat_mcse_dots()].
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #' @param x numeric vector of positive distances from the center of the dot
 #' (assumed to be 0) to evaluate blur function at.
 #' @param r radius of the dot that is being blurred.

@@ -29,7 +29,8 @@ the dot at each \code{x} value.
 Methods for constructing blurs, as used in the \code{blur} argument to
 \code{\link[=geom_blur_dots]{geom_blur_dots()}} or \code{\link[=stat_mcse_dots]{stat_mcse_dots()}}.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \details{
 These functions are passed \code{x}, \code{r}, and \code{sd} when \code{\link[=geom_blur_dots]{geom_blur_dots()}}

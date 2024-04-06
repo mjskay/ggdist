@@ -90,7 +90,8 @@ and the \code{\link[=smooth_density]{smooth_}} family of functions.
 \description{
 Histogram density estimator.
 
-Supports \link[=automatic-partial-functions]{automatic partial function application}.
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \examples{
 library(distributional)

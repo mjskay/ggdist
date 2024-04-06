@@ -9,7 +9,7 @@
 #' Smooths `x` values using a density estimator, returning new `x` of the same
 #' length. Can be used with a dotplot (e.g. [`geom_dots`]`(smooth = ...)`) to create
 #' "density dotplots".
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #'
 #' @param x a numeric vector
 #' @param density Density estimator to use for smoothing. One of:
@@ -139,7 +139,7 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #' dataset; `smooth_discrete()` uses a kernel density estimator and `smooth_bar()`
 #' places values in an evenly-spaced grid. Can be used with a dotplot
 #' (e.g. [`geom_dots`]`(smooth = ...)`) to create "bar dotplots".
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #'
 #' @param x a numeric vector
 #' @param width approximate width of the bars as a fraction of data [resolution()].
@@ -240,7 +240,7 @@ smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
 #' Apply no smooth to a dotplot
 #'
 #' Default smooth for dotplots: no smooth. Simply returns the input values.
-#' @template description-auto-partial
+#' @template description-auto-partial-waivable
 #'
 #' @param x a numeric vector
 #' @param ... ignored
