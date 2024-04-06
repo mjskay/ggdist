@@ -15,6 +15,7 @@ Bug fixes:
 
 * Ensure `point_interval(<distribution>)` supports tidy evaluation on the
   `.point` and `.interval` arguments (#221).
+* `point_interval(<tibble>)` always returns a `tibble()` (#224).
 
 
 # ggdist 3.3.2

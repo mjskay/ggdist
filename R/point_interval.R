@@ -164,8 +164,16 @@ point_interval = function(
 
 #' @rdname point_interval
 #' @export
-point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+point_interval.default = function(
+  .data,
+  ...,
+  .width = .95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -314,6 +322,12 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
 #' @rdname point_interval
 #' @export
+point_interval.tbl_df = function(.data, ...) {
+  as_tibble(NextMethod(), .name_repair = "minimal")
+}
+
+#' @rdname point_interval
+#' @export
 point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
@@ -343,6 +357,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 }
 
 #' @rdname point_interval
+#' @importFrom rlang eval_tidy expr
 #' @export
 point_interval.rvar = function(
   .data, ...,

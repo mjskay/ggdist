@@ -3,6 +3,7 @@
 \name{point_interval}
 \alias{point_interval}
 \alias{point_interval.default}
+\alias{point_interval.tbl_df}
 \alias{point_interval.numeric}
 \alias{point_interval.rvar}
 \alias{point_interval.distribution}
@@ -55,6 +56,8 @@ point_interval(
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
   .prob
 )
+
+\method{point_interval}{tbl_df}(.data, ...)
 
 \method{point_interval}{numeric}(
   .data,
