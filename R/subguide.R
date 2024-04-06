@@ -89,11 +89,13 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   orientation = "horizontal",
   theme = theme_get()
 ) {
+  if (length(values) == 0) return(gtable::gtable())
+
   define_orientation_variables(orientation)
   grob_width = switch(width., width = grobWidth, height = grobHeight)
   position = get_subguide_position(position, orientation)
 
-  limits = suppressWarnings(range(values))
+  limits = range(values)
   scale = scale_thickness_shared(breaks = breaks, labels = labels, limits = limits)
   scale$train(values)
 
@@ -114,7 +116,7 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   axis_width = grob_width(axis_grob)
 
   title_element = calc_element(paste0("axis.title.", y), theme)
-  title_margin = max(title_element$margin)
+  title_margin = max(title_element$margin %||% unit(0, "points"))
   title_element$margin = margin(0, 0, 0, 0)
   title_grob = element_grob(title_element, label = title)
   title_width = grob_width(title_grob)
