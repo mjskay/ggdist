@@ -170,6 +170,10 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
     arrow = '[grid::arrow()] giving the arrow heads to use on the spike, or `NULL` for no arrows.'
   ), GeomSlab$param_docs),
 
+  default_params = defaults(list(
+    subguide = "spike"
+  ), GeomSlab$default_params),
+
   hidden_params = setdiff(
     union("fill_type", GeomSlab$hidden_params),
     "arrow"

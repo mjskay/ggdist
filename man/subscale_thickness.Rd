@@ -46,6 +46,17 @@ used with the \code{subscale} parameter of \code{\link[=geom_slabinterval]{geom_
 Supports \link[=auto_partial]{automatic partial function application} with
 \link[=waiver]{waived arguments}.
 }
+\details{
+You can overwrite \code{subscale_thickness} in the global environment to set
+the default properties of the thickness subscale. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{subscale_thickness = ggdist::subscale_thickness(expand = expansion(c(0, 0.05)))
+}\if{html}{\out{</div>}}
+
+This will cause \code{\link[=geom_slabinterval]{geom_slabinterval()}}s to default to a thickness subscale
+that expands by 5\% at the top of the scale. \strong{Always} prefix such a
+definition with \verb{ggdist::} to avoid infinite loops caused by recursion.
+}
 \examples{
 library(ggplot2)
 library(distributional)

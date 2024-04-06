@@ -6,6 +6,9 @@
 \alias{subguide_outside}
 \alias{subguide_integer}
 \alias{subguide_count}
+\alias{subguide_slab}
+\alias{subguide_dots}
+\alias{subguide_spike}
 \title{Axis sub-guide for thickness scales}
 \usage{
 subguide_axis(
@@ -27,6 +30,12 @@ subguide_outside(..., label_side = "outside", just = 1)
 subguide_integer(..., breaks = scales::breaks_extended(Q = c(1, 5, 2, 4, 3)))
 
 subguide_count(..., breaks = scales::breaks_width(1))
+
+subguide_slab(values, ...)
+
+subguide_dots(values, ...)
+
+subguide_spike(values, ...)
 }
 \arguments{
 \item{values}{Values used to construct the scale used for this guide.
@@ -95,9 +104,9 @@ settings that normally apply to axis guides will be followed.}
 \code{subguide_axis()} itself.}
 }
 \description{
-This is a sub-guide intended for annotating the \code{thickness} aesthetic
-in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
-\code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+This is a sub-guide intended for annotating the \code{thickness} and dot-count
+subscales in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
+\code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}.
 
 Supports \link[=auto_partial]{automatic partial function application} with
 \link[=waiver]{waived arguments}.
@@ -115,6 +124,18 @@ labeling counts in \code{\link[=geom_dots]{geom_dots()}}.
 \code{\link[=subguide_count]{subguide_count()}} is a shortcut for drawing labels where \emph{every} whole number
 is labeled, useful for labeling counts in \code{\link[=geom_dots]{geom_dots()}}. If your max count is
 large, \code{\link[=subguide_integer]{subguide_integer()}} may be better.
+
+\code{\link[=subguide_slab]{subguide_slab()}}, \code{\link[=subguide_dots]{subguide_dots()}}, and \code{\link[=subguide_spike]{subguide_spike()}} are aliases
+for \code{\link[=subguide_none]{subguide_none()}} that allow you to change the default subguide used
+for the \code{\link[=geom_slabinterval]{geom_slabinterval()}}, \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}, and \code{\link[=geom_spike]{geom_spike()}}
+families. If you overwrite these in the global environment, you can set
+the corresponding default subguide. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{subguide_slab = ggdist::subguide_inside(position = "right")
+}\if{html}{\out{</div>}}
+
+This will cause \code{\link[=geom_slabinterval]{geom_slabinterval()}}s to default to having a guide on the
+right side of the geom.
 }
 \examples{
 library(ggplot2)

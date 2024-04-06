@@ -173,11 +173,11 @@ draw_slabs = function(
     }
   })
 
-  subguide_grobs = if (identical(subguide, "none")) {
+  subguide_fun = match_function(subguide, "subguide_")
+  subguide_grobs = if (identical(subguide_fun(numeric()), zeroGrob())) {
     # quick exit, also avoid errors for multiple non-equal axes when not drawing them
     list()
   } else {
-    subguide_fun = match_function(subguide, "subguide_")
     subguide_params = coord$transform(subguide_params, panel_params)
     dlply_(subguide_params, c(y, "side", "justification", "scale"), function(d) {
       d$group = NULL
@@ -601,7 +601,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
           of values to be scaled and then returns a [thickness] vector representing
           the scaled values, such as [subscale_thickness()] or [subscale_identity()].
         \\item A string giving the name of such a function when prefixed
-          with `"subscale_"`; e.g. `"thickness"` or `"identity"`.
+          with `"subscale_"`; e.g. `"thickness"` or `"identity"`. The value
+          `"thickness"` using the default subscale, which can be modified by
+          setting [`subguide_thickness`]; see the documentation for that
+          function.
       }
       For a comprehensive discussion and examples of slab scaling and normalization, see the
       [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
@@ -684,7 +687,11 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
           [subguide_none()] (to draw no annotation). See [subguide_axis()]
           for a list of possibilities and examples.
         \\item A string giving the name of such a function when prefixed
-          with `"subguide_"`; e.g. `"axis"` or `"none"`.
+          with `"subguide_"`; e.g. `"axis"` or `"none"`. The values `"slab"`,
+          `"dots"`, and `"spike"` use the default subguide for their geom
+          families (no subguide), which can be modified by setting
+          [`subguide_slab`], [`subguide_dots`], or [`subguide_spike`];
+          see the documentation for those functions.
       }
       ')
   ), AbstractGeom$param_docs),
@@ -701,7 +708,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     show_slab = TRUE,
     show_point = TRUE,
     show_interval = TRUE,
-    subguide = "none",
+    subguide = "slab",
     na.rm = FALSE
   ),
 

@@ -10,6 +10,9 @@ New features and enhancements:
 * More arguments to `stat_slabinterval()` now use `waiver()`s so that they
   can be set either in the call to the stat or in the call to the density
   estimator (#220).
+* Default subscales and subguides can be set by assigning `subscale_thickness`,
+  `subguide_slab`, `subguide_dots`, and `subguide_spike` in the global 
+  environment (#225).
 
 Bug fixes:
 

@@ -12,7 +12,7 @@ dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
   overlaps = "nudge", overflow = "warn",
-  subguide = "none",
+  subguide = "dots",
   verbose = FALSE,
   orientation = "vertical",
   make_points_grob = make_points_grob

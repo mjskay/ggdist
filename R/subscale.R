@@ -15,6 +15,18 @@
 #'  - A function that accepts a length-2 [numeric] vector of the automatic
 #'    limits and returns new limits. Unlike positional scales. Unlike
 #'    positional scales, these limits will not remove data.
+#'
+#' @details
+#' You can overwrite `subscale_thickness` in the global environment to set
+#' the default properties of the thickness subscale. For example:
+#'
+#' ```r
+#' subscale_thickness = ggdist::subscale_thickness(expand = expansion(c(0, 0.05)))
+#' ```
+#'
+#' This will cause [geom_slabinterval()]s to default to a thickness subscale
+#' that expands by 5% at the top of the scale. **Always** prefix such a
+#' definition with `ggdist::` to avoid infinite loops caused by recursion.
 #' @returns A [thickness] vector of the same length as `x` scaled to be between
 #' `0` and `1`.
 #' @family sub-scales

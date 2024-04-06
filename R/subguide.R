@@ -1,8 +1,8 @@
 #' Axis sub-guide for thickness scales
 #'
-#' This is a sub-guide intended for annotating the `thickness` aesthetic
-#' in \pkg{ggdist}. It can be used with the `subguide` parameter of
-#' [geom_slabinterval()].
+#' This is a sub-guide intended for annotating the `thickness` and dot-count
+#' subscales in \pkg{ggdist}. It can be used with the `subguide` parameter of
+#' [geom_slabinterval()] and [geom_dotsinterval()].
 #' @template description-auto-partial-waivable
 #'
 #' @inheritParams scale_thickness
@@ -93,7 +93,7 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   grob_width = switch(width., width = grobWidth, height = grobHeight)
   position = get_subguide_position(position, orientation)
 
-  limits = range(values)
+  limits = suppressWarnings(range(values))
   scale = scale_thickness_shared(breaks = breaks, labels = labels, limits = limits)
   scale$train(values)
 
@@ -192,16 +192,42 @@ subguide_count = function(..., breaks = scales::breaks_width(1)) {
 
 #' Empty sub-guide for thickness scales
 #'
-#' This is a blank sub-guide that omits annotations for the `thickness` aesthetic
-#' in \pkg{ggdist}. It can be used with the `subguide` parameter of
-#' [geom_slabinterval()].
+#' This is a blank sub-guide that omits annotations for the `thickness` and
+#' dot-count sub-scales in \pkg{ggdist}. It can be used with the `subguide`
+#' parameter of [geom_slabinterval()] and [geom_dotsinterval()].
+#' @template description-auto-partial-waivable
 #'
 #' @param ... ignored.
 #' @family sub-guides
 #' @export
-subguide_none = function(...) {
+subguide_none = auto_partial(name = "subguide_none", function(values, ...) {
   zeroGrob()
-}
+})
+
+#' @details
+#' [subguide_slab()], [subguide_dots()], and [subguide_spike()] are aliases
+#' for [subguide_none()] that allow you to change the default subguide used
+#' for the [geom_slabinterval()], [geom_dotsinterval()], and [geom_spike()]
+#' families. If you overwrite these in the global environment, you can set
+#' the corresponding default subguide. For example:
+#'
+#' ```r
+#' subguide_slab = ggdist::subguide_inside(position = "right")
+#' ```
+#'
+#' This will cause [geom_slabinterval()]s to default to having a guide on the
+#' right side of the geom.
+#' @rdname subguide_axis
+#' @export
+subguide_slab = subguide_none
+
+#' @rdname subguide_axis
+#' @export
+
+subguide_dots = subguide_none
+#' @rdname subguide_axis
+#' @export
+subguide_spike = subguide_none
 
 
 # helpers -----------------------------------------------------------------

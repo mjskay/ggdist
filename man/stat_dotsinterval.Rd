@@ -185,7 +185,11 @@ annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a tra
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
 \item A string giving the name of such a function when prefixed
-with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}.
+with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}. The values \code{"slab"},
+\code{"dots"}, and \code{"spike"} use the default subguide for their geom
+families (no subguide), which can be modified by setting
+\code{\link{subguide_slab}}, \code{\link{subguide_dots}}, or \code{\link{subguide_spike}};
+see the documentation for those functions.
 }}
 }}
 

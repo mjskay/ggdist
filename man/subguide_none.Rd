@@ -4,15 +4,18 @@
 \alias{subguide_none}
 \title{Empty sub-guide for thickness scales}
 \usage{
-subguide_none(...)
+subguide_none(values, ...)
 }
 \arguments{
 \item{...}{ignored.}
 }
 \description{
-This is a blank sub-guide that omits annotations for the \code{thickness} aesthetic
-in \pkg{ggdist}. It can be used with the \code{subguide} parameter of
-\code{\link[=geom_slabinterval]{geom_slabinterval()}}.
+This is a blank sub-guide that omits annotations for the \code{thickness} and
+dot-count sub-scales in \pkg{ggdist}. It can be used with the \code{subguide}
+parameter of \code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}.
+
+Supports \link[=auto_partial]{automatic partial function application} with
+\link[=waiver]{waived arguments}.
 }
 \seealso{
 Other sub-guides: 

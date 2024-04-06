@@ -10,11 +10,11 @@ geom_spike(
   stat = "identity",
   position = "identity",
   ...,
+  subguide = "spike",
   orientation = NA,
   subscale = "thickness",
   normalize = "all",
   arrow = NULL,
-  subguide = "none",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -54,6 +54,22 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
+\item{subguide}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\itemize{
+\item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
+object and an \code{orientation} argument giving the orientation of the
+geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
+\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
+for a list of possibilities and examples.
+\item A string giving the name of such a function when prefixed
+with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}. The values \code{"slab"},
+\code{"dots"}, and \code{"spike"} use the default subguide for their geom
+families (no subguide), which can be modified by setting
+\code{\link{subguide_slab}}, \code{\link{subguide_dots}}, or \code{\link{subguide_spike}};
+see the documentation for those functions.
+}}
+
 \item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
@@ -76,7 +92,10 @@ the groups determined by \code{normalize}. One of:
 of values to be scaled and then returns a \link{thickness} vector representing
 the scaled values, such as \code{\link[=subscale_thickness]{subscale_thickness()}} or \code{\link[=subscale_identity]{subscale_identity()}}.
 \item A string giving the name of such a function when prefixed
-with \code{"subscale_"}; e.g. \code{"thickness"} or \code{"identity"}.
+with \code{"subscale_"}; e.g. \code{"thickness"} or \code{"identity"}. The value
+\code{"thickness"} using the default subscale, which can be modified by
+setting \code{\link{subguide_thickness}}; see the documentation for that
+function.
 }
 For a comprehensive discussion and examples of slab scaling and normalization, see the
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
@@ -96,18 +115,6 @@ For a comprehensive discussion and examples of slab scaling and normalization, s
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
 
 \item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
-
-\item{subguide}{Sub-guide used to annotate the \code{thickness} scale. One of:
-\itemize{
-\item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
-object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
-annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
-\code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
-for a list of possibilities and examples.
-\item A string giving the name of such a function when prefixed
-with \code{"subguide_"}; e.g. \code{"axis"} or \code{"none"}.
-}}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
