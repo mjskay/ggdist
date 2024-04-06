@@ -7,6 +7,9 @@ New features and enhancements:
   `thickness` per-geometry sub-scales (in much the same way those 
   parameters can be set on `scale_thickness_shared()`) (#219).
 * Allow use of square `shape`s in `geom_blur_dots()`.
+* More arguments to `stat_slabinterval()` now use `waiver()`s so that they
+  can be set either in the call to the stat or in the call to the density
+  estimator (#220).
 
 
 # ggdist 3.3.2
