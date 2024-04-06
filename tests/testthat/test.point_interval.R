@@ -734,6 +734,13 @@ test_that("flattened indices retain index order", {
 
 })
 
+test_that("automatic partial evaluation works with distributional objects", {
+  expect_equal(
+    point_interval(.point = mean)(dist_normal()),
+    point_interval(dist_normal(), .point = mean)
+  )
+})
+
 
 # 100% intervals ----------------------------------------------------------
 

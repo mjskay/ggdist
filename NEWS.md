@@ -11,6 +11,11 @@ New features and enhancements:
   can be set either in the call to the stat or in the call to the density
   estimator (#220).
 
+Bug fixes:
+
+* Ensure `point_interval(<distribution>)` supports tidy evaluation on the
+  `.point` and `.interval` arguments (#221).
+
 
 # ggdist 3.3.2
 

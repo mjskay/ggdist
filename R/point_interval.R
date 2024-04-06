@@ -349,10 +349,12 @@ point_interval.rvar = function(
   .width = .95, .point = median, .interval = qi, .simple_names = TRUE, na.rm = FALSE
 ) {
   x = .data
-  # using substitute here so that names of .point / .interval are passed down correctly
-  eval(substitute(point_interval(
+  # using eval_tidy here so that names of .point / .interval are passed down correctly
+  eval_tidy(expr(point_interval(
     tibble(.value = x), ...,
-    .width = .width, .point = .point, .interval = .interval, .simple_names = .simple_names, na.rm = na.rm
+    .width = .width,
+    .point = {{ .point }}, .interval = {{ .interval }},
+    .simple_names = .simple_names, na.rm = na.rm
   )))
 }
 
