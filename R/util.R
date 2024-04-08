@@ -116,11 +116,11 @@ check_na = function(x, na.rm) {
 }
 
 .Deprecated_argument_alias = function(new_arg, old_arg, which = -1, fun = as.character(sys.call(which))[[1]]) {
-  if (missing(old_arg)) {
+  old_name = quo_name(enquo(old_arg))
+  if (rlang::is_missing(old_arg)) {
     new_arg
   } else {
     new_name = quo_name(enquo(new_arg))
-    old_name = quo_name(enquo(old_arg))
 
     warning0(
       "\nIn ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",

@@ -149,13 +149,20 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom rlang quos quos_auto_name eval_tidy syms
+#' @importFrom rlang quos quos_auto_name eval_tidy syms missing_arg
 #' @importFrom stats median
 #' @importFrom tibble as_tibble
 #' @export
 point_interval = function(
-  .data, ..., .width = 0.95, .point = median, .interval = qi, .simple_names = TRUE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob = missing_arg()
 ) {
   if (missing(.data)) return(partial_self("point_interval", waivable = FALSE))
 
@@ -173,13 +180,15 @@ point_interval.default = function(
   .simple_names = TRUE,
   na.rm = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob
+  .prob = missing_arg()
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
   point_name = tolower(quo_name(enquo(.point)))
   interval_name = tolower(quo_name(enquo(.interval)))
+  .point = match_function(.point)
+  .interval = match_function(.interval)
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
@@ -328,13 +337,23 @@ point_interval.tbl_df = function(.data, ...) {
 
 #' @rdname point_interval
 #' @export
-point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+point_interval.numeric = function(
+  .data,
+  ...,
+  .width = .95,
+  .point = median,
+  .interval = qi,
+  .simple_names = FALSE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob = missing_arg()
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   point_name = tolower(quo_name(enquo(.point)))
   interval_name = tolower(quo_name(enquo(.interval)))
+  .point = match_function(.point)
+  .interval = match_function(.interval)
 
   result = map_dfr_(.width, function(p) {
     interval = .interval(data, .width = p, na.rm = na.rm)
@@ -381,7 +400,12 @@ point_interval.distribution = point_interval.rvar
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
-qi = function(x, .width = .95, .prob, na.rm = FALSE) {
+qi = function(
+  x,
+  .width = .95,
+  na.rm = FALSE,
+  .prob = missing_arg()
+) {
   .width = .Deprecated_argument_alias(.width, .prob)
 
   lower_prob = (1 - .width) / 2
@@ -423,7 +447,15 @@ ul = function(x, .width = .95, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 4096, .prob) {
+hdi = function(
+  x,
+  .width = .95,
+  na.rm = FALSE,
+  ...,
+  density = density_bounded(trim = TRUE),
+  n = 4096,
+  .prob = missing_arg()
+) {
   .width = .Deprecated_argument_alias(.width, .prob)
   hdi_(x, .width = .width, na.rm = na.rm, ..., density = density, n = n)
 }

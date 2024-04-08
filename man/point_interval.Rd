@@ -42,7 +42,7 @@ point_interval(
   .simple_names = TRUE,
   na.rm = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob
+  .prob = missing_arg()
 )
 
 \method{point_interval}{default}(

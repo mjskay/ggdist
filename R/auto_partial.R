@@ -392,24 +392,27 @@ new_auto_partial = function(
   name = NULL,
   waivable = FALSE
 ) {
-  force(f)
-  force(args)
-  force(required_arg_names)
-  force(name)
-  force(waivable)
+  # we use these weird names to avoid clashing with argument names in f,
+  # because partial_f will have a signature containing the same formals as f,
+  # so if those formals include the names f, args, etc, things will break
+  `>f` = f
+  `>args` = args
+  `>required_arg_names` = required_arg_names
+  `>name` = name
+  `>waivable` = waivable
 
   partial_f = function() {
     named_arg_promises = named_arg_promise_list()
     dot_arg_promises = dot_arg_promise_list()
     arg_promises = c(named_arg_promises, dot_arg_promises)
     new_args = match_function_args(sys.function(), arg_promises)
-    if (waivable) new_args = remove_waivers(new_args, required_arg_names)
-    args = update_args(args, new_args)
+    if (`>waivable`) new_args = remove_waivers(new_args, `>required_arg_names`)
+    `>args` = update_args(`>args`, new_args)
 
-    if (all(required_arg_names %in% names(args))) {
-      do.call(f, args)
+    if (all(`>required_arg_names` %in% names(`>args`))) {
+      do.call(`>f`, `>args`)
     } else {
-      new_auto_partial(f, args, required_arg_names, name, waivable)
+      new_auto_partial(`>f`, `>args`, `>required_arg_names`, `>name`, `>waivable`)
     }
   }
   partial_formals = formals(f)
