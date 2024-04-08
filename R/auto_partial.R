@@ -390,7 +390,7 @@ new_auto_partial = function(
   args = promise_list(),
   required_arg_names = find_required_arg_names(f),
   name = NULL,
-  waivable = FALSE
+  waivable = TRUE
 ) {
   # we use these weird names to avoid clashing with argument names in f,
   # because partial_f will have a signature containing the same formals as f,
@@ -406,18 +406,20 @@ new_auto_partial = function(
     dot_arg_promises = dot_arg_promise_list()
     arg_promises = c(named_arg_promises, dot_arg_promises)
     new_args = match_function_args(sys.function(), arg_promises)
-    if (`>waivable`) new_args = remove_waivers(new_args, `>required_arg_names`)
-    `>args` = update_args(`>args`, new_args)
+    if (`>waivable`) new_args = remove_waivers(new_args)
+    args = update_args(`>args`, new_args)
 
-    if (all(`>required_arg_names` %in% names(`>args`))) {
-      do.call(`>f`, `>args`)
+    if (all(`>required_arg_names` %in% names(args))) {
+      do.call(`>f`, args, envir = parent.frame())
     } else {
-      new_auto_partial(`>f`, `>args`, `>required_arg_names`, `>name`, `>waivable`)
+      new_auto_partial(`>f`, args, `>required_arg_names`, `>name`, `>waivable`)
     }
   }
   partial_formals = formals(f)
   updated_formal_names = intersect(names(partial_formals), names(args))
   partial_formals[updated_formal_names] = lapply(args[updated_formal_names], promise_expr)
+  is_updated_required = names(partial_formals) %in% intersect(updated_formal_names, required_arg_names)
+  partial_formals = c(partial_formals[!is_updated_required], partial_formals[is_updated_required])
   formals(partial_f) = partial_formals
 
   attr(partial_f, "f") = f
@@ -540,16 +542,12 @@ dot_arg_promise_list = function() {
 
 #' Remove waivers from an argument list
 #' @param args a named list of promises
-#' @param required_arg_names names of required arguments, which will not be
-#' checked for waivers
 #' @returns A modified version of `args` with any waived arguments (i.e.
 #' promises for which [is_promise_waived()] returns `TRUE`) removed
 #' @noRd
-remove_waivers = function(args, required_arg_names) {
-  keep = rep(TRUE, length(args))
-  waivable = !(names(args) %in% required_arg_names)
-  keep[waivable] = !vapply(args[waivable], is_promise_waived, logical(1))
-  args[keep]
+remove_waivers = function(args) {
+  waived = vapply(args, is_promise_waived, logical(1))
+  args[!waived]
 }
 
 #' Is a promise a waiver?
