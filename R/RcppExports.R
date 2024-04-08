@@ -5,3 +5,23 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
+find_var_ <- function(name, env) {
+    .Call(`_ggdist_find_var_`, name, env)
+}
+
+find_promise_ <- function(name, env) {
+    .Call(`_ggdist_find_promise_`, name, env)
+}
+
+promise_expr_ <- function(promise) {
+    .Call(`_ggdist_promise_expr_`, promise)
+}
+
+promise_env_ <- function(promise) {
+    .Call(`_ggdist_promise_env_`, promise)
+}
+
+dots_to_list_ <- function(dots) {
+    .Call(`_ggdist_dots_to_list_`, dots)
+}
+

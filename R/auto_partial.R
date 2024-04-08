@@ -275,7 +275,293 @@ waiver = ggplot2::waiver
 
 #' waiver-coalescing operator
 #' @noRd
-`%|W|%` = function (x, y) {
+`%|W|%` = function(x, y) {
   if (inherits(x, "waiver")) y
   else x
+}
+
+
+# promise lists -----------------------------------------------------------------
+
+new_promise_list = function(x = list()) {
+  class(x) = "autopartial_promise_list"
+  x
+}
+
+#' construct a list of promises
+#' @param ... unevaluated expressions, possibly with names
+#' @returns a list of promises
+#' @noRd
+promise_list = function(...) {
+  dots = environment()$...
+  if (missing(dots)) {
+    new_promise_list()
+  } else {
+    new_promise_list(dots_to_list_(dots))
+  }
+}
+
+#' @export
+`[.autopartial_promise_list` = function(x, ...) {
+  new_promise_list(NextMethod())
+}
+
+#' @export
+print.autopartial_promise_list = function(x, ...) {
+  cat0("<promise_list>:\n")
+  print(lapply(x, format_promise), ...)
+  invisible(x)
+}
+
+#' @export
+format.autopartial_promise_list = function(x, ...) {
+  vapply(x, format_promise, character(1))
+}
+
+#' @export
+print.autopartial_formatted_promise = function(x, ...) {
+  cat0(x, "\n")
+  invisible(x)
+}
+
+format_promise = function(x) {
+  expr = promise_expr(x)
+  env = promise_env(x)
+  structure(
+    paste0("<promise: ", deparse0(expr), ", ", format(env), ">"),
+    class = c("autopartial_formatted_promise", "character")
+  )
+}
+
+
+# promises ----------------------------------------------------------------
+
+#' Find a promise by name
+#' @param name the name of a promise as a string or symbol
+#' @param env the environment to search
+#' @returns The promise with the given name from the given environment
+#' @noRd
+find_promise = find_var_
+
+promise_expr = function(x) {
+  do.call(substitute, list(x))
+}
+
+promise_env = function(x) {
+  if (typeof(x) == "promise"){
+    promise_env_(x)
+  } else {
+    NULL
+  }
+}
+
+promise_peak_value = function(x) {
+  eval(promise_expr(x), promise_env(x))
+}
+
+
+# auto_partial ------------------------------------------------------------
+
+auto_partial_ = function(.f, ..., .name = NULL, .waivable = FALSE) {
+  if (is.null(.name)) {
+    f_expr = substitute(.f)
+    if (is.symbol(f_expr)) {
+      .name = as.character(f_expr)
+    }
+  }
+  args = match_function_args(.f, promise_list(...))
+  new_auto_partial(.f, args = args, name = .name, waivable = .waivable)
+}
+
+#' Construct an automatically partially-applied function
+#'
+#' @param f function to automatically partially-apply
+#' @param args a named list of promises representing arguments, such as
+#' returned by `promise_list()`
+#' @param required_arg_names the names of required arguments in `f`
+#' @param name the name of the function.
+#' @param waivable whether or not arguments to the function are checked for
+#' [waiver()]s.
+#' @returns a function that when called will be partially applied if any of the
+#' arguments in `required_arg_names` have not yet been supplied yet.
+#' @noRd
+new_auto_partial = function(
+  f,
+  args = promise_list(),
+  required_arg_names = find_required_arg_names(f),
+  name = NULL,
+  waivable = FALSE
+) {
+  force(f)
+  force(args)
+  force(required_arg_names)
+  force(name)
+  force(waivable)
+
+  partial_f = function() {
+    named_arg_promises = named_arg_promise_list()
+    dot_arg_promises = dot_arg_promise_list()
+    arg_promises = c(named_arg_promises, dot_arg_promises)
+    new_args = match_function_args(sys.function(), arg_promises)
+    if (waivable) new_args = remove_waivers(new_args, required_arg_names)
+    args = update_args(args, new_args)
+
+    if (all(required_arg_names %in% names(args))) {
+      do.call(f, args)
+    } else {
+      new_auto_partial(f, args, required_arg_names, name, waivable)
+    }
+  }
+  partial_formals = formals(f)
+  updated_formal_names = intersect(names(partial_formals), names(args))
+  partial_formals[updated_formal_names] = lapply(args[updated_formal_names], promise_expr)
+  formals(partial_f) = partial_formals
+
+  attr(partial_f, "f") = f
+  attr(partial_f, "args") = args
+  attr(partial_f, "name") = name
+  attr(partial_f, "waivable") = waivable
+  class(partial_f) = "autopartial_function"
+  partial_f
+}
+
+#' @export
+print.autopartial_function = function(x, ..., width = getOption("width")) {
+  cat0("<auto_partial", if (attr(x, "waivable")) " with waivers", ">:\n")
+
+  name = attr(x, "name") %||% "."
+  cat0(name, " = ")
+
+  f = attr(x, "f")
+  f_string = capture.output(print(f, width = width - 4, ...))
+  cat(f_string, sep = "\n    ")
+
+  cat0(format(as.call(c(
+    list(as.name(name)),
+    lapply(attr(x, "args"), promise_expr)
+  ))))
+
+  invisible(x)
+}
+
+#' Given a function and a list of arguments, return a modified version of the
+#' argument list where named arguments have been matched according to R's
+#' argument-matching rules.
+#' @param f a function
+#' @param args a list of arguments, such as returned by [promise_list()]
+#' @returns a standardized list of arguments (i.e. where all arguments with
+#' names are named and in order) that can be supplied to `f`, or an error
+#' if `args` is not a valid argument list for `f`.
+#' @noRd
+match_function_args = function(f, args) {
+  # use match.call to figure out the names of arguments and the
+  # argument order
+  args_i = seq_along(args)
+  names(args_i) = names(args)
+  call =  as.call(c(list(quote(f)), args_i))
+  args_i_call = match.call(f, call)[-1]
+  args_i = as.integer(as.list(args_i_call))
+
+  # fill in names and re-order the args
+  names(args)[args_i] = names(args_i_call)
+  args[args_i]
+}
+
+#' Update a list of arguments, overwriting named arguments in `old_args`
+#' with values that appear in `new_args`. Positional arguments from both
+#' argument lists are kept in the same order as they appear.
+#' @param old_args a list of arguments
+#' @param new_args a list of arguments
+#' @returns a list of arguments
+#' @noRd
+update_args = function(old_args, new_args) {
+  if (is.null(names(old_args))) names(old_args) = rep("", length(old_args))
+  if (is.null(names(new_args))) names(new_args) = rep("", length(new_args))
+
+  old_names = names(old_args)
+  old_names = old_names[nzchar(old_names)]
+  new_names = names(new_args)
+  updated_names = intersect(old_names, new_names)
+  old_args[updated_names] = new_args[updated_names]
+
+  c(old_args, new_args[!names(new_args) %in% updated_names])
+}
+
+#' Return the names of required arguments for function `f`
+#' @param f A function
+#' @returns character vector of argument names
+#' @noRd
+find_required_arg_names = function(f) {
+  args = formals(f)
+  is_missing = vapply(args, is_missing_arg, logical(1))
+  setdiff(names(args)[is_missing], "...")
+}
+
+#' Is `x` a missing argument?
+#' @param an argument
+#' @returns `TRUE` if `x` represents a missing argument
+#' @noRd
+is_missing_arg = function(x) {
+  missing(x) || identical(x, quote(expr = ))
+}
+
+#' Retrieve a list of promises from named arguments in
+#' the surrounding function
+#' @returns A named list of promises for arguments to the
+#' calling function
+#' @noRd
+named_arg_promise_list = function() {
+  f = sys.function(sys.parent())
+  call = match.call(f, sys.call(sys.parent()), envir = parent.frame(2L))
+  arg_names = intersect(names(call[-1]), names(formals(f)))
+  env = parent.frame()
+  promises = lapply(arg_names, find_promise, env)
+  names(promises) = arg_names
+  new_promise_list(promises)
+}
+
+#' Retrieve a list of promises from `...` arguments in
+#' the surrounding function
+#' @returns A list of (possibly named) promises for arguments to the
+#' calling function
+#' @noRd
+dot_arg_promise_list = function() {
+  env = parent.frame()
+  if (exists("...", env)) {
+    evalq(promise_list(...), env)
+  } else {
+    new_promise_list()
+  }
+}
+
+#' Remove waivers from an argument list
+#' @param args a named list of promises
+#' @param required_arg_names names of required arguments, which will not be
+#' checked for waivers
+#' @returns A modified version of `args` with any waived arguments (i.e.
+#' promises for which [is_promise_waived()] returns `TRUE`) removed
+#' @noRd
+remove_waivers = function(args, required_arg_names) {
+  keep = rep(TRUE, length(args))
+  waivable = !(names(args) %in% required_arg_names)
+  keep[waivable] = !vapply(args[waivable], is_promise_waived, logical(1))
+  args[keep]
+}
+
+#' Is a promise a waiver?
+#'
+#' Returns `TRUE` if a promise is a simple expression referring to a
+#' `waiver()`. Does not evaluate functions or other compound expressions,
+#' but will evaluate symbols to check if they point to a `waiver()` object
+#' @returns `TRUE` if `x` is a promise for the expression `waiver()` or
+#' for a symbol pointing to a `waiver()`.
+#' @noRd
+is_promise_waived = function(x) {
+  expr = promise_expr(x)
+  identical(expr, quote(waiver())) ||
+    (is.symbol(expr) && inherits(get0(expr, promise_env(x)), "waiver"))
+}
+
+cat0 = function(...) {
+  cat(..., sep = "")
 }
