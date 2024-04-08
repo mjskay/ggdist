@@ -394,7 +394,7 @@ new_auto_partial = function(
 ) {
   # we use these weird names to avoid clashing with argument names in f,
   # because partial_f will have a signature containing the same formals as f,
-  # so if those formals include the names f, args, etc, things will break
+  # so if those formals include the names f, args, etc, things would break
   `>f` = f
   `>args` = args
   `>required_arg_names` = required_arg_names
@@ -451,7 +451,8 @@ print.autopartial_function = function(x, ..., width = getOption("width")) {
 #' argument list where named arguments have been matched according to R's
 #' argument-matching rules.
 #' @param f a function
-#' @param args a list of arguments, such as returned by [promise_list()]
+#' @param args a list of arguments, such as returned by [promise_list()].
+#' Should not contain a `...` argument.
 #' @returns a standardized list of arguments (i.e. where all arguments with
 #' names are named and in order) that can be supplied to `f`, or an error
 #' if `args` is not a valid argument list for `f`.
