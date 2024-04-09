@@ -362,28 +362,50 @@ promise_peak_value = function(x) {
 
 # auto_partial ------------------------------------------------------------
 
-auto_partial_ = function(.f, ..., .name = NULL, .waivable = FALSE) {
-  if (is.null(.name)) {
-    f_expr = substitute(.f)
-    if (is.symbol(f_expr)) {
-      .name = as.character(f_expr)
-    }
-  }
+#' Automatic partial function application
+#'
+#' Construct a version of `.f` that is automatically partially applied.
+#' @param .f a function
+#' @param ... arguments to be partially applied to `.f`
+#' @noRd
+auto_partial_ = function(.f, ...) {
+  f_expr = substitute(.f)
+  name = if (is.symbol(f_expr)) as.character(f_expr)
   args = match_function_args(.f, promise_list(...))
-  new_auto_partial(.f, args = args, name = .name, waivable = .waivable)
+  new_auto_partial(.f, args = args, name = name)
 }
 
-#' Construct an automatically partially-applied function
+#' Partial function application
 #'
+#' Partially apply a function once.
+#' @param .f a function
+#' @param ... arguments to be partially applied to `.f`
+#' @noRd
+partial_ = function(.f, ...) {
+  f_expr = substitute(.f)
+  name = if (is.symbol(f_expr)) as.character(f_expr)
+  args = match_function_args(.f, promise_list(...))
+  new_auto_partial(.f, args = args, name = name, required_arg_names = character())
+}
+
+#' Low-level constructor for automatically partially-applied functions
+#'
+#' Construct a version of the function `f` that is partially applied when called
+#' unless all required arguments have been supplied.
 #' @param f function to automatically partially-apply
 #' @param args a named list of promises representing arguments, such as
-#' returned by `promise_list()`
-#' @param required_arg_names the names of required arguments in `f`
-#' @param name the name of the function.
-#' @param waivable whether or not arguments to the function are checked for
-#' [waiver()]s.
-#' @returns a function that when called will be partially applied if any of the
-#' arguments in `required_arg_names` have not yet been supplied yet.
+#' returned by `promise_list()`.
+#' @param required_arg_names character vector of the names of required arguments
+#' in `f`. When all of these have been supplied, the function will be evaluated.
+#' The default, `find_required_arg_names(f)`, considers all arguments without a
+#' default value in the function definition to be required. Pass `NULL` or
+#' `character()` to get tradition (non-automatic) partial application.
+#' @param name the name of the function as a string. Used for printing purposes
+#' only.
+#' @param waivable if `TRUE`, if you pass `waiver()` to an argument to this
+#' function, whatever value that argument already has will be used instead.
+#' @returns a function that when called will be partially applied until all of
+#' the arguments in `required_arg_names` have been supplied.
 #' @noRd
 new_auto_partial = function(
   f,
@@ -416,8 +438,12 @@ new_auto_partial = function(
     }
   }
   partial_formals = formals(f)
+  # update expressions in formals to match provided args
   updated_formal_names = intersect(names(partial_formals), names(args))
   partial_formals[updated_formal_names] = lapply(args[updated_formal_names], promise_expr)
+  # move any required args that have been applied to the end. this allows
+  # f(1)(2)(3)... to be equivalent to f(1, 2, 3, ...) if positions 1, 2, 3, ...
+  # correspond to required arguments.
   is_updated_required = names(partial_formals) %in% intersect(updated_formal_names, required_arg_names)
   partial_formals = c(partial_formals[!is_updated_required], partial_formals[is_updated_required])
   formals(partial_f) = partial_formals
@@ -426,7 +452,7 @@ new_auto_partial = function(
   attr(partial_f, "args") = args
   attr(partial_f, "name") = name
   attr(partial_f, "waivable") = waivable
-  class(partial_f) = "autopartial_function"
+  class(partial_f) = c("autopartial_function", "function")
   partial_f
 }
 
@@ -438,8 +464,8 @@ print.autopartial_function = function(x, ..., width = getOption("width")) {
   cat0(name, " = ")
 
   f = attr(x, "f")
-  f_string = capture.output(print(f, width = width - 4, ...))
-  cat(f_string, sep = "\n    ")
+  f_string = capture.output(print(f, width = width - 2, ...))
+  cat(f_string, sep = "\n  ")
 
   cat0(format(as.call(c(
     list(as.name(name)),
