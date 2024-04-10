@@ -68,12 +68,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // is_waived_
-bool is_waived_(SEXP x);
+bool is_waived_(RObject x);
 RcppExport SEXP _ggdist_is_waived_(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< RObject >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(is_waived_(x));
     return rcpp_result_gen;
 END_RCPP

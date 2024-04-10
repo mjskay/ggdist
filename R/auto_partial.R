@@ -175,14 +175,14 @@ waiver = ggplot2::waiver
   else x
 }
 
-is_waiver =
-  function(x) {
-  if (inherits(x, "waiver")) return(TRUE)
-
-  expr = promise_expr(x)
-
-  identical(expr, quote(waiver())) ||
-    (is.symbol(expr) && is_waiver(eval(expr, promise_env(x))))
+is_waiver = function(x) {
+  if (typeof(x) == "promise") {
+    expr = promise_expr(x)
+    identical(expr, quote(waiver())) ||
+      (is.symbol(expr) && is_waiver(get0(expr, promise_env(x))))
+  } else {
+    inherits(x, "waiver")
+  }
 }
 
 

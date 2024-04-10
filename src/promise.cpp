@@ -55,7 +55,7 @@ bool is_waiver_call(SEXP x) {
 }
 
 // [[Rcpp::export]]
-bool is_waived_(SEXP x) {
+bool is_waived_(RObject x) {
   if (TYPEOF(x) != PROMSXP) {
     return Rf_inherits(x, "waiver");
   }
@@ -63,12 +63,12 @@ bool is_waived_(SEXP x) {
   //TODO: fix this so we can use it instead of the R implementation
   // the problem is bytecode (I think...); need to fix promise_expr
   x = unwrap_promise_(x);
-  Shield<SEXP> expr = PRCODE(x);
+  RObject expr = PRCODE(x);
 
   if (is_waiver_call(expr)) return true;
 
   if (TYPEOF(expr) == SYMSXP) {
-    Shield<SEXP> var = Rf_eval(expr, PRENV(x));
+    RObject var = Rf_eval(expr, PRENV(x));
     return is_waived_(var);
   }
 
