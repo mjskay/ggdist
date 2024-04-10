@@ -77,6 +77,7 @@
 #'   scale_x_continuous(expand = expansion(add = 0.5))
 #'
 #' @importFrom scales oob_discard
+#' @importFrom gtable gtable
 #' @export
 subguide_axis = function(
   values,

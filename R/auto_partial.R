@@ -179,7 +179,7 @@ is_waiver = function(x) {
   if (typeof(x) == "promise") {
     expr = promise_expr(x)
     identical(expr, quote(waiver())) ||
-      (is.symbol(expr) && is_waiver(get0(expr, promise_env(x))))
+      (is.symbol(expr) && is_waiver(get0(as.character(expr), promise_env(x))))
   } else {
     inherits(x, "waiver")
   }
@@ -198,12 +198,7 @@ new_promise_list = function(x = list()) {
 #' @returns a list of promises
 #' @noRd
 promise_list = function(...) {
-  dots = environment()$...
-  if (missing(dots)) {
-    new_promise_list()
-  } else {
-    new_promise_list(dots_to_list_(dots))
-  }
+  dot_arg_promise_list()
 }
 
 #' @export
@@ -391,7 +386,7 @@ print.autopartial_function = function(x, ..., width = getOption("width")) {
   cat0(name, " = ")
 
   f = attr(x, "f")
-  f_string = capture.output(print(f, width = width - 2, ...))
+  f_string = utils::capture.output(print(f, width = width - 2, ...))
   cat(f_string, sep = "\n  ")
 
   cat0(format(as.call(c(
@@ -511,10 +506,11 @@ named_arg_promise_list = function(which = sys.parent()) {
 #' @noRd
 dot_arg_promise_list = function(which = sys.parent()) {
   env = sys.frame(which)
-  if (exists("...", env)) {
-    evalq(promise_list(...), env)
-  } else {
+  dots = env$...
+  if (missing(dots)) {
     new_promise_list()
+  } else {
+    new_promise_list(dots_to_list_(dots))
   }
 }
 
