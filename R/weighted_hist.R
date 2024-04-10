@@ -135,7 +135,7 @@ NULL
 #' @rdname breaks
 #' @param width For [breaks_fixed()], the desired bin width.
 #' @export
-breaks_fixed = auto_partial(name = "breaks_fixed", function(
+breaks_fixed = function(
   x, weights = NULL, width = 1
 ) {
   if (length(x) == 1) return(c(x - width/2, x + width/2))
@@ -145,23 +145,25 @@ breaks_fixed = auto_partial(name = "breaks_fixed", function(
   expand = ((-diff(x_range)) %% width) / 2
 
   seq.int(x_range[[1]] - expand, x_range[[2]] + expand, by = width)
-})
+}
+breaks_fixed = auto_partial(breaks_fixed)
 
 ## breaks_Sturges ---------------------------------------------------------------
 #' @rdname breaks
 #' @export
-breaks_Sturges = auto_partial(name = "breaks_Sturges", function(
+breaks_Sturges = function(
   x, weights = NULL
 ) {
   weights = weights %||% rep(1, length(x))
   n = max(length(x), sum(weights))
   ceiling(log2(n) + 1)
-})
+}
+breaks_Sturges = auto_partial(breaks_Sturges)
 
 ## breaks_Scott ---------------------------------------------------------------
 #' @rdname breaks
 #' @export
-breaks_Scott = auto_partial(name = "breaks_Scott", function(
+breaks_Scott = function(
   x, weights = NULL
 ) {
   weights = weights %||% rep(1, length(x))
@@ -172,7 +174,8 @@ breaks_Scott = auto_partial(name = "breaks_Scott", function(
   } else {
     1L
   }
-})
+}
+breaks_Scott = auto_partial(breaks_Scott)
 
 ## breaks_FD ---------------------------------------------------------------
 #' @rdname breaks
@@ -181,7 +184,7 @@ breaks_Scott = auto_partial(name = "breaks_Scott", function(
 #'   parameter, see the documentation of the corresponding parameter in
 #'   [grDevices::nclass.FD()].
 #' @export
-breaks_FD = auto_partial(name = "breaks_FD", function(
+breaks_FD = function(
   x, weights = NULL, digits = 5
 ) {
   .x = signif(x, digits = digits)
@@ -210,7 +213,8 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
   } else {
     1L
   }
-})
+}
+breaks_FD = auto_partial(breaks_FD)
 
 ## breaks_quantiles --------------------------------------------------------
 #' @rdname breaks
@@ -222,7 +226,7 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
 #' @param min_width For [breaks_quantiles()], a scalar numeric between `0` and
 #'   `1` giving the minimum bin width as a proportion of `diff(range(x)) / max_n`.
 #' @export
-breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
+breaks_quantiles = function(
   x, weights = NULL, max_n = "Scott", min_width = 0.5
 ) {
   max_n = get_raw_breaks(x, weights, max_n)
@@ -246,7 +250,8 @@ breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
 
   if (length(breaks) == 1) breaks = 1L
   breaks
-})
+}
+breaks_quantiles = auto_partial(breaks_quantiles)
 
 
 # alignment algorithms ----------------------------------------------------
@@ -320,24 +325,27 @@ breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
 #'   geom_vline(xintercept = 0, linetype = "22", color = "red")
 #' @name align
 #' @export
-align_none = auto_partial(name = "align_none", function(breaks) {
+align_none = function(breaks) {
   0
-})
+}
+align_none = auto_partial(align_none)
 
 ## align_boundary ----------------------------------------------------------
 #' @rdname align
 #' @export
-align_boundary = auto_partial(name = "align_boundary", function(breaks, at = 0) {
+align_boundary = function(breaks, at = 0) {
   (breaks[[1]] - at) %% diff(breaks[1:2])
-})
+}
+align_boundary = auto_partial(align_boundary)
 
 ## align_center ------------------------------------------------------------
 #' @rdname align
 #' @export
-align_center = auto_partial(name = "align_center", function(breaks, at = 0) {
+align_center = function(breaks, at = 0) {
   w = diff(breaks[1:2])
   (breaks[[1]] - at + w/2) %% w
-})
+}
+align_center = auto_partial(align_center)
 
 
 # helpers -----------------------------------------------------------------

@@ -78,7 +78,7 @@
 #'
 #' @importFrom scales oob_discard
 #' @export
-subguide_axis = auto_partial(name = "subguide_axis", function(
+subguide_axis = function(
   values,
   title = NULL,
   breaks = waiver(),
@@ -143,7 +143,8 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   gt = gtable::gtable_add_grob(gt, title_grob, 1, title_i)
   if (orientation %in% c("x", "vertical")) gt = t(gt)
   gt
-})
+}
+subguide_axis = auto_partial(subguide_axis)
 
 #' @details
 #' [subguide_inside()] is a shortcut for drawing labels inside of the chart
@@ -151,6 +152,7 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
 #' @rdname subguide_axis
 #' @export
 subguide_inside = function(..., label_side = "inside") {
+  # TODO: use auto_partial()
   subguide_axis(..., label_side = label_side)
 }
 
@@ -203,9 +205,10 @@ subguide_count = function(..., breaks = scales::breaks_width(1)) {
 #' @param ... ignored.
 #' @family sub-guides
 #' @export
-subguide_none = auto_partial(name = "subguide_none", function(values, ...) {
+subguide_none = function(values, ...) {
   zeroGrob()
-})
+}
+subguide_none = auto_partial(subguide_none)
 
 #' @details
 #' [subguide_slab()], [subguide_dots()], and [subguide_spike()] are aliases

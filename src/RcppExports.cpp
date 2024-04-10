@@ -22,20 +22,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// find_var_
-SEXP find_var_(Symbol name, Environment env);
-RcppExport SEXP _ggdist_find_var_(SEXP nameSEXP, SEXP envSEXP) {
+// unwrap_promise_
+SEXP unwrap_promise_(SEXP x);
+RcppExport SEXP _ggdist_unwrap_promise_(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Symbol >::type name(nameSEXP);
-    Rcpp::traits::input_parameter< Environment >::type env(envSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_var_(name, env));
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(unwrap_promise_(x));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_promise_
-Promise find_promise_(Symbol name, Environment env);
+SEXP find_promise_(Symbol name, Environment env);
 RcppExport SEXP _ggdist_find_promise_(SEXP nameSEXP, SEXP envSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -68,6 +67,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// is_waived_
+bool is_waived_(SEXP x);
+RcppExport SEXP _ggdist_is_waived_(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_waived_(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // dots_to_list_
 List dots_to_list_(DottedPair dots);
 RcppExport SEXP _ggdist_dots_to_list_(SEXP dotsSEXP) {
@@ -82,10 +92,11 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
-    {"_ggdist_find_var_", (DL_FUNC) &_ggdist_find_var_, 2},
+    {"_ggdist_unwrap_promise_", (DL_FUNC) &_ggdist_unwrap_promise_, 1},
     {"_ggdist_find_promise_", (DL_FUNC) &_ggdist_find_promise_, 2},
     {"_ggdist_promise_expr_", (DL_FUNC) &_ggdist_promise_expr_, 1},
     {"_ggdist_promise_env_", (DL_FUNC) &_ggdist_promise_env_, 1},
+    {"_ggdist_is_waived_", (DL_FUNC) &_ggdist_is_waived_, 1},
     {"_ggdist_dots_to_list_", (DL_FUNC) &_ggdist_dots_to_list_, 1},
     {NULL, NULL, 0}
 };

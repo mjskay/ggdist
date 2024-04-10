@@ -74,7 +74,7 @@
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_unbounded = auto_partial(name = "density_unbounded", function(
+density_unbounded = function(
   x, weights = NULL,
   n = 501, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = TRUE,
@@ -109,12 +109,11 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
   )
 
   d$data.name = x_label
-  # need to apply get_expr over match.call() instead of just using match.call()
-  # to remove tildes from the call created by partial application
-  d$call = as.call(lapply(match.call(), get_expr))
+  d$call = match_call_with_promises()
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
-})
+}
+density_unbounded = auto_partial(density_unbounded)
 
 
 ## density_bounded -------------------------------------------------------
@@ -188,7 +187,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_bounded = auto_partial(name = "density_bounded", function(
+density_bounded = function(
   x, weights = NULL,
   n = 501, bandwidth = "dpi", adjust = 1, kernel = "gaussian",
   trim = TRUE, bounds = c(NA, NA), bounder = "cdf",
@@ -250,10 +249,11 @@ density_bounded = auto_partial(name = "density_bounded", function(
 
   d$data.name = x_label
   d$y = f
-  d$call = as.call(lapply(match.call(), get_expr))
+  d$call = match_call_with_promises()
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
-})
+}
+density_bounded = auto_partial(density_bounded)
 
 
 ## density_histogram -------------------------------------------------------
@@ -305,7 +305,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #'   theme_ggdist()
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_histogram = auto_partial(name = "density_histogram", function(
+density_histogram = function(
   x, weights = NULL,
   breaks = "Scott",
   align = "none",
@@ -352,16 +352,15 @@ density_histogram = auto_partial(name = "density_histogram", function(
       y = pdf,
       bw = if (h$equidist) diff(h$breaks[1:2]) else mean(diff(h$breaks)),
       n = length(x),
-      # need to apply get_expr over match.call() instead of just using match.call()
-      # to remove tildes from the call created by partial application
-      call = as.call(lapply(match.call(), get_expr)),
+      call = match_call_with_promises(),
       data.name = x_label,
       has.na = FALSE,
       cdf = cdf
     ),
     class = c("ggdist_density", "density")
   )
-})
+}
+density_histogram = auto_partial(density_histogram)
 
 
 # density object methods --------------------------------------------------
@@ -401,48 +400,54 @@ plot.ggdist_density = function(x, ..., ylim = c(0, NA)) {
 #' @name bandwidth
 #' @importFrom stats bw.nrd0
 #' @export
-bandwidth_nrd0 = auto_partial(name = "bandwidth_nrd0", function(x, ...) {
+bandwidth_nrd0 = function(x, ...) {
   bw.nrd0(x)
-})
+}
+bandwidth_nrd0 = auto_partial(bandwidth_nrd0)
 
 ## bandwidth_nrd ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.nrd
 #' @export
-bandwidth_nrd = auto_partial(name = "bandwidth_nrd", function(x, ...) {
+bandwidth_nrd = function(x, ...) {
   bw_fallback(bw.nrd, x, ..., call = call("bandwidth_nrd"))
-})
+}
+bandwidth_nrd = auto_partial(bandwidth_nrd)
 
 ## bandwidth_ucv ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.ucv
 #' @export
-bandwidth_ucv = auto_partial(name = "bandwidth_ucv", function(x, ...) {
+bandwidth_ucv = function(x, ...) {
   bw_fallback(bw.ucv, x, ..., call = call("bandwidth_ucv"))
-})
+}
+bandwidth_ucv = auto_partial(bandwidth_ucv)
 
 ## bandwidth_bcv ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.bcv
 #' @export
-bandwidth_bcv = auto_partial(name = "bandwidth_bcv", function(x, ...) {
+bandwidth_bcv = function(x, ...) {
   bw_fallback(bw.bcv, x, ..., call = call("bandwidth_bcv"))
-})
+}
+bandwidth_bcv = auto_partial(bandwidth_bcv)
 
 ## bandwidth_SJ ----------------------------------------------------------
 #' @rdname bandwidth
 #' @importFrom stats bw.SJ
 #' @export
-bandwidth_SJ = auto_partial(name = "bandwidth_SJ", function(x, ...) {
+bandwidth_SJ = function(x, ...) {
   bw_fallback(bw.SJ, x, ..., call = call("bandwidth_SJ"))
-})
+}
+bandwidth_SJ = auto_partial(bandwidth_SJ)
 
 ## bandwidth_dpi ----------------------------------------------------------
 #' @rdname bandwidth
 #' @export
-bandwidth_dpi = auto_partial(name = "bandwidth_dpi", function(x, ...) {
+bandwidth_dpi = function(x, ...) {
   bw_fallback(bw.SJ, x, method = "dpi", ..., call = call("bandwidth_dpi"))
-})
+}
+bandwidth_dpi = auto_partial(bandwidth_dpi)
 
 
 # adaptive density estimator ----------------------------------------------

@@ -122,111 +122,6 @@ partial_self = function(name = NULL, waivable = TRUE) {
   partial_f
 }
 
-#' @rdname auto_partial
-#' @param f A function
-#' @param name A character string giving the name of the function, to be used
-#' when printing.
-#' @param waivable logical: if `TRUE`, optional arguments that get
-#' passed a [waiver()] will keep their default value (or whatever
-#' non-`waiver` value has been most recently partially applied for that
-#' argument).
-#' @returns A modified version of `f` that will automatically be partially
-#' applied if all of its required arguments are not given.
-#' @examples
-#' # create a custom automatically partially applied function
-#' f = auto_partial(function(x, y, z = 3) (x + y) * z)
-#' f()
-#' f(1)
-#' g = f(y = 2)(z = 4)
-#' g
-#' g(1)
-#'
-#' # pass waiver() to optional arguments to use existing values
-#' f(z = waiver())(1, 2)  # uses default z = 3
-#' f(z = 4)(z = waiver())(1, 2)  # uses z = 4
-#' @export
-#' @importFrom rlang new_function expr
-auto_partial = function(f, name = NULL, waivable = TRUE) {
-  f_body = body(f)
-  # must ensure the function body is a { ... } block, not a single expression,
-  # so we can splice it in later with !!!f_body
-  if (!inherits(f_body, "{")) {
-    f_body = expr({
-      !!f_body
-    })
-  }
-  f_args = formals(f)
-
-  # find the required arguments
-  is_required_arg = map_lgl_(f_args, rlang::is_missing)
-  required_arg_names = names(f_args)[is_required_arg]
-  required_arg_names = required_arg_names[required_arg_names != "..."]
-
-  # build a logical expression testing to see if any required args are missing
-  any_required_args_missing = Reduce(
-    function(x, y) expr(!!x || !!y),
-    lapply(required_arg_names, function(arg_name) expr(missing(!!as.symbol(arg_name))))
-  )
-
-  partial_self_f = if (identical(environment(f), environment(partial_self))) {
-    # when auto_partial is called from within the ggdist namespace, don't inline
-    # the partial self function
-    quote(partial_self)
-  } else {
-    # when auto_partial is called from outside the ggdist namespace, we need to
-    # inline the partial_self function so that it is guaranteed to be found
-    partial_self
-  }
-
-  partial_self_if_missing_args = if (length(required_arg_names) > 0) {
-    expr({
-      if (!!any_required_args_missing) return((!!partial_self_f)(!!name, waivable = !!waivable))
-    })
-  }
-
-  # build an expression to apply waivers to optional args
-  process_waivers = if (waivable) {
-    optional_args = f_args[!is_required_arg]
-    map2_(optional_args, names(optional_args), function(arg_expr, arg_name) {
-      arg_sym = as.symbol(arg_name)
-      expr(if (inherits(!!arg_sym, "waiver")) assign(!!arg_name, !!arg_expr))
-    })
-  }
-
-  new_f = new_function(
-    f_args,
-    expr({
-      !!!partial_self_if_missing_args
-      # no idea why, but covr::package_coverage() fails if the next line doesn't
-      # have { } around it. It is not necessary for normal execution. Must have
-      # something to do with how covr adds hooks for tracing execution.
-      { !!!process_waivers }
-      !!!f_body
-    }),
-    env = environment(f)
-  )
-  attr(new_f, "srcref") = attr(f, "srcref")
-
-  new_f
-}
-
-#' @importFrom rlang get_expr
-#' @export
-print.ggdist_partial_function = function(x, ...) {
-  f_sym = as.name(attr(x, "name"))
-  f_args = lapply(attr(x, "provided_args"), get_expr)
-
-  cat(sep = "\n",
-    "<partial_function>: ",
-    paste0("  ", format(as.call(c(
-      list(f_sym),
-      f_args
-    ))))
-  )
-
-  invisible(x)
-}
-
 
 # waiver ------------------------------------------------------------------
 
@@ -278,6 +173,16 @@ waiver = ggplot2::waiver
 `%|W|%` = function(x, y) {
   if (inherits(x, "waiver")) y
   else x
+}
+
+is_waiver =
+  function(x) {
+  if (inherits(x, "waiver")) return(TRUE)
+
+  expr = promise_expr(x)
+
+  identical(expr, quote(waiver())) ||
+    (is.symbol(expr) && is_waiver(eval(expr, promise_env(x))))
 }
 
 
@@ -336,39 +241,56 @@ format_promise = function(x) {
 
 # promises ----------------------------------------------------------------
 
-#' Find a promise by name
+#' Find a promise by name.
 #' @param name the name of a promise as a string or symbol
 #' @param env the environment to search
-#' @returns The promise with the given name from the given environment
+#' @returns One of:
+#' - If `name` refers to a promise, the promise with the given name from the
+#' given environment. Promises whose code is itself a promise (possibly
+#' recursively) are unwrapped so that the code referred to by the returned
+#' promise is not also a promise.
+#' - If `name` does not refer to a promise, it is returned as a normal object.
 #' @noRd
-find_promise = find_var_
+find_promise = find_promise_
 
 promise_expr = function(x) {
-  do.call(substitute, list(x))
+  if (typeof(x) == "promise") {
+    do.call(substitute, list(unwrap_promise_(x)))
+  } else {
+    x
+  }
 }
 
 promise_env = function(x) {
-  if (typeof(x) == "promise"){
+  if (typeof(x) == "promise") {
     promise_env_(x)
   } else {
     NULL
   }
 }
 
-promise_peak_value = function(x) {
-  eval(promise_expr(x), promise_env(x))
-}
-
 
 # auto_partial ------------------------------------------------------------
 
-#' Automatic partial function application
-#'
-#' Construct a version of `.f` that is automatically partially applied.
-#' @param .f a function
+#' @rdname auto_partial
+#' @param .f A function
 #' @param ... arguments to be partially applied to `.f`
-#' @noRd
-auto_partial_ = function(.f, ...) {
+#' @returns A modified version of `.f` that will automatically be partially
+#' applied if all of its required arguments are not given.
+#' @examples
+#' # create a custom automatically partially applied function
+#' f = auto_partial(function(x, y, z = 3) (x + y) * z)
+#' f()
+#' f(1)
+#' g = f(y = 2)(z = 4)
+#' g
+#' g(1)
+#'
+#' # pass waiver() to optional arguments to use existing values
+#' f(z = waiver())(1, 2)  # uses default z = 3
+#' f(z = 4)(z = waiver())(1, 2)  # uses z = 4
+#' @export
+auto_partial = function(.f, ...) {
   f_expr = substitute(.f)
   name = if (is.symbol(f_expr)) as.character(f_expr)
   args = match_function_args(.f, promise_list(...))
@@ -420,21 +342,26 @@ new_auto_partial = function(
   `>f` = f
   `>args` = args
   `>required_arg_names` = required_arg_names
-  `>name` = name
+  `>name` = name %||% "."
   `>waivable` = waivable
 
   partial_f = function() {
-    named_arg_promises = named_arg_promise_list()
-    dot_arg_promises = dot_arg_promise_list()
-    arg_promises = c(named_arg_promises, dot_arg_promises)
-    new_args = match_function_args(sys.function(), arg_promises)
+    new_args = arg_promise_list()
     if (`>waivable`) new_args = remove_waivers(new_args)
-    args = update_args(`>args`, new_args)
+    `>args` = update_args(`>args`, new_args)
 
-    if (all(`>required_arg_names` %in% names(args))) {
-      do.call(`>f`, args, envir = parent.frame())
+    if (all(`>required_arg_names` %in% names(`>args`))) {
+      # a simpler version of the below would be something like:
+      # > do.call(`>f`, args, envir = parent.frame())
+      # however this would lead to the function call appearing as the
+      # full function body in things like match.call(). So instead
+      # we construct a calling environment in which the function is
+      # defined under a readable name.
+      call_env = new.env(parent = parent.frame())
+      call_env[[`>name`]] = `>f`
+      do.call(`>name`, `>args`, envir = call_env)
     } else {
-      new_auto_partial(`>f`, args, `>required_arg_names`, `>name`, `>waivable`)
+      new_auto_partial(`>f`, `>args`, `>required_arg_names`, `>name`, `>waivable`)
     }
   }
   partial_formals = formals(f)
@@ -499,6 +426,15 @@ match_function_args = function(f, args) {
   args[args_i]
 }
 
+#' A variation on match.call that uses code from promises
+#' @noRd
+match_call_with_promises = function(which = sys.parent()) {
+  arg_promises = arg_promise_list(which)
+  arg_exprs = lapply(arg_promises, promise_expr)
+  f_expr = sys.call(which)[[1]]
+  as.call(c(list(f_expr), arg_exprs))
+}
+
 #' Update a list of arguments, overwriting named arguments in `old_args`
 #' with values that appear in `new_args`. Positional arguments from both
 #' argument lists are kept in the same order as they appear.
@@ -537,16 +473,31 @@ is_missing_arg = function(x) {
   missing(x) || identical(x, quote(expr = ))
 }
 
+#' Retrieve a list of promises from arguments in
+#' the surrounding function
+#' @param which the frame number to get call information from.
+#' @returns A list of promises for arguments to the
+#' calling function
+#' @noRd
+arg_promise_list = function(which = sys.parent()) {
+  named_arg_promises = named_arg_promise_list(which)
+  dot_arg_promises = dot_arg_promise_list(which)
+  arg_promises = c(named_arg_promises, dot_arg_promises)
+  # TODO: this line might be redundant / maybe just return arg_promises
+  new_promise_list(match_function_args(sys.function(which), arg_promises))
+}
+
 #' Retrieve a list of promises from named arguments in
 #' the surrounding function
+#' @param which the frame number to get call information from.
 #' @returns A named list of promises for arguments to the
 #' calling function
 #' @noRd
-named_arg_promise_list = function() {
-  f = sys.function(sys.parent())
-  call = match.call(f, sys.call(sys.parent()), envir = parent.frame(2L))
+named_arg_promise_list = function(which = sys.parent()) {
+  f = sys.function(which)
+  call = match.call(f, sys.call(which), envir = sys.frame(which - 1L))
   arg_names = intersect(names(call[-1]), names(formals(f)))
-  env = parent.frame()
+  env = sys.frame(which)
   promises = lapply(arg_names, find_promise, env)
   names(promises) = arg_names
   new_promise_list(promises)
@@ -554,11 +505,12 @@ named_arg_promise_list = function() {
 
 #' Retrieve a list of promises from `...` arguments in
 #' the surrounding function
+#' @param which the frame number to get call information from.
 #' @returns A list of (possibly named) promises for arguments to the
 #' calling function
 #' @noRd
-dot_arg_promise_list = function() {
-  env = parent.frame()
+dot_arg_promise_list = function(which = sys.parent()) {
+  env = sys.frame(which)
   if (exists("...", env)) {
     evalq(promise_list(...), env)
   } else {
@@ -569,25 +521,11 @@ dot_arg_promise_list = function() {
 #' Remove waivers from an argument list
 #' @param args a named list of promises
 #' @returns A modified version of `args` with any waived arguments (i.e.
-#' promises for which [is_promise_waived()] returns `TRUE`) removed
+#' promises for which [is_waiver()] returns `TRUE`) removed
 #' @noRd
 remove_waivers = function(args) {
-  waived = vapply(args, is_promise_waived, logical(1))
+  waived = vapply(args, is_waiver, logical(1))
   args[!waived]
-}
-
-#' Is a promise a waiver?
-#'
-#' Returns `TRUE` if a promise is a simple expression referring to a
-#' `waiver()`. Does not evaluate functions or other compound expressions,
-#' but will evaluate symbols to check if they point to a `waiver()` object
-#' @returns `TRUE` if `x` is a promise for the expression `waiver()` or
-#' for a symbol pointing to a `waiver()`.
-#' @noRd
-is_promise_waived = function(x) {
-  expr = promise_expr(x)
-  identical(expr, quote(waiver())) ||
-    (is.symbol(expr) && inherits(get0(expr, promise_env(x)), "waiver"))
 }
 
 cat0 = function(...) {

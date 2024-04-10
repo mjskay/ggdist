@@ -58,7 +58,7 @@
 #'   )
 #' @importFrom scales rescale expand_range
 #' @export
-subscale_thickness = auto_partial(name = "subscale_thickness", function(
+subscale_thickness = function(
   x,
   limits = function(l) c(min(0, l[1]), l[2]),
   expand = c(0, 0)
@@ -84,7 +84,8 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
   }
 
   thickness(x, limits[1], limits[2])
-})
+}
+subscale_thickness = auto_partial(subscale_thickness)
 
 #' Identity sub-scale for thickness aesthetic
 #'
@@ -101,6 +102,7 @@ subscale_thickness = auto_partial(name = "subscale_thickness", function(
 subscale_identity = function(x) {
   thickness(x)
 }
+subscale_identity = auto_partial(subscale_identity)
 
 
 # apply a thickness subscale ----------------------------------------------

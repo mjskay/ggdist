@@ -111,19 +111,21 @@ NULL
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = auto_partial(name = "smooth_bounded", function(
+smooth_bounded = function(
   x, density = "bounded", bounds = c(NA, NA), bounder = "cooke", trim = FALSE, ...
 ) {
   .smooth_density(x, density = density, bounds = bounds, bounder = bounder, trim = trim, ...)
-})
+}
+smooth_bounded = auto_partial(smooth_bounded)
 
 #' @rdname smooth_density
 #' @export
-smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
+smooth_unbounded = function(
   x, density = "unbounded", trim = FALSE, ...
 ) {
   .smooth_density(x, density = density, trim = trim, ...)
-})
+}
+smooth_unbounded = auto_partial(smooth_unbounded)
 
 
 # discrete smooths --------------------------------------------------------
@@ -201,7 +203,7 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #'
 #'
 #' @export
-smooth_discrete = auto_partial(name = "smooth_discrete", function(
+smooth_discrete = function(
   x,
   kernel = c("rectangular", "gaussian", "epanechnikov", "triangular", "biweight", "cosine", "optcosine"),
   width = 0.7,
@@ -224,11 +226,12 @@ smooth_discrete = auto_partial(name = "smooth_discrete", function(
   # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
   bandwidth = resolution(as.numeric(x), zero = FALSE) * bw_mult * width
   smooth_unbounded(x, kernel = kernel, bandwidth = bandwidth, ...)
-})
+}
+smooth_discrete = auto_partial(smooth_discrete)
 
 #' @rdname smooth_discrete
 #' @export
-smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
+smooth_bar = function(x, width = 0.7, ...) {
   if (length(x) < 2) return(x)
 
   # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
@@ -237,7 +240,8 @@ smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
     (ppoints(length(x), 0.5) - 0.5) * x_width + x[[1]]
   })
   x
-})
+}
+smooth_bar = auto_partial(smooth_bar)
 
 #' Apply no smooth to a dotplot
 #'
@@ -257,6 +261,7 @@ smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
 #'
 #' @family dotplot smooths
 #' @export
-smooth_none = auto_partial(name = "smooth_none", function(x, ...) {
+smooth_none = function(x, ...) {
   x
-})
+}
+smooth_none = auto_partial(smooth_none)

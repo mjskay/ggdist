@@ -5,8 +5,8 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
-find_var_ <- function(name, env) {
-    .Call(`_ggdist_find_var_`, name, env)
+unwrap_promise_ <- function(x) {
+    .Call(`_ggdist_unwrap_promise_`, x)
 }
 
 find_promise_ <- function(name, env) {
@@ -19,6 +19,10 @@ promise_expr_ <- function(promise) {
 
 promise_env_ <- function(promise) {
     .Call(`_ggdist_promise_env_`, promise)
+}
+
+is_waived_ <- function(x) {
+    .Call(`_ggdist_is_waived_`, x)
 }
 
 dots_to_list_ <- function(dots) {

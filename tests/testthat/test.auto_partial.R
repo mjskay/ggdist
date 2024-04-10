@@ -6,26 +6,19 @@
 
 test_that("partial function printing works", {
   add1 = function(x, ...) {
-    if (missing(x)) return(partial_self("add1"))
     x + 1
   }
 
-  add1_auto = auto_partial(name = "add1", function(x, ...) {
-    x + 1
-  })
+  add1_auto = auto_partial(add1)
 
-  expect_output(print(add1()), "<partial_function>:.*add1\\(\\)")
-  expect_output(print(add1_auto()), "<partial_function>:.*add1\\(\\)")
-  expect_output(print(add1(a = 2)), "<partial_function>:.*add1\\(a = 2\\)")
-  expect_output(print(add1_auto(a = 2)), "<partial_function>:.*add1\\(a = 2\\)")
-  expect_output(print(add1(a = 2)(a = 3, b = 4)), "<partial_function>:.*add1\\(a = 3, b = 4\\)")
-  expect_output(print(add1_auto(a = 2)(a = 3, b = 4)), "<partial_function>:.*add1\\(a = 3, b = 4\\)")
-  expect_equal(add1(a = 2)(a = 3, b = 4)(1), 2)
+  expect_output(print(add1_auto()), "<auto_partial.*add1\\(\\)")
+  expect_output(print(add1_auto(a = 2)), "<auto_partial.*add1\\(a = 2\\)")
+  expect_output(print(add1_auto(a = 2)(a = 3, b = 4)), "<auto_partial.*add1\\(a = 3, b = 4\\)")
   expect_equal(add1_auto(a = 2)(a = 3, b = 4)(1), 2)
 })
 
 test_that("function bodies without braces work", {
-  add1_auto_nobrace = auto_partial(name = "add1", function(x, ...) x + 1)
+  add1_auto_nobrace = auto_partial(function(x, ...) x + 1)
   expect_equal(add1_auto_nobrace(3), 4)
 })
 
@@ -33,27 +26,73 @@ test_that("functions without arguments work", {
   expect_equal(auto_partial(function() 5)(), 5)
 })
 
-test_that("functions inside the ggdist namespace do not inline partial_self", {
-  f = function(x) {
-    x + 1
-  }
-  environment(f) = asNamespace("ggdist")
-  expect_match(deparse0(body(auto_partial(f, name = "f"))), 'partial_self("f", waivable = TRUE)', fixed = TRUE)
-})
-
 test_that("wrapper functions work", {
-  f = auto_partial(name = "f", function(x, y = 1, z = 2) {
+  f = function(x, y = 1, z = 2) {
     y + z
-  })
+  }
+  f = auto_partial(f)
   g = function(..., y = 2) f(..., y = y)
 
-  expect_output(print(g(y = 2)), "<partial_function>:.*f\\(y = y\\)")
+  expect_output(print(g(y = 2)), "<auto_partial.*f\\(y = y\\)")
   expect_equal(g(1), f(1, y = 2))
   expect_equal(g(1, y = 3, z = 4), f(1, y = 3, z = 4))
 })
 
+test_that("dots args are not prematurely evaluated", {
+  f = function(x, y, z) substitute(y)
+  f = auto_partial(f)
+  g = function(...) {
+    gz = 3
+    f(z = gz, ...)
+  }
+  h = function(...) {
+    hy = 2
+    g(y = {stop("should not be evaluated"); hy}, ...)
+  }
+  h(x = 1)
+
+  expect_silent(h(x = 1))
+  expect_equal(h(x = 1), quote({stop("should not be evaluated"); hy}))
+})
+
+test_that("dots args are forwarded correctly", {
+  f = function(x, y, z) list(x, y, z)
+  f = auto_partial(f)
+  g = function(...) {
+    gz = 3
+    f(z = gz, ...)
+  }
+  h = function(...) {
+    hy = 2
+    g(y = {print("evaluated"); hy}, ...)
+  }
+
+  expect_silent(h())
+  expect_s3_class(h(), "autopartial_function")
+  expect_output(
+    expect_equal(h(x = 1), list(1, 2, 3)),
+    "evaluated"
+  )
+})
+
+test_that("waivers are detected correctly", {
+  f = function(x = 1, y = 2, z = 3) list(x, y, z)
+  f = auto_partial(f)
+  g = function(...) {
+    gz = waiver()
+    f(z = gz, ...)
+  }
+  h = function(...) {
+    g(y = waiver(), ...)
+  }
+
+  expect_equal(g(), list(1, 2, 3))
+  expect_equal(h(x = waiver()), list(1, 2, 3))
+})
+
 test_that("original function names are preserved in match.call after multiple partial applications", {
-  foo = auto_partial(function(x) as.call(lapply(match.call(), get_expr)))
+  foo = function(x) match.call()
+  foo = auto_partial(foo)
 
   expect_equal(foo()()(1), quote(foo(x = 1)))
 })

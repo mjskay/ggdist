@@ -54,7 +54,7 @@ point_interval(
   .simple_names = TRUE,
   na.rm = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob
+  .prob = missing_arg()
 )
 
 \method{point_interval}{tbl_df}(.data, ...)
@@ -68,7 +68,7 @@ point_interval(
   .simple_names = FALSE,
   na.rm = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob
+  .prob = missing_arg()
 )
 
 \method{point_interval}{rvar}(
@@ -91,7 +91,7 @@ point_interval(
   na.rm = FALSE
 )
 
-qi(x, .width = 0.95, .prob, na.rm = FALSE)
+qi(x, .width = 0.95, na.rm = FALSE, .prob = missing_arg())
 
 ll(x, .width = 0.95, na.rm = FALSE)
 
@@ -104,7 +104,7 @@ hdi(
   ...,
   density = density_bounded(trim = TRUE),
   n = 4096,
-  .prob
+  .prob = missing_arg()
 )
 
 Mode(x, na.rm = FALSE, ...)

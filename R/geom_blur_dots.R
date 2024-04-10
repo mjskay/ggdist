@@ -10,7 +10,7 @@
 if (getRversion() < "4.1") globalVariables("radialGradient")
 
 ## make_blurry_points_grob -------------------------------------------------
-make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", function(
+make_blurry_points_grob = function(
   x,
   y,
   ...,  # ignored
@@ -79,7 +79,8 @@ make_blurry_points_grob = auto_partial(name = "make_blurry_points_grob", functio
   })
 
   do.call(grobTree, grobs)
-})
+}
+make_blurry_points_grob = auto_partial(make_blurry_points_grob)
 
 #' Translate a pch into a shape for use with a blurry dotplot
 #' @param shape a `pch`-style shape (number or single letter)
@@ -273,14 +274,15 @@ geom_blur_dots = make_geom(GeomBlurDots)
 #' # see examples in geom_blur_dots()
 #' @importFrom stats pnorm
 #' @export
-blur_gaussian = auto_partial(name = "blur_gaussian", function(x, r, sd) {
+blur_gaussian = function(x, r, sd) {
   pnorm(x + r, 0, sd) - pnorm(x - r, 0, sd)
-})
+}
+blur_gaussian = auto_partial(blur_gaussian)
 
 #' @rdname blur
 #' @importFrom stats qnorm
 #' @export
-blur_interval = auto_partial(name = "blur_interval", function(x, r, sd, .width = 0.95) {
+blur_interval = function(x, r, sd, .width = 0.95) {
   z = qnorm((1 + .width)/2)
   ifelse(
     x < r, 1,
@@ -289,4 +291,5 @@ blur_interval = auto_partial(name = "blur_interval", function(x, r, sd, .width =
       0
     )
   )
-})
+}
+blur_interval = auto_partial(blur_interval)

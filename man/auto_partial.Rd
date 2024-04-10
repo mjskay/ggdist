@@ -5,21 +5,15 @@
 \alias{automatic-partial-functions}
 \title{Automatic partial function application in ggdist}
 \usage{
-auto_partial(f, name = NULL, waivable = TRUE)
+auto_partial(.f, ...)
 }
 \arguments{
-\item{f}{A function}
+\item{.f}{A function}
 
-\item{name}{A character string giving the name of the function, to be used
-when printing.}
-
-\item{waivable}{logical: if \code{TRUE}, optional arguments that get
-passed a \code{\link[=waiver]{waiver()}} will keep their default value (or whatever
-non-\code{waiver} value has been most recently partially applied for that
-argument).}
+\item{...}{arguments to be partially applied to \code{.f}}
 }
 \value{
-A modified version of \code{f} that will automatically be partially
+A modified version of \code{.f} that will automatically be partially
 applied if all of its required arguments are not given.
 }
 \description{

@@ -164,6 +164,9 @@ point_interval = function(
   .exclude = c(".chain", ".iteration", ".draw", ".row"),
   .prob = missing_arg()
 ) {
+  # can't wrap point_interval at the top level because otherwise roxygen2
+  # doesn't recognize it as an S3 method and generates incorrect NAMESPACE entries
+  # TODO: replace with auto_partial()
   if (missing(.data)) return(partial_self("point_interval", waivable = FALSE))
 
   UseMethod("point_interval")
