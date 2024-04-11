@@ -90,11 +90,37 @@ test_that("waivers are detected correctly", {
   expect_equal(h(x = waiver()), list(1, 2, 3))
 })
 
+
+test_that("auto_partial works on primitive functions", {
+  l = auto_partial(log)
+  expect_equal(l(exp(1)), 1)
+  expect_equal(l(base = 2)(2), 1)
+})
+
+# match.call() in auto_partial() ------------------------------------------
+
 test_that("original function names are preserved in match.call after multiple partial applications", {
   foo = function(x) match.call()
   foo = auto_partial(foo)
 
   expect_equal(foo()()(1), quote(foo(x = 1)))
+})
+
+test_that("match.call() captures expressions, not evaluated values", {
+  f = function(x, y, ...) match.call()
+  f = auto_partial(f)
+  g = function(...) f(x = stop("x"), ...)
+  h = function(...) g(y = stop("y"), ...)
+  expect_equal(h(rnorm(10)), quote(f(x = stop("x"), y = stop("y"), rnorm(10))))
+})
+
+
+# parent.frame() in auto_partial() ----------------------------------------
+
+test_that("parent.frame() captures calling environment", {
+  f = function() parent.frame()
+  e = new.env()
+  expect_equal(with(e, auto_partial(f)()), e)
 })
 
 

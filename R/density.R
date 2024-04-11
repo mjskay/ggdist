@@ -109,7 +109,7 @@ density_unbounded = function(
   )
 
   d$data.name = x_label
-  d$call = match_call_with_promises()
+  d$call = match.call()
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
 }
@@ -249,7 +249,7 @@ density_bounded = function(
 
   d$data.name = x_label
   d$y = f
-  d$call = match_call_with_promises()
+  d$call = match.call()
   d$cdf = weighted_ecdf(x, weights)(d$x)
   d
 }
@@ -352,7 +352,7 @@ density_histogram = function(
       y = pdf,
       bw = if (h$equidist) diff(h$breaks[1:2]) else mean(diff(h$breaks)),
       n = length(x),
-      call = match_call_with_promises(),
+      call = match.call(),
       data.name = x_label,
       has.na = FALSE,
       cdf = cdf

@@ -89,6 +89,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// apply_closure_
+SEXP apply_closure_(Language call, RObject fun, DottedPair args, Environment env);
+RcppExport SEXP _ggdist_apply_closure_(SEXP callSEXP, SEXP funSEXP, SEXP argsSEXP, SEXP envSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Language >::type call(callSEXP);
+    Rcpp::traits::input_parameter< RObject >::type fun(funSEXP);
+    Rcpp::traits::input_parameter< DottedPair >::type args(argsSEXP);
+    Rcpp::traits::input_parameter< Environment >::type env(envSEXP);
+    rcpp_result_gen = Rcpp::wrap(apply_closure_(call, fun, args, env));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
@@ -98,6 +112,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_promise_env_", (DL_FUNC) &_ggdist_promise_env_, 1},
     {"_ggdist_is_waiver_", (DL_FUNC) &_ggdist_is_waiver_, 1},
     {"_ggdist_dots_to_list_", (DL_FUNC) &_ggdist_dots_to_list_, 1},
+    {"_ggdist_apply_closure_", (DL_FUNC) &_ggdist_apply_closure_, 4},
     {NULL, NULL, 0}
 };
 

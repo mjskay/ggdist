@@ -29,3 +29,7 @@ dots_to_list_ <- function(dots) {
     .Call(`_ggdist_dots_to_list_`, dots)
 }
 
+apply_closure_ <- function(call, fun, args, env) {
+    .Call(`_ggdist_apply_closure_`, call, fun, args, env)
+}
+

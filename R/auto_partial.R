@@ -234,6 +234,9 @@ format_promise = function(x) {
   )
 }
 
+is_promise_list = function(x) {
+  inherits(x, "autopartial_promise_list")
+}
 
 # promises ----------------------------------------------------------------
 
@@ -284,6 +287,20 @@ promise_env = function(x) {
 }
 
 
+# closures ----------------------------------------------------------------
+
+#' Call a closure
+#' @param call ([call]) expression of the function call with its arguments.
+#' This is not evaluated, but will be available in the closure as [sys.call()].
+#' @param fun ([closure]) the function to call.
+#' @param args (coerced to [pairlist]) list of arguments as promises.
+#' @param env ([environment]) environment to call the function from.
+#' @noRd
+apply_closure = function(call, fun, args, env) {
+  apply_closure_(call, fun, as.pairlist(args), env)
+}
+
+
 # auto_partial ------------------------------------------------------------
 
 #' @rdname auto_partial
@@ -329,8 +346,7 @@ partial_ = function(.f, ...) {
 #' Construct a version of the function `f` that is partially applied when called
 #' unless all required arguments have been supplied.
 #' @param f function to automatically partially-apply
-#' @param args a named list of promises representing arguments, such as
-#' returned by `promise_list()`.
+#' @param args a [promise_list()] of arguments
 #' @param required_arg_names character vector of the names of required arguments
 #' in `f`. When all of these have been supplied, the function will be evaluated.
 #' The default, `find_required_arg_names(f)`, considers all arguments without a
@@ -350,13 +366,23 @@ new_auto_partial = function(
   name = NULL,
   waivable = TRUE
 ) {
+  name = name %||% "."
+  stopifnot(
+    "`f` must be a function" = is.function(f),
+    "`f` cannot be a primitive function without an argument lists, like `if`" = !is.null(args(f)),
+    "`args` must be a promise_list" = is_promise_list(args),
+    "`required_arg_names` must be a character vector" = is.character(required_arg_names) || is.null(required_arg_names),
+    "`name` must be a string" = is.character(name) && length(name) == 1,
+    "`waivable` must be a scalar logical" = is.logical(waivable) && length(waivable) == 1
+  )
+
   # we use these weird names to avoid clashing with argument names in f,
   # because partial_f will have a signature containing the same formals as f,
   # so if those formals include the names f, args, etc, things would break
   `>f` = f
   `>args` = args
   `>required_arg_names` = required_arg_names
-  `>name` = name %||% "."
+  `>name` = name
   `>waivable` = waivable
 
   partial_f = function() {
@@ -365,31 +391,34 @@ new_auto_partial = function(
     `>args` = update_args(`>args`, new_args)
 
     if (all(`>required_arg_names` %in% names(`>args`))) {
-      # turn promises that would be evaluated in the calling frame anyway into
-      # expressions, since this works the same but will look better in
-      # match.call() in the most typical user-facing cases
-      caller_env = parent.frame()
-      # TODO: do this, but also don't unpromise expressions that contain the
-      # symbol in `>name`
-      # `>args` = unpromise_in_env(`>args`, caller_env)
-
       # a simpler version of the below would be something like:
       # > do.call(`>f`, args, envir = parent.frame())
       # however this would lead to the function call appearing as the
-      # full function body in things like match.call(). So instead
-      # we construct a calling environment in which the function is
-      # defined under a readable name. This does mean that functions
-      # that inspect the calling context might have issues
-      # TODO: can we manually construct a call that sets the calling context
-      # to caller_env but also has nice function calls in match.call()?
-      call_env = new.env(parent = caller_env)
-      call_env[[`>name`]] = `>f`
-      do.call(`>name`, `>args`, envir = call_env)
+      # full function body in things like match.call().
+      caller_env = parent.frame()
+      switch(typeof(`>f`),
+        closure = {
+          # for closures, we can manually construct the call such that the
+          # following functions work when used in the closure:
+          # (1) sys.call() / match.call() will pick up a nice-looking call
+          # (2) substitute() gives nice-looking expressions
+          # (3) parent.frame() gives the the same frame the user called us from
+          arg_exprs = lapply(`>args`, promise_expr)
+          f_expr = as.symbol(`>name`)
+          call = as.call(c(list(f_expr), arg_exprs))
+          apply_closure(call, `>f`, `>args`, caller_env)
+        },
+        special = {
+          # for primitives / builtins we can at least ensure the calling frame
+          # is the same frame the user called us from
+          do.call(`>f`, `>args`, envir = caller_env)
+        }
+      )
     } else {
       new_auto_partial(`>f`, `>args`, `>required_arg_names`, `>name`, `>waivable`)
     }
   }
-  partial_formals = formals(f)
+  partial_formals = formals(args(f))
   # update expressions in formals to match provided args
   updated_formal_names = intersect(names(partial_formals), names(args))
   partial_formals[updated_formal_names] = lapply(args[updated_formal_names], promise_expr)
@@ -443,21 +472,12 @@ match_function_args = function(f, args) {
   args_i = seq_along(args)
   names(args_i) = names(args)
   call =  as.call(c(list(quote(f)), args_i))
-  args_i_call = match.call(f, call)[-1]
+  args_i_call = match.call(args(f), call)[-1]
   args_i = as.integer(as.list(args_i_call))
 
   # fill in names and re-order the args
   names(args)[args_i] = names(args_i_call)
   args[args_i]
-}
-
-#' A variation on match.call that uses code from promises
-#' @noRd
-match_call_with_promises = function(which = sys.parent()) {
-  arg_promises = arg_promise_list(which)
-  arg_exprs = lapply(arg_promises, promise_expr)
-  f_expr = sys.call(which)[[1]]
-  as.call(c(list(f_expr), arg_exprs))
 }
 
 #' Update a list of arguments, overwriting named arguments in `old_args`
@@ -480,12 +500,22 @@ update_args = function(old_args, new_args) {
   c(old_args, new_args[!names(new_args) %in% updated_names])
 }
 
+#' @export
+c.autopartial_promise_list = function(...) {
+  xs = list(...)
+  if (all(vapply(xs, is_promise_list, logical(1)))) {
+    new_promise_list(NextMethod())
+  } else {
+    NextMethod()
+  }
+}
+
 #' Return the names of required arguments for function `f`
 #' @param f A function
 #' @returns character vector of argument names
 #' @noRd
 find_required_arg_names = function(f) {
-  args = formals(f)
+  args = formals(args(f))
   is_missing = vapply(args, is_missing_arg, logical(1))
   setdiff(names(args)[is_missing], "...")
 }
@@ -524,7 +554,7 @@ named_arg_promise_list = function(which = sys.parent()) {
 
   f = sys.function(which)
   call = match.call(f, sys.call(which), envir = dots_env)
-  arg_names = intersect(names(call[-1]), names(formals(f)))
+  arg_names = intersect(names(call[-1]), names(formals(args(f))))
   promises = lapply(arg_names, find_promise, env)
   names(promises) = arg_names
   new_promise_list(promises)
@@ -563,6 +593,7 @@ remove_waivers = function(args) {
 #' @returns a named list of promises and unevaluated expressions, where promises
 #' with the environment `env` have been turned into their corresponding
 #' expressions
+#' @noRd
 unpromise_in_env = function(args, env) {
   lapply(args, function(arg) {
     if (identical(promise_env(arg), env)) promise_expr(arg) else arg
