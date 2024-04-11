@@ -67,14 +67,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// is_waived_
-bool is_waived_(RObject x);
-RcppExport SEXP _ggdist_is_waived_(SEXP xSEXP) {
+// is_waiver_
+bool is_waiver_(RObject x);
+RcppExport SEXP _ggdist_is_waiver_(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< RObject >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_waived_(x));
+    rcpp_result_gen = Rcpp::wrap(is_waiver_(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -96,7 +96,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_find_promise_", (DL_FUNC) &_ggdist_find_promise_, 2},
     {"_ggdist_promise_expr_", (DL_FUNC) &_ggdist_promise_expr_, 1},
     {"_ggdist_promise_env_", (DL_FUNC) &_ggdist_promise_env_, 1},
-    {"_ggdist_is_waived_", (DL_FUNC) &_ggdist_is_waived_, 1},
+    {"_ggdist_is_waiver_", (DL_FUNC) &_ggdist_is_waiver_, 1},
     {"_ggdist_dots_to_list_", (DL_FUNC) &_ggdist_dots_to_list_, 1},
     {NULL, NULL, 0}
 };

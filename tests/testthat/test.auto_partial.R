@@ -97,6 +97,25 @@ test_that("original function names are preserved in match.call after multiple pa
   expect_equal(foo()()(1), quote(foo(x = 1)))
 })
 
+
+# waivers -----------------------------------------------------------------
+
+test_that("is_waiver works", {
+  x = waiver()
+
+  expect_true(is_waiver(x))
+  expect_true(is_waiver(waiver()))
+
+  expect_true(is_waiver(new_promise(quote(x))[[1]]))
+  expect_true(is_waiver(new_promise(quote(waiver()))[[1]]))
+
+  f = function(x) promise_list(x)
+  g = function(y) f(y)
+  h = compiler::cmpfun(function(z) g(z))
+  expect_true(is_waiver(h(x)[[1]]))
+  expect_true(is_waiver(h(waiver())[[1]]))
+})
+
 test_that("waivers work", {
   foo = auto_partial(function(x, a = 2) c(x, a))
 
@@ -109,4 +128,19 @@ test_that("waivers work", {
   foo = auto_partial(function(x, y, a = 3, b = 4) c(x, y, a, b))
 
   expect_equal(foo(a = waiver(), b = 5)(1)(y = -2, b = waiver()), c(1, -2, 3, 5))
+})
+
+
+# promises ----------------------------------------------------------------
+
+test_that("promise expressions are not retrieved as byte code", {
+  f = function(...) {
+    lapply(promise_list(...), promise_expr_)
+  }
+  f = auto_partial(f)
+  g = compiler::cmpfun(function(...) {
+    gx = 5
+    f(x = gx, ...)
+  })
+  expect_equal(g(), list(x = quote(gx)))
 })

@@ -21,8 +21,8 @@ promise_env_ <- function(promise) {
     .Call(`_ggdist_promise_env_`, promise)
 }
 
-is_waived_ <- function(x) {
-    .Call(`_ggdist_is_waived_`, x)
+is_waiver_ <- function(x) {
+    .Call(`_ggdist_is_waiver_`, x)
 }
 
 dots_to_list_ <- function(dots) {

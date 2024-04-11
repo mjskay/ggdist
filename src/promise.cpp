@@ -11,10 +11,10 @@ using namespace Rcpp;
  */
 // [[Rcpp::export]]
 SEXP unwrap_promise_(SEXP x) {
-  SEXP expr = x;
+  RObject expr = x;
   while (TYPEOF(expr) == PROMSXP) {
     x = expr;
-    expr = PRCODE(x);
+    expr = PREXPR(x);
   }
   return x;
 }
@@ -28,17 +28,20 @@ SEXP unwrap_promise_(SEXP x) {
  */
 // [[Rcpp::export]]
 SEXP find_promise_(Symbol name, Environment env) {
-  return unwrap_promise_(Rf_findVar(name, env));
+  RObject var = Rf_findVar(name, env);
+  return unwrap_promise_(var);
 }
 
 // [[Rcpp::export]]
 SEXP promise_expr_(Promise promise) {
-  return PRCODE(unwrap_promise_(promise));
+  promise = unwrap_promise_(promise);
+  return PREXPR(promise);
 }
 
 // [[Rcpp::export]]
 SEXP promise_env_(Promise promise) {
-  return PRENV(unwrap_promise_(promise));
+  promise = unwrap_promise_(promise);
+  return PRENV(promise);
 }
 
 // identical(x, quote(waiver()))
@@ -55,24 +58,21 @@ bool is_waiver_call(SEXP x) {
 }
 
 // [[Rcpp::export]]
-bool is_waived_(RObject x) {
-  if (TYPEOF(x) != PROMSXP) {
-    return Rf_inherits(x, "waiver");
+bool is_waiver_(RObject x) {
+  if (TYPEOF(x) == PROMSXP) {
+    x = unwrap_promise_(x);
+    RObject expr = PREXPR(x);
+
+    if (TYPEOF(expr) == SYMSXP) {
+      // TODO: should this be PRVALUE?
+      Environment env = PRENV(x);
+      x = Rcpp_eval(expr, env);
+    } else {
+      x = expr;
+    }
   }
 
-  //TODO: fix this so we can use it instead of the R implementation
-  // the problem is bytecode (I think...); need to fix promise_expr
-  x = unwrap_promise_(x);
-  RObject expr = PRCODE(x);
-
-  if (is_waiver_call(expr)) return true;
-
-  if (TYPEOF(expr) == SYMSXP) {
-    RObject var = Rf_eval(expr, PRENV(x));
-    return is_waived_(var);
-  }
-
-  return false;
+  return is_waiver_call(x) || Rf_inherits(x, "waiver");
 }
 
 /**

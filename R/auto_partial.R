@@ -175,15 +175,16 @@ waiver = ggplot2::waiver
   else x
 }
 
-is_waiver = function(x) {
-  if (typeof(x) == "promise") {
-    expr = promise_expr(x)
-    identical(expr, quote(waiver())) ||
-      (is.symbol(expr) && is_waiver(get0(as.character(expr), promise_env(x))))
-  } else {
-    inherits(x, "waiver")
-  }
-}
+is_waiver = is_waiver_
+#   function(x) {
+#   if (typeof(x) == "promise") {
+#     expr = promise_expr(x)
+#     identical(expr, quote(waiver())) ||
+#       (is.symbol(expr) && is_waiver(get0(as.character(expr), promise_env(x))))
+#   } else {
+#     inherits(x, "waiver")
+#   }
+# }
 
 
 # promise lists -----------------------------------------------------------------
@@ -236,6 +237,24 @@ format_promise = function(x) {
 
 # promises ----------------------------------------------------------------
 
+# NOTE: individual promises are always stored in promise lists because
+# they are fragile and prone to evaluating themselves if assigned to variables.
+new_promise = function(expr, env = parent.frame()) {
+  do.call(promise_list, list(expr), envir = env)
+}
+
+promise = function(x, env = parent.frame()) {
+  new_promise(substitute(x), env)
+}
+
+arg_promise = function(x, env = parent.frame()) {
+  expr = substitute(x)
+  stopifnot(is.symbol(expr))
+  # seem to need to do wrap the call to find_promise() in a list rather than
+  # returning directly to avoid evaluating the promise...
+  new_promise_list(list(find_promise(expr, env)))
+}
+
 #' Find a promise by name.
 #' @param name the name of a promise as a string or symbol
 #' @param env the environment to search
@@ -250,7 +269,7 @@ find_promise = find_promise_
 
 promise_expr = function(x) {
   if (typeof(x) == "promise") {
-    do.call(substitute, list(unwrap_promise_(x)))
+    promise_expr_(x)
   } else {
     x
   }
@@ -346,13 +365,24 @@ new_auto_partial = function(
     `>args` = update_args(`>args`, new_args)
 
     if (all(`>required_arg_names` %in% names(`>args`))) {
+      # turn promises that would be evaluated in the calling frame anyway into
+      # expressions, since this works the same but will look better in
+      # match.call() in the most typical user-facing cases
+      caller_env = parent.frame()
+      # TODO: do this, but also don't unpromise expressions that contain the
+      # symbol in `>name`
+      # `>args` = unpromise_in_env(`>args`, caller_env)
+
       # a simpler version of the below would be something like:
       # > do.call(`>f`, args, envir = parent.frame())
       # however this would lead to the function call appearing as the
       # full function body in things like match.call(). So instead
       # we construct a calling environment in which the function is
-      # defined under a readable name.
-      call_env = new.env(parent = parent.frame())
+      # defined under a readable name. This does mean that functions
+      # that inspect the calling context might have issues
+      # TODO: can we manually construct a call that sets the calling context
+      # to caller_env but also has nice function calls in match.call()?
+      call_env = new.env(parent = caller_env)
       call_env[[`>name`]] = `>f`
       do.call(`>name`, `>args`, envir = call_env)
     } else {
@@ -489,10 +519,12 @@ arg_promise_list = function(which = sys.parent()) {
 #' calling function
 #' @noRd
 named_arg_promise_list = function(which = sys.parent()) {
-  f = sys.function(which)
-  call = match.call(f, sys.call(which), envir = sys.frame(which - 1L))
-  arg_names = intersect(names(call[-1]), names(formals(f)))
   env = sys.frame(which)
+  dots_env = do.call(parent.frame, list(), envir = env)
+
+  f = sys.function(which)
+  call = match.call(f, sys.call(which), envir = dots_env)
+  arg_names = intersect(names(call[-1]), names(formals(f)))
   promises = lapply(arg_names, find_promise, env)
   names(promises) = arg_names
   new_promise_list(promises)
@@ -522,6 +554,19 @@ dot_arg_promise_list = function(which = sys.parent()) {
 remove_waivers = function(args) {
   waived = vapply(args, is_waiver, logical(1))
   args[!waived]
+}
+
+#' turn arguments that are in the given environment into expressions instead
+#' of promises
+#' @param args a named list of promises
+#' @param env an environment
+#' @returns a named list of promises and unevaluated expressions, where promises
+#' with the environment `env` have been turned into their corresponding
+#' expressions
+unpromise_in_env = function(args, env) {
+  lapply(args, function(arg) {
+    if (identical(promise_env(arg), env)) promise_expr(arg) else arg
+  })
 }
 
 cat0 = function(...) {
