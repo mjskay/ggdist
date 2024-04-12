@@ -17,6 +17,16 @@ test_that("partial function printing works", {
   expect_equal(add1_auto(a = 2)(a = 3, b = 4)(1), 2)
 })
 
+test_that("classic curry-style invocation works", {
+  f = function(x, y, z, a = 4) list(x, y, z, a)
+  f = auto_partial(f)
+
+  expect_equal(f(1, 2, 3), list(1, 2, 3, 4))
+  expect_equal(f(1)(2)(3), list(1, 2, 3, 4))
+  expect_equal(f(x = 1, a = 5, 2, 3), list(1, 2, 3, 5))
+  expect_equal(f(x = 1)(a = 5, 2)(3), list(1, 2, 3, 5))
+})
+
 test_that("function bodies without braces work", {
   add1_auto_nobrace = auto_partial(function(x, ...) x + 1)
   expect_equal(add1_auto_nobrace(3), 4)
@@ -99,11 +109,11 @@ test_that("auto_partial works on primitive functions", {
 
 # match.call() in auto_partial() ------------------------------------------
 
-test_that("original function names are preserved in match.call after multiple partial applications", {
-  foo = function(x) match.call()
+test_that("match.call supports multiple partial applications", {
+  foo = function(x, y, z) match.call()
   foo = auto_partial(foo)
 
-  expect_equal(foo()()(1), quote(foo(x = 1)))
+  expect_equal(foo(x = 1)(y = 2)(z = 3), quote(foo(x = 1, y = 2, z = 3)))
 })
 
 test_that("match.call() captures expressions, not evaluated values", {

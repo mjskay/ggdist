@@ -210,13 +210,13 @@ promise_list = function(...) {
 #' @export
 print.autopartial_promise_list = function(x, ...) {
   cat0("<promise_list>:\n")
-  print(lapply(x, format_promise), ...)
+  print(lapply(x, make_printable))
   invisible(x)
 }
 
 #' @export
 format.autopartial_promise_list = function(x, ...) {
-  vapply(x, format_promise, character(1))
+  format(lapply(x, make_printable), ...)
 }
 
 #' @export
@@ -225,13 +225,17 @@ print.autopartial_formatted_promise = function(x, ...) {
   invisible(x)
 }
 
-format_promise = function(x) {
-  expr = promise_expr(x)
-  env = promise_env(x)
-  structure(
-    paste0("<promise: ", deparse0(expr), ", ", format(env), ">"),
-    class = c("autopartial_formatted_promise", "character")
-  )
+make_printable = function(x) {
+  if (typeof(x) == "promise") {
+    expr = promise_expr(x)
+    env = promise_env(x)
+    structure(
+      paste0("<promise: ", deparse0(expr), ", ", format(env), ">"),
+      class = c("autopartial_formatted_promise", "character")
+    )
+  } else {
+    x
+  }
 }
 
 is_promise_list = function(x) {
@@ -289,6 +293,54 @@ promise_env = function(x) {
 
 # closures ----------------------------------------------------------------
 
+#' Call a function using promises
+#'
+#' Calls a function using an argument list that may contain promises.
+#'
+#' @param f ([closure] or [primitive]) function to call
+#' @param args ([promise_list], [list], or [pairlist]) list of arguments
+#' to call the function with.
+#' @param env ([environment]) environment to call `f` from. This will be
+#' available as [parent.frame()] within `f`.
+#' @param name ([language] or scalar [character]) name of the function to
+#' use when constructing the unevaluated call. This is purely cosmetic; it
+#' does not affect what function is called, but will be available as
+#' the first element of [sys.call()] within `f`.
+#'
+#' This function is intended as an alternative to [do.call()] that provides
+#' better support for promises when calling [closure]s. In particular,
+#' promises in `args` will be left as-is, allowing precise manipulation of the
+#' expressions and environments of the arguments to `f`.
+#'
+#' The name of the function in the unevaluated call provided to `f` via
+#' [sys.call()] can also be set via `name`, making it possible to avoid
+#' potentially-ugly captured function calls created by `match.call()` in `f`.
+#' @noRd
+pcall = function(f, args, env = parent.frame(), name = substitute(f)) {
+  # a simpler version of the below would be something like:
+  # > do.call(f, args, envir = env)
+  # however this would lead to the function call appearing as the
+  # full function body in things like match.call().
+  switch(typeof(f),
+    closure = {
+      # for closures, we can manually construct the call such that the
+      # following functions work when used in the closure:
+      # (1) sys.call() / match.call() will pick up a nice-looking call
+      # (2) substitute() gives nice-looking expressions
+      # (3) parent.frame() gives the the same frame the user called us from
+      arg_exprs = lapply(args, promise_expr)
+      if (is.character(name)) name = as.symbol(name)
+      call = as.call(c(list(name), arg_exprs))
+      apply_closure(call, f, args, env)
+    },
+    special = {
+      # for primitives / builtins we can at least ensure the calling frame
+      # is the same frame the user called us from
+      do.call(f, args, envir = env)
+    }
+  )
+}
+
 #' Call a closure
 #' @param call ([call]) expression of the function call with its arguments.
 #' This is not evaluated, but will be available in the closure as [sys.call()].
@@ -345,18 +397,20 @@ partial_ = function(.f, ...) {
 #'
 #' Construct a version of the function `f` that is partially applied when called
 #' unless all required arguments have been supplied.
-#' @param f function to automatically partially-apply
-#' @param args a [promise_list()] of arguments
-#' @param required_arg_names character vector of the names of required arguments
+#' @param f ([closure] or [primitive]) function to automatically partially-apply
+#' @param args ([list]; typically a [promise_list]) arguments to apply now
+#' @param required_arg_names ([character] vector) names of required arguments
 #' in `f`. When all of these have been supplied, the function will be evaluated.
 #' The default, `find_required_arg_names(f)`, considers all arguments without a
 #' default value in the function definition to be required. Pass `NULL` or
 #' `character()` to get tradition (non-automatic) partial application.
-#' @param name the name of the function as a string. Used for printing purposes
-#' only.
-#' @param waivable if `TRUE`, if you pass `waiver()` to an argument to this
-#' function, whatever value that argument already has will be used instead.
-#' @returns a function that when called will be partially applied until all of
+#' @param name (scalar [character]) the name of the function. Used for printing
+#' purposes only. If `NULL`, the expression passed in for `f` is used if that
+#' expression is a symbol, and `"."` is used otherwise.
+#' @param waivable (scalar [logical]) if `TRUE`, if you pass `waiver()` to an
+#' argument to this function, whatever value that argument already has will be
+#' used instead.
+#' @returns a [function] that when called will be partially applied until all of
 #' the arguments in `required_arg_names` have been supplied.
 #' @noRd
 new_auto_partial = function(
@@ -366,11 +420,14 @@ new_auto_partial = function(
   name = NULL,
   waivable = TRUE
 ) {
-  name = name %||% "."
+  if (is.null(name)) {
+    f_expr = substitute(f)
+    name = if (is.symbol(f_expr)) as.character(f_expr) else "."
+  }
   stopifnot(
     "`f` must be a function" = is.function(f),
     "`f` cannot be a primitive function without an argument lists, like `if`" = !is.null(args(f)),
-    "`args` must be a promise_list" = is_promise_list(args),
+    "`args` must be a list" = is.list(args) || is.pairlist(args),
     "`required_arg_names` must be a character vector" = is.character(required_arg_names) || is.null(required_arg_names),
     "`name` must be a string" = is.character(name) && length(name) == 1,
     "`waivable` must be a scalar logical" = is.logical(waivable) && length(waivable) == 1
@@ -391,29 +448,31 @@ new_auto_partial = function(
     `>args` = update_args(`>args`, new_args)
 
     if (all(`>required_arg_names` %in% names(`>args`))) {
-      # a simpler version of the below would be something like:
-      # > do.call(`>f`, args, envir = parent.frame())
-      # however this would lead to the function call appearing as the
-      # full function body in things like match.call().
-      caller_env = parent.frame()
-      switch(typeof(`>f`),
-        closure = {
-          # for closures, we can manually construct the call such that the
-          # following functions work when used in the closure:
-          # (1) sys.call() / match.call() will pick up a nice-looking call
-          # (2) substitute() gives nice-looking expressions
-          # (3) parent.frame() gives the the same frame the user called us from
-          arg_exprs = lapply(`>args`, promise_expr)
-          f_expr = as.symbol(`>name`)
-          call = as.call(c(list(f_expr), arg_exprs))
-          apply_closure(call, `>f`, `>args`, caller_env)
-        },
-        special = {
-          # for primitives / builtins we can at least ensure the calling frame
-          # is the same frame the user called us from
-          do.call(`>f`, `>args`, envir = caller_env)
-        }
-      )
+      # n = sys.call()[[1]]
+      pcall(`>f`, `>args`, env = parent.frame(), name = `>name`)
+      # # a simpler version of the below would be something like:
+      # # > do.call(`>f`, args, envir = parent.frame())
+      # # however this would lead to the function call appearing as the
+      # # full function body in things like match.call().
+      # caller_env = parent.frame()
+      # switch(typeof(`>f`),
+      #   closure = {
+      #     # for closures, we can manually construct the call such that the
+      #     # following functions work when used in the closure:
+      #     # (1) sys.call() / match.call() will pick up a nice-looking call
+      #     # (2) substitute() gives nice-looking expressions
+      #     # (3) parent.frame() gives the the same frame the user called us from
+      #     arg_exprs = lapply(`>args`, promise_expr)
+      #     f_expr = as.symbol(`>name`)
+      #     call = as.call(c(list(f_expr), arg_exprs))
+      #     apply_closure(call, `>f`, `>args`, caller_env)
+      #   },
+      #   special = {
+      #     # for primitives / builtins we can at least ensure the calling frame
+      #     # is the same frame the user called us from
+      #     do.call(`>f`, `>args`, envir = caller_env)
+      #   }
+      # )
     } else {
       new_auto_partial(`>f`, `>args`, `>required_arg_names`, `>name`, `>waivable`)
     }
@@ -502,12 +561,9 @@ update_args = function(old_args, new_args) {
 
 #' @export
 c.autopartial_promise_list = function(...) {
-  xs = list(...)
-  if (all(vapply(xs, is_promise_list, logical(1)))) {
-    new_promise_list(NextMethod())
-  } else {
-    NextMethod()
-  }
+  out = NextMethod()
+  if (is.list(out)) out = new_promise_list(out)
+  out
 }
 
 #' Return the names of required arguments for function `f`
