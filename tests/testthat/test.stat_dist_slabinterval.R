@@ -820,6 +820,8 @@ test_that("dist_categorical works", {
 })
 
 test_that("dist_categorical works with modified scale limits", {
+  skip_if_not_installed("posterior")
+
   p = ggplot_build(
     ggplot() +
       stat_slab(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c"))))) +
@@ -842,6 +844,8 @@ test_that("dist_categorical works with modified scale limits", {
 })
 
 test_that("dist_categorical works with explicit integer levels", {
+  skip_if_not_installed("posterior")
+
   p = ggplot_build(
     ggplot() +
       stat_slab(aes(xdist = dist_categorical(list(c(3,1)/4), list(c(1L,3L)))))
@@ -862,6 +866,8 @@ test_that("dist_categorical works with explicit integer levels", {
 })
 
 test_that("dist_sample works", {
+  skip_if_not_installed("posterior")
+
   p = ggplot_build(
     ggplot() +
       stat_slabinterval(aes(xdist = dist_categorical(list(3:1/6), list(c("a","b","c")))))
