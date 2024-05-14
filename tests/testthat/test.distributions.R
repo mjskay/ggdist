@@ -106,7 +106,7 @@ test_that("constant distributions are detected correctly", {
 # factor rvars ----------------------------------------------------
 
 test_that("distribution functions work on factor rvars", {
-  skip_if_not_installed("posterior")
+  skip_if_not_installed("posterior", "1.4.0")
 
   x_values = c("a","a","b","b","b","c","c","c","c")
 
