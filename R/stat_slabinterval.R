@@ -702,7 +702,7 @@ layer_slabinterval = function(...) {
             plot$scales$add(scale)
           }
           scale$limits = scale$limits %||% distr_levels(data[[dist]])
-          scale$train(posterior::draws_of(data[[dist]]))
+          scale$train(distr_levels(data[[dist]]))
         }
       }
       data
