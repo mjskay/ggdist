@@ -236,6 +236,8 @@ test_that("subguide_axis(numeric()) works but is not zeroGrob()", {
 # subguide_integer --------------------------------------------------------
 
 test_that("integer subguide corner cases work", {
+  skip_if_no_vdiffr()
+
   df = data.frame(x = c(1, 2), t = c(0, 0.5))
 
   sg = subguide_integer(theme = theme_test())

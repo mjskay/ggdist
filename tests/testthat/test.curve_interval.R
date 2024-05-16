@@ -84,6 +84,8 @@ test_that("curve_interval works with lineribbon", {
 # basic cases: 95%, 0%, 100%, > 100% ---------------------------------------------
 
 test_that("basic cases on single interval work", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(value = ppoints(1000))
 
   ref = data.frame(
@@ -116,6 +118,8 @@ test_that("basic cases on single interval work", {
 })
 
 test_that("basic cases on single curve work", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(x = 1:3, y = rep(ppoints(1000), each = 3) + 1:3)
 
   ref = data.frame(
@@ -134,7 +138,6 @@ test_that("basic cases on single curve work", {
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
 
-  skip_if_not_installed("posterior")
   # data frame of rvars
   y_rvar = rep(posterior::rvar(ppoints(1000)), 3) + 1:3
   df = data.frame(x = 1:3, y = y_rvar)
@@ -149,6 +152,8 @@ test_that("basic cases on single curve work", {
 })
 
 test_that("basic cases on multiple variables", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(
     x = 1:3,
     y1 = rep(ppoints(1000), each = 3) + 1:3,
@@ -181,17 +186,23 @@ test_that("basic cases on multiple variables", {
 # errors ------------------------------------------------------------------
 
 test_that("error is thrown when no columns found to summarize", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(value = ppoints(10))
   expect_error(curve_interval(df, .exclude = "value"), "No columns found to calculate point and interval summaries for")
   expect_error(curve_interval(df, .along = x))
 })
 
 test_that("error is thrown when along does not match a column", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(value = ppoints(10))
   expect_error(curve_interval(df, .along = x), class = "ggdist_invalid_column_selection")
 })
 
 test_that("error is thrown with groups of different sizes", {
+  skip_if_not_installed("posterior")
+
   df = data.frame(
     value = ppoints(9),
     group = c("a", "a", "b"),
@@ -201,6 +212,8 @@ test_that("error is thrown with groups of different sizes", {
 })
 
 test_that("curve_interval(<rvar>) and curve_interval(<matrix>) do not support along", {
+  skip_if_not_installed("posterior")
+
   expect_error(
     curve_interval(matrix(1:4, nrow = 2), .along = "x"),
     'does\\s+not\\s+support\\s+the\\s+[^a-zA-Z]*\\.along[^a-zA-Z]*\\s+argument'
