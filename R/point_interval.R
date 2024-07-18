@@ -522,12 +522,13 @@ hdi_.distribution = function(x, .width = .95, na.rm = FALSE, ..., density = dens
 #' @rdname point_interval
 #' @importFrom rlang is_integerish
 #' @importFrom stats density
-Mode = function(x, na.rm = FALSE, ...) {
+Mode = function(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...) {
   UseMethod("Mode")
 }
 #' @export
 #' @rdname point_interval
-Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = TRUE), n = 2001, weights = NULL) {
+Mode.default = function(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ..., density = density_bounded(trim = TRUE), n = 2001, weights = NULL) {
+  type = match.arg(type)
   if (na.rm) {
     x = x[!is.na(x)]
   } else if (anyNA(x)) {
@@ -535,7 +536,15 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
   }
   density = match_function(density, "density_")
 
-  if (is_integerish(x)) {
+  if (type == "auto") {
+    if (is_integerish(x)) {
+      type = "discrete"
+    } else {
+      type = "continuous"
+    }
+  }
+
+  if (type == "discrete") {
     if (is.null(weights)) {
       # for the discrete case, based on https://stackoverflow.com/a/8189441
       ux = unique(x)
@@ -553,20 +562,20 @@ Mode.default = function(x, na.rm = FALSE, ..., density = density_bounded(trim = 
 }
 #' @export
 #' @rdname point_interval
-Mode.rvar = function(x, na.rm = FALSE, ...) {
+Mode.rvar = function(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...) {
   draws = posterior::draws_of(x)
   .dim = dim(draws)
-  apply(draws, seq_along(.dim)[-1], Mode, na.rm = na.rm, weights = weights(x))
+  apply(draws, seq_along(.dim)[-1], Mode, na.rm = na.rm, type = type, weights = weights(x))
 }
 #' @importFrom stats optim
 #' @export
 #' @rdname point_interval
-Mode.distribution = function(x, na.rm = FALSE, ...) {
+Mode.distribution = function(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...) {
   find_mode = function(x) {
     if (anyNA(x)) {
       NA_real_
     } else if (distr_is_sample(x)) {
-      Mode(distr_get_sample(x), na.rm = na.rm, weights = distr_get_sample_weights(x))
+      Mode(distr_get_sample(x), na.rm = na.rm, type = type, weights = distr_get_sample_weights(x))
     } else if (distr_is_constant(x)) {
       quantile(x, 0.5)[[1]]
     } else if (distr_is_discrete(x)) {
