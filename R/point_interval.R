@@ -102,6 +102,11 @@ globalVariables(c("y", "ymin", "ymax"))
 #' and unbounded data.
 #' @param n For [hdi()] and [Mode()], the number of points to use to estimate highest-density
 #' intervals or modes.
+#' @param type For [Mode()], the type of estimator to use. Can be `"discrete"` to compute
+#' the discrete mode (the single most frequently occurring value) or `"continuous"`
+#' to compute the maximum a posteriori (MAP) estimate (the maximum value of the
+#' the estimated density). The default `"auto"` uses `"discrete"` if `x` is
+#' an integer or non-numeric (see [`rlang::is_integerish()`]) and `"continuous"` otherwise.
 #' @param weights For [Mode()], an optional vector, which (if not `NULL`) is of the same length
 #' as `x` and provides weights for each element of `x`.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
@@ -537,7 +542,7 @@ Mode.default = function(x, na.rm = FALSE, type = c("auto", "discrete", "continuo
   density = match_function(density, "density_")
 
   if (type == "auto") {
-    if (is_integerish(x)) {
+    if (is_integerish(x) || !is.numeric(x)) {
       type = "discrete"
     } else {
       type = "continuous"

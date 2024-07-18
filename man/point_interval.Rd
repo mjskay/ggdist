@@ -107,20 +107,21 @@ hdi(
   .prob
 )
 
-Mode(x, na.rm = FALSE, ...)
+Mode(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...)
 
 \method{Mode}{default}(
   x,
   na.rm = FALSE,
+  type = c("auto", "discrete", "continuous"),
   ...,
   density = density_bounded(trim = TRUE),
   n = 2001,
   weights = NULL
 )
 
-\method{Mode}{rvar}(x, na.rm = FALSE, ...)
+\method{Mode}{rvar}(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...)
 
-\method{Mode}{distribution}(x, na.rm = FALSE, ...)
+\method{Mode}{distribution}(x, na.rm = FALSE, type = c("auto", "discrete", "continuous"), ...)
 
 hdci(x, .width = 0.95, na.rm = FALSE)
 
@@ -205,6 +206,12 @@ and unbounded data.}
 
 \item{n}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the number of points to use to estimate highest-density
 intervals or modes.}
+
+\item{type}{For \code{\link[=Mode]{Mode()}}, the type of estimator to use. Can be \code{"discrete"} to compute
+the discrete mode (the single most frequently occurring value) or \code{"continuous"}
+to compute the maximum a posteriori (MAP) estimate (the maximum value of the
+the estimated density). The default \code{"auto"} uses \code{"discrete"} if \code{x} is
+an integer or non-numeric (see \code{\link[rlang:is_integerish]{rlang::is_integerish()}}) and \code{"continuous"} otherwise.}
 
 \item{weights}{For \code{\link[=Mode]{Mode()}}, an optional vector, which (if not \code{NULL}) is of the same length
 as \code{x} and provides weights for each element of \code{x}.}
