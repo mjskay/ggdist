@@ -39,7 +39,7 @@ Suggests:
     tidyselect,
     dplyr (>= 1.0.0),
     fda,
-    posterior,
+    posterior (>= 1.4.0),
     beeswarm (>= 0.4.0),
     rmarkdown,
     knitr,
