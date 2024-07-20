@@ -142,3 +142,19 @@ test_that("weighted density estimator works", {
   expect_equal(du$x, d$x)
   expect_equal(du$y, d$y)
 })
+
+
+# plot() ------------------------------------------------------------------
+
+test_that("plot(<density>) limits work", {
+  skip_if_no_vdiffr()
+
+  d = density_histogram(1:2, breaks = 1)
+  vdiffr::expect_doppelganger("plot.ggdist_density sets zero baseline by default",
+    plot(d)
+  )
+
+  vdiffr::expect_doppelganger("plot.ggdist_density ylim = NULL resets limits",
+    plot(d, ylim = NULL)
+  )
+})

@@ -13,7 +13,7 @@
 #' (`lower`) and upper (`upper`) limits of the slab values in their original
 #' data units.
 #'
-#' @param x An object (typically a `numeric()`) representing scaled values
+#' @param x An object (typically a [`numeric`]) representing scaled values
 #' to be converted to a `thickness()` object.
 #' @param lower The original lower bounds of thickness values before scaling.
 #' May be `NA` to indicate that this bound is not known.
@@ -104,10 +104,6 @@ format.ggdist_thickness = function(x, ...) {
 
 
 # casting -------------------------------------------------------
-
-as_thickness = function(x) {
-  vec_cast(x, new_thickness())
-}
 
 #' @export
 vec_ptype2.ggdist_thickness.ggdist_thickness = function(x, y, ...) new_thickness()

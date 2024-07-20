@@ -7,7 +7,7 @@
 thickness(x = double(), lower = NA_real_, upper = NA_real_)
 }
 \arguments{
-\item{x}{An object (typically a \code{numeric()}) representing scaled values
+\item{x}{An object (typically a \code{\link{numeric}}) representing scaled values
 to be converted to a \code{thickness()} object.}
 
 \item{lower}{The original lower bounds of thickness values before scaling.
