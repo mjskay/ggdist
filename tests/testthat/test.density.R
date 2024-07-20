@@ -148,6 +148,7 @@ test_that("weighted density estimator works", {
 
 test_that("plot(<density>) limits work", {
   skip_if_no_vdiffr()
+  skip_if_old_plot()
 
   d = density_histogram(1:2, breaks = 1)
   vdiffr::expect_doppelganger("plot.ggdist_density sets zero baseline by default",

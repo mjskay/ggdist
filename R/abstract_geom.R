@@ -222,7 +222,7 @@ make_geom = function(geom,
     }),                                                        # nocov end
     env = parent.frame()
   )
-  new_f = removeSource(new_f)
+  new_f = utils::removeSource(new_f)
 
   new_f
 }

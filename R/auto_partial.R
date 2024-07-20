@@ -205,7 +205,7 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
     }),
     env = environment(f)
   )
-  new_f = removeSource(new_f)
+  new_f = utils::removeSource(new_f)
 
   new_f
 }
