@@ -12,11 +12,9 @@ skip_if_no_vdiffr = function() {
 }
 
 #' skip tests senstive to minor changes in density() in R 4.4
-#' For now, these tests will be skipped in R 4.4 (devel).
-#' Once R 4.4 becomes the release version, invert this and update snapshots.
 #' @noRd
 skip_if_sensitive_to_density = function() {
-  testthat::skip_if(getRversion() >= "4.4", "density() output changed in R 4.4")
+  testthat::skip_if(getRversion() < "4.4", "density() output changed in R 4.4")
 }
 
 #' skip tests if gradient support for visual test cases is not available
