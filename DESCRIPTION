@@ -61,7 +61,7 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: true
 Encoding: UTF-8
 Collate:
