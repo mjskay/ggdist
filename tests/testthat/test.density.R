@@ -152,10 +152,10 @@ test_that("plot(<density>) limits work", {
 
   d = density_histogram(1:2, breaks = 1)
   vdiffr::expect_doppelganger("plot.ggdist_density sets zero baseline by default",
-    plot(d)
+    function() plot(d)
   )
 
   vdiffr::expect_doppelganger("plot.ggdist_density ylim = NULL resets limits",
-    plot(d, ylim = NULL)
+    function() plot(d, ylim = NULL)
   )
 })
