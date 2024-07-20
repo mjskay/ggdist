@@ -20,7 +20,7 @@ skip_if_sensitive_to_density = function() {
 #' skip tests with minor numerical variations on Mac OS
 #' @noRd
 skip_if_mac = function() {
-  skip_on_os("mac")
+  testthat::skip_on_os("mac")
 }
 
 #' skip tests if gradient support for visual test cases is not available

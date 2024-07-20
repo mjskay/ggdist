@@ -205,7 +205,7 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
     }),
     env = environment(f)
   )
-  attr(new_f, "srcref") = attr(f, "srcref")
+  attr(body(new_f), "srcref") = NULL
 
   new_f
 }

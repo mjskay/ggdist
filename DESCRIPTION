@@ -19,7 +19,7 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
     barplots (Fernandes M., Walls L., Munson S., Hullman J., Kay M., 2018) <doi:10.1145/3173574.3173718>,
     and fit curves with multiple uncertainty ribbons.
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.0.0)
 Imports:
     grid,
     ggplot2 (>= 3.5.0),

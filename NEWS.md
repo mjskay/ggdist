@@ -1,7 +1,8 @@
 # ggdist (development version)
 
-New features and enhancements:
+Major changes:
 
+* Require R > 4.0 due to several dependencies now requiring it.
 * To complement the `subguide`s for `geom_slab()`, there are now `subscale`s,
   which can be used to adjust the `limits` or the `expand` parameter of the 
   `thickness` per-geometry sub-scales (in much the same way those 
