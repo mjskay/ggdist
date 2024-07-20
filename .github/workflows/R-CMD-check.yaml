@@ -1,46 +1,65 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# NOTE: This workflow is overkill for most R packages and
+# check-standard.yaml is likely a better choice.
+# usethis::use_github_action("check-standard") will install it.
 on:
   push:
     branches:
       - '*'
   pull_request:
     branches:
+      - main
       - master
       - dev
 
 name: R-CMD-check
 
+permissions: read-all
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.suffix }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: macOS-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: 'oldrel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: '4.1', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: '4.0', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: ubuntu-latest, r: '3.6', suffix: '', not_cran: 'true', vignettes: 'NULL'}
+          - {os: macos-latest,   r: 'release'}
+
+          - {os: windows-latest, r: 'release'}
+          # use 4.1 to check with rtools40's older compiler
+          - {os: windows-latest, r: '4.1'}
+
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'oldrel-1'}
+          - {os: ubuntu-latest,  r: 'oldrel-2'}
+          - {os: ubuntu-latest,  r: 'oldrel-3'}
+          - {os: ubuntu-latest,  r: 'oldrel-4'}
 
     env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-pandoc@v2
+      - name: Install pngquant
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y pngquant
 
       - name: Query dependencies
         run: |
@@ -61,14 +80,9 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
+          Rscript -e "install.packages('pak')"
+          sysreqs=$(Rscript -e "cat(tryCatch(pak::pkg_sysreqs('.', dependencies = TRUE), error = function(e) pak::pkg_sysreqs('.'))[['install_scripts']])")
           sudo -s eval "$sysreqs"
-
-      - name: Install pngquant
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install -y pngquant
 
       - name: Install dependencies
         run: |
@@ -76,22 +90,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          _R_CHECK_FORCE_SUGGESTS_: false
-          NOT_CRAN: ${{ matrix.config.not_cran }}
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", ${{ matrix.config.vignettes }}), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@v3
+      - uses: r-lib/actions/check-r-package@v2
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
-
-      - name: Test coverage
-        if: matrix.config.r == 'release' && runner.os == 'Linux'
-        run: covr::codecov()
-        shell: Rscript {0}
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
