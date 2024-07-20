@@ -162,6 +162,8 @@ test_that("scale transformation works on halfeye", {
 test_that("pdf and cdf aesthetics work", {
   skip_if_no_vdiffr()
   skip_if_sensitive_to_density()
+  # skip on Mac OS due to minor numerical variations
+  skip_if_mac()
 
 
   p = data.frame(

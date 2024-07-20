@@ -11,10 +11,16 @@ skip_if_no_vdiffr = function() {
   testthat::skip_if_not_installed("ggplot2", "3.3.3.9000")
 }
 
-#' skip tests senstive to minor changes in density() in R 4.4
+#' skip tests sensitive to minor changes in density() in R 4.4
 #' @noRd
 skip_if_sensitive_to_density = function() {
   testthat::skip_if(getRversion() < "4.4", "density() output changed in R 4.4")
+}
+
+#' skip tests with minor numerical variations on Mac OS
+#' @noRd
+skip_if_mac = function() {
+  skip_on_os("mac")
 }
 
 #' skip tests if gradient support for visual test cases is not available

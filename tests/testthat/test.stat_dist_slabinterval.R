@@ -354,6 +354,8 @@ test_that("scale transformation works", {
 test_that("scale transformation works on dist_sample", {
   skip_if_no_vdiffr()
   skip_if_sensitive_to_density()
+  # skip on Mac OS due to minor numerical variations
+  skip_if_mac()
 
 
   p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%

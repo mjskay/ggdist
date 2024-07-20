@@ -56,14 +56,6 @@ test_that("one-group geom_lineribbons work", {
       geom_lineribbon() +
       scale_fill_brewer()
   )
-  vdiffr::expect_doppelganger("one-group geom_lineribbon (reverse order)",
-    df %>%
-      group_by(x, g) %>%
-      mean_hdi(y, .width = c(.50, .75, .90)) %>%
-      ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-      geom_lineribbon() +
-      scale_fill_brewer()
-  )
   vdiffr::expect_doppelganger("one-group geom_lineribbon (manual aes)",
     df %>%
       group_by(x, g) %>%
@@ -78,6 +70,19 @@ test_that("one-group geom_lineribbons work", {
       mode_qi(y, .width = c(.50, .75, .90)) %>%
       rename(l = .lower, u = .upper) %>%
       ggplot(aes(x = y, y = x, xmin = l, xmax = u)) +
+      geom_lineribbon() +
+      scale_fill_brewer()
+  )
+
+
+  # skip on Mac OS due to minor numerical variations
+  skip_if_mac()
+
+  vdiffr::expect_doppelganger("one-group geom_lineribbon (reverse order)",
+    df %>%
+      group_by(x, g) %>%
+      mean_hdi(y, .width = c(.50, .75, .90)) %>%
+      ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
   )
