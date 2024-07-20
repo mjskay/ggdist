@@ -205,7 +205,7 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
     }),
     env = environment(f)
   )
-  attr(body(new_f), "srcref") = NULL
+  new_f = removeSource(new_f)
 
   new_f
 }

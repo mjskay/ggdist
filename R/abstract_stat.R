@@ -166,7 +166,7 @@ make_stat = function(stat, geom,
     }),                                                      # nocov end
     env = parent.frame()
   )
-  attr(body(new_f), "srcref") = NULL
+  new_f = removeSource(new_f)
 
   new_f
 }
