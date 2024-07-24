@@ -12,30 +12,31 @@
 #' Unbounded density estimator using [stats::density()].
 #' @template description-auto-partial-waivable
 #'
-#' @param x numeric vector containing a sample to compute a density estimate for.
-#' @param weights optional numeric vector of weights to apply to `x`.
-#' @param n numeric: the number of grid points to evaluate the density estimator at.
-#' @param bandwidth bandwidth of the density estimator. One of:
+#' @param x <[numeric]> Sample to compute a density estimate for.
+#' @param weights <[numeric] | [NULL]> Optional weights to apply to `x`.
+#' @param n <scalar [numeric]> The number of grid points to evaluate the density estimator at.
+#' @param bandwidth <scalar [numeric] | [function] | [string][character]>
+#' Bandwidth of the density estimator. One of:
 #'   - a numeric: the bandwidth, as the standard deviation of the kernel
 #'   - a function: a function taking `x` (the sample) and returning the bandwidth
 #'   - a string: the suffix of the name of a function starting with `"bandwidth_"` that
 #'     will be used to determine the bandwidth. See [bandwidth] for a list.
 #' @eval rd_param_density_adjust()
-#' @param kernel string: the smoothing kernel to be used. This must partially
+#' @param kernel <[string][character]> The smoothing kernel to be used. This must partially
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @eval rd_param_density_trim()
-#' @param adapt (**very experimental**) The name and interpretation of this argument
-#' are subject to change without notice. Positive integer. If `adapt > 1`, uses
+#' @param adapt <positive [integer]> (**very experimental**) The name and interpretation of this argument
+#' are subject to change without notice. If `adapt > 1`, uses
 #' an adaptive approach to calculate the density. First, uses the
 #' adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
 #' bandwidths, then groups these bandwidths into `adapt` groups, then calculates
 #' and sums the densities from each group. You can set this to a very large number
 #' (e.g. `Inf`) for a fully adaptive approach, but this will be very slow; typically
 #' something around 100 yields nearly identical results.
-#' @param na.rm Should missing (`NA`) values in `x` be removed?
+#' @param na.rm <scalar [logical]> Should missing (`NA`) values in `x` be removed?
 #' @param ... Additional arguments (ignored).
-#' @param range_only If `TRUE`, the range of the output of this density estimator
+#' @param range_only <scalar [logical]> If `TRUE`, the range of the output of this density estimator
 #' is computed and is returned in the `$x` element of the result, and `c(NA, NA)`
 #' is returned in `$y`. This gives a faster way to determine the range of the output
 #' than `density_XXX(n = 2)`.
@@ -124,9 +125,10 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #' @template description-auto-partial-waivable
 #'
 #' @inheritParams density_unbounded
-#' @param bounds length-2 vector of min and max bounds. If a bound is `NA`, then
+#' @param bounds <length-2 [numeric]> Min and max bounds. If a bound is `NA`, then
 #' that bound is estimated from the data using the method specified by `bounder`.
-#' @param bounder Method to use to find missing (`NA`) `bounds`. A function that
+#' @param bounder <[function] | [string][character]> Method to use to find missing
+#' (`NA`) `bounds`. A function that
 #' takes a numeric vector of values and returns a length-2 vector of the estimated
 #' lower and upper bound of the distribution. Can also be a string giving the
 #' suffix of the name of such a function that starts with `"bounder_"`. Useful
@@ -262,18 +264,22 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' Histogram density estimator.
 #' @template description-auto-partial-waivable
 #'
-#' @param x numeric vector containing a sample to compute a density estimate for.
-#' @param weights optional numeric vector of weights to apply to `x`.
+#' @inheritParams density_unbounded
 #' @eval rd_param_density_breaks()
 #' @eval rd_param_density_align()
-#' @param outline_bars Should outlines in between the bars (i.e. density values of
+#' @param outline_bars <scalar [logical]> Should outlines in between the bars (i.e. density values of
 #' 0) be included?
-#' @param na.rm Should missing (`NA`) values in `x` be removed?
-#' @param ... Additional arguments (ignored).
-#' @param range_only If `TRUE`, the range of the output of this density estimator
-#' is computed and is returned in the `$x` element of the result, and `c(NA, NA)`
-#' is returned in `$y`. This gives a faster way to determine the range of the output
-#' than `density_XXX(n = 2)`.
+#' @param right_closed <scalar [logical]> Should the right edge of each bin be closed? For
+#' a bin with endpoints \eqn{L} and \eqn{U}:
+#'  - if `TRUE`, use \eqn{(L, U]}: the interval containing all \eqn{x} such that \eqn{L < x \le U}.
+#'  - if `FALSE`, use \eqn{[L, U)}: the interval containing all \eqn{x} such that \eqn{L \le x < U}.
+#'
+#' Equivalent to the `right` argument of [hist()] or the `left.open` argument of [findInterval()].
+#' @param outermost_closed <scalar [logical]> Should values on the edges of the outermost (first
+#' or last) bins always be included in those bins? If `TRUE`, the first edge (when `right_closed = TRUE`)
+#' or the last edge (when `right_closed = FALSE`) is treated as closed.
+#'
+#' Equivalent to the `include.lowest` argument of [hist()] or the `rightmost.closed` argument of [findInterval()].
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -310,6 +316,8 @@ density_histogram = auto_partial(name = "density_histogram", function(
   breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
+  right_closed = TRUE,
+  outermost_closed = TRUE,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -317,7 +325,11 @@ density_histogram = auto_partial(name = "density_histogram", function(
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
 
-  h = weighted_hist(x, weights = weights, breaks = breaks, align = align)
+  h = weighted_hist(
+    x, weights = weights,
+    breaks = breaks, align = align,
+    right_closed = right_closed, outermost_closed = outermost_closed
+  )
   input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
   input_2 = h$breaks[-1]                 # second edge of bin
   input_ = (input_1 + input_2)/2   # center of bin

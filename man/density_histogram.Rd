@@ -10,18 +10,21 @@ density_histogram(
   breaks = "Scott",
   align = "none",
   outline_bars = FALSE,
+  right_closed = TRUE,
+  outermost_closed = TRUE,
   na.rm = FALSE,
   ...,
   range_only = FALSE
 )
 }
 \arguments{
-\item{x}{numeric vector containing a sample to compute a density estimate for.}
+\item{x}{<\link{numeric}> Sample to compute a density estimate for.}
 
-\item{weights}{optional numeric vector of weights to apply to \code{x}.}
+\item{weights}{<\link{numeric} | \link{NULL}> Optional weights to apply to \code{x}.}
 
-\item{breaks}{Determines the breakpoints defining bins. Default \code{"Scott"}. Similar to (but not exactly the
-same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
+\item{breaks}{<\link{numeric} | \link{function} | \link[=character]{string}>
+Determines the breakpoints defining bins. Default \code{"Scott"}. Similar to (but not exactly the same as) the \code{breaks}
+argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
 \item A vector numeric giving the breakpoints between histogram bins
@@ -37,7 +40,8 @@ For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]
 \code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
 set the bin width to \code{1}.}
 
-\item{align}{Determines how to align the breakpoints defining bins. Default \code{"none"} (performs no alignment). One of:
+\item{align}{<scalar \link{numeric} | \link{function} | \link[=character]{string}>
+Determines how to align the breakpoints defining bins. Default \code{"none"} (performs no alignment). One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted
 from the breaks. The offset must be between \code{0} and the bin width.
@@ -51,14 +55,29 @@ For example, \code{align = "none"} will provide no alignment,
 \code{align = align_center(at = 0)} will center a bin on \code{0}, and
 \code{align = align_boundary(at = 0)} will align a bin edge on \code{0}.}
 
-\item{outline_bars}{Should outlines in between the bars (i.e. density values of
+\item{outline_bars}{<scalar \link{logical}> Should outlines in between the bars (i.e. density values of
 0) be included?}
 
-\item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
+\item{right_closed}{<scalar \link{logical}> Should the right edge of each bin be closed? For
+a bin with endpoints \eqn{L} and \eqn{U}:
+\itemize{
+\item if \code{TRUE}, use \eqn{(L, U]}: the interval containing all \eqn{x} such that \eqn{L < x \le U}.
+\item if \code{FALSE}, use \eqn{[L, U)}: the interval containing all \eqn{x} such that \eqn{L \le x < U}.
+}
+
+Equivalent to the \code{right} argument of \code{\link[=hist]{hist()}} or the \code{left.open} argument of \code{\link[=findInterval]{findInterval()}}.}
+
+\item{outermost_closed}{<scalar \link{logical}> Should values on the edges of the outermost (first
+or last) bins always be included in those bins? If \code{TRUE}, the first edge (when \code{right_closed = TRUE})
+or the last edge (when \code{right_closed = FALSE}) is treated as closed.
+
+Equivalent to the \code{include.lowest} argument of \code{\link[=hist]{hist()}} or the \code{rightmost.closed} argument of \code{\link[=findInterval]{findInterval()}}.}
+
+\item{na.rm}{<scalar \link{logical}> Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments (ignored).}
 
-\item{range_only}{If \code{TRUE}, the range of the output of this density estimator
+\item{range_only}{<scalar \link{logical}> If \code{TRUE}, the range of the output of this density estimator
 is computed and is returned in the \verb{$x} element of the result, and \code{c(NA, NA)}
 is returned in \verb{$y}. This gives a faster way to determine the range of the output
 than \code{density_XXX(n = 2)}.}

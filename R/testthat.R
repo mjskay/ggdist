@@ -16,6 +16,7 @@ skip_if_no_vdiffr = function() {
 
 #' skip tests of plot() on old versions of R (minor changes appear to
 #' make them incompatible)
+#' @noRd
 skip_if_old_plot = function() {
   testthat::skip_if_not(getRversion() > "4.3", "plot() output changed in R 4.3")
 }

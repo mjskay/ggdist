@@ -19,13 +19,14 @@ density_unbounded(
 )
 }
 \arguments{
-\item{x}{numeric vector containing a sample to compute a density estimate for.}
+\item{x}{<\link{numeric}> Sample to compute a density estimate for.}
 
-\item{weights}{optional numeric vector of weights to apply to \code{x}.}
+\item{weights}{<\link{numeric} | \link{NULL}> Optional weights to apply to \code{x}.}
 
-\item{n}{numeric: the number of grid points to evaluate the density estimator at.}
+\item{n}{<scalar \link{numeric}> The number of grid points to evaluate the density estimator at.}
 
-\item{bandwidth}{bandwidth of the density estimator. One of:
+\item{bandwidth}{<scalar \link{numeric} | \link{function} | \link[=character]{string}>
+Bandwidth of the density estimator. One of:
 \itemize{
 \item a numeric: the bandwidth, as the standard deviation of the kernel
 \item a function: a function taking \code{x} (the sample) and returning the bandwidth
@@ -33,16 +34,16 @@ density_unbounded(
 will be used to determine the bandwidth. See \link{bandwidth} for a list.
 }}
 
-\item{adjust}{Scalar numeric that the bandwidth of the density estimator is multiplied by. Default \code{1}.}
+\item{adjust}{<scalar \link{numeric}> Value to multiply the bandwidth of the density estimator by. Default \code{1}.}
 
-\item{kernel}{string: the smoothing kernel to be used. This must partially
+\item{kernel}{<\link[=character]{string}> The smoothing kernel to be used. This must partially
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{trim}{Should the density estimate be trimmed to the range of the data? Default \code{TRUE}.}
+\item{trim}{<scalar \link{logical}> Should the density estimate be trimmed to the range of the data? Default \code{TRUE}.}
 
-\item{adapt}{(\strong{very experimental}) The name and interpretation of this argument
-are subject to change without notice. Positive integer. If \code{adapt > 1}, uses
+\item{adapt}{<positive \link{integer}> (\strong{very experimental}) The name and interpretation of this argument
+are subject to change without notice. If \code{adapt > 1}, uses
 an adaptive approach to calculate the density. First, uses the
 adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
 bandwidths, then groups these bandwidths into \code{adapt} groups, then calculates
@@ -50,11 +51,11 @@ and sums the densities from each group. You can set this to a very large number
 (e.g. \code{Inf}) for a fully adaptive approach, but this will be very slow; typically
 something around 100 yields nearly identical results.}
 
-\item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
+\item{na.rm}{<scalar \link{logical}> Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments (ignored).}
 
-\item{range_only}{If \code{TRUE}, the range of the output of this density estimator
+\item{range_only}{<scalar \link{logical}> If \code{TRUE}, the range of the output of this density estimator
 is computed and is returned in the \verb{$x} element of the result, and \code{c(NA, NA)}
 is returned in \verb{$y}. This gives a faster way to determine the range of the output
 than \code{density_XXX(n = 2)}.}

@@ -31,10 +31,11 @@ following this format, including \code{\link[=density_unbounded]{density_unbound
 e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 }}
 
-\item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
+\item{bounds}{<length-2 \link{numeric}> Min and max bounds. If a bound is \code{NA}, then
 that bound is estimated from the data using the method specified by \code{bounder}.}
 
-\item{bounder}{Method to use to find missing (\code{NA}) \code{bounds}. A function that
+\item{bounder}{<\link{function} | \link[=character]{string}> Method to use to find missing
+(\code{NA}) \code{bounds}. A function that
 takes a numeric vector of values and returns a length-2 vector of the estimated
 lower and upper bound of the distribution. Can also be a string giving the
 suffix of the name of such a function that starts with \code{"bounder_"}. Useful

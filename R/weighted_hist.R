@@ -6,7 +6,8 @@
 
 #' @importFrom rlang as_label enexpr get_expr
 weighted_hist = function(
-  x, weights = NULL, breaks = "Scott", align = "none"
+  x, weights = NULL, breaks = "Scott", align = "none",
+  right_closed = TRUE, outermost_closed = TRUE
 ) {
   x_label = as_label(enexpr(x))
   weights_label = as_label(enexpr(weights))
@@ -22,13 +23,17 @@ weighted_hist = function(
   c(breaks, binwidths, equidist) %<-% get_breaks(x, weights, breaks)
   # only apply bin alignment if bins are equidistant
   if (equidist) c(breaks, binwidths) %<-% align_breaks(x, breaks, binwidths, align)
-  # check for invalid binning
-  if (min(x) < breaks[1] || max(x) > breaks[length(breaks)]) {
-    cli_abort("The {.arg breaks} argument to {.fun ggdist::density_histogram} must cover all values of {.arg x}")
-  }
 
   # bin x values
-  bin = findInterval(x, breaks, rightmost.closed = TRUE, left.open = TRUE)
+  bin = findInterval(x, breaks, rightmost.closed = outermost_closed, left.open = right_closed)
+
+  # check for invalid binning
+  if (min(bin) < 1 || max(bin) >= length(breaks)) {
+    cli_abort(
+      "The {.arg breaks} argument to {.fun ggdist::density_histogram} must cover all values of {.arg x}",
+      class = "ggdist_invalid_breaks"
+    )
+  }
 
   # sum up weights in each bin
   weights = weights %||% rep(1, length(x))

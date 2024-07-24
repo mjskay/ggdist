@@ -18,7 +18,7 @@ smooth_bar(x, width = 0.7, ...)
 \arguments{
 \item{x}{a numeric vector}
 
-\item{kernel}{string: the smoothing kernel to be used. This must partially
+\item{kernel}{<\link[=character]{string}> The smoothing kernel to be used. This must partially
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 

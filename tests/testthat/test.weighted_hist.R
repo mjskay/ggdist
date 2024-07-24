@@ -121,5 +121,20 @@ test_that("align is valid", {
 })
 
 test_that("breaks are valid", {
-  expect_error(weighted_hist(1:10, breaks = c(1,2)), "must\\s+cover\\s+all\\s+values")
+  expect_error(weighted_hist(1:3, breaks = c(1,2)), class = "ggdist_invalid_breaks")
+  expect_error(weighted_hist(0:2, breaks = c(1,2)), class = "ggdist_invalid_breaks")
+
+  expect_no_error(weighted_hist(1:2, breaks = c(1,3)))
+  expect_no_error(weighted_hist(1:2, breaks = c(1,3), right_closed = FALSE, outermost_closed = FALSE))
+  expect_error(
+    weighted_hist(1:2, breaks = c(1,3), outermost_closed = FALSE),
+    class = "ggdist_invalid_breaks"
+  )
+
+  expect_no_error(weighted_hist(1:2, breaks = c(0,2)))
+  expect_no_error(weighted_hist(1:2, breaks = c(0,2), outermost_closed = FALSE))
+  expect_error(
+    weighted_hist(1:2, breaks = c(0,2), right_closed = FALSE, outermost_closed = FALSE),
+    class = "ggdist_invalid_breaks"
+  )
 })

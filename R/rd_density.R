@@ -29,11 +29,11 @@ rd_param_density = function(description, default, passed_to = NULL) {
 
 rd_param_density_adjust = function(passed_to = NULL) {
   short_description = rd_param_density(
-    description = 'Scalar numeric that the bandwidth of the density estimator is multiplied by.',
+    description = 'Value to multiply the bandwidth of the density estimator by.',
     default = '`1`.',
     passed_to = passed_to
   )
-  glue_doc('@param adjust <<short_description>>')
+  glue_doc('@param adjust <scalar [numeric]> <<short_description>>')
 }
 
 rd_param_density_trim = function(passed_to = NULL) {
@@ -42,7 +42,7 @@ rd_param_density_trim = function(passed_to = NULL) {
     default = '`TRUE`.',
     passed_to = passed_to
   )
-  glue_doc('@param trim <<short_description>>')
+  glue_doc('@param trim <scalar [logical]> <<short_description>>')
 }
 
 rd_param_density_align = function(passed_to = NULL) {
@@ -52,7 +52,8 @@ rd_param_density_align = function(passed_to = NULL) {
     passed_to = passed_to
   )
   glue_doc('
-    @param align <<short_description>> One of:
+    @param align <scalar [numeric] | [function] | [string][character]>
+    <<short_description>> One of:
     \\itemize{
       \\item A scalar (length-1) numeric giving an offset that is subtracted
         from the breaks. The offset must be between `0` and the bin width.
@@ -75,8 +76,9 @@ rd_param_density_breaks = function(passed_to = NULL) {
     passed_to = passed_to
   )
   glue_doc('
-    @param breaks <<short_description>> Similar to (but not exactly the
-    same as) the `breaks` argument to [graphics::hist()]. One of:
+    @param breaks <[numeric] | [function] | [string][character]>
+    <<short_description>> Similar to (but not exactly the same as) the `breaks`
+    argument to [graphics::hist()]. One of:
     \\itemize{
       \\item A scalar (length-1) numeric giving the number of bins
       \\item A vector numeric giving the breakpoints between histogram bins
