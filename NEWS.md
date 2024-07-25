@@ -14,7 +14,7 @@ Major changes:
 * More arguments to `stat_slabinterval()` now use `waiver()`s so that they
   can be set either in the call to the stat or in the call to the density
   estimator (#220).
-* Bin edge openness can now be set via the `right_open` and `outermost_open`
+* Bin edge openness can now be set via the `right_closed` and `outermost_closed`
   arguments to `density_histogram()` (#238).
 
 Bug fixes:
