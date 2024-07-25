@@ -17,43 +17,46 @@
 #' @param passed_to `NULL`, or the name of an example function in the `density`
 #' family that would have this parameter.
 #' @noRd
-rd_param_density = function(description, default, passed_to = NULL) {
+rd_param_density = function(types, description, default, passed_to = NULL) {
   paste0(
-    if (!is.null(passed_to)) glue_doc("Passed to `density` (e.g. [<<passed_to>>()]): "),
+    "<", types, if (is.null(passed_to)) "> ",
+    if (!is.null(passed_to)) glue_doc(" | [waiver]> Passed to `density` (e.g. [<<passed_to>>()]): "),
     description,
     " Default ",
-    if (!is.null(passed_to)) "`waiver()` defers to the default of the density estimator, which is usually ",
+    if (!is.null(passed_to)) "[waiver()] defers to the default of the density estimator, which is usually ",
     default
   )
 }
 
 rd_param_density_adjust = function(passed_to = NULL) {
   short_description = rd_param_density(
+    types = 'scalar [numeric]',
     description = 'Value to multiply the bandwidth of the density estimator by.',
     default = '`1`.',
     passed_to = passed_to
   )
-  glue_doc('@param adjust <scalar [numeric]> <<short_description>>')
+  glue_doc('@param adjust <<short_description>>')
 }
 
 rd_param_density_trim = function(passed_to = NULL) {
   short_description = rd_param_density(
+    types = 'scalar [logical]',
     description = 'Should the density estimate be trimmed to the range of the data?',
     default = '`TRUE`.',
     passed_to = passed_to
   )
-  glue_doc('@param trim <scalar [logical]> <<short_description>>')
+  glue_doc('@param trim <<short_description>>')
 }
 
 rd_param_density_align = function(passed_to = NULL) {
   short_description = rd_param_density(
+    types = 'scalar [numeric] | [function] | [string][character]',
     description = 'Determines how to align the breakpoints defining bins.',
     default = '`"none"` (performs no alignment).',
     passed_to = passed_to
   )
   glue_doc('
-    @param align <scalar [numeric] | [function] | [string][character]>
-    <<short_description>> One of:
+    @param align <<short_description>> One of:
     \\itemize{
       \\item A scalar (length-1) numeric giving an offset that is subtracted
         from the breaks. The offset must be between `0` and the bin width.
@@ -71,12 +74,13 @@ rd_param_density_align = function(passed_to = NULL) {
 
 rd_param_density_breaks = function(passed_to = NULL) {
   short_description = rd_param_density(
+    types = '[numeric] | [function] | [string][character]',
     description = 'Determines the breakpoints defining bins.',
     default = '`"Scott"`.',
     passed_to = passed_to
   )
   glue_doc('
-    @param breaks <[numeric] | [function] | [string][character]>
+    @param breaks
     <<short_description>> Similar to (but not exactly the same as) the `breaks`
     argument to [graphics::hist()]. One of:
     \\itemize{

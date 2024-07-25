@@ -22,8 +22,7 @@ density_histogram(
 
 \item{weights}{<\link{numeric} | \link{NULL}> Optional weights to apply to \code{x}.}
 
-\item{breaks}{<\link{numeric} | \link{function} | \link[=character]{string}>
-Determines the breakpoints defining bins. Default \code{"Scott"}. Similar to (but not exactly the same as) the \code{breaks}
+\item{breaks}{<\link{numeric} | \link{function} | \link[=character]{string}> Determines the breakpoints defining bins. Default \code{"Scott"}. Similar to (but not exactly the same as) the \code{breaks}
 argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
@@ -40,8 +39,7 @@ For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]
 \code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
 set the bin width to \code{1}.}
 
-\item{align}{<scalar \link{numeric} | \link{function} | \link[=character]{string}>
-Determines how to align the breakpoints defining bins. Default \code{"none"} (performs no alignment). One of:
+\item{align}{<scalar \link{numeric} | \link{function} | \link[=character]{string}> Determines how to align the breakpoints defining bins. Default \code{"none"} (performs no alignment). One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted
 from the breaks. The offset must be between \code{0} and the bin width.

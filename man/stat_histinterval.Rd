@@ -166,12 +166,11 @@ distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is
 \code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
 it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
 
-\item{adjust}{<scalar \link{numeric}> Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Value to multiply the bandwidth of the density estimator by. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{1}.}
+\item{adjust}{<scalar \link{numeric} | \link{waiver}> Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Value to multiply the bandwidth of the density estimator by. Default \code{\link[=waiver]{waiver()}} defers to the default of the density estimator, which is usually \code{1}.}
 
-\item{trim}{<scalar \link{logical}> Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Should the density estimate be trimmed to the range of the data? Default \code{waiver()} defers to the default of the density estimator, which is usually \code{TRUE}.}
+\item{trim}{<scalar \link{logical} | \link{waiver}> Passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}): Should the density estimate be trimmed to the range of the data? Default \code{\link[=waiver]{waiver()}} defers to the default of the density estimator, which is usually \code{TRUE}.}
 
-\item{breaks}{<\link{numeric} | \link{function} | \link[=character]{string}>
-Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines the breakpoints defining bins. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{"Scott"}. Similar to (but not exactly the same as) the \code{breaks}
+\item{breaks}{<\link{numeric} | \link{function} | \link[=character]{string} | \link{waiver}> Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines the breakpoints defining bins. Default \code{\link[=waiver]{waiver()}} defers to the default of the density estimator, which is usually \code{"Scott"}. Similar to (but not exactly the same as) the \code{breaks}
 argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
@@ -188,8 +187,7 @@ For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]
 \code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
 set the bin width to \code{1}.}
 
-\item{align}{<scalar \link{numeric} | \link{function} | \link[=character]{string}>
-Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines how to align the breakpoints defining bins. Default \code{waiver()} defers to the default of the density estimator, which is usually \code{"none"} (performs no alignment). One of:
+\item{align}{<scalar \link{numeric} | \link{function} | \link[=character]{string} | \link{waiver}> Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}): Determines how to align the breakpoints defining bins. Default \code{\link[=waiver]{waiver()}} defers to the default of the density estimator, which is usually \code{"none"} (performs no alignment). One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted
 from the breaks. The offset must be between \code{0} and the bin width.
