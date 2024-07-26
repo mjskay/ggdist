@@ -41,7 +41,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' corresponding to the interval. This behavior allows `point_interval`
 #' and its derived functions (like `median_qi`, `mean_qi`, `mode_hdi`, etc)
 #' to be easily used to plot intervals in ggplot stats using methods like
-#' [stat_eye()], [stat_halfeye()], or [stat_summary()].
+#' [stat_eye()], [stat_halfeye()], or [`stat_summary()`][ggplot2::stat_summary].
 #'
 #' `median_qi`, `mode_hdi`, etc are short forms for
 #' `point_interval(..., .point = median, .interval = qi)`, etc.

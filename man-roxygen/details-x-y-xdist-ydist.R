@@ -10,9 +10,9 @@
 #' These aesthetics can be used as follows:
 #'
 #'  - `xdist`, `ydist`, and `dist` can be any distribution object from the [distributional](https://pkg.mitchelloharawild.com/distributional/)
-#'    package ([dist_normal()], [dist_beta()], etc) or can be a [posterior::rvar()] object.
-#'    Since these functions are vectorized,
-#'    other columns can be passed directly to them in an [aes()] specification; e.g.
+#'    package ([`dist_normal()`][distributional::dist_normal], [`dist_beta()`][distributional::dist_beta], etc)
+#'    or can be a [posterior::rvar()] object. Since these functions are vectorized,
+#'    other columns can be passed directly to them in an [`aes()`][ggplot2::aes] specification; e.g.
 #'    `aes(dist = dist_normal(mu, sigma))` will work if `mu` and `sigma` are columns in the
 #'    input data frame.
 #'

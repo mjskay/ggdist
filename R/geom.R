@@ -142,7 +142,7 @@ define_orientation_variables = function(orientation) {
 
 #' Base ggproto classes for ggdist
 #'
-#' @seealso [ggproto]
+#' @seealso [`ggproto()`][ggplot2::ggproto]
 #' @keywords internal
 #' @name ggdist-ggproto
 NULL

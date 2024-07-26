@@ -30,7 +30,7 @@
 Base ggproto classes for ggdist
 }
 \seealso{
-\link{ggproto}
+\code{\link[ggplot2:ggproto]{ggproto()}}
 }
 \keyword{datasets}
 \keyword{internal}

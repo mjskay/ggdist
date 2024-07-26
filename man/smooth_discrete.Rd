@@ -22,7 +22,7 @@ smooth_bar(x, width = 0.7, ...)
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{width}{approximate width of the bars as a fraction of data \code{\link[=resolution]{resolution()}}.}
+\item{width}{approximate width of the bars as a fraction of data \code{\link[ggplot2:resolution]{resolution()}}.}
 
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
 \code{\link[=smooth_unbounded]{smooth_unbounded()}} and thereby to \code{\link[=density_unbounded]{density_unbounded()}}; \code{\link[=smooth_bar]{smooth_bar()}}
@@ -41,7 +41,7 @@ If \code{x} is missing, returns a partial application of itself. See \link{autom
 
 Smooths \code{x} values where \code{x} is presumed to be discrete, returning a new \code{x}
 of the same length. Both \code{smooth_discrete()} and \code{smooth_bar()} use the
-\code{\link[=resolution]{resolution()}} of the data to apply smoothing around unique values in the
+\code{\link[ggplot2:resolution]{resolution()}} of the data to apply smoothing around unique values in the
 dataset; \code{smooth_discrete()} uses a kernel density estimator and \code{smooth_bar()}
 places values in an evenly-spaced grid. Can be used with a dotplot
 (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create "bar dotplots".
@@ -52,7 +52,7 @@ Supports \link[=auto_partial]{automatic partial function application} with
 \details{
 \code{smooth_discrete()} applies a kernel density estimator (default: rectangular)
 to \code{x}. It automatically sets the bandwidth to be such that the kernel's
-width (for each kernel type) is approximately \code{width} times the \code{\link[=resolution]{resolution()}}
+width (for each kernel type) is approximately \code{width} times the \code{\link[ggplot2:resolution]{resolution()}}
 of the data. This means it essentially creates smoothed bins around each
 unique value. It calls down to \code{\link[=smooth_unbounded]{smooth_unbounded()}}.
 

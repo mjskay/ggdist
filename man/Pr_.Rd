@@ -20,7 +20,7 @@ some \code{after_stat()} expressions in aesthetic assignments in \pkg{ggdist} st
 \code{\link[=Pr_]{Pr_()}} and \code{\link[=p_]{p_()}} are an \strong{experimental} mini-language for specifying aesthetic values
 based on probabilities and probability densities derived from distributions
 supplied to \pkg{ggdist} stats (e.g., in \code{\link[=stat_slabinterval]{stat_slabinterval()}},
-\code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, etc.). They generate expressions that use \code{\link[=after_stat]{after_stat()}}
+\code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, etc.). They generate expressions that use \code{\link[ggplot2:aes_eval]{after_stat()}}
 and the computed variables of the stat (such as \code{cdf} and \code{pdf}; see e.g.
 the \strong{Computed Variables} section of \code{\link[=stat_slabinterval]{stat_slabinterval()}}) to compute
 the desired probabilities or densities.
@@ -40,7 +40,7 @@ aesthetic of a slab is to use \code{after_stat(pdf)}:
 
 Where \code{p_(x)} is the probability density function. The use of \verb{!!} is
 necessary to splice the generated expression into the \code{aes()} call; for
-more information, see \link{quasiquotation}.
+more information, see \link[rlang:topic-inject]{quasiquotation}.
 }
 \section{Probability expressions}{
 
@@ -109,5 +109,5 @@ ggplot(df, aes(y = name, xdist = d)) +
 }
 \seealso{
 The \emph{Computed Variables} section of \code{\link[=stat_slabinterval]{stat_slabinterval()}} (especially
-\code{cdf} and \code{pdf}) and the \code{\link[=after_stat]{after_stat()}} function.
+\code{cdf} and \code{pdf}) and the \code{\link[ggplot2:aes_eval]{after_stat()}} function.
 }

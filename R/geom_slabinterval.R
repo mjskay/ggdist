@@ -354,7 +354,7 @@ transform_size = function(size, size_domain, size_range) {
 #' specify the endpoints of the interval. A scaling factor for interval line width and point size is applied
 #' through the `interval_size_domain`, `interval_size_range`, and `fatten_point` parameters.
 #' These scaling factors are designed to give multiple uncertainty intervals reasonable
-#' scaling at the default settings for [scale_size_continuous()].
+#' scaling at the default settings for [`scale_size_continuous()`][ggplot2::scale_size_continuous].
 #'
 #' As a combination geom, this geom expects a `datatype` aesthetic specifying which part of the geom a given
 #' row in the input data corresponds to: `"slab"` or `"interval"`. However, specifying this aesthetic
@@ -376,14 +376,14 @@ transform_size = function(size, size_domain, size_range) {
 #' @eval rd_layer_params("slabinterval")
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
-#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+#' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
 #' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
-#' Setting this equal to `"dodge"` ([position_dodge()]) or `"dodgejust"` ([position_dodgejust()]) can be useful if
+#' Setting this equal to `"dodge"` ([`position_dodge()`][ggplot2::position_dodge]) or `"dodgejust"` ([position_dodgejust()]) can be useful if
 #' you have overlapping geometries.
 #' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can
-#' be added to a [ggplot()] object.
+#' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @author Matthew Kay
 #' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
 #' See [geom_dotsinterval()] for a combination geom designed for plotting dotplots with intervals.
@@ -652,16 +652,17 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       documentation for that argument.)
       '),
     interval_size_range = glue_doc('
-      A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
-      sizes, as they tend to be too thick when using the default settings of [scale_size_continuous()], which give
-      sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size
-      values (typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
-      function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
-      the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
-      argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
-      that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-      size of the interval or points separately, you can also use the `linewidth` or `point_size`
-      aesthetics; see [sub-geometry-scales].
+      A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+      and point sizes, as they tend to be too thick when using the default settings of [`scale_size_continuous()`][ggplot2::scale_size_continuous],
+      which give sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the
+      input domain of raw size values (typically this should be equal to the value of the `range`
+      argument of the [`scale_size_continuous()`][ggplot2::scale_size_continuous] function), and
+      `interval_size_range` indicates the desired output range of the size values (the min and max
+      of the actual sizes used to draw intervals). Most of the time it is not recommended to change
+      the value of this argument, as it may result in strange scaling of legends; this argument is
+      a holdover from earlier versions that did not have size aesthetics targeting the point and
+      interval separately. If you want to adjust the size of the interval or points separately,
+      you can also use the `linewidth` or `point_size` aesthetics; see [sub-geometry-scales].
       '),
     fatten_point = glue_doc('
       A multiplicative factor used to adjust the size of the point relative to the size of the

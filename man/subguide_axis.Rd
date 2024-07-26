@@ -98,7 +98,7 @@ parameter to \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 \item{theme}{A \link[ggplot2:theme]{ggplot2::theme} object used to determine the style that the
 sub-guide elements are drawn in. The title label is drawn using the
 \code{"axis.title.x"} or \code{"axis.title.y"} theme setting, and the axis line,
-ticks, and tick labels are drawn using \code{\link[=guide_axis]{guide_axis()}}, so the same theme
+ticks, and tick labels are drawn using \code{\link[ggplot2:guide_axis]{guide_axis()}}, so the same theme
 settings that normally apply to axis guides will be followed.}
 
 \item{...}{Arguments passed to other functions, typically back to

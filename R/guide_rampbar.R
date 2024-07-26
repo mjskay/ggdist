@@ -10,7 +10,7 @@
 #'
 #' A colour ramp bar guide that shows continuous colour ramp scales mapped onto
 #' values as a smooth gradient. Designed for use with [scale_fill_ramp_continuous()]
-#' and [scale_colour_ramp_continuous()]. Based on [guide_colourbar()].
+#' and [scale_colour_ramp_continuous()]. Based on [`guide_colourbar()`][ggplot2::guide_colourbar].
 #'
 #' @inheritDotParams ggplot2::guide_colourbar
 #' @param to The color to ramp to in the guide. Corresponds to `1` on the scale.

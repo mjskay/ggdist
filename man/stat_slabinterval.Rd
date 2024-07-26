@@ -53,10 +53,10 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
 you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slabinterval]{geom_slabinterval()}},
 these include:
@@ -109,16 +109,17 @@ if you are using a graphics device that support gradients.
 \item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
-\item{\code{interval_size_range}}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
-sizes, as they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give
-sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size
-values (typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
-function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
-argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
-that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can also use the \code{linewidth} or \code{point_size}
-aesthetics; see \link{sub-geometry-scales}.}
+\item{\code{interval_size_range}}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
+input domain of raw size values (typically this should be equal to the value of the \code{range}
+argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
+\code{interval_size_range} indicates the desired output range of the size values (the min and max
+of the actual sizes used to draw intervals). Most of the time it is not recommended to change
+the value of this argument, as it may result in strange scaling of legends; this argument is
+a holdover from earlier versions that did not have size aesthetics targeting the point and
+interval separately. If you want to adjust the size of the interval or points separately,
+you can also use the \code{linewidth} or \code{point_size} aesthetics; see \link{sub-geometry-scales}.}
 \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
@@ -266,7 +267,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
-be added to a \code{\link[=ggplot]{ggplot()}} object.
+be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 "Meta" stat for computing distribution functions (densities or CDFs) + intervals for use with
@@ -308,9 +309,9 @@ this is not recommended as it does not work as well with orientation detection.
 These aesthetics can be used as follows:
 \itemize{
 \item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
-package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-Since these functions are vectorized,
-other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+package (\code{\link[distributional:dist_normal]{dist_normal()}}, \code{\link[distributional:dist_beta]{dist_beta()}}, etc)
+or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object. Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[ggplot2:aes]{aes()}} specification; e.g.
 \code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
 input data frame.
 \item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
@@ -329,8 +330,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -373,11 +374,11 @@ These \code{stat}s support the following aesthetics:
 \item{\code{weight}: When using samples (i.e. the \code{x} and \code{y} aesthetics, not \code{xdist} or \code{ydist}), optional
 weights to be applied to each draw.}
 \item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
-object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
-object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
-\pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
 \item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
 }
 

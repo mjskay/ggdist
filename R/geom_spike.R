@@ -21,7 +21,7 @@
 #' thickness function.
 #' @inheritParams geom_slabinterval
 #' @return A [ggplot2::Geom] representing a spike geometry which can
-#' be added to a [ggplot()] object.
+#' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' rd_slabinterval_aesthetics(geom_name),
 #' @seealso
 #' See [stat_spike()] for the stat version, intended for

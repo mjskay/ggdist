@@ -26,7 +26,7 @@ positional scales, these limits will not remove data.
 
 \item{expand}{A numeric vector of limit expansion constants of length
 2 or 4, following the same format used by the \code{expand} argument of
-\code{\link[=continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
+\code{\link[ggplot2:continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
 You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
 expansion values; expanding the lower limit is usually not recommended
 (because with most \code{thickness} scales the lower limit is the baseline

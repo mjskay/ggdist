@@ -89,7 +89,7 @@ bounds values with \code{NA}.
 
 \item{expand}{A numeric vector of limit expansion constants of length
 2 or 4, following the same format used by the \code{expand} argument of
-\code{\link[=continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
+\code{\link[ggplot2:continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
 You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
 expansion values; expanding the lower limit is usually not recommended
 (because with most \code{thickness} scales the lower limit is the baseline
@@ -150,7 +150,7 @@ You can create your own transformation with \code{\link[scales:new_transform]{sc
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{thickness}
-aesthetic for \code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
+aesthetic for \code{ggdist} geoms. Can be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 This \pkg{ggplot2} scale linearly scales all \code{thickness} values of geoms

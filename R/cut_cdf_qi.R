@@ -16,7 +16,7 @@
 #'
 #' @param p A numeric vector of values from a cumulative distribution function,
 #' such as values returned by `p`-prefixed distribution functions in base R (e.g. [pnorm()]),
-#' the [cdf()] function, or values of the `cdf` computed aesthetic from the
+#' the [`cdf()`][distributional::cdf] function, or values of the `cdf` computed aesthetic from the
 #' [stat_slabinterval()] family of stats.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' @param labels One of:

@@ -62,10 +62,10 @@ give the stat as \code{"count"}.
 }}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
 you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
@@ -136,16 +136,17 @@ if you are using a graphics device that support gradients.
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
 
-\item{interval_size_range}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
-sizes, as they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give
-sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size
-values (typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
-function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
-argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
-that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can also use the \code{linewidth} or \code{point_size}
-aesthetics; see \link{sub-geometry-scales}.}
+\item{interval_size_range}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
+input domain of raw size values (typically this should be equal to the value of the \code{range}
+argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
+\code{interval_size_range} indicates the desired output range of the size values (the min and max
+of the actual sizes used to draw intervals). Most of the time it is not recommended to change
+the value of this argument, as it may result in strange scaling of legends; this argument is
+a holdover from earlier versions that did not have size aesthetics targeting the point and
+interval separately. If you want to adjust the size of the interval or points separately,
+you can also use the \code{linewidth} or \code{point_size} aesthetics; see \link{sub-geometry-scales}.}
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
@@ -192,7 +193,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a slab or combined slab+interval geometry which can
-be added to a \code{\link[=ggplot]{ggplot()}} object.
+be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
@@ -220,7 +221,7 @@ point, and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the 
 specify the endpoints of the interval. A scaling factor for interval line width and point size is applied
 through the \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point} parameters.
 These scaling factors are designed to give multiple uncertainty intervals reasonable
-scaling at the default settings for \code{\link[=scale_size_continuous]{scale_size_continuous()}}.
+scaling at the default settings for \code{\link[ggplot2:scale_size]{scale_size_continuous()}}.
 
 As a combination geom, this geom expects a \code{datatype} aesthetic specifying which part of the geom a given
 row in the input data corresponds to: \code{"slab"} or \code{"interval"}. However, specifying this aesthetic

@@ -9,7 +9,7 @@ cut_cdf_qi(p, .width = c(0.66, 0.95, 1), labels = NULL)
 \arguments{
 \item{p}{A numeric vector of values from a cumulative distribution function,
 such as values returned by \code{p}-prefixed distribution functions in base R (e.g. \code{\link[=pnorm]{pnorm()}}),
-the \code{\link[=cdf]{cdf()}} function, or values of the \code{cdf} computed aesthetic from the
+the \code{\link[distributional:cdf]{cdf()}} function, or values of the \code{cdf} computed aesthetic from the
 \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of stats.}
 
 \item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.}

@@ -157,7 +157,7 @@ guide_colorbar2(...)
 }
 \arguments{
 \item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
-passes arguments to \code{\link[=scale_color_discrete]{scale_color_discrete()}}. See those functions for more details.}
+passes arguments to \code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}}. See those functions for more details.}
 
 \item{aesthetics}{Names of aesthetics to set scales for.}
 
@@ -188,7 +188,7 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing one of the aesthetics used to target the appearance of specific parts of composite
-\code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
+\code{ggdist} geoms. Can be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 These scales allow more specific aesthetic mappings to be made when using \code{\link[=geom_slabinterval]{geom_slabinterval()}}
@@ -209,8 +209,8 @@ related geoms:
 \item{\verb{scale_slab_color_* }}{Slab outline color}
 \item{\verb{scale_slab_fill_* }}{Slab fill color}
 \item{\verb{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
-\code{scale_slab_alpha_continuous} differ from \code{\link[=scale_alpha_continuous]{scale_alpha_continuous()}} and
-are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
+\code{scale_slab_alpha_continuous} differ from \code{\link[ggplot2:scale_alpha]{scale_alpha_continuous()}}
+and are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
 densities of 0 get mapped to 0 in the output.}
 \item{\verb{scale_slab_linewidth_* }}{Slab outline line width}
 \item{\verb{scale_slab_linetype_* }}{Slab outline line type}
@@ -218,7 +218,8 @@ densities of 0 get mapped to 0 in the output.}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.
-\code{\link[=scale_color_discrete]{scale_color_discrete()}}, \code{\link[=scale_color_continuous]{scale_color_continuous()}}, etc.
+\code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}},
+\code{\link[ggplot2:scale_colour_continuous]{scale_color_continuous()}}, etc.
 
 Other scale functions can be used with the aesthetics/scales defined here by using the \code{aesthetics}
 argument to that scale function. For example, to use color brewer scales with the \code{point_color} aesthetic:
@@ -270,7 +271,8 @@ data.frame(distribution = "Normal(1,2)") \%>\%
 
 }
 \seealso{
-Other ggplot2 scales: \code{\link[=scale_color_discrete]{scale_color_discrete()}}, \code{\link[=scale_color_continuous]{scale_color_continuous()}}, etc.
+Other ggplot2 scales: \code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}},
+\code{\link[ggplot2:scale_colour_continuous]{scale_color_continuous()}}, etc.
 
 Other ggdist scales: 
 \code{\link{scale_colour_ramp}},

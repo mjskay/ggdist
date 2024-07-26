@@ -52,8 +52,8 @@ scale_fill_ramp_discrete(..., aesthetics = "fill_ramp")
 \item{from}{The color to ramp from. Corresponds to \code{0} on the scale.}
 
 \item{...}{Arguments passed to underlying scale or guide functions. E.g.
-\code{\link[=scale_colour_ramp_discrete]{scale_colour_ramp_discrete()}} passes arguments to \code{\link[=discrete_scale]{discrete_scale()}},
-\code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} passes arguments to \code{\link[=continuous_scale]{continuous_scale()}}.
+\code{\link[=scale_colour_ramp_discrete]{scale_colour_ramp_discrete()}} passes arguments to \code{\link[ggplot2:discrete_scale]{discrete_scale()}},
+\code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} passes arguments to \code{\link[ggplot2:continuous_scale]{continuous_scale()}}.
 See those functions for more details.}
 
 \item{limits}{One of:
@@ -76,13 +76,13 @@ values after the scale transformation. These values should be between \code{0}
 \item{guide}{A function used to create a guide or its name. For
 \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} and \code{\link[=scale_fill_ramp_continuous]{scale_fill_ramp_continuous()}},
 \code{\link[=guide_rampbar]{guide_rampbar()}} can be used to create gradient color bars. See
-\code{\link[=guides]{guides()}} for information on other guides.}
+\code{\link[ggplot2:guides]{guides()}} for information on other guides.}
 
 \item{aesthetics}{Names of aesthetics to set scales for.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{colour_ramp} and/or \code{fill_ramp}
-aesthetics for \code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
+aesthetics for \code{ggdist} geoms. Can be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 This scale creates a secondary scale that modifies the \code{fill} or \code{color} scale of

@@ -42,10 +42,10 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \code{\link[=stat_dots]{stat_dots()}} and \code{\link[=geom_dots]{geom_dots()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
 you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_dots]{geom_dots()}},
 these include:
@@ -210,7 +210,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a dot geometry which can
-be added to a \code{\link[=ggplot]{ggplot()}} object.
+be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} with sensible defaults
@@ -232,7 +232,7 @@ ensures the plot fits within the available space. They can also ensure dots do n
 )}
 }
 \details{
-The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
+The \emph{dots} family of stats and geoms are similar to \code{\link[ggplot2:geom_dotplot]{ggplot2::geom_dotplot()}} but with a number of differences:
 
 \itemize{
 \item Dots geoms act like slabs in \code{\link[=geom_slabinterval]{geom_slabinterval()}} and can be given x positions (or y positions when
@@ -251,7 +251,7 @@ Stats and geoms in this family include:
 \item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
 of the dots automatically (may result in very small dots).
 \item \code{\link[=geom_swarm]{geom_swarm()}} and \code{\link[=geom_weave]{geom_weave()}}: dotplots on raw data with defaults intended to create "beeswarm" plots.
-Used \code{side = "both"} by default, and sets the default dot size to the same size as \code{\link[=geom_point]{geom_point()}}
+Used \code{side = "both"} by default, and sets the default dot size to the same size as \code{\link[ggplot2:geom_point]{geom_point()}}
 (\code{binwidth = unit(1.5, "mm")}), allowing dots to overlap instead of getting very small.
 \item \code{\link[=stat_dots]{stat_dots()}}: dotplots on raw data, \pkg{distributional} objects, and \code{\link[posterior:rvar]{posterior::rvar()}}s
 \item \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}: dotplot + interval plots on raw data with already-calculated
@@ -277,9 +277,9 @@ this is not recommended as it does not work as well with orientation detection.
 These aesthetics can be used as follows:
 \itemize{
 \item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
-package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-Since these functions are vectorized,
-other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+package (\code{\link[distributional:dist_normal]{dist_normal()}}, \code{\link[distributional:dist_beta]{dist_beta()}}, etc)
+or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object. Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[ggplot2:aes]{aes()}} specification; e.g.
 \code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
 input data frame.
 \item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
@@ -298,8 +298,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -342,11 +342,11 @@ These \code{stat}s support the following aesthetics:
 \item{\code{weight}: When using samples (i.e. the \code{x} and \code{y} aesthetics, not \code{xdist} or \code{ydist}), optional
 weights to be applied to each draw.}
 \item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
-object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
-object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
-\pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
 \item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
 }
 

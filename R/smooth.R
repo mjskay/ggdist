@@ -137,14 +137,14 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #'
 #' Smooths `x` values where `x` is presumed to be discrete, returning a new `x`
 #' of the same length. Both `smooth_discrete()` and `smooth_bar()` use the
-#' [resolution()] of the data to apply smoothing around unique values in the
+#' [`resolution()`][ggplot2::resolution] of the data to apply smoothing around unique values in the
 #' dataset; `smooth_discrete()` uses a kernel density estimator and `smooth_bar()`
 #' places values in an evenly-spaced grid. Can be used with a dotplot
 #' (e.g. [`geom_dots`]`(smooth = ...)`) to create "bar dotplots".
 #' @template description-auto-partial-waivable
 #'
 #' @param x a numeric vector
-#' @param width approximate width of the bars as a fraction of data [resolution()].
+#' @param width approximate width of the bars as a fraction of data [`resolution()`][ggplot2::resolution].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
 #' [smooth_unbounded()] and thereby to [density_unbounded()]; [smooth_bar()]
 #' ignores them.
@@ -153,7 +153,7 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #' @details
 #' `smooth_discrete()` applies a kernel density estimator (default: rectangular)
 #' to `x`. It automatically sets the bandwidth to be such that the kernel's
-#' width (for each kernel type) is approximately `width` times the [resolution()]
+#' width (for each kernel type) is approximately `width` times the [`resolution()`][ggplot2::resolution]
 #' of the data. This means it essentially creates smoothed bins around each
 #' unique value. It calls down to [smooth_unbounded()].
 #'

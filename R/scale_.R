@@ -25,8 +25,8 @@
 #'   \item{`scale_slab_color_* `}{Slab outline color}
 #'   \item{`scale_slab_fill_* `}{Slab fill color}
 #'   \item{`scale_slab_alpha_* `}{Slab alpha level / opacity. The default settings of
-#'   `scale_slab_alpha_continuous` differ from [scale_alpha_continuous()] and
-#'   are designed for gradient plots (e.g. [stat_gradientinterval()]) by ensuring that
+#'   `scale_slab_alpha_continuous` differ from [`scale_alpha_continuous()`][ggplot2::scale_alpha_continuous]
+#'   and are designed for gradient plots (e.g. [stat_gradientinterval()]) by ensuring that
 #'   densities of 0 get mapped to 0 in the output.}
 #'   \item{`scale_slab_linewidth_* `}{Slab outline line width}
 #'   \item{`scale_slab_linetype_* `}{Slab outline line type}
@@ -34,7 +34,8 @@
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
-#' [scale_color_discrete()], [scale_color_continuous()], etc.
+#' [`scale_color_discrete()`][ggplot2::scale_color_discrete],
+#' [`scale_color_continuous()`][ggplot2::scale_color_continuous], etc.
 #'
 #' Other scale functions can be used with the aesthetics/scales defined here by using the `aesthetics`
 #' argument to that scale function. For example, to use color brewer scales with the `point_color` aesthetic:
@@ -56,7 +57,7 @@
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritParams ggplot2::scale_shape
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_point_color_discrete`
-#' passes arguments to [scale_color_discrete()]. See those functions for more details.
+#' passes arguments to [`scale_color_discrete()`][ggplot2::scale_color_discrete]. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param guide Guide to use for legends for an aesthetic.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
@@ -65,12 +66,13 @@
 #' @param na.value When `na.translate` is true, what value should be shown?
 #' @return
 #' A [ggplot2::Scale] representing one of the aesthetics used to target the appearance of specific parts of composite
-#' `ggdist` geoms. Can be added to a [ggplot()] object.
+#' `ggdist` geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @name sub-geometry-scales
 #' @aliases scales
 #' @author Matthew Kay
 #' @family ggdist scales
-#' @seealso Other ggplot2 scales: [scale_color_discrete()], [scale_color_continuous()], etc.
+#' @seealso Other ggplot2 scales: [`scale_color_discrete()`][ggplot2::scale_color_discrete],
+#' [`scale_color_continuous()`][ggplot2::scale_color_continuous], etc.
 #' @examples
 #'
 #' library(dplyr)

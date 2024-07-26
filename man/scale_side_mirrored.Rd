@@ -79,7 +79,7 @@ every level in a legend, the layer should use \code{show.legend = TRUE}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{side}
-aesthetic for \pkg{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
+aesthetic for \pkg{ggdist} geoms. Can be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 This scale creates mirrored slabs for the \code{side} aesthetic of the \code{\link[=geom_slabinterval]{geom_slabinterval()}}

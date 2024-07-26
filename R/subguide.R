@@ -36,7 +36,7 @@
 #' @param theme A [ggplot2::theme] object used to determine the style that the
 #'    sub-guide elements are drawn in. The title label is drawn using the
 #'    `"axis.title.x"` or `"axis.title.y"` theme setting, and the axis line,
-#'    ticks, and tick labels are drawn using [guide_axis()], so the same theme
+#'    ticks, and tick labels are drawn using [`guide_axis()`][ggplot2::guide_axis], so the same theme
 #'    settings that normally apply to axis guides will be followed.
 #' @param ... Arguments passed to other functions, typically back to
 #'    `subguide_axis()` itself.

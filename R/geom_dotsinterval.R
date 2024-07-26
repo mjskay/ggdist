@@ -366,7 +366,7 @@ draw_slabs_dots = function(
 #' @inheritParams geom_slabinterval
 #' @author Matthew Kay
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
-#' be added to a [ggplot()] object.
+#' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @seealso See the [stat_slabinterval()] family for other
 #' stats built on top of [geom_slabinterval()].
 #' See `vignette("dotsinterval")` for a variety of examples of use.

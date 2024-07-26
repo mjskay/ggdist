@@ -41,7 +41,7 @@ rd_lineribbon_shortcut_stat = function(
     '@template details-x-y-xdist-ydist',
     glue_doc('
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can
-      be added to a [ggplot()] object.'),
+      be added to a [`ggplot()`][ggplot2::ggplot] object.'),
     rd_slabinterval_computed_variables(stat),
     rd_lineribbon_aesthetics(geom_name, stat),
     glue_doc('

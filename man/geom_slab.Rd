@@ -55,10 +55,10 @@ give the stat as \code{"count"}.
 }}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
 you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
@@ -157,7 +157,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a slab (ridge) geometry which can
-be added to a \code{\link[=ggplot]{ggplot()}} object.
+be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 Shortcut version of \code{\link[=geom_slabinterval]{geom_slabinterval()}} for creating slab (ridge) plots.

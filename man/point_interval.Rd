@@ -247,7 +247,7 @@ data frame with one row per value of \code{.width} and three columns:
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot stats using methods like
-\code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, or \code{\link[=stat_summary]{stat_summary()}}.
+\code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, or \code{\link[ggplot2:stat_summary]{stat_summary()}}.
 
 \code{median_qi}, \code{mode_hdi}, etc are short forms for
 \code{point_interval(..., .point = median, .interval = qi)}, etc.

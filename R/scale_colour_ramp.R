@@ -17,13 +17,13 @@
 #' @inheritParams ggplot2::continuous_scale
 #' @param from The color to ramp from. Corresponds to `0` on the scale.
 #' @param ... Arguments passed to underlying scale or guide functions. E.g.
-#' [scale_colour_ramp_discrete()] passes arguments to [discrete_scale()],
-#' [scale_colour_ramp_continuous()] passes arguments to [continuous_scale()].
+#' [scale_colour_ramp_discrete()] passes arguments to [`discrete_scale()`][ggplot2::discrete_scale],
+#' [scale_colour_ramp_continuous()] passes arguments to [`continuous_scale()`][ggplot2::continuous_scale].
 #' See those functions for more details.
 #' @param guide A function used to create a guide or its name. For
 #' [scale_colour_ramp_continuous()] and [scale_fill_ramp_continuous()],
 #' [guide_rampbar()] can be used to create gradient color bars. See
-#' [guides()] for information on other guides.
+#' [`guides()`][ggplot2::guides] for information on other guides.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum
 #' values after the scale transformation. These values should be between `0`
@@ -47,7 +47,7 @@
 #' to implement geoms that make use of `colour_ramp` or `fill_ramp` scales.
 #' @return
 #' A [ggplot2::Scale] representing a scale for the `colour_ramp` and/or `fill_ramp`
-#' aesthetics for `ggdist` geoms. Can be added to a [ggplot()] object.
+#' aesthetics for `ggdist` geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @name scale_colour_ramp
 #' @aliases scale_color_ramp scale_fill_ramp
 #' @author Matthew Kay

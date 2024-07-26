@@ -14,7 +14,7 @@
 #' [Pr_()] and [p_()] are an **experimental** mini-language for specifying aesthetic values
 #' based on probabilities and probability densities derived from distributions
 #' supplied to \pkg{ggdist} stats (e.g., in [stat_slabinterval()],
-#' [stat_dotsinterval()], etc.). They generate expressions that use [after_stat()]
+#' [stat_dotsinterval()], etc.). They generate expressions that use [`after_stat()`][ggplot2::after_stat]
 #' and the computed variables of the stat (such as `cdf` and `pdf`; see e.g.
 #' the **Computed Variables** section of [stat_slabinterval()]) to compute
 #' the desired probabilities or densities.
@@ -36,7 +36,7 @@
 #'
 #' Where `p_(x)` is the probability density function. The use of `!!` is
 #' necessary to splice the generated expression into the `aes()` call; for
-#' more information, see [quasiquotation].
+#' more information, see [quasiquotation][rlang::quasiquotation].
 #'
 #' @section Probability expressions:
 #'
@@ -69,7 +69,7 @@
 #'   discrete). It currently does not allow any operators in the expression, and
 #'   must be passed one of `x`, `y`, or `value`.
 #' @seealso The *Computed Variables* section of [stat_slabinterval()] (especially
-#' `cdf` and `pdf`) and the [after_stat()] function.
+#' `cdf` and `pdf`) and the [`after_stat()`][ggplot2::after_stat] function.
 #' @examples
 #' library(ggplot2)
 #' library(distributional)

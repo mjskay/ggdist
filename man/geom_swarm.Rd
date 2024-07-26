@@ -60,10 +60,10 @@ give the stat as \code{"count"}.
 }}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
 you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
@@ -227,7 +227,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a beeswarm geometry which can
-be added to a \code{\link[=ggplot]{ggplot()}} object.
+be added to a \code{\link[ggplot2:ggplot]{ggplot()}} object.
 }
 \description{
 Shortcut version of \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for creating beeswarm plots.
@@ -244,7 +244,7 @@ ensure the plot fits within the available space.
 )}
 }
 \details{
-The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
+The \emph{dots} family of stats and geoms are similar to \code{\link[ggplot2:geom_dotplot]{ggplot2::geom_dotplot()}} but with a number of differences:
 
 \itemize{
 \item Dots geoms act like slabs in \code{\link[=geom_slabinterval]{geom_slabinterval()}} and can be given x positions (or y positions when
@@ -263,7 +263,7 @@ Stats and geoms in this family include:
 \item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
 of the dots automatically (may result in very small dots).
 \item \code{\link[=geom_swarm]{geom_swarm()}} and \code{\link[=geom_weave]{geom_weave()}}: dotplots on raw data with defaults intended to create "beeswarm" plots.
-Used \code{side = "both"} by default, and sets the default dot size to the same size as \code{\link[=geom_point]{geom_point()}}
+Used \code{side = "both"} by default, and sets the default dot size to the same size as \code{\link[ggplot2:geom_point]{geom_point()}}
 (\code{binwidth = unit(1.5, "mm")}), allowing dots to overlap instead of getting very small.
 \item \code{\link[=stat_dots]{stat_dots()}}: dotplots on raw data, \pkg{distributional} objects, and \code{\link[posterior:rvar]{posterior::rvar()}}s
 \item \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}: dotplot + interval plots on raw data with already-calculated

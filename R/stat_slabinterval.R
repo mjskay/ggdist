@@ -363,7 +363,7 @@ compute_interval_slabinterval = function(
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
-#' be added to a [ggplot()] object.
+#' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
 #' use by default and some of the options it has.
 #' See `vignette("slabinterval")` for a variety of examples of use.
@@ -457,11 +457,11 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     weight = 'When using samples (i.e. the `x` and `y` aesthetics, not `xdist` or `ydist`), optional
     weights to be applied to each draw.',
     xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
-    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+    object (e.g. [`dist_normal()`][distributional::dist_normal]) or a [posterior::rvar()] object.',
     ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
-    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+    object (e.g. [`dist_normal()`][distributional::dist_normal]) or a [posterior::rvar()] object.',
     dist = 'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
-    \\pkg{distributional} object (e.g. [dist_normal()]), or a [posterior::rvar()] object. See **Details**.',
+    \\pkg{distributional} object (e.g. [`dist_normal()`][distributional::dist_normal]), or a [posterior::rvar()] object. See **Details**.',
     args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
   ), AbstractStatSlabinterval$aes_docs),
 

@@ -1,5 +1,5 @@
 #' @details
-#' The *dots* family of stats and geoms are similar to [geom_dotplot()] but with a number of differences:
+#' The *dots* family of stats and geoms are similar to [ggplot2::geom_dotplot()] but with a number of differences:
 #'
 #' \itemize{
 #'   \item Dots geoms act like slabs in [geom_slabinterval()] and can be given x positions (or y positions when
@@ -18,7 +18,7 @@
 #'  - [geom_dots()]: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
 #'    of the dots automatically (may result in very small dots).
 #'  - [geom_swarm()] and [geom_weave()]: dotplots on raw data with defaults intended to create "beeswarm" plots.
-#'    Used `side = "both"` by default, and sets the default dot size to the same size as [geom_point()]
+#'    Used `side = "both"` by default, and sets the default dot size to the same size as [`geom_point()`][ggplot2::geom_point]
 #'    (`binwidth = unit(1.5, "mm")`), allowing dots to overlap instead of getting very small.
 #'  - [stat_dots()]: dotplots on raw data, \pkg{distributional} objects, and [posterior::rvar()]s
 #'  - [geom_dotsinterval()]: dotplot + interval plots on raw data with already-calculated

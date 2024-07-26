@@ -28,7 +28,7 @@
 #' output by this scale, not the original data values.
 #' @param expand A numeric vector of limit expansion constants of length
 #' 2 or 4, following the same format used by the `expand` argument of
-#' [continuous_scale()]. The default is not to expand the limits.
+#' [`continuous_scale()`][ggplot2::continuous_scale]. The default is not to expand the limits.
 #' You can use the convenience function [expansion()] to generate the
 #' expansion values; expanding the lower limit is usually not recommended
 #' (because with most `thickness` scales the lower limit is the baseline
@@ -60,7 +60,7 @@
 #'
 #' @return
 #' A [ggplot2::Scale] representing a scale for the `thickness`
-#' aesthetic for `ggdist` geoms. Can be added to a [ggplot()] object.
+#' aesthetic for `ggdist` geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @name scale_thickness
 #' @author Matthew Kay
 #' @family ggdist scales

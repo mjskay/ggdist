@@ -43,12 +43,12 @@ globalVariables("prior")
 #'   - an [environment]: use the given environment
 #' @param lb The name of an input column (for `data.frame` and `brms::prior` objects) that contains
 #'   the lower bound of the distribution, which if present will produce a truncated distribution using
-#'   [dist_truncated()]. Ignored if `lb` is `NULL` or if `object[[lb]]` is `NA` for the corresponding
-#'   input row.
+#'   [`dist_truncated()`][distributional::dist_truncated]. Ignored if `lb` is `NULL` or if `object[[lb]]`
+#'   is `NA` for the corresponding input row.
 #' @param ub The name of an input column (for `data.frame` and `brms::prior` objects) that contains
 #'   the upper bound of the distribution, which if present will produce a truncated distribution using
-#'   [dist_truncated()]. Ignored if `ub` is `NULL` or if `object[[ub]]` is `NA` for the corresponding
-#'   input row.
+#'   [`dist_truncated()`][distributional::dist_truncated]. Ignored if `ub` is `NULL` or if `object[[ub]]`
+#'   is `NA` for the corresponding input row.
 #' @param to_r_names If `TRUE` (the default), certain common aliases for distribution names are
 #'   automatically translated into names that R can recognize (i.e., names which have functions starting
 #'   with `r`, `p`, `q`, and `d` representing random number generators, distribution

@@ -19,7 +19,7 @@
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @return
 #' A [ggplot2::Scale] representing a scale for the `side`
-#' aesthetic for \pkg{ggdist} geoms. Can be added to a [ggplot()] object.
+#' aesthetic for \pkg{ggdist} geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @author Matthew Kay
 #' @family ggdist scales
 #' @examples

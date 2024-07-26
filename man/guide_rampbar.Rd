@@ -65,7 +65,7 @@ A guide object.
 \description{
 A colour ramp bar guide that shows continuous colour ramp scales mapped onto
 values as a smooth gradient. Designed for use with \code{\link[=scale_fill_ramp_continuous]{scale_fill_ramp_continuous()}}
-and \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}}. Based on \code{\link[=guide_colourbar]{guide_colourbar()}}.
+and \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}}. Based on \code{\link[ggplot2:guide_colourbar]{guide_colourbar()}}.
 }
 \details{
 This guide creates smooth gradient color bars for use with \code{\link[=scale_fill_ramp_continuous]{scale_fill_ramp_continuous()}}

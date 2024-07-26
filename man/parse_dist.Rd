@@ -99,13 +99,13 @@ of distribution specifications.}
 
 \item{lb}{The name of an input column (for \code{data.frame} and \code{brms::prior} objects) that contains
 the lower bound of the distribution, which if present will produce a truncated distribution using
-\code{\link[=dist_truncated]{dist_truncated()}}. Ignored if \code{lb} is \code{NULL} or if \code{object[[lb]]} is \code{NA} for the corresponding
-input row.}
+\code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{lb} is \code{NULL} or if \code{object[[lb]]}
+is \code{NA} for the corresponding input row.}
 
 \item{ub}{The name of an input column (for \code{data.frame} and \code{brms::prior} objects) that contains
 the upper bound of the distribution, which if present will produce a truncated distribution using
-\code{\link[=dist_truncated]{dist_truncated()}}. Ignored if \code{ub} is \code{NULL} or if \code{object[[ub]]} is \code{NA} for the corresponding
-input row.}
+\code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{ub} is \code{NULL} or if \code{object[[ub]]}
+is \code{NA} for the corresponding input row.}
 
 \item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
 distribution names R recognizes. Unrecognized names are left as-is.}
