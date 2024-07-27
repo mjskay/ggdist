@@ -63,7 +63,7 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 (see \code{\link[ggplot2:coord_cartesian]{coord_cartesian()}}).
 }}
 
-\item{renormalize}{When mapping values to the \code{thickness} scale, should those
+\item{renormalize}{<scalar \link{logical}> When mapping values to the \code{thickness} scale, should those
 values be allowed to be renormalized by geoms (e.g. via the \code{normalize} parameter
 to \code{\link[=geom_slabinterval]{geom_slabinterval()}})? The default is \code{FALSE}: if \code{scale_thickness_shared()}
 is in use, the geom-specific \code{normalize} parameter is ignored (this is achieved
@@ -87,10 +87,10 @@ bounds values with \code{NA}.
 \item{guide}{A function used to create a guide or its name. See
 \code{\link[ggplot2:guides]{guides()}} for more information.}
 
-\item{expand}{A numeric vector of limit expansion constants of length
+\item{expand}{<\link{numeric}> Vector of limit expansion constants of length
 2 or 4, following the same format used by the \code{expand} argument of
 \code{\link[ggplot2:continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
-You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
+You can use the convenience function \code{\link[ggplot2:expansion]{expansion()}} to generate the
 expansion values; expanding the lower limit is usually not recommended
 (because with most \code{thickness} scales the lower limit is the baseline
 and represents \code{0}), so a typical usage might be something like

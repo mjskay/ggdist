@@ -152,16 +152,17 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
 
   param_docs = defaults(list(
     step = glue_doc('
-      Should the line/ribbon be drawn as a step function? One of:
+      <scalar [logical] | [string][character]> Should the line/ribbon be drawn
+      as a step function? One of:
       \\itemize{
         \\item `FALSE` (default): do not draw as a step function.
         \\item `"mid"` (or `TRUE`): draw steps midway between adjacent x values.
         \\item `"hv"`: draw horizontal-then-vertical steps.
         \\item `"vh"`: draw as vertical-then-horizontal steps.
       }
-      `TRUE` is an alias for `"mid"` because for a step function with ribbons, `"mid"` is probably what you want
-      (for the other two step approaches the ribbons at either the very first or very last x value will not be
-      visible).
+      `TRUE` is an alias for `"mid"`, because for a step function with ribbons
+      `"mid"` is reasonable default (for the other two step approaches the ribbons
+      at either the very first or very last x value will not be visible).
       ')
   ), AbstractGeom$param_docs),
 

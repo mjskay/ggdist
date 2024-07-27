@@ -58,12 +58,12 @@
 #' @inheritParams ggplot2::scale_shape
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_point_color_discrete`
 #' passes arguments to [`scale_color_discrete()`][ggplot2::scale_color_discrete]. See those functions for more details.
-#' @param aesthetics Names of aesthetics to set scales for.
-#' @param guide Guide to use for legends for an aesthetic.
-#' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
+#' @param aesthetics <[character]> Names of aesthetics to set scales for.
+#' @param guide <[Guide][ggplot2::Guide] | [string][character]> Guide to use for legends for an aesthetic.
+#' @param range <length-2 [numeric]> The minimum and maximum size of the plotting symbol
 #' after transformation.
-#' @param na.translate In discrete scales, should we show missing values?
-#' @param na.value When `na.translate` is true, what value should be shown?
+#' @param na.translate <scalar [logical]> In discrete scales, should we show missing values?
+#' @param na.value <[linetype][ggplot2::linetype]> When `na.translate` is `TRUE`, what value should be shown?
 #' @return
 #' A [ggplot2::Scale] representing one of the aesthetics used to target the appearance of specific parts of composite
 #' `ggdist` geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.

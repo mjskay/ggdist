@@ -54,15 +54,16 @@ give the stat as \code{"count"}.
 \link[ggplot2:layer_stats]{layer stat} documentation.
 }}
 
-\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
-you have overlapping geometries.}
+\item{position}{<\link[ggplot2:ggplot2-ggproto]{Position} | \link[=character]{string}> Position adjustment,
+either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
+\code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{subguide}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\item{subguide}{<\link{function} | \link[=character]{string}> Sub-guide used to annotate the \code{thickness} scale. One of:
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
@@ -78,7 +79,7 @@ families (no subguide), which can be modified by setting
 see the documentation for those functions.
 }}
 
-\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
 are assigned. Automatic detection works most of the time.
@@ -93,8 +94,8 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{subscale}{Sub-scale used to scale values of the \code{thickness} aesthetic within
-the groups determined by \code{normalize}. One of:
+\item{subscale}{<\link{function} | \link[=character]{string}> Sub-scale used to scale values of the
+\code{thickness} aesthetic within the groups determined by \code{normalize}. One of:
 \itemize{
 \item A function that takes an \code{x} argument giving a numeric vector
 of values to be scaled and then returns a \link{thickness} vector representing
@@ -108,7 +109,7 @@ function.
 For a comprehensive discussion and examples of slab scaling and normalization, see the
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
 
-\item{normalize}{Groups within which to scale values of the \code{thickness} aesthetic. One of:
+\item{normalize}{<\link[=character]{string}> Groups within which to scale values of the \code{thickness} aesthetic. One of:
 \itemize{
 \item \code{"all"}: normalize so that the maximum height across all data is \code{1}.
 \item \code{"panels"}: normalize within panels so that the maximum height in each panel is \code{1}.
@@ -122,10 +123,10 @@ only be used with functions whose values are in [0,1], such as CDFs).
 For a comprehensive discussion and examples of slab scaling and normalization, see the
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
 
-\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
+\item{arrow}{<\link{arrow} | \link{NULL}> Type of arrow heads to use on the spike, or \code{NULL} for no arrows.}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
+\item{na.rm}{<scalar \link{logical}> If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE},
+missing values are silently removed.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.

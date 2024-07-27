@@ -33,7 +33,7 @@
 #'    \item `.value` <-> `value`
 #' }
 #'
-#' @param data A data frame to translate.
+#' @param data <[data.frame]> A data frame to translate.
 #'
 #' @return A data frame with (possibly) new names in some columns, according to the
 #' translation scheme described in **Details**.

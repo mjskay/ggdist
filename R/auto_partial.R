@@ -123,10 +123,10 @@ partial_self = function(name = NULL, waivable = TRUE) {
 }
 
 #' @rdname auto_partial
-#' @param f A function
-#' @param name A character string giving the name of the function, to be used
+#' @param f <[function]> Function to automatically partially-apply.
+#' @param name <[string][character]> Name of the function, to be used
 #' when printing.
-#' @param waivable logical: if `TRUE`, optional arguments that get
+#' @param waivable <scalar [logical]> If `TRUE`, optional arguments that get
 #' passed a [waiver()] will keep their default value (or whatever
 #' non-`waiver` value has been most recently partially applied for that
 #' argument).

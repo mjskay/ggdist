@@ -18,7 +18,7 @@ geoms. See the examples.}
 \item{preserve}{Should dodging preserve the \code{"total"} width of all elements
 at a position, or the width of a \code{"single"} element?}
 
-\item{justification}{Justification of the point position (\code{x}/\code{y}) relative
+\item{justification}{<scalar \link{numeric}> Justification of the point position (\code{x}/\code{y}) relative
 to its bounds (\code{xmin}/\code{xmax} or \code{ymin}/\code{ymax}), where \code{0} indicates
 bottom/left justification and \code{1} indicates top/right justification
 (depending on \code{orientation}). This is only used if \code{xmin}/\code{xmax}/\code{ymin}/\code{ymax}

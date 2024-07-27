@@ -19,11 +19,12 @@ weighted_quantile(
 weighted_quantile_fun(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7)
 }
 \arguments{
-\item{x}{numeric vector: sample values}
+\item{x}{<\link{numeric}> Sample values.}
 
-\item{probs}{numeric vector: probabilities in \eqn{[0, 1]}}
+\item{probs}{<\link{numeric}> Vector of probabilities in \eqn{[0, 1]} defining the
+quantiles to return.}
 
-\item{weights}{Weights for the sample. One of:
+\item{weights}{<\link{numeric} | \link{NULL}> Weights for the sample. One of:
 \itemize{
 \item numeric vector of same length as \code{x}: weights for corresponding values in \code{x},
 which will be normalized to sum to 1.
@@ -31,7 +32,7 @@ which will be normalized to sum to 1.
 (equivalent to \code{\link[=quantile]{quantile()}}) are returned.
 }}
 
-\item{n}{Presumed effective sample size. If this is greater than 1 and
+\item{n}{<scalar \link{numeric}> Presumed effective sample size. If this is greater than 1 and
 continuous quantiles (\code{type >= 4}) are requested, flat regions may be added
 to the approximation to the inverse CDF in areas where the normalized
 weight exceeds \code{1/n} (i.e., regions of high density). This can be used to
@@ -54,17 +55,17 @@ sum represents the true sample size.
 }
 }}
 
-\item{na.rm}{logical: if \code{TRUE}, corresponding entries in \code{x} and \code{weights}
+\item{na.rm}{<scalar \link{logical}> If \code{TRUE}, corresponding entries in \code{x} and \code{weights}
 are removed if either is \code{NA}.}
 
-\item{names}{logical: If \code{TRUE}, add names to the output giving the input
+\item{names}{<scalar \link{logical}> If \code{TRUE}, add names to the output giving the input
 \code{probs} formatted as a percentage.}
 
-\item{type}{integer between 1 and 9: determines the type of quantile estimator
+\item{type}{<scalar \link{integer}> Value between 1 and 9: determines the type of quantile estimator
 to be used. Types 1 to 3 are for discontinuous quantiles, types 4 to 9 are
 for continuous quantiles. See \strong{Details}.}
 
-\item{digits}{numeric: the number of digits to use to format percentages
+\item{digits}{<scalar \link{numeric}> The number of digits to use to format percentages
 when \code{names} is \code{TRUE}.}
 }
 \value{

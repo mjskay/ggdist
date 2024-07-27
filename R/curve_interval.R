@@ -20,20 +20,20 @@ globalVariables(".value")
 #' See Mirzargar *et al.* (2014) or Juul *et al.* (2020) for an accessible introduction
 #' to data depth and curve boxplots / functional boxplots.
 #'
-#' @param .data One of:
+#' @param .data <[data.frame] | [rvar][posterior::rvar] | [matrix]> One of:
 #'   - A data frame (or grouped data frame as returned by [dplyr::group_by()])
 #'     that contains draws to summarize.
 #'   - A [posterior::rvar] vector.
 #'   - A matrix; in which case the first dimension should be draws and the second
 #'     dimension values of the curve.
-#' @param ... Bare column names or expressions that, when evaluated in the context of
+#' @param ... <bare [language]> Bare column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
 #' This can be numeric columns, list columns containing numeric vectors, or
 #' [posterior::rvar()]s.
-#' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
-#' values). Supports [tidyselect][tidyselect::language] syntax. Intervals are calculated jointly with
+#' @param .along <[tidyselect][tidyselect::language]> Which columns are the input values to the function
+#' describing the curve (e.g., the "x" values). Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
 #' (`NULL`) causes [curve_interval()] to use all grouping variables in the input data frame as the value
 #' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
@@ -42,25 +42,25 @@ globalVariables(".value")
 #' conditional on `g`. To avoid selecting any variables as input values to the function describing the
 #' curve, use `character()`; this will produce conditional intervals only (the result in this case should
 #' be very similar to `median_qi()`). Currently only supported when `.data` is a data frame.
-#' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
-#' If multiple probabilities are provided, multiple rows per group are generated, each with
+#' @param .width <[numeric]> Vector of probabilities to use that determine the widths of the resulting
+#' intervals. If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).
-#' @param .interval The method used to calculate the intervals. Currently, all methods rank the curves
-#' using some measure of *data depth*, then create envelopes containing the `.width`% "deepest" curves.
-#' Available methods are:
+#' @param .interval <[string][character]> The method used to calculate the intervals. Currently, all
+#' methods rank the curves using some measure of *data depth*, then create envelopes containing the
+#' `.width`% "deepest" curves. Available methods are:
 #'   - `"mhd"`: mean halfspace depth (Fraiman and Muniz 2001).
 #'   - `"mbd"`: modified band depth (Sun and Genton 2011): calls [fda::fbplot()] with `method = "MBD"`.
 #'   - `"bd"`: band depth (Sun and Genton 2011): calls [fda::fbplot()] with `method = "BD2"`.
 #'   - `"bd-mbd"`: band depth, breaking ties with modified band depth (Sun and Genton 2011): calls
 #'     [fda::fbplot()] with `method = "Both"`.
-#' @param .simple_names When `TRUE` and only a single column / vector is to be summarized, use the
-#' name `.lower` for the lower end of the interval and `.upper` for the
+#' @param .simple_names <scalar [logical]> When `TRUE` and only a single column / vector is to be
+#' summarized, use the name `.lower` for the lower end of the interval and `.upper` for the
 #' upper end. When `FALSE` and `.data` is a data frame,
 #' names the lower and upper intervals for each column `x` `x.lower` and `x.upper`.
-#' @param .exclude A character vector of names of columns to be excluded from summarization
+#' @param .exclude <[character]> Vector of names of columns to be excluded from summarization
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in \pkg{ggdist} and \pkg{tidybayes}.
-#' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
+#' @param na.rm <scalar [logical]> Should `NA` values be stripped before the computation proceeds?
 #' If `FALSE` (the default), the presence of `NA` values in the columns to be summarized will generally
 #' result in an error. If `TRUE`, `NA` values will be removed in the calculation of intervals so long
 #' as `.interval` is `"mhd"`; other methods do not currently support `na.rm`. Be cautious in applying

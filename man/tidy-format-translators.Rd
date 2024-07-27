@@ -17,7 +17,7 @@ to_ggmcmc_names(data)
 from_ggmcmc_names(data)
 }
 \arguments{
-\item{data}{A data frame to translate.}
+\item{data}{<\link{data.frame}> A data frame to translate.}
 }
 \value{
 A data frame with (possibly) new names in some columns, according to the

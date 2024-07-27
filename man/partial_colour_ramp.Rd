@@ -7,10 +7,10 @@
 partial_colour_ramp(amount = double(), from = "white")
 }
 \arguments{
-\item{amount}{Numeric vector between \code{0} and \code{1} giving amounts to ramp
-the colour. \code{0} corresponds to the colour \code{from}.}
+\item{amount}{<\link{numeric}> Vector of values between \code{0} and \code{1} giving amounts
+to ramp the colour. \code{0} corresponds to the colour \code{from}.}
 
-\item{from}{Character vector giving colours to ramp from.}
+\item{from}{<\link{character}> Vector giving colours to ramp from.}
 }
 \value{
 A \link[vctrs:new_rcrd]{vctrs::rcrd} of class \code{"ggdist_partial_colour_ramp"} with fields

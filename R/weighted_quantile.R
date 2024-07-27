@@ -8,14 +8,15 @@
 #'
 #' A variation of [quantile()] that can be applied to weighted samples.
 #'
-#' @param x numeric vector: sample values
-#' @param probs numeric vector: probabilities in \eqn{[0, 1]}
-#' @param weights Weights for the sample. One of:
+#' @param x <[numeric]> Sample values.
+#' @param probs <[numeric]> Vector of probabilities in \eqn{[0, 1]} defining the
+#' quantiles to return.
+#' @param weights <[numeric] | [NULL]> Weights for the sample. One of:
 #'  - numeric vector of same length as `x`: weights for corresponding values in `x`,
 #'    which will be normalized to sum to 1.
 #'  - `NULL`: indicates no weights are provided, so unweighted sample quantiles
 #'    (equivalent to [quantile()]) are returned.
-#' @param n Presumed effective sample size. If this is greater than 1 and
+#' @param n <scalar [numeric]> Presumed effective sample size. If this is greater than 1 and
 #' continuous quantiles (`type >= 4`) are requested, flat regions may be added
 #' to the approximation to the inverse CDF in areas where the normalized
 #' weight exceeds `1/n` (i.e., regions of high density). This can be used to
@@ -33,13 +34,13 @@
 #'     - `"sum"`: i.e. use the sum of the unnormalized `weights` as the sample
 #'       size. Useful if the provided `weights` is unnormalized so that its
 #'       sum represents the true sample size.
-#' @param na.rm logical: if `TRUE`, corresponding entries in `x` and `weights`
+#' @param na.rm <scalar [logical]> If `TRUE`, corresponding entries in `x` and `weights`
 #' are removed if either is `NA`.
-#' @param names logical: If `TRUE`, add names to the output giving the input
+#' @param names <scalar [logical]> If `TRUE`, add names to the output giving the input
 #' `probs` formatted as a percentage.
-#' @param digits numeric: the number of digits to use to format percentages
+#' @param digits <scalar [numeric]> The number of digits to use to format percentages
 #' when `names` is `TRUE`.
-#' @param type integer between 1 and 9: determines the type of quantile estimator
+#' @param type <scalar [integer]> Value between 1 and 9: determines the type of quantile estimator
 #' to be used. Types 1 to 3 are for discontinuous quantiles, types 4 to 9 are
 #' for continuous quantiles. See **Details**.
 #'

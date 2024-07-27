@@ -54,15 +54,16 @@ give the stat as \code{"count"}.
 \link[ggplot2:layer_stats]{layer stat} documentation.
 }}
 
-\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
-you have overlapping geometries.}
+\item{position}{<\link[ggplot2:ggplot2-ggproto]{Position} | \link[=character]{string}> Position adjustment,
+either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
+\code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
 are assigned. Automatic detection works most of the time.
@@ -77,11 +78,11 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{interval_size_domain}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
+\item{interval_size_domain}{<length-2 \link{numeric}> Minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
 
-\item{interval_size_range}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+\item{interval_size_range}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when drawing interval
 and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
@@ -93,19 +94,21 @@ a holdover from earlier versions that did not have size aesthetics targeting the
 interval separately. If you want to adjust the size of the interval or points separately,
 you can also use the \code{linewidth} or \code{point_size} aesthetics; see \link{sub-geometry-scales}.}
 
-\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+\item{fatten_point}{<scalar \link{numeric}> A multiplicative factor used to adjust the size of the point relative to the
+size of the thickest interval line. If you wish to specify point sizes directly, you can also use
+the \code{point_size} aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}};
+sizes specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 
-\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the interval, or \code{NULL} for no arrows.}
+\item{arrow}{<\link{arrow} | \link{NULL}> Type of arrow heads to use on the interval, or \code{NULL} for no arrows.}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
+\item{na.rm}{<scalar \link{logical}> If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE},
+missing values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{<\link{logical}> Should this layer be included in the legends?
+Default is \code{c(size = FALSE)}, unlike most geoms, to match its common use cases.
+\code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+those that are mapped (the default for most geoms). It can also be a named
+logical vector to finely select the aesthetics to display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions

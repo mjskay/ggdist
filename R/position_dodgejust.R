@@ -37,7 +37,7 @@
 #' intervals relative to their slabs when dodging.
 #'
 #' @inheritParams ggplot2::position_dodge
-#' @param justification Justification of the point position (`x`/`y`) relative
+#' @param justification <scalar [numeric]> Justification of the point position (`x`/`y`) relative
 #'   to its bounds (`xmin`/`xmax` or `ymin`/`ymax`), where `0` indicates
 #'   bottom/left justification and `1` indicates top/right justification
 #'   (depending on `orientation`). This is only used if `xmin`/`xmax`/`ymin`/`ymax`

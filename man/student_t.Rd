@@ -22,9 +22,9 @@ rstudent_t(n, df, mu = 0, sigma = 1)
 \item{df}{degrees of freedom (\eqn{> 0}, maybe non-integer).  \code{df
       = Inf} is allowed.}
 
-\item{mu}{Location parameter (median)}
+\item{mu}{<\link{numeric}> Location parameter (median).}
 
-\item{sigma}{Scale parameter}
+\item{sigma}{<\link{numeric}> Scale parameter.}
 
 \item{log, log.p}{logical; if TRUE, probabilities p are given as log(p).}
 

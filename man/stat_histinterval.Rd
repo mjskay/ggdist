@@ -49,20 +49,21 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{\link[=stat_histinterval]{stat_histinterval()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+\item{geom}{<\link[ggplot2:ggplot2-ggproto]{Geom} | \link[=character]{string}> Use to override
+the default connection between \code{\link[=stat_histinterval]{stat_histinterval()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
-\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
-you have overlapping geometries.}
+\item{position}{<\link[ggplot2:ggplot2-ggproto]{Position} | \link[=character]{string}> Position adjustment,
+either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
+\code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slabinterval]{geom_slabinterval()}},
 these include:
 \describe{
-\item{\code{subscale}}{Sub-scale used to scale values of the \code{thickness} aesthetic within
-the groups determined by \code{normalize}. One of:
+\item{\code{subscale}}{<\link{function} | \link[=character]{string}> Sub-scale used to scale values of the
+\code{thickness} aesthetic within the groups determined by \code{normalize}. One of:
 \itemize{
 \item A function that takes an \code{x} argument giving a numeric vector
 of values to be scaled and then returns a \link{thickness} vector representing
@@ -75,7 +76,7 @@ function.
 }
 For a comprehensive discussion and examples of slab scaling and normalization, see the
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
-\item{\code{normalize}}{Groups within which to scale values of the \code{thickness} aesthetic. One of:
+\item{\code{normalize}}{<\link[=character]{string}> Groups within which to scale values of the \code{thickness} aesthetic. One of:
 \itemize{
 \item \code{"all"}: normalize so that the maximum height across all data is \code{1}.
 \item \code{"panels"}: normalize within panels so that the maximum height in each panel is \code{1}.
@@ -88,7 +89,8 @@ only be used with functions whose values are in [0,1], such as CDFs).
 }
 For a comprehensive discussion and examples of slab scaling and normalization, see the
 \href{https://mjskay.github.io/ggdist/articles/thickness.html}{\code{thickness} scale article}.}
-\item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. One of:
+\item{\code{fill_type}}{<\link[=character]{string}> What type of fill to use when the fill color or alpha varies within a slab.
+One of:
 \itemize{
 \item \code{"segments"}: breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
@@ -106,10 +108,10 @@ can be set explicitly). On R < 4.2, support for gradients cannot be auto-detecte
 fall back to \code{fill_type = "segments"}, in which case you can set \code{fill_type = "gradient"} explicitly
 if you are using a graphics device that support gradients.
 }}
-\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
+\item{\code{interval_size_domain}}{<length-2 \link{numeric}> Minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
-\item{\code{interval_size_range}}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+\item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when drawing interval
 and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
@@ -120,12 +122,12 @@ the value of this argument, as it may result in strange scaling of legends; this
 a holdover from earlier versions that did not have size aesthetics targeting the point and
 interval separately. If you want to adjust the size of the interval or points separately,
 you can also use the \code{linewidth} or \code{point_size} aesthetics; see \link{sub-geometry-scales}.}
-\item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-\item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the interval, or \code{NULL} for no arrows.}
-\item{\code{subguide}}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\item{\code{fatten_point}}{<scalar \link{numeric}> A multiplicative factor used to adjust the size of the point relative to the
+size of the thickest interval line. If you wish to specify point sizes directly, you can also use
+the \code{point_size} aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}};
+sizes specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+\item{\code{arrow}}{<\link{arrow} | \link{NULL}> Type of arrow heads to use on the interval, or \code{NULL} for no arrows.}
+\item{\code{subguide}}{<\link{function} | \link[=character]{string}> Sub-guide used to annotate the \code{thickness} scale. One of:
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
@@ -142,7 +144,7 @@ see the documentation for those functions.
 }}
 }}
 
-\item{density}{Density estimator for sample data. One of:
+\item{density}{<\link{function} | \link[=character]{string}> Density estimator for sample data. One of:
 \itemize{
 \item A function which takes a numeric vector and returns a list with elements
 \code{x} (giving grid points for the density estimator) and \code{y} (the
@@ -156,7 +158,7 @@ Defaults to \code{"bounded"}, i.e. \code{\link[=density_bounded]{density_bounded
 the data and then uses a bounded density estimator based on the reflection method.
 }}
 
-\item{p_limits}{Probability limits (numeric vector of size 2). Used to determine the lower and upper
+\item{p_limits}{<length-2 \link{numeric}> Probability limits. Used to determine the lower and upper
 limits of \emph{analytical} distributions (distributions from \emph{samples} ignore this parameter and determine
 their limits based on the limits of the sample and the value of the \code{trim} parameter).
 E.g., if this is \code{c(.001, .999)}, then a slab is drawn
@@ -202,18 +204,18 @@ For example, \code{align = "none"} will provide no alignment,
 \code{align = align_center(at = 0)} will center a bin on \code{0}, and
 \code{align = align_boundary(at = 0)} will align a bin edge on \code{0}.}
 
-\item{outline_bars}{Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}) and also
+\item{outline_bars}{<scalar \link{logical} | \link{waiver}> Passed to \code{density} (e.g. \code{\link[=density_histogram]{density_histogram()}}) and also
 used for discrete analytical distributions (whose slabs are drawn as histograms). Determines
 if outlines in between the bars are drawn. If \code{\link[=waiver]{waiver()}} or \code{FALSE}
 (the default), the outline is drawn only along the tops of the bars. If \code{TRUE}, outlines in between
 bars are also drawn (though you may have to set the \code{slab_color} or \code{color} aesthetic to
 see the outlines).}
 
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
+\item{expand}{<\link{logical}> For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
 Can be a length-two logical vector to control expansion to the lower and upper limit respectively.}
 
-\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
+\item{point_interval}{<\link{function} | \link[=character]{string}> A function from the \code{\link[=point_interval]{point_interval()}} family
+(e.g., \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
 (e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc; if a string, the caller's environment is searched
 for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
 (typically mean, median, or mode) and interval type (quantile interval, \code{qi};
@@ -221,24 +223,24 @@ highest-density interval, \code{hdi}; or highest-density continuous interval, \c
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
-\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+\item{limits}{<length-2 \link{numeric}> Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
 \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 be determined by either \code{p_limits} or the scale settings.}
 
-\item{n}{Number of points at which to evaluate the function that defines the slab. Also
+\item{n}{<scalar \link{numeric}> Number of points at which to evaluate the function that defines the slab. Also
 passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}). Default \code{waiver()} uses the value \code{501}
 for analytical distributions and defers to the default of the density estimator for
 sample-based distributions, which is also usually \code{501}.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
-that determine the widths of the resulting intervals. If multiple probabilities are provided,
+\item{.width}{<\link{numeric}> The \code{.width} argument passed to \code{point_interval}: a vector of probabilities
+to use that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
 are assigned. Automatic detection works most of the time.
@@ -253,12 +255,13 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
+\item{na.rm}{<scalar \link{logical}> If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE},
+missing values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{<\link{logical}> Should this layer be included in the legends? Default is \code{c(size = FALSE)},
+unlike most geoms, to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends,
+and \code{NA} shows only those that are mapped (the default for most geoms). It can also be a named logical
+vector to finely select the aesthetics to display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions

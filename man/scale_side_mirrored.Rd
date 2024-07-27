@@ -7,7 +7,7 @@
 scale_side_mirrored(start = "topright", ..., aesthetics = "side")
 }
 \arguments{
-\item{start}{The side to start from. Can be any valid value of the \code{side} aesthetic
+\item{start}{<\link[=character]{string}> The side to start from. Can be any valid value of the \code{side} aesthetic
 except \code{"both"}.}
 
 \item{...}{
@@ -75,7 +75,7 @@ every level in a legend, the layer should use \code{show.legend = TRUE}.}
     \item{\code{super}}{The super class to use for the constructed scale}
   }}
 
-\item{aesthetics}{Names of aesthetics to set scales for.}
+\item{aesthetics}{<\link{character}> Names of aesthetics to set scales for.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{side}

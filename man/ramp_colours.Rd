@@ -7,9 +7,10 @@
 ramp_colours(colour, ramp)
 }
 \arguments{
-\item{colour}{character vector of colours.}
+\item{colour}{<\link{character}> Vector of colours to ramp to.}
 
-\item{ramp}{a \code{\link{partial_colour_ramp}} vector.}
+\item{ramp}{<\link{partial_colour_ramp}> Vector of colour ramps (same length as
+\code{colour}) giving the colour to ramp from and the amount to ramp.}
 }
 \value{
 A character vector of colours.

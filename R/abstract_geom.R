@@ -65,7 +65,7 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
 
   param_docs = list(
     orientation = glue_doc('
-      Whether this geom is drawn horizontally or vertically. One of:
+      <[string][character]> Whether this geom is drawn horizontally or vertically. One of:
       \\itemize{
         \\item `NA` (default): automatically detect the orientation based on how the aesthetics
           are assigned. Automatic detection works most of the time.
@@ -82,8 +82,8 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
       '),
 
     na.rm = glue_doc('
-      If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
-      values are silently removed.
+      <scalar [logical]> If `FALSE`, the default, missing values are removed with a warning. If `TRUE`,
+      missing values are silently removed.
       ')
   ),
 

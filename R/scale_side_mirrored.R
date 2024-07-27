@@ -13,10 +13,10 @@
 #' of two or three levels.
 #'
 #' @inheritParams ggplot2::discrete_scale
-#' @param start The side to start from. Can be any valid value of the `side` aesthetic
+#' @param start <[string][character]> The side to start from. Can be any valid value of the `side` aesthetic
 #' except `"both"`.
 #' @inheritDotParams ggplot2::discrete_scale
-#' @param aesthetics Names of aesthetics to set scales for.
+#' @param aesthetics <[character]> Names of aesthetics to set scales for.
 #' @return
 #' A [ggplot2::Scale] representing a scale for the `side`
 #' aesthetic for \pkg{ggdist} geoms. Can be added to a [`ggplot()`][ggplot2::ggplot] object.

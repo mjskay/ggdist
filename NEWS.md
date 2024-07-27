@@ -17,6 +17,11 @@ Major changes:
 * Bin edge openness can now be set via the `right_closed` and `outermost_closed`
   arguments to `density_histogram()` (#238).
 
+Documentation:
+
+* Almost all parameter documentation (except some inherited from other packages)
+  now includes an annotation listing valid data types for that parameter (#243). 
+
 Bug fixes:
 
 * Ensure `point_interval(<distribution>)` supports tidy evaluation on the

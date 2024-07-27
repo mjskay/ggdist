@@ -19,9 +19,9 @@ rlkjcorr_marginal(n, K, eta)
 \arguments{
 \item{x, q}{vector of quantiles.}
 
-\item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
+\item{K}{<\link{numeric}> Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
-\item{eta}{Parameter controlling the shape of the distribution}
+\item{eta}{<\link{numeric}> Parameter controlling the shape of the distribution}
 
 \item{log, log.p}{logical; if TRUE, probabilities p are given as log(p).}
 

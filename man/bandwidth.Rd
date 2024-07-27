@@ -23,7 +23,7 @@ bandwidth_SJ(x, ...)
 bandwidth_dpi(x, ...)
 }
 \arguments{
-\item{x}{A numeric vector giving a sample.}
+\item{x}{<\link{numeric}> Vector containing a sample.}
 
 \item{...}{
   Arguments passed on to \code{\link[stats:bandwidth]{stats::bw.SJ}}
@@ -57,6 +57,14 @@ in \pkg{stats}. See, for example, \code{\link[=bw.SJ]{bw.SJ()}}.
 
 \code{\link[=bandwidth_dpi]{bandwidth_dpi()}}, which is the default bandwidth estimator in \pkg{ggdist},
 is the Sheather-Jones direct plug-in estimator, i.e. \code{bw.SJ(..., method = "dpi")}.
+
+With the exception of \code{\link[=bandwidth_nrd0]{bandwidth_nrd0()}}, these estimators may fail in some
+cases, often when a sample contains many duplicates. If they do they will
+automatically fall back to \code{\link[=bandwidth_nrd0]{bandwidth_nrd0()}} with a warning. However, these
+failures are typically symptomatic of situations where you should not want to
+use a kernel density estimator in the first place (e.g. data with duplicates
+and/or discrete data). In these cases consider using a dotplot (\code{\link[=geom_dots]{geom_dots()}})
+or histogram (\code{\link[=density_histogram]{density_histogram()}}) instead.
 }
 \seealso{
 \code{\link[=density_bounded]{density_bounded()}}, \code{\link[=density_unbounded]{density_unbounded()}}.

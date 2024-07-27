@@ -18,19 +18,18 @@ bin_dots(
 )
 }
 \arguments{
-\item{x}{numeric vector of x values}
+\item{x}{<\link{numeric}> \emph{x} values.}
 
-\item{y}{numeric vector of y values}
+\item{y}{<\link{numeric}> \emph{y} values (same length as \code{x}).}
 
-\item{binwidth}{bin width}
+\item{binwidth}{<scalar \link{numeric}> Bin width.}
 
-\item{heightratio}{ratio of bin width to dot height}
+\item{heightratio}{<scalar \link{numeric}> Ratio of bin width to dot height}
 
-\item{stackratio}{ratio of dot height to vertical distance between dot
-centers}
+\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
+between dot centers}
 
-\item{layout}{The layout method used
-for the dots: \itemize{
+\item{layout}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of
 their bins as in the classic Wilkinson dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly
@@ -63,8 +62,8 @@ to be drawn on the bottom or the left depending on if \code{orientation} is \cod
 causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
 sides (as in a violin plot).}
 
-\item{orientation}{Whether the dots are laid out horizontally or vertically.
-Follows the naming scheme of \code{\link[=geom_slabinterval]{geom_slabinterval()}}:
+\item{orientation}{<\link[=character]{string}> Whether the dots are laid out horizontally
+or vertically. Follows the naming scheme of \code{\link[=geom_slabinterval]{geom_slabinterval()}}:
 \itemize{
 \item \code{"horizontal"} assumes the data values for the dotplot are in the \code{x}
 variable and that dots will be stacked up in the \code{y} direction.
@@ -76,7 +75,7 @@ For compatibility with the base ggplot naming scheme for \code{orientation},
 \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
 \code{"horizontal"}.}
 
-\item{overlaps}{How to handle overlapping dots or bins in the \code{"bin"},
+\item{overlaps}{<\link[=character]{string}> How to handle overlapping dots or bins in the \code{"bin"},
 \code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} or \code{"bar"} layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.

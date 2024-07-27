@@ -6,15 +6,15 @@
 #' @template description-auto-partial-waivable
 #'
 #' @inheritParams scale_thickness
-#' @param x a [numeric] vector to be rescaled.
+#' @param x <[numeric]> Vector to be rescaled.
 #'    Typically provided automatically by [geom_slabinterval()].
-#' @param limits One of:
-#'  - `NULL` to use the range of the data
+#' @param limits <length-2 [numeric] | [function] | [NULL]> One of:
 #'  - A [numeric] vector of length two providing the limits of the scale. Use
 #'    `NA` to use the default minimum or maximum.
 #'  - A function that accepts a length-2 [numeric] vector of the automatic
-#'    limits and returns new limits. Unlike positional scales. Unlike
-#'    positional scales, these limits will not remove data.
+#'    limits and returns new limits. Unlike positional scales, these limits
+#'    will not remove data.
+#'  - `NULL` to use the range of the data
 #'
 #' @details
 #' You can overwrite `subscale_thickness` in the global environment to set

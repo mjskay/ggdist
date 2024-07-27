@@ -159,16 +159,16 @@ guide_colorbar2(...)
 \item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
 passes arguments to \code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}}. See those functions for more details.}
 
-\item{aesthetics}{Names of aesthetics to set scales for.}
+\item{aesthetics}{<\link{character}> Names of aesthetics to set scales for.}
 
-\item{guide}{Guide to use for legends for an aesthetic.}
+\item{guide}{<\link[ggplot2:ggplot2-ggproto]{Guide} | \link[=character]{string}> Guide to use for legends for an aesthetic.}
 
-\item{range}{a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
+\item{range}{<length-2 \link{numeric}> The minimum and maximum size of the plotting symbol
 after transformation.}
 
-\item{na.translate}{In discrete scales, should we show missing values?}
+\item{na.translate}{<scalar \link{logical}> In discrete scales, should we show missing values?}
 
-\item{na.value}{When \code{na.translate} is true, what value should be shown?}
+\item{na.value}{<\link[ggplot2:aes_linetype_size_shape]{linetype}> When \code{na.translate} is \code{TRUE}, what value should be shown?}
 
 \item{limits}{One of:
 \itemize{

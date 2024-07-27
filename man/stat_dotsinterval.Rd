@@ -40,19 +40,20 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{\link[=stat_dotsinterval]{stat_dotsinterval()}} and \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}}
+\item{geom}{<\link[ggplot2:ggplot2-ggproto]{Geom} | \link[=character]{string}> Use to override
+the default connection between \code{\link[=stat_dotsinterval]{stat_dotsinterval()}} and \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}}
 
-\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
-Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
-you have overlapping geometries.}
+\item{position}{<\link[ggplot2:ggplot2-ggproto]{Position} | \link[=character]{string}> Position adjustment,
+either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
+\code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_dotsinterval]{geom_dotsinterval()}},
 these include:
 \describe{
-\item{\code{binwidth}}{The bin width to use for laying out the dots.
+\item{\code{binwidth}}{<\link{numeric} | \link{unit}> The bin width to use for laying out the dots.
 One of:
 \itemize{
 \item \code{NA} (the default): Dynamically select the bin width based on the
@@ -73,17 +74,16 @@ dots that are \emph{exactly} 10\% of the viewport size along whichever dimension
 dotplot is drawn; \code{unit(c(0, 0.1), "npc")} would make dots that are \emph{at most}
 10\% of the viewport size (while still ensuring the tallest stack is less than
 or equal to \code{scale}).}
-\item{\code{dotsize}}{The width of the dots relative to the \code{binwidth}. The default,
+\item{\code{dotsize}}{<scalar \link{numeric}> The width of the dots relative to the \code{binwidth}. The default,
 \code{1.07}, makes dots be just a bit wider than the bin width, which is a
 manually-tuned parameter that tends to work well with the default circular
 shape, preventing gaps between bins from appearing to be too large visually
 (as might arise from dots being \emph{precisely} the \code{binwidth}). If it is desired
 to have dots be precisely the \code{binwidth}, set \code{dotsize = 1}.}
-\item{\code{stackratio}}{The distance between the center of the dots in the same
+\item{\code{stackratio}}{<scalar \link{numeric}> The distance between the center of the dots in the same
 stack relative to the dot height. The default, \code{1}, makes dots in the same
 stack just touch each other.}
-\item{\code{layout}}{The layout method used
-for the dots: \itemize{
+\item{\code{layout}}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of
 their bins as in the classic Wilkinson dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly
@@ -107,7 +107,7 @@ may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
-\item{\code{overlaps}}{How to handle overlapping dots or bins in the \code{"bin"},
+\item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \code{"bin"},
 \code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} or \code{"bar"} layouts).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
@@ -120,7 +120,7 @@ using a constrained optimization which minimizes the squared distance of
 dots to their desired positions, subject to the constraint that adjacent
 dots do not overlap.
 }}
-\item{\code{smooth}}{Smoother to apply to dot positions.
+\item{\code{smooth}}{<\link{function} | \link[=character]{string}> Smoother to apply to dot positions.
 One of:
 \itemize{
 \item A function that takes a numeric vector of dot positions and returns a
@@ -134,7 +134,7 @@ applying smoothing.
 
 Smoothing is most effective when the smoother is matched to the support of
 the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
-\item{\code{overflow}}{How to handle overflow of dots beyond the extent of the geom
+\item{\code{overflow}}{<\link[=character]{string}> How to handle overflow of dots beyond the extent of the geom
 when a minimum \code{binwidth} (or an exact \code{binwidth}) is supplied.
 One of:
 \itemize{
@@ -150,7 +150,7 @@ user-specified \code{dotsize}.
 If you find the default layout has dots that are too small, and you are okay
 with dots overlapping, consider setting \code{overflow = "compress"} and supplying
 an exact or minimum dot size using \code{binwidth}.}
-\item{\code{verbose}}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
+\item{\code{verbose}}{<scalar \link{logical}> If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
 manually. Bin width is printed both as data units and as normalized parent
 coordinates or \code{"npc"}s (see \code{\link[=unit]{unit()}}). Note that if you just want to scale the
@@ -158,10 +158,10 @@ selected bin width to fit within a desired area, it is probably easier to use
 \code{scale} than to copy and scale \code{binwidth} manually, and if you just want to
 provide constraints on the bin width, you can pass a length-2 vector to \code{binwidth}.
 }
-\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
+\item{\code{interval_size_domain}}{<length-2 \link{numeric}> Minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
-\item{\code{interval_size_range}}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+\item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when drawing interval
 and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
@@ -172,12 +172,12 @@ the value of this argument, as it may result in strange scaling of legends; this
 a holdover from earlier versions that did not have size aesthetics targeting the point and
 interval separately. If you want to adjust the size of the interval or points separately,
 you can also use the \code{linewidth} or \code{point_size} aesthetics; see \link{sub-geometry-scales}.}
-\item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-\item{\code{arrow}}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the interval, or \code{NULL} for no arrows.}
-\item{\code{subguide}}{Sub-guide used to annotate the \code{thickness} scale. One of:
+\item{\code{fatten_point}}{<scalar \link{numeric}> A multiplicative factor used to adjust the size of the point relative to the
+size of the thickest interval line. If you wish to specify point sizes directly, you can also use
+the \code{point_size} aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}};
+sizes specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+\item{\code{arrow}}{<\link{arrow} | \link{NULL}> Type of arrow heads to use on the interval, or \code{NULL} for no arrows.}
+\item{\code{subguide}}{<\link{function} | \link[=character]{string}> Sub-guide used to annotate the \code{thickness} scale. One of:
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
@@ -194,14 +194,14 @@ see the documentation for those functions.
 }}
 }}
 
-\item{quantiles}{Setting this to a value other than \code{NA}
-will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
-(for analytical distributions, the default of \code{NA} is taken to mean \code{100} quantiles). The value of
-\code{quantiles} determines the number
-of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
+\item{quantiles}{<scalar \link{logical}> Number of quantiles to plot in the dotplot. Use \code{NA}
+(the default) to plot all data points. Setting this to a value other than \code{NA} will produce
+a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution (for
+analytical distributions, the default of \code{NA} is taken to mean \code{100} quantiles). See
+Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
 
-\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
+\item{point_interval}{<\link{function} | \link[=character]{string}> A function from the \code{\link[=point_interval]{point_interval()}} family
+(e.g., \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
 (e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc; if a string, the caller's environment is searched
 for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
 (typically mean, median, or mode) and interval type (quantile interval, \code{qi};
@@ -209,12 +209,12 @@ highest-density interval, \code{hdi}; or highest-density continuous interval, \c
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
-that determine the widths of the resulting intervals. If multiple probabilities are provided,
+\item{.width}{<\link{numeric}> The \code{.width} argument passed to \code{point_interval}: a vector of probabilities
+to use that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
 are assigned. Automatic detection works most of the time.
@@ -229,8 +229,8 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
+\item{na.rm}{<scalar \link{logical}> If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE},
+missing values are silently removed.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.

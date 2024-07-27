@@ -11,23 +11,23 @@ subscale_thickness(
 )
 }
 \arguments{
-\item{x}{a \link{numeric} vector to be rescaled.
+\item{x}{<\link{numeric}> Vector to be rescaled.
 Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 
-\item{limits}{One of:
+\item{limits}{<length-2 \link{numeric} | \link{function} | \link{NULL}> One of:
 \itemize{
-\item \code{NULL} to use the range of the data
 \item A \link{numeric} vector of length two providing the limits of the scale. Use
 \code{NA} to use the default minimum or maximum.
 \item A function that accepts a length-2 \link{numeric} vector of the automatic
-limits and returns new limits. Unlike positional scales. Unlike
-positional scales, these limits will not remove data.
+limits and returns new limits. Unlike positional scales, these limits
+will not remove data.
+\item \code{NULL} to use the range of the data
 }}
 
-\item{expand}{A numeric vector of limit expansion constants of length
+\item{expand}{<\link{numeric}> Vector of limit expansion constants of length
 2 or 4, following the same format used by the \code{expand} argument of
 \code{\link[ggplot2:continuous_scale]{continuous_scale()}}. The default is not to expand the limits.
-You can use the convenience function \code{\link[=expansion]{expansion()}} to generate the
+You can use the convenience function \code{\link[ggplot2:expansion]{expansion()}} to generate the
 expansion values; expanding the lower limit is usually not recommended
 (because with most \code{thickness} scales the lower limit is the baseline
 and represents \code{0}), so a typical usage might be something like

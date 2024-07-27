@@ -8,13 +8,13 @@
 #'
 #' A variation of [ecdf()] that can be applied to weighted samples.
 #'
-#' @param x numeric vector: sample values
-#' @param weights Weights for the sample. One of:
+#' @param x <[numeric]> Sample values.
+#' @param weights <[numeric] | [NULL]> Weights for the sample. One of:
 #'  - numeric vector of same length as `x`: weights for corresponding values in `x`,
 #'    which will be normalized to sum to 1.
 #'  - `NULL`: indicates no weights are provided, so the unweighted empirical
 #'    cumulative distribution function (equivalent to [ecdf()]) is returned.
-#' @param na.rm logical: if `TRUE`, corresponding entries in `x` and `weights`
+#' @param na.rm <scalar [logical]> If `TRUE`, corresponding entries in `x` and `weights`
 #' are removed if either is `NA`.
 #'
 #' @details

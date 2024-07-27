@@ -28,34 +28,36 @@ globalVariables("prior")
 #' `"LogNormal"`, `"log_normal"`, `"log-Normal"`, and any number of other variants
 #' all get translated into `"lnorm"`.
 #'
-#' @param object A character vector containing distribution specifications or a data frame with a column
-#'  containing distribution specifications.
-#' @param dist_col A bare (unquoted) column or column expression that resolves to a character vector
-#'  of distribution specifications.
-#' @param ...  Arguments passed to other implementations of `parse_dist`.
-#' @param dist The name of the output column to contain the distribution name
-#' @param args The name of the output column to contain the arguments to the distribution
-#' @param dist_obj The name of the output column to contain a \pkg{distributional} object representing the distribution
-#' @param package The package or environment to search for distribution functions in.
-#' Passed to [distributional::dist_wrap()]. One of:
-#'   - `NULL`: use the calling environment
+#' @param object <[character] | [data.frame]> One of:
+#'  - A character vector containing distribution specifications, like `c("normal(0,1)", "exp(1)")`
+#'  - A data frame with a column containing distribution specifications.
+#' @param dist_col <bare [language]> Column or column expression of `object` that resolves to a
+#' character vector of distribution specifications (when `object` is a [data.frame()]).
+#' @param ...  Arguments passed to other implementations of `parse_dist()`.
+#' @param dist <[string][character]> The name of the output column to contain the distribution name.
+#' @param args <[string][character]> The name of the output column to contain the arguments to the distribution.
+#' @param dist_obj <[string][character]> The name of the output column to contain a \pkg{distributional}
+#' object representing the distribution.
+#' @param package <[string][character] | [environment] | [NULL]> The package or environment to search for
+#' distribution functions in. Passed to [distributional::dist_wrap()]. One of:
 #'   - a string: use the environment for the package with the given name
 #'   - an [environment]: use the given environment
-#' @param lb The name of an input column (for `data.frame` and `brms::prior` objects) that contains
-#'   the lower bound of the distribution, which if present will produce a truncated distribution using
-#'   [`dist_truncated()`][distributional::dist_truncated]. Ignored if `lb` is `NULL` or if `object[[lb]]`
-#'   is `NA` for the corresponding input row.
-#' @param ub The name of an input column (for `data.frame` and `brms::prior` objects) that contains
-#'   the upper bound of the distribution, which if present will produce a truncated distribution using
-#'   [`dist_truncated()`][distributional::dist_truncated]. Ignored if `ub` is `NULL` or if `object[[ub]]`
-#'   is `NA` for the corresponding input row.
-#' @param to_r_names If `TRUE` (the default), certain common aliases for distribution names are
-#'   automatically translated into names that R can recognize (i.e., names which have functions starting
-#'   with `r`, `p`, `q`, and `d` representing random number generators, distribution
-#'   functions, etc. for that distribution), using the `r_dist_name` function. For example,
-#'   `"normal"` is translated into `"norm"` and `"lognormal"` is translated into `"lnorm"`.
-#' @param dist_name For `r_dist_name`, a character vector of distribution names to be translated into
-#'   distribution names R recognizes. Unrecognized names are left as-is.
+#'   - `NULL` (default): use the calling environment
+#' @param lb <[string][character]> The name of an input column (for `data.frame` and `brms::prior` objects)
+#' that contains the lower bound of the distribution, which if present will produce a truncated distribution
+#' using [`dist_truncated()`][distributional::dist_truncated]. Ignored if `object[[lb]]` is `NULL` or if
+#' it is `NA` for the corresponding input row.
+#' @param ub <[string][character]> The name of an input column (for `data.frame` and `brms::prior` objects)
+#' that contains the upper bound of the distribution, which if present will produce a truncated distribution
+#' using [`dist_truncated()`][distributional::dist_truncated]. Ignored if `object[[ub]]` is `NULL` or if
+#' it is `NA` for the corresponding input row.
+#' @param to_r_names <scalar [logical]> If `TRUE` (the default), certain common aliases for distribution
+#' names are automatically translated into names that R can recognize (i.e., names which have functions
+#' starting with `r`, `p`, `q`, and `d` representing random number generators, distribution functions,
+#' etc. for that distribution), using the `r_dist_name` function. For example, `"normal"` is translated
+#' into `"norm"` and `"lognormal"` is translated into `"lnorm"`.
+#' @param dist_name <[character]> For `r_dist_name()`, a character vector of distribution names to be
+#' translated into distribution names R recognizes. Unrecognized names are left as-is.
 #' @return
 #'
 #' - `parse_dist` returns a data frame containing at least two columns named after the `dist` and `args`

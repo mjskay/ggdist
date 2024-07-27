@@ -24,8 +24,8 @@
 #' distribution scaled into \eqn{(-1,1)}{(-1,1)}.
 #'
 #' @inheritParams stats::dnorm
-#' @param eta Parameter controlling the shape of the distribution
-#' @param K Dimension of the correlation matrix. Must be greater than or equal to 2.
+#' @param K <[numeric]> Dimension of the correlation matrix. Must be greater than or equal to 2.
+#' @param eta <[numeric]> Parameter controlling the shape of the distribution
 #' @return
 #' - `dlkjcorr_marginal` gives the density
 #' - `plkjcorr_marginal` gives the cumulative distribution function (CDF)
@@ -137,18 +137,19 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' family of ggplot2 stats.
 #'
 #' @inheritParams lkjcorr_marginal
-#' @param data A data frame containing a column with distribution names (`".dist"` by default)
+#' @param data <[data.frame]> A data frame containing a column with distribution names (`".dist"` by default)
 #' and a list column of distribution arguments (`".args"` by default), such as output by
 #' [parse_dist()].
-#' @param predicate a bare expression for selecting the rows of `data` to modify. This is useful
-#' if `data` contains more than one row with an LKJ prior in it and you only want to modify some
-#' of the distributions; if this is the case, give row a predicate expression that evaluates to
-#' `TRUE` on the rows you want to modify.
+#' @param predicate <bare [language] | [NULL]> Expression for selecting the rows of `data` to modify.
+#' This is useful if `data` contains more than one row with an LKJ prior in it and you only want
+#' to modify some of the distributions; if this is the case, give row a predicate expression that
+#' evaluates to `TRUE` on the rows you want to modify.
+#'
 #' If `NULL` (the default), all `lkjcorr` distributions in `data` are modified.
-#' @param dist The name of the column containing distribution names. See [parse_dist()].
-#' @param args The name of the column containing distribution arguments. See [parse_dist()].
-#' @param dist_obj The name of the column to contain a \pkg{distributional} object representing the
-#' distribution. See [parse_dist()].
+#' @param dist <[string][character]> The name of the column containing distribution names. See [parse_dist()].
+#' @param args <[string][character]> The name of the column containing distribution arguments. See [parse_dist()].
+#' @param dist_obj <[string][character]> The name of the output column to contain a \pkg{distributional}
+#' object representing the distribution. See [parse_dist()].
 #' @return
 #' A data frame of the same size and column names as the input, with the `dist`, and `args`,
 #' and `dist_obj` columns modified on rows where `dist == "lkjcorr"` such that they represent a

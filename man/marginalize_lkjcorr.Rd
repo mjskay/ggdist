@@ -14,24 +14,25 @@ marginalize_lkjcorr(
 )
 }
 \arguments{
-\item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)
+\item{data}{<\link{data.frame}> A data frame containing a column with distribution names (\code{".dist"} by default)
 and a list column of distribution arguments (\code{".args"} by default), such as output by
 \code{\link[=parse_dist]{parse_dist()}}.}
 
-\item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
+\item{K}{<\link{numeric}> Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
-\item{predicate}{a bare expression for selecting the rows of \code{data} to modify. This is useful
-if \code{data} contains more than one row with an LKJ prior in it and you only want to modify some
-of the distributions; if this is the case, give row a predicate expression that evaluates to
-\code{TRUE} on the rows you want to modify.
+\item{predicate}{<bare \link{language} | \link{NULL}> Expression for selecting the rows of \code{data} to modify.
+This is useful if \code{data} contains more than one row with an LKJ prior in it and you only want
+to modify some of the distributions; if this is the case, give row a predicate expression that
+evaluates to \code{TRUE} on the rows you want to modify.
+
 If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} are modified.}
 
-\item{dist}{The name of the column containing distribution names. See \code{\link[=parse_dist]{parse_dist()}}.}
+\item{dist}{<\link[=character]{string}> The name of the column containing distribution names. See \code{\link[=parse_dist]{parse_dist()}}.}
 
-\item{args}{The name of the column containing distribution arguments. See \code{\link[=parse_dist]{parse_dist()}}.}
+\item{args}{<\link[=character]{string}> The name of the column containing distribution arguments. See \code{\link[=parse_dist]{parse_dist()}}.}
 
-\item{dist_obj}{The name of the column to contain a \pkg{distributional} object representing the
-distribution. See \code{\link[=parse_dist]{parse_dist()}}.}
+\item{dist_obj}{<\link[=character]{string}> The name of the output column to contain a \pkg{distributional}
+object representing the distribution. See \code{\link[=parse_dist]{parse_dist()}}.}
 }
 \value{
 A data frame of the same size and column names as the input, with the \code{dist}, and \code{args},

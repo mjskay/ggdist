@@ -400,13 +400,21 @@ plot.ggdist_density = function(x, ..., ylim = c(0, NA)) {
 #' @template description-auto-partial-waivable
 #'
 #' @inheritDotParams stats::bw.SJ
-#' @param x A numeric vector giving a sample.
+#' @param x <[numeric]> Vector containing a sample.
 #' @details
 #' These are loose wrappers around the corresponding `bw.`-prefixed functions
 #' in \pkg{stats}. See, for example, [bw.SJ()].
 #'
 #' [bandwidth_dpi()], which is the default bandwidth estimator in \pkg{ggdist},
 #' is the Sheather-Jones direct plug-in estimator, i.e. `bw.SJ(..., method = "dpi")`.
+#'
+#' With the exception of [bandwidth_nrd0()], these estimators may fail in some
+#' cases, often when a sample contains many duplicates. If they do they will
+#' automatically fall back to [bandwidth_nrd0()] with a warning. However, these
+#' failures are typically symptomatic of situations where you should not want to
+#' use a kernel density estimator in the first place (e.g. data with duplicates
+#' and/or discrete data). In these cases consider using a dotplot ([geom_dots()])
+#' or histogram ([density_histogram()]) instead.
 #'
 #' @returns A single number giving the bandwidth
 #' @seealso [density_bounded()], [density_unbounded()].

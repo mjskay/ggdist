@@ -101,8 +101,8 @@ rd_dotsinterval_shortcut_stat = function(
     '@inheritParams geom_dotsinterval',
     rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
-      @param geom Use to override the default connection between
-      [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
+      @param geom <[Geom][ggplot2::Geom] | [string][character]> Use to override
+      the default connection between [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
     '@template details-dotsinterval-family',
     '@template references-quantile-dotplots',
     '@template details-x-y-xdist-ydist',

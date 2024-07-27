@@ -63,47 +63,48 @@ globalVariables(c("y", "ymin", "ymax"))
 #' `ll` and `ul` yield lower limits and upper limits, respectively (where the opposite
 #' limit is set to either `Inf` or `-Inf`).
 #'
-#' @param .data Data frame (or grouped data frame as returned by [dplyr::group_by()])
-#' that contains draws to summarize.
-#' @param ... Bare column names or expressions that, when evaluated in the context of
+#' @param .data <[data.frame] | [grouped_df][dplyr::grouped_df]> Data frame (or grouped
+#' data frame as returned by [dplyr::group_by()]) that contains draws to summarize.
+#' @param ... <bare [language]> Column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
 #' These columns can be numeric, \pkg{distributional} objects, `posterior::rvar`s,
 #' or list columns of numeric values to summarise.
-#' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
-#' If multiple probabilities are provided, multiple rows per group are generated, each with
-#' a different probability interval (and value of the corresponding `.width` column).
+#' @param .width <[numeric]> vector of probabilities to use that determine the widths of
+#' the resulting intervals. If multiple probabilities are provided, multiple rows per
+#' group are generated, each with a different probability interval (and value of the
+#' corresponding `.width` column).
 #' @param .prob Deprecated. Use `.width` instead.
-#' @param .point Point summary function, which takes a vector and returns a single
-#' value, e.g. [mean()], [median()], or [Mode()].
-#' @param .interval Interval function, which takes a vector and a probability
+#' @param .point <[function]> Point summary function, which takes a vector and returns a single
+#' value, e.g. [`mean`], [`median`], or [`Mode`].
+#' @param .interval <[function]> Interval function, which takes a vector and a probability
 #' (`.width`) and returns a two-element vector representing the lower and upper
-#' bound of an interval; e.g. [qi()], [hdi()]
-#' @param .simple_names When `TRUE` and only a single column / vector is to be summarized, use the
-#' name `.lower` for the lower end of the interval and `.upper` for the
+#' bound of an interval; e.g. [`qi`], [`hdi`]
+#' @param .simple_names <scalar [logical]> When `TRUE` and only a single column / vector
+#' is to be summarized, use the name `.lower` for the lower end of the interval and `.upper` for the
 #' upper end. If `.data` is a vector and this is `TRUE`, this will also set the column name
 #' of the point summary to `.value`. When `FALSE` and `.data` is a data frame,
 #' names the lower and upper intervals for each column `x` `x.lower` and `x.upper`.
 #' When `FALSE` and `.data` is a vector, uses the naming scheme `y`, `ymin`
 #' and `ymax` (for use with ggplot).
-#' @param .exclude A character vector of names of columns to be excluded from summarization
-#' if no column names are specified to be summarized. Default ignores several meta-data column
+#' @param .exclude <[character]> Vector of names of columns to be excluded from summarization
+#' if no column names are specified to be summarized in `...`. Default ignores several meta-data column
 #' names used in \pkg{ggdist} and \pkg{tidybayes}.
-#' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
+#' @param na.rm <scalar [logical]> Should `NA` values be stripped before the computation proceeds?
 #' If `FALSE` (the default), any vectors to be summarized that contain `NA` will result in
 #' point and interval summaries equal to `NA`.
-#' @param x vector to summarize (for interval functions: `qi` and `hdi`)
-#' @param density For [hdi()] and [Mode()], the kernel density estimator to use, either as
-#' a function (e.g. [`density_bounded`], [`density_unbounded`]) or as a string giving the
-#' suffix to a function that starts with `density_` (e.g. `"bounded"` or `"unbounded"`). The
-#' default, `"bounded"`, uses the bounded density estimator of [density_bounded()], which
-#' itself estimates the bounds of the distribution, and tends to work well on both bounded
-#' and unbounded data.
-#' @param n For [hdi()] and [Mode()], the number of points to use to estimate highest-density
-#' intervals or modes.
-#' @param weights For [Mode()], an optional vector, which (if not `NULL`) is of the same length
-#' as `x` and provides weights for each element of `x`.
+#' @param x <[numeric]> Vector to summarize (for interval functions: [qi()], [hdi()], etc)
+#' @param density <[function] | [string][character]> For [hdi()] and [Mode()], the kernel
+#' density estimator to use, either as a function (e.g. [`density_bounded`], [`density_unbounded`])
+#' or as a string giving the suffix to a function that starts with `density_` (e.g. `"bounded"`
+#' or `"unbounded"`). The default, `"bounded"`, uses the bounded density estimator of
+#' [density_bounded()], which itself estimates the bounds of the distribution, and tends to
+#' work well on both bounded and unbounded data.
+#' @param n <scalar [numeric]> For [hdi()] and [Mode()], the number of points to use to estimate
+#' highest-density intervals or modes.
+#' @param weights <[numeric] | [NULL]> For [Mode()], an optional vector, which (if not `NULL`)
+#' is of the same length as `x` and provides weights for each element of `x`.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).

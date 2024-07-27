@@ -17,7 +17,7 @@
 #'
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritDotParams ggplot2::continuous_scale
-#' @param renormalize When mapping values to the `thickness` scale, should those
+#' @param renormalize <scalar [logical]> When mapping values to the `thickness` scale, should those
 #' values be allowed to be renormalized by geoms (e.g. via the `normalize` parameter
 #' to [geom_slabinterval()])? The default is `FALSE`: if `scale_thickness_shared()`
 #' is in use, the geom-specific `normalize` parameter is ignored (this is achieved
@@ -26,10 +26,10 @@
 #' Note that if you set renormalize to `TRUE`, subguides created via the
 #' `subguide` parameter to [geom_slabinterval()] will display the scaled values
 #' output by this scale, not the original data values.
-#' @param expand A numeric vector of limit expansion constants of length
+#' @param expand <[numeric]> Vector of limit expansion constants of length
 #' 2 or 4, following the same format used by the `expand` argument of
 #' [`continuous_scale()`][ggplot2::continuous_scale]. The default is not to expand the limits.
-#' You can use the convenience function [expansion()] to generate the
+#' You can use the convenience function [`expansion()`][ggplot2::expansion] to generate the
 #' expansion values; expanding the lower limit is usually not recommended
 #' (because with most `thickness` scales the lower limit is the baseline
 #' and represents `0`), so a typical usage might be something like

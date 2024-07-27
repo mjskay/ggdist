@@ -302,9 +302,9 @@ compute_interval_slabinterval = function(
 #'
 #' @inheritParams geom_slabinterval
 #' @inheritParams density_histogram
-#' @param geom Use to override the default connection between
-#' [stat_slabinterval()] and [geom_slabinterval()]
-#' @param p_limits Probability limits (numeric vector of size 2). Used to determine the lower and upper
+#' @param geom <[Geom][ggplot2::Geom] | [string][character]> Use to override the
+#' default connection between [stat_slabinterval()] and [geom_slabinterval()].
+#' @param p_limits <length-2 [numeric]> Probability limits. Used to determine the lower and upper
 #' limits of *analytical* distributions (distributions from *samples* ignore this parameter and determine
 #' their limits based on the limits of the sample and the value of the `trim` parameter).
 #' E.g., if this is `c(.001, .999)`, then a slab is drawn
@@ -314,7 +314,7 @@ compute_interval_slabinterval = function(
 #' `p_limits` is `c(NA, NA)`, on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
-#' @param density Density estimator for sample data. One of:
+#' @param density <[function] | [string][character]> Density estimator for sample data. One of:
 #'  - A function which takes a numeric vector and returns a list with elements
 #'    `x` (giving grid points for the density estimator) and `y` (the
 #'    corresponding densities). \pkg{ggdist} provides a family of functions
@@ -329,39 +329,40 @@ compute_interval_slabinterval = function(
 #' @eval rd_param_density_trim(passed_to = "density_bounded")
 #' @eval rd_param_density_breaks(passed_to = "density_histogram")
 #' @eval rd_param_density_align(passed_to = "density_histogram")
-#' @param outline_bars Passed to `density` (e.g. [density_histogram()]) and also
+#' @param outline_bars <scalar [logical] | [waiver]> Passed to `density` (e.g. [density_histogram()]) and also
 #' used for discrete analytical distributions (whose slabs are drawn as histograms). Determines
 #' if outlines in between the bars are drawn. If [waiver()] or `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars. If `TRUE`, outlines in between
 #' bars are also drawn (though you may have to set the `slab_color` or `color` aesthetic to
 #' see the outlines).
-#' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
+#' @param expand <[logical]> For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be a length-two logical vector to control expansion to the lower and upper limit respectively.
-#' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+#' @param limits <length-2 [numeric]> Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param n Number of points at which to evaluate the function that defines the slab. Also
+#' @param n <scalar [numeric]> Number of points at which to evaluate the function that defines the slab. Also
 #' passed to `density` (e.g. [density_bounded()]). Default `waiver()` uses the value `501`
 #' for analytical distributions and defers to the default of the density estimator for
 #' sample-based distributions, which is also usually `501`.
-#' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
-#'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
-#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc; if a string, the caller's environment is searched
-#'   for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
-#'   (typically mean, median, or mode) and interval type (quantile interval, `qi`;
-#'   highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
-#'   be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.
-#'   See the [point_interval()] family of functions for more information.
-#' @param .width The `.width` argument passed to `point_interval`: a vector of probabilities to use
-#' that determine the widths of the resulting intervals. If multiple probabilities are provided,
+#' @param point_interval <[function] | [string][character]> A function from the [point_interval()] family
+#' (e.g., `median_qi`, `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
+#' (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc; if a string, the caller's environment is searched
+#' for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
+#' (typically mean, median, or mode) and interval type (quantile interval, `qi`;
+#' highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
+#' be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.
+#' See the [point_interval()] family of functions for more information.
+#' @param .width <[numeric]> The `.width` argument passed to `point_interval`: a vector of probabilities
+#' to use that determine the widths of the resulting intervals. If multiple probabilities are provided,
 #' multiple intervals per group are generated, each with a different probability interval (and
 #' value of the corresponding `.width` and `level` generated variables).
-#' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
-#' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
-#' those that are mapped (the default for most geoms).
+#' @param show.legend <[logical]> Should this layer be included in the legends? Default is `c(size = FALSE)`,
+#' unlike most geoms, to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends,
+#' and `NA` shows only those that are mapped (the default for most geoms). It can also be a named logical
+#' vector to finely select the aesthetics to display.
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
 #' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats

@@ -93,11 +93,11 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
 
 #' @eval rd_dotsinterval_shortcut_stat("dotsinterval", "dots + point + interval")
 #' @inheritParams stat_slabinterval
-#' @param quantiles Setting this to a value other than `NA`
-#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
-#' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
-#' `quantiles` determines the number
-#' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
+#' @param quantiles <scalar [logical]> Number of quantiles to plot in the dotplot. Use `NA`
+#' (the default) to plot all data points. Setting this to a value other than `NA` will produce
+#' a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution (for
+#' analytical distributions, the default of `NA` is taken to mean `100` quantiles). See
+#' Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
 #' @export
 stat_dotsinterval = make_stat(StatDotsinterval, geom = "dotsinterval")
 

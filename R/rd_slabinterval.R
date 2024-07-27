@@ -81,8 +81,8 @@ rd_slabinterval_shortcut_stat = function(
     '@inheritParams geom_slabinterval',
     rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
-      @param geom Use to override the default connection between
-      [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
+      @param geom <[Geom][ggplot2::Geom] | [string][character]> Use to override
+      the default connection between [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
     '@template details-x-y-xdist-ydist',
     glue_doc('
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can

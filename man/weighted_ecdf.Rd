@@ -7,9 +7,9 @@
 weighted_ecdf(x, weights = NULL, na.rm = FALSE)
 }
 \arguments{
-\item{x}{numeric vector: sample values}
+\item{x}{<\link{numeric}> Sample values.}
 
-\item{weights}{Weights for the sample. One of:
+\item{weights}{<\link{numeric} | \link{NULL}> Weights for the sample. One of:
 \itemize{
 \item numeric vector of same length as \code{x}: weights for corresponding values in \code{x},
 which will be normalized to sum to 1.
@@ -17,7 +17,7 @@ which will be normalized to sum to 1.
 cumulative distribution function (equivalent to \code{\link[=ecdf]{ecdf()}}) is returned.
 }}
 
-\item{na.rm}{logical: if \code{TRUE}, corresponding entries in \code{x} and \code{weights}
+\item{na.rm}{<scalar \link{logical}> If \code{TRUE}, corresponding entries in \code{x} and \code{weights}
 are removed if either is \code{NA}.}
 }
 \value{

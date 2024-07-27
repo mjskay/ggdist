@@ -13,11 +13,12 @@
 #' (`lower`) and upper (`upper`) limits of the slab values in their original
 #' data units.
 #'
-#' @param x An object (typically a [`numeric`]) representing scaled values
+#' @param x <coercible-to-[numeric]> A [numeric] vector or an object
+#' coercible to a [numeric] (via [vctrs::vec_cast()]) representing scaled values
 #' to be converted to a `thickness()` object.
-#' @param lower The original lower bounds of thickness values before scaling.
+#' @param lower <[numeric]> The original lower bounds of thickness values before scaling.
 #' May be `NA` to indicate that this bound is not known.
-#' @param upper The original upper bounds of thickness values before scaling.
+#' @param upper <[numeric]> The original upper bounds of thickness values before scaling.
 #' May be `NA` to indicate that this bound is not known.
 #'
 #' @details

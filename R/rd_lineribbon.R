@@ -32,12 +32,13 @@ rd_lineribbon_shortcut_stat = function(
     '@inheritParams geom_lineribbon',
     rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
-      @param geom Use to override the default connection between
-      [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
+      @param geom <[Geom][ggplot2::Geom] | [string][character]> Use to override
+      the default connection between [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
     glue_doc('
-      @param show.legend Should this layer be included in the legends? `NA`,
-      the default, includes if any aesthetics are mapped. `FALSE` never includes,
-      and `TRUE` always includes.'),
+      @param show.legend <[logical]> Should this layer be included in the legends?
+      `NA`, the default, includes if any aesthetics are mapped. `FALSE` never includes,
+      and `TRUE` always includes. It can also be a named logical vector to finely select
+      the aesthetics to display.'),
     '@template details-x-y-xdist-ydist',
     glue_doc('
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can

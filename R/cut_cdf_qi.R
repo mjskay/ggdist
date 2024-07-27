@@ -14,16 +14,16 @@
 #' done more easily by mapping the `.width` or `level` computed variable to
 #' slab fill or color. See **Examples**.
 #'
-#' @param p A numeric vector of values from a cumulative distribution function,
+#' @param p <[numeric]> Vector of values from a cumulative distribution function,
 #' such as values returned by `p`-prefixed distribution functions in base R (e.g. [pnorm()]),
 #' the [`cdf()`][distributional::cdf] function, or values of the `cdf` computed aesthetic from the
 #' [stat_slabinterval()] family of stats.
-#' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
-#' @param labels One of:
-#'   - `NULL` to use the default labels (`.width` converted to a character vector).
+#' @param .width <[numeric]> Vector of probabilities to use that determine the widths of the resulting intervals.
+#' @param labels <[character] | [function] | [NULL]> One of:
 #'   - A character vector giving labels (must be same length as `.width`)
 #'   - A function that takes numeric probabilities as input and returns labels as output
 #'     (a good candidate might be [scales::percent_format()]).
+#'   - `NULL` to use the default labels (`.width` converted to a character vector).
 #'
 #' @return
 #' An [ordered] factor of the same length as `p` giving the quantile interval to

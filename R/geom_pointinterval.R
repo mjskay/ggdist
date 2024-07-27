@@ -10,9 +10,11 @@ globalVariables(".width")
 
 
 #' @eval rd_slabinterval_shortcut_geom("pointinterval", "point + multiple-interval")
-#' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
-#' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
-#' those that are mapped (the default for most geoms).
+#' @param show.legend <[logical]> Should this layer be included in the legends?
+#' Default is `c(size = FALSE)`, unlike most geoms, to match its common use cases.
+#' `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
+#' those that are mapped (the default for most geoms). It can also be a named
+#' logical vector to finely select the aesthetics to display.
 #' @examples
 #'
 #' library(dplyr)

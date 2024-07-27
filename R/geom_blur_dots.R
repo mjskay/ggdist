@@ -135,7 +135,8 @@ GeomBlurDots = ggproto("GeomBlurDots", GeomDots,
   ), GeomDots$default_params),
 
   param_docs = defaults(list(
-    blur = glue_doc('Blur function to apply to dots.
+    blur = glue_doc('
+      <[function] | [string][character]> Blur function to apply to dots.
       One of: \\itemize{
         \\item A function that takes a numeric vector of distances from the dot
           center, the dot radius, and the standard deviation of the blur and returns
@@ -236,11 +237,11 @@ geom_blur_dots = make_geom(GeomBlurDots)
 #' Methods for constructing blurs, as used in the `blur` argument to
 #' [geom_blur_dots()] or [stat_mcse_dots()].
 #' @template description-auto-partial-waivable
-#' @param x numeric vector of positive distances from the center of the dot
+#' @param x <[numeric]> Vector of positive distances from the center of the dot
 #' (assumed to be 0) to evaluate blur function at.
-#' @param r radius of the dot that is being blurred.
-#' @param sd standard deviation of the dot that is being blurred.
-#' @param .width for `blur_interval()`, a probability giving the width of
+#' @param r <scalar [numeric]> Radius of the dot that is being blurred.
+#' @param sd <scalar [numeric]> Standard deviation of the dot that is being blurred.
+#' @param .width <scalar [numeric]> For `blur_interval()`, a probability giving the width of
 #' the interval.
 #' @name blur
 #' @details
@@ -264,11 +265,11 @@ geom_blur_dots = make_geom(GeomBlurDots)
 #' dot at 50% opacity, where the interval is a Gaussian quantile interval with
 #' mass equal to `.width` and standard deviation `sd`.
 #' @returns
-#' A vector of length `x` giving the opacity of the radial gradient representing
-#' the dot at each `x` value.
+#' A vector with the same length as `x` giving the opacity of the radial
+#' gradient representing the dot at each `x` value.
 #' @seealso
 #' [geom_blur_dots()] and [stat_mcse_dots()] for geometries making use of
-#' `blur`s.
+#' `blur` functions.
 #' @examples
 #' # see examples in geom_blur_dots()
 #' @importFrom stats pnorm

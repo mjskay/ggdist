@@ -63,9 +63,9 @@ weighted_hist = function(
 #' argument to [density_histogram()].
 #' @template description-auto-partial-waivable
 #'
-#' @param x A numeric vector giving a sample.
-#' @param weights A numeric vector of `length(x)` giving sample weights.
-#'
+#' @param x <[numeric]> Sample values.
+#' @param weights <[numeric] | [NULL]> Optional weights to apply to `x`, which
+#' will be normalized to sum to 1.
 #' @details
 #' These functions take a sample and its weights and return a value suitable for
 #' the `breaks` argument to [density_histogram()] that will determine the histogram
@@ -138,7 +138,7 @@ NULL
 
 ## breaks_fixed ---------------------------------------------------------------
 #' @rdname breaks
-#' @param width For [breaks_fixed()], the desired bin width.
+#' @param width <scalar [numeric]> For [breaks_fixed()], the desired bin width.
 #' @export
 breaks_fixed = auto_partial(name = "breaks_fixed", function(
   x, weights = NULL, width = 1
@@ -181,7 +181,7 @@ breaks_Scott = auto_partial(name = "breaks_Scott", function(
 
 ## breaks_FD ---------------------------------------------------------------
 #' @rdname breaks
-#' @param digits For [breaks_FD()], the number of significant digits to keep when
+#' @param digits <scalar [numeric]> For [breaks_FD()], the number of significant digits to keep when
 #'   rounding in the Freedman-Diaconis algorithm. For an explanation of this
 #'   parameter, see the documentation of the corresponding parameter in
 #'   [grDevices::nclass.FD()].
@@ -219,13 +219,15 @@ breaks_FD = auto_partial(name = "breaks_FD", function(
 
 ## breaks_quantiles --------------------------------------------------------
 #' @rdname breaks
-#' @param max_n For [breaks_quantiles()], either a scalar numeric giving the
-#'   maximum number of bins, or another breaks function (or string giving the
-#'   suffix of the name of a function prefixed with `"breaks_"`) that will
-#'   return the maximum number of bins. [breaks_quantiles()] will construct
-#'   *at most* `max_n` bins.
-#' @param min_width For [breaks_quantiles()], a scalar numeric between `0` and
-#'   `1` giving the minimum bin width as a proportion of `diff(range(x)) / max_n`.
+#' @param max_n <scalar [numeric] | [function] | [string][character]>
+#' For [breaks_quantiles()], either a scalar numeric giving the
+#' maximum number of bins, or another breaks function (or string giving the
+#' suffix of the name of a function prefixed with `"breaks_"`) that will
+#' return the maximum number of bins. [breaks_quantiles()] will construct
+#' *at most* `max_n` bins.
+#' @param min_width <scalar [numeric]> For [breaks_quantiles()], a numeric
+#' between `0` and `1` giving the minimum bin width as a proportion of
+#' `diff(range(x)) / max_n`.
 #' @export
 breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
   x, weights = NULL, max_n = "Scott", min_width = 0.5
@@ -262,8 +264,8 @@ breaks_quantiles = auto_partial(name = "breaks_quantiles", function(
 #' argument to [density_histogram()].
 #' @template description-auto-partial-waivable
 #'
-#' @param breaks A sorted vector of breaks (bin edges).
-#' @param at A scalar numeric giving an alignment point.
+#' @param breaks <[numeric]> A sorted vector of breaks (bin edges).
+#' @param at <scalar [numeric]> The alignment point.
 #'  - For [align_boundary()]: align breaks so that a bin edge lines up with `at`.
 #'  - For [align_center()]: align breaks so that the center of a bin lines up with `at`.
 #'

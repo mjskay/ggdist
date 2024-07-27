@@ -7,19 +7,19 @@
 cut_cdf_qi(p, .width = c(0.66, 0.95, 1), labels = NULL)
 }
 \arguments{
-\item{p}{A numeric vector of values from a cumulative distribution function,
+\item{p}{<\link{numeric}> Vector of values from a cumulative distribution function,
 such as values returned by \code{p}-prefixed distribution functions in base R (e.g. \code{\link[=pnorm]{pnorm()}}),
 the \code{\link[distributional:cdf]{cdf()}} function, or values of the \code{cdf} computed aesthetic from the
 \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of stats.}
 
-\item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.}
+\item{.width}{<\link{numeric}> Vector of probabilities to use that determine the widths of the resulting intervals.}
 
-\item{labels}{One of:
+\item{labels}{<\link{character} | \link{function} | \link{NULL}> One of:
 \itemize{
-\item \code{NULL} to use the default labels (\code{.width} converted to a character vector).
 \item A character vector giving labels (must be same length as \code{.width})
 \item A function that takes numeric probabilities as input and returns labels as output
 (a good candidate might be \code{\link[scales:percent_format]{scales::percent_format()}}).
+\item \code{NULL} to use the default labels (\code{.width} converted to a character vector).
 }}
 }
 \value{

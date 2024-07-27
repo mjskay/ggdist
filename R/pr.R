@@ -8,7 +8,7 @@
 #' **Experimental** probability-like expressions that can be used in place of
 #' some `after_stat()` expressions in aesthetic assignments in \pkg{ggdist} stats.
 #'
-#' @param x Bare (unevaluated) expressions. See **Details**.
+#' @param x <bare [language]> Expressions. See *Probability expressions*, below.
 #'
 #' @details
 #' [Pr_()] and [p_()] are an **experimental** mini-language for specifying aesthetic values

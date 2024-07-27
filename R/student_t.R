@@ -11,8 +11,8 @@
 #' location (`mu`), and scale (`sigma`).
 #'
 #' @inheritParams stats::dt
-#' @param mu Location parameter (median)
-#' @param sigma Scale parameter
+#' @param mu <[numeric]> Location parameter (median).
+#' @param sigma <[numeric]> Scale parameter.
 #' @return
 #' - `dstudent_t` gives the density
 #' - `pstudent_t` gives the cumulative distribution function (CDF)

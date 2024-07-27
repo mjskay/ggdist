@@ -38,10 +38,10 @@ subguide_dots(values, ...)
 subguide_spike(values, ...)
 }
 \arguments{
-\item{values}{Values used to construct the scale used for this guide.
+\item{values}{<\link{numeric}> Values used to construct the scale used for this guide.
 Typically provided automatically by \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 
-\item{title}{The title of the scale shown on the sub-guide's axis.}
+\item{title}{<\link[=character]{string}> The title of the scale shown on the sub-guide's axis.}
 
 \item{breaks}{One of:
 \itemize{
@@ -67,7 +67,7 @@ as output. Also accepts rlang \link[rlang:as_function]{lambda} function
 notation.
 }}
 
-\item{position}{Numeric value between \code{0} and \code{1} giving the position of the
+\item{position}{<scalar \link{numeric}> Value between \code{0} and \code{1} giving the position of the
 guide relative to the axis: \code{0} causes the sub-guide to be drawn on the
 left or bottom depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"},
 and \code{1} causes the sub-guide to be drawn on the top or right depending on
@@ -75,11 +75,11 @@ if \code{orientation} is \code{"horizontal"} or \code{"vertical"}. May also be a
 indicating the position: \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"},
 \code{"topright"}, \code{"topleft"}, \code{"bottomright"}, or \code{"bottomleft"}.}
 
-\item{just}{Numeric value between \code{0} and \code{1} giving the justification of the
+\item{just}{<scalar \link{numeric}> Value between \code{0} and \code{1} giving the justification of the
 guide relative to its position: 0 means aligned towards the inside of the
 axis edge, 1 means aligned towards the outside of the axis edge.}
 
-\item{label_side}{Which side of the axis to draw the ticks and labels on.
+\item{label_side}{<\link[=character]{string}> Which side of the axis to draw the ticks and labels on.
 \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms which cause the labels
 to be drawn on the top or the right depending on if \code{orientation} is
 \code{"horizontal"} or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"}
@@ -91,11 +91,11 @@ depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
 of the chart, depending on \code{position}, and \code{"outside"} on the side closest
 to the outside of the chart.}
 
-\item{orientation}{Orientation of the geometry this sub-guide is for. One
+\item{orientation}{<\link[=character]{string}> Orientation of the geometry this sub-guide is for. One
 of \code{"horizontal"} (\code{"y"}) or \code{"vertical"} (\code{"x"}). See the \code{orientation}
 parameter to \code{\link[=geom_slabinterval]{geom_slabinterval()}}.}
 
-\item{theme}{A \link[ggplot2:theme]{ggplot2::theme} object used to determine the style that the
+\item{theme}{<\link[ggplot2:theme]{theme}> Theme used to determine the style that the
 sub-guide elements are drawn in. The title label is drawn using the
 \code{"axis.title.x"} or \code{"axis.title.y"} theme setting, and the axis line,
 ticks, and tick labels are drawn using \code{\link[ggplot2:guide_axis]{guide_axis()}}, so the same theme

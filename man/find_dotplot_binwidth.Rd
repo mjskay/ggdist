@@ -13,17 +13,16 @@ find_dotplot_binwidth(
 )
 }
 \arguments{
-\item{x}{numeric vector of values}
+\item{x}{<\link{numeric}> Data values.}
 
-\item{maxheight}{maximum height of the dotplot}
+\item{maxheight}{<scalar \link{numeric}> Maximum height of the dotplot.}
 
-\item{heightratio}{ratio of bin width to dot height}
+\item{heightratio}{<scalar \link{numeric}> Ratio of bin width to dot height.}
 
-\item{stackratio}{ratio of dot height to vertical distance between dot
-centers}
+\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
+between dot centers}
 
-\item{layout}{The layout method used
-for the dots: \itemize{
+\item{layout}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of
 their bins as in the classic Wilkinson dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly

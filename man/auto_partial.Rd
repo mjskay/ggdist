@@ -8,12 +8,12 @@
 auto_partial(f, name = NULL, waivable = TRUE)
 }
 \arguments{
-\item{f}{A function}
+\item{f}{<\link{function}> Function to automatically partially-apply.}
 
-\item{name}{A character string giving the name of the function, to be used
+\item{name}{<\link[=character]{string}> Name of the function, to be used
 when printing.}
 
-\item{waivable}{logical: if \code{TRUE}, optional arguments that get
+\item{waivable}{<scalar \link{logical}> If \code{TRUE}, optional arguments that get
 passed a \code{\link[=waiver]{waiver()}} will keep their default value (or whatever
 non-\code{waiver} value has been most recently partially applied for that
 argument).}

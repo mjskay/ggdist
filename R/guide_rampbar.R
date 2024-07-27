@@ -13,8 +13,8 @@
 #' and [scale_colour_ramp_continuous()]. Based on [`guide_colourbar()`][ggplot2::guide_colourbar].
 #'
 #' @inheritDotParams ggplot2::guide_colourbar
-#' @param to The color to ramp to in the guide. Corresponds to `1` on the scale.
-#' @param available_aes A vector of character strings listing the aesthetics for which a `guide_rampbar()` can be drawn.
+#' @param to <[string][character]> The color to ramp to in the guide. Corresponds to `1` on the scale.
+#' @param available_aes <[character]> Vector listing the aesthetics for which a `guide_rampbar()` can be drawn.
 #' @details
 #' This guide creates smooth gradient color bars for use with [scale_fill_ramp_continuous()]
 #' and [scale_colour_ramp_continuous()]. The color to ramp from is determined by the `from`

@@ -68,18 +68,19 @@ to use \code{position_jitter()}, give the position as \code{"jitter"}.
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{step}{Should the line/ribbon be drawn as a step function? One of:
+\item{step}{<scalar \link{logical} | \link[=character]{string}> Should the line/ribbon be drawn
+as a step function? One of:
 \itemize{
 \item \code{FALSE} (default): do not draw as a step function.
 \item \code{"mid"} (or \code{TRUE}): draw steps midway between adjacent x values.
 \item \code{"hv"}: draw horizontal-then-vertical steps.
 \item \code{"vh"}: draw as vertical-then-horizontal steps.
 }
-\code{TRUE} is an alias for \code{"mid"} because for a step function with ribbons, \code{"mid"} is probably what you want
-(for the other two step approaches the ribbons at either the very first or very last x value will not be
-visible).}
+\code{TRUE} is an alias for \code{"mid"}, because for a step function with ribbons
+\code{"mid"} is reasonable default (for the other two step approaches the ribbons
+at either the very first or very last x value will not be visible).}
 
-\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
 \item \code{NA} (default): automatically detect the orientation based on how the aesthetics
 are assigned. Automatic detection works most of the time.
@@ -94,8 +95,8 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
+\item{na.rm}{<scalar \link{logical}> If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE},
+missing values are silently removed.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.

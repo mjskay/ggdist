@@ -11,19 +11,19 @@ blur_gaussian(x, r, sd)
 blur_interval(x, r, sd, .width = 0.95)
 }
 \arguments{
-\item{x}{numeric vector of positive distances from the center of the dot
+\item{x}{<\link{numeric}> Vector of positive distances from the center of the dot
 (assumed to be 0) to evaluate blur function at.}
 
-\item{r}{radius of the dot that is being blurred.}
+\item{r}{<scalar \link{numeric}> Radius of the dot that is being blurred.}
 
-\item{sd}{standard deviation of the dot that is being blurred.}
+\item{sd}{<scalar \link{numeric}> Standard deviation of the dot that is being blurred.}
 
-\item{.width}{for \code{blur_interval()}, a probability giving the width of
+\item{.width}{<scalar \link{numeric}> For \code{blur_interval()}, a probability giving the width of
 the interval.}
 }
 \value{
-A vector of length \code{x} giving the opacity of the radial gradient representing
-the dot at each \code{x} value.
+A vector with the same length as \code{x} giving the opacity of the radial
+gradient representing the dot at each \code{x} value.
 }
 \description{
 Methods for constructing blurs, as used in the \code{blur} argument to
@@ -58,5 +58,5 @@ mass equal to \code{.width} and standard deviation \code{sd}.
 }
 \seealso{
 \code{\link[=geom_blur_dots]{geom_blur_dots()}} and \code{\link[=stat_mcse_dots]{stat_mcse_dots()}} for geometries making use of
-\code{blur}s.
+\code{blur} functions.
 }

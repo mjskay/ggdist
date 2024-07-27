@@ -14,9 +14,9 @@ align_boundary(breaks, at = 0)
 align_center(breaks, at = 0)
 }
 \arguments{
-\item{breaks}{A sorted vector of breaks (bin edges).}
+\item{breaks}{<\link{numeric}> A sorted vector of breaks (bin edges).}
 
-\item{at}{A scalar numeric giving an alignment point.
+\item{at}{<scalar \link{numeric}> The alignment point.
 \itemize{
 \item For \code{\link[=align_boundary]{align_boundary()}}: align breaks so that a bin edge lines up with \code{at}.
 \item For \code{\link[=align_center]{align_center()}}: align breaks so that the center of a bin lines up with \code{at}.

@@ -69,46 +69,50 @@ parse_dist(
 r_dist_name(dist_name)
 }
 \arguments{
-\item{object}{A character vector containing distribution specifications or a data frame with a column
-containing distribution specifications.}
-
-\item{...}{Arguments passed to other implementations of \code{parse_dist}.}
-
-\item{dist}{The name of the output column to contain the distribution name}
-
-\item{args}{The name of the output column to contain the arguments to the distribution}
-
-\item{dist_obj}{The name of the output column to contain a \pkg{distributional} object representing the distribution}
-
-\item{package}{The package or environment to search for distribution functions in.
-Passed to \code{\link[distributional:dist_wrap]{distributional::dist_wrap()}}. One of:
+\item{object}{<\link{character} | \link{data.frame}> One of:
 \itemize{
-\item \code{NULL}: use the calling environment
-\item a string: use the environment for the package with the given name
-\item an \link{environment}: use the given environment
+\item A character vector containing distribution specifications, like \code{c("normal(0,1)", "exp(1)")}
+\item A data frame with a column containing distribution specifications.
 }}
 
-\item{to_r_names}{If \code{TRUE} (the default), certain common aliases for distribution names are
-automatically translated into names that R can recognize (i.e., names which have functions starting
-with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution
-functions, etc. for that distribution), using the \code{r_dist_name} function. For example,
-\code{"normal"} is translated into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.}
+\item{...}{Arguments passed to other implementations of \code{parse_dist()}.}
 
-\item{dist_col}{A bare (unquoted) column or column expression that resolves to a character vector
-of distribution specifications.}
+\item{dist}{<\link[=character]{string}> The name of the output column to contain the distribution name.}
 
-\item{lb}{The name of an input column (for \code{data.frame} and \code{brms::prior} objects) that contains
-the lower bound of the distribution, which if present will produce a truncated distribution using
-\code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{lb} is \code{NULL} or if \code{object[[lb]]}
-is \code{NA} for the corresponding input row.}
+\item{args}{<\link[=character]{string}> The name of the output column to contain the arguments to the distribution.}
 
-\item{ub}{The name of an input column (for \code{data.frame} and \code{brms::prior} objects) that contains
-the upper bound of the distribution, which if present will produce a truncated distribution using
-\code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{ub} is \code{NULL} or if \code{object[[ub]]}
-is \code{NA} for the corresponding input row.}
+\item{dist_obj}{<\link[=character]{string}> The name of the output column to contain a \pkg{distributional}
+object representing the distribution.}
 
-\item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
-distribution names R recognizes. Unrecognized names are left as-is.}
+\item{package}{<\link[=character]{string} | \link{environment} | \link{NULL}> The package or environment to search for
+distribution functions in. Passed to \code{\link[distributional:dist_wrap]{distributional::dist_wrap()}}. One of:
+\itemize{
+\item a string: use the environment for the package with the given name
+\item an \link{environment}: use the given environment
+\item \code{NULL} (default): use the calling environment
+}}
+
+\item{to_r_names}{<scalar \link{logical}> If \code{TRUE} (the default), certain common aliases for distribution
+names are automatically translated into names that R can recognize (i.e., names which have functions
+starting with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution functions,
+etc. for that distribution), using the \code{r_dist_name} function. For example, \code{"normal"} is translated
+into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.}
+
+\item{dist_col}{<bare \link{language}> Column or column expression of \code{object} that resolves to a
+character vector of distribution specifications (when \code{object} is a \code{\link[=data.frame]{data.frame()}}).}
+
+\item{lb}{<\link[=character]{string}> The name of an input column (for \code{data.frame} and \code{brms::prior} objects)
+that contains the lower bound of the distribution, which if present will produce a truncated distribution
+using \code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{object[[lb]]} is \code{NULL} or if
+it is \code{NA} for the corresponding input row.}
+
+\item{ub}{<\link[=character]{string}> The name of an input column (for \code{data.frame} and \code{brms::prior} objects)
+that contains the upper bound of the distribution, which if present will produce a truncated distribution
+using \code{\link[distributional:dist_truncated]{dist_truncated()}}. Ignored if \code{object[[ub]]} is \code{NULL} or if
+it is \code{NA} for the corresponding input row.}
+
+\item{dist_name}{<\link{character}> For \code{r_dist_name()}, a character vector of distribution names to be
+translated into distribution names R recognizes. Unrecognized names are left as-is.}
 }
 \value{
 \itemize{

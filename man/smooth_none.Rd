@@ -7,7 +7,7 @@
 smooth_none(x, ...)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{x}{<\link{numeric}> Values to smooth.}
 
 \item{...}{ignored}
 }

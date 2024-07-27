@@ -379,9 +379,10 @@ transform_size = function(size, size_domain, size_range) {
 #' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
-#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
-#' Setting this equal to `"dodge"` ([`position_dodge()`][ggplot2::position_dodge]) or `"dodgejust"` ([position_dodgejust()]) can be useful if
-#' you have overlapping geometries.
+#' @param position <[Position][ggplot2::Position] | [string][character]> Position adjustment,
+#' either as a string, or the result of a call to a position adjustment function.
+#' Setting this equal to `"dodge"` ([`position_dodge()`][ggplot2::position_dodge]) or
+#' `"dodgejust"` ([position_dodgejust()]) can be useful if you have overlapping geometries.
 #' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can
 #' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @author Matthew Kay
@@ -594,8 +595,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
   param_docs = defaults(list(
     # SLAB PARAMS
     subscale = glue_doc('
-      Sub-scale used to scale values of the `thickness` aesthetic within
-      the groups determined by `normalize`. One of:
+      <[function] | [string][character]> Sub-scale used to scale values of the
+      `thickness` aesthetic within the groups determined by `normalize`. One of:
       \\itemize{
         \\item A function that takes an `x` argument giving a numeric vector
           of values to be scaled and then returns a [thickness] vector representing
@@ -610,7 +611,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
       '),
     normalize = glue_doc('
-      Groups within which to scale values of the `thickness` aesthetic. One of:
+      <[string][character]> Groups within which to scale values of the `thickness` aesthetic. One of:
       \\itemize{
         \\item `"all"`: normalize so that the maximum height across all data is `1`.
         \\item `"panels"`: normalize within panels so that the maximum height in each panel is `1`.
@@ -625,7 +626,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
       '),
     fill_type = glue_doc('
-      What type of fill to use when the fill color or alpha varies within a slab. One of:
+      <[string][character]> What type of fill to use when the fill color or alpha varies within a slab.
+      One of:
       \\itemize{
         \\item `"segments"`: breaks up the slab geometry into segments for each unique combination of fill color and
           alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
@@ -647,12 +649,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
     # INTERVAL PARAMS
     interval_size_domain = glue_doc('
-      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics
+      <length-2 [numeric]> Minimum and maximum of the values of the `size` and `linewidth` aesthetics
       that will be translated into actual sizes for intervals drawn according to `interval_size_range` (see the
       documentation for that argument.)
       '),
     interval_size_range = glue_doc('
-      A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval
+      <length-2 [numeric]> This geom scales the raw size aesthetic values when drawing interval
       and point sizes, as they tend to be too thick when using the default settings of [`scale_size_continuous()`][ggplot2::scale_size_continuous],
       which give sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the
       input domain of raw size values (typically this should be equal to the value of the `range`
@@ -665,21 +667,21 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       you can also use the `linewidth` or `point_size` aesthetics; see [sub-geometry-scales].
       '),
     fatten_point = glue_doc('
-      A multiplicative factor used to adjust the size of the point relative to the size of the
-      thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
-      aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
-      specified with that aesthetic will not be adjusted using `fatten_point`.
+      <scalar [numeric]> A multiplicative factor used to adjust the size of the point relative to the
+      size of the thickest interval line. If you wish to specify point sizes directly, you can also use
+      the `point_size` aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()];
+      sizes specified with that aesthetic will not be adjusted using `fatten_point`.
       '),
-    arrow = '[grid::arrow()] giving the arrow heads to use on the interval, or `NULL` for no arrows.',
+    arrow = '<[arrow] | [NULL]> Type of arrow heads to use on the interval, or `NULL` for no arrows.',
 
     # SUB_GEOMETRY FLAGS
-    show_slab = 'Should the slab portion of the geom be drawn?',
-    show_point = 'Should the point portion of the geom be drawn?',
-    show_interval = 'Should the interval portion of the geom be drawn?',
+    show_slab = '<scalar [logical]> Should the slab portion of the geom be drawn?',
+    show_point = '<scalar [logical]> Should the point portion of the geom be drawn?',
+    show_interval = '<scalar [logical]> Should the interval portion of the geom be drawn?',
 
     # GUIDES
     subguide = glue_doc('
-      Sub-guide used to annotate the `thickness` scale. One of:
+      <[function] | [string][character]> Sub-guide used to annotate the `thickness` scale. One of:
       \\itemize{
         \\item A function that takes a `scale` argument giving a [ggplot2::Scale]
           object and an `orientation` argument giving the orientation of the

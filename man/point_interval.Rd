@@ -155,59 +155,60 @@ median_hdci(.data, ..., .width = 0.95)
 mode_hdci(.data, ..., .width = 0.95)
 }
 \arguments{
-\item{.data}{Data frame (or grouped data frame as returned by \code{\link[dplyr:group_by]{dplyr::group_by()}})
-that contains draws to summarize.}
+\item{.data}{<\link{data.frame} | \link[dplyr:grouped_df]{grouped_df}> Data frame (or grouped
+data frame as returned by \code{\link[dplyr:group_by]{dplyr::group_by()}}) that contains draws to summarize.}
 
-\item{...}{Bare column names or expressions that, when evaluated in the context of
+\item{...}{<bare \link{language}> Column names or expressions that, when evaluated in the context of
 \code{.data}, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.
 These columns can be numeric, \pkg{distributional} objects, \code{posterior::rvar}s,
 or list columns of numeric values to summarise.}
 
-\item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
-If multiple probabilities are provided, multiple rows per group are generated, each with
-a different probability interval (and value of the corresponding \code{.width} column).}
+\item{.width}{<\link{numeric}> vector of probabilities to use that determine the widths of
+the resulting intervals. If multiple probabilities are provided, multiple rows per
+group are generated, each with a different probability interval (and value of the
+corresponding \code{.width} column).}
 
-\item{.point}{Point summary function, which takes a vector and returns a single
-value, e.g. \code{\link[=mean]{mean()}}, \code{\link[=median]{median()}}, or \code{\link[=Mode]{Mode()}}.}
+\item{.point}{<\link{function}> Point summary function, which takes a vector and returns a single
+value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}
 
-\item{.interval}{Interval function, which takes a vector and a probability
+\item{.interval}{<\link{function}> Interval function, which takes a vector and a probability
 (\code{.width}) and returns a two-element vector representing the lower and upper
-bound of an interval; e.g. \code{\link[=qi]{qi()}}, \code{\link[=hdi]{hdi()}}}
+bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
 
-\item{.simple_names}{When \code{TRUE} and only a single column / vector is to be summarized, use the
-name \code{.lower} for the lower end of the interval and \code{.upper} for the
+\item{.simple_names}{<scalar \link{logical}> When \code{TRUE} and only a single column / vector
+is to be summarized, use the name \code{.lower} for the lower end of the interval and \code{.upper} for the
 upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
 names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
 When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
 and \code{ymax} (for use with ggplot).}
 
-\item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+\item{na.rm}{<scalar \link{logical}> Should \code{NA} values be stripped before the computation proceeds?
 If \code{FALSE} (the default), any vectors to be summarized that contain \code{NA} will result in
 point and interval summaries equal to \code{NA}.}
 
-\item{.exclude}{A character vector of names of columns to be excluded from summarization
-if no column names are specified to be summarized. Default ignores several meta-data column
+\item{.exclude}{<\link{character}> Vector of names of columns to be excluded from summarization
+if no column names are specified to be summarized in \code{...}. Default ignores several meta-data column
 names used in \pkg{ggdist} and \pkg{tidybayes}.}
 
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
-\item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
+\item{x}{<\link{numeric}> Vector to summarize (for interval functions: \code{\link[=qi]{qi()}}, \code{\link[=hdi]{hdi()}}, etc)}
 
-\item{density}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the kernel density estimator to use, either as
-a function (e.g. \code{\link{density_bounded}}, \code{\link{density_unbounded}}) or as a string giving the
-suffix to a function that starts with \code{density_} (e.g. \code{"bounded"} or \code{"unbounded"}). The
-default, \code{"bounded"}, uses the bounded density estimator of \code{\link[=density_bounded]{density_bounded()}}, which
-itself estimates the bounds of the distribution, and tends to work well on both bounded
-and unbounded data.}
+\item{density}{<\link{function} | \link[=character]{string}> For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the kernel
+density estimator to use, either as a function (e.g. \code{\link{density_bounded}}, \code{\link{density_unbounded}})
+or as a string giving the suffix to a function that starts with \code{density_} (e.g. \code{"bounded"}
+or \code{"unbounded"}). The default, \code{"bounded"}, uses the bounded density estimator of
+\code{\link[=density_bounded]{density_bounded()}}, which itself estimates the bounds of the distribution, and tends to
+work well on both bounded and unbounded data.}
 
-\item{n}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the number of points to use to estimate highest-density
-intervals or modes.}
+\item{n}{<scalar \link{numeric}> For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the number of points to use to estimate
+highest-density intervals or modes.}
 
-\item{weights}{For \code{\link[=Mode]{Mode()}}, an optional vector, which (if not \code{NULL}) is of the same length
-as \code{x} and provides weights for each element of \code{x}.}
+\item{weights}{<\link{numeric} | \link{NULL}> For \code{\link[=Mode]{Mode()}}, an optional vector, which (if not \code{NULL})
+is of the same length as \code{x} and provides weights for each element of \code{x}.}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding

@@ -11,8 +11,8 @@
 #' "density dotplots".
 #' @template description-auto-partial-waivable
 #'
-#' @param x a numeric vector
-#' @param density Density estimator to use for smoothing. One of:
+#' @param x <[numeric]> Values to smooth.
+#' @param density <[function] | [string][character]> Density estimator to use for smoothing. One of:
 #'  - A function which takes a numeric vector and returns a list with elements
 #'    `x` (giving grid points for the density estimator) and `y` (the
 #'    corresponding densities). \pkg{ggdist} provides a family of functions
@@ -20,7 +20,7 @@
 #'    [density_bounded()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
 #'    e.g. `"bounded"` for `[density_bounded()]`.
-#' @param trim Passed to `density`: Should the density estimate be trimmed to the
+#' @param trim <scalar [logical]> Passed to `density`: Should the density estimate be trimmed to the
 #' range of the data? Default `FALSE`.
 #' @param ... Arguments passed to the density estimator specified by `density`.
 #' @inheritParams density_bounded
@@ -143,8 +143,8 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #' (e.g. [`geom_dots`]`(smooth = ...)`) to create "bar dotplots".
 #' @template description-auto-partial-waivable
 #'
-#' @param x a numeric vector
-#' @param width approximate width of the bars as a fraction of data [`resolution()`][ggplot2::resolution].
+#' @param x <[numeric]> Values to smooth.
+#' @param width <scalar [numeric]> approximate width of the bars as a fraction of data [`resolution()`][ggplot2::resolution].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
 #' [smooth_unbounded()] and thereby to [density_unbounded()]; [smooth_bar()]
 #' ignores them.
@@ -244,7 +244,7 @@ smooth_bar = auto_partial(name = "smooth_bar", function(x, width = 0.7, ...) {
 #' Default smooth for dotplots: no smooth. Simply returns the input values.
 #' @template description-auto-partial-waivable
 #'
-#' @param x a numeric vector
+#' @param x <[numeric]> Values to smooth.
 #' @param ... ignored
 #'
 #' @details

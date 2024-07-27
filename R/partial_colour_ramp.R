@@ -13,9 +13,9 @@
 #' (`amount`, a value between `0` and `1`). The target colour of the ramp
 #' can be filled in later using `ramp_colours()`, producing a colour.
 #'
-#' @param amount Numeric vector between `0` and `1` giving amounts to ramp
-#' the colour. `0` corresponds to the colour `from`.
-#' @param from Character vector giving colours to ramp from.
+#' @param amount <[numeric]> Vector of values between `0` and `1` giving amounts
+#' to ramp the colour. `0` corresponds to the colour `from`.
+#' @param from <[character]> Vector giving colours to ramp from.
 #'
 #' @details
 #' This datatype is used by [scale_colour_ramp] to create ramped colours in
@@ -116,8 +116,9 @@ vec_cast.integer.ggdist_partial_colour_ramp = function(x, to, ...) as.integer(fi
 #' a vector of the same length as the inputs giving the transformed
 #' (ramped) colours.
 #'
-#' @param colour character vector of colours.
-#' @param ramp a [`partial_colour_ramp`] vector.
+#' @param colour <[character]> Vector of colours to ramp to.
+#' @param ramp <[partial_colour_ramp]> Vector of colour ramps (same length as
+#' `colour`) giving the colour to ramp from and the amount to ramp.
 #' @details
 #' Takes vectors of colours and [`partial_colour_ramp`]s and produces
 #' colours by interpolating between each `from` colour and the target `colour`

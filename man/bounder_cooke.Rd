@@ -7,7 +7,7 @@
 bounder_cooke(x)
 }
 \arguments{
-\item{x}{numeric vector containing a sample to estimate the bounds of.}
+\item{x}{<\link{numeric}> Sample to estimate the bounds of.}
 }
 \value{
 A length-2 numeric vector giving an estimate of the minimum and maximum bounds

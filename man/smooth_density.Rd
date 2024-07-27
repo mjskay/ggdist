@@ -18,9 +18,9 @@ smooth_bounded(
 smooth_unbounded(x, density = "unbounded", trim = FALSE, ...)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{x}{<\link{numeric}> Values to smooth.}
 
-\item{density}{Density estimator to use for smoothing. One of:
+\item{density}{<\link{function} | \link[=character]{string}> Density estimator to use for smoothing. One of:
 \itemize{
 \item A function which takes a numeric vector and returns a list with elements
 \code{x} (giving grid points for the density estimator) and \code{y} (the
@@ -48,7 +48,7 @@ See \code{\link[=bounder_cooke]{bounder_cooke()}}.
 \item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}). See \code{\link[=bounder_range]{bounder_range()}}.
 }}
 
-\item{trim}{Passed to \code{density}: Should the density estimate be trimmed to the
+\item{trim}{<scalar \link{logical}> Passed to \code{density}: Should the density estimate be trimmed to the
 range of the data? Default \code{FALSE}.}
 
 \item{...}{Arguments passed to the density estimator specified by \code{density}.}

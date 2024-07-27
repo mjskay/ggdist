@@ -167,7 +167,7 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
 
   param_docs = defaults(list(
     # SLAB PARAMS
-    arrow = '[grid::arrow()] giving the arrow heads to use on the spike, or `NULL` for no arrows.'
+    arrow = '<[arrow] | [NULL]> Type of arrow heads to use on the spike, or `NULL` for no arrows.'
   ), GeomSlab$param_docs),
 
   default_params = defaults(list(
