@@ -24,6 +24,9 @@ Documentation:
 
 Bug fixes:
 
+* Stats and geoms now pass down `check.aes` and `check.param` to `layer()` so
+  that aesthetics can be used to carry data to later stages of the pipeline
+  without spurious warnings (#248).
 * Ensure `point_interval(<distribution>)` supports tidy evaluation on the
   `.point` and `.interval` arguments (#221).
 * `point_interval(<tibble>)` always returns a `tibble()` (#224).
