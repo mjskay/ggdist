@@ -57,7 +57,9 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
   # arguments passed to the geom_XXX() constructor and the underlying layer() call
   layer_args = list(
     show.legend = NA,
-    inherit.aes = TRUE
+    inherit.aes = TRUE,
+    check.aes = TRUE,
+    check.param = TRUE
   ),
 
 
