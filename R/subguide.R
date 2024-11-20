@@ -89,7 +89,6 @@ subguide_axis = auto_partial(name = "subguide_axis", function(
   orientation = "horizontal",
   theme = theme_get()
 ) {
-  print(values)
   if (length(values) == 0) return(gtable::gtable())
 
   define_orientation_variables(orientation)
