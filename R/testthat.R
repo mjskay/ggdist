@@ -38,7 +38,7 @@ skip_if_mac = function() {
 #' gradients would be incorrect)
 #' @noRd
 skip_if_no_gradient = function() {
-  testthat::skip_if_not(getRversion() >= "4.1")
+  testthat::skip_if_not(getRversion() >= "4.2")
   testthat::skip_if_not_installed("svglite", "2.1.0")
   testthat::skip_if_not_installed("fontquiver")
   testthat::skip_if_not_installed("sysfonts")
