@@ -198,10 +198,13 @@ data.frame(
   value = rnorm(300, c(1, 8, 3), c(1, 1.7, 1))
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +
-  stat_slab() +
-  stat_dotsinterval(side = "bottom", slab_linewidth = NA) +
+  geom_dots(layout = "weave", side = "bottom", linewidth = 0) +
+  stat_slabinterval() +
   scale_fill_brewer(palette = "Set2") +
-  theme_ggdist()
+  theme_ggdist() +
+  labs(
+    title = "Rainclouds using geom_dots(layout = 'weave') with stat_slabinterval()"
+  )
 ```
 
 The `geom_lineribbon()` / `stat_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize 
