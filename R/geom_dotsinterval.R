@@ -713,3 +713,26 @@ GeomDots$default_key_aes$slab_size = NULL
 #' @eval rd_dotsinterval_shortcut_geom("dots", "dot")
 #' @export
 geom_dots = make_geom(GeomDots)
+
+# principal function we aim to modify in order to scale height
+make_weighted_points_grob = function(
+    x, y, pch, col, fill, fontfamily, fontsize, lwd, lty, sd, axis, weight = NULL
+) {
+  # Convert weights to vertical scale if available
+  scale_y = if (!is.null(weight)) weight else rep(1, length(y))
+  scale_y = scale_y / max(scale_y)
+
+  # Use custom glyphs (e.g., ellipses/squares) with affine scaling
+  grid::grobTree(
+    mapply(function(x0, y0, w, size) {
+      grid::ellipseGrob(
+        x = unit(x0, "native"),
+        y = unit(y0, "native"),
+        width = unit(size, "points"),
+        height = unit(size * w, "points"),
+        gp = gpar(col = col, fill = fill, lwd = lwd, lty = lty)
+      )
+    }, x, y, scale_y, fontsize, SIMPLIFY = FALSE)
+  )
+}
+
