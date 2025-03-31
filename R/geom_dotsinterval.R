@@ -714,6 +714,7 @@ GeomDots$default_key_aes$slab_size = NULL
 #' @export
 geom_dots = make_geom(GeomDots)
 
+<<<<<<< HEAD
 
 ## geom_weighted_dots ----------------------------------------------------
 
@@ -831,3 +832,72 @@ GeomWeightedDots = ggproto("GeomWeightedDots", GeomDots,
 #'   geom_weighted_dots()
 #'
 #' @export
+
+
+# principal function we aim to modify in order to scale height
+make_weighted_points_grob = function(
+    x, y, pch, col, fill, fontfamily, fontsize, lwd, lty, sd, axis, weight = NULL
+) {
+  # Convert weights to vertical scale if available
+  scale_y = if (!is.null(weight)) weight else rep(1, length(y))
+  scale_y = scale_y / max(scale_y)
+
+  # Use custom glyphs (e.g., ellipses/squares) with affine scaling
+  grid::grobTree(
+    mapply(function(x0, y0, w, size) {
+      grid::ellipseGrob(
+        x = unit(x0, "native"),
+        y = unit(y0, "native"),
+        width = unit(size, "points"),
+        height = unit(size * w, "points"),
+        gp = gpar(col = col, fill = fill, lwd = lwd, lty = lty)
+      )
+    }, x, y, scale_y, fontsize, SIMPLIFY = FALSE)
+  )
+}
+
+#' Weighted Dotplot Geom
+#'
+#' @export
+#' @rdname ggdist
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2
+
+# Defining the geom wrapper function to make weighted dots
+geom_weighted_dots = function(mapping = NULL, data = NULL, stat = "identity",
+                              position = "identity", ..., na.rm = FALSE,
+                              orientation = NA, show.legend = NA, inherit.aes = TRUE) {
+  layer(
+    geom = GeomWeightedDots, mapping = mapping, data = data, stat = stat,
+    position = position, show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, orientation = orientation, ...)
+  )
+}
+
+# making an ellipse function to get ellipse for each dot
+ellipseGrob = function(x = unit(0.5, "npc"),
+                       y = unit(0.5, "npc"),
+                       width = unit(1, "cm"),
+                       height = unit(1, "cm"),
+                       gp = gpar(),
+                       name = NULL,
+                       vp = NULL) {
+  # Use circleGrob and apply scaling to turn it into an ellipse
+  circle = grid::circleGrob(
+    x = x, y = y, r = unit(0.5, "npc"), gp = gp,
+    name = name, vp = vp
+  )
+
+  # Apply viewport with scaling to make it elliptical
+  ellipse_vp = grid::viewport(
+    x = x, y = y,
+    width = width, height = height,
+    just = c("center", "center")
+  )
+
+  # Return grob tree
+  grid::grobTree(circle, vp = ellipse_vp)
+}
+
