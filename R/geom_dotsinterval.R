@@ -713,3 +713,191 @@ GeomDots$default_key_aes$slab_size = NULL
 #' @eval rd_dotsinterval_shortcut_geom("dots", "dot")
 #' @export
 geom_dots = make_geom(GeomDots)
+
+<<<<<<< HEAD
+
+## geom_weighted_dots ----------------------------------------------------
+
+#' @export
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2-ggproto
+GeomWeightedDots = ggproto("GeomWeightedDots", GeomDots,
+                           default_aes = defaults(aes(
+                             weight = 1,
+                             shape = 21,
+                             linewidth = 0.75,
+                             size = 2,
+                             colour = "gray65"
+                           ), GeomDots$default_aes),
+
+                           draw_slabs = function(self, s_data, panel_params, coord, orientation,
+                                                 ..., fill_type, na.rm, dotsize, stackratio,
+                                                 binwidth, layout, overlaps, overflow,
+                                                 subguide, verbose) {
+
+                             define_orientation_variables(orientation)
+
+                             # Normalize weights (stretch factor)
+                             s_data$thickness = s_data$weight
+                             max_weight = max(s_data$weight, na.rm = TRUE)
+                             if (!is.na(max_weight) && max_weight > 0) {
+                               s_data$thickness = s_data$thickness / max_weight
+                             } else {
+                               s_data$thickness = 1
+                             }
+
+                             # Apply slab thickness transformation
+                             scaled = rescale_slab_thickness(s_data, orientation, na.rm, name = "geom_weighted_dots")
+                             s_data = scaled[[1]]
+
+                             s_data = self$override_slab_aesthetics(s_data)
+                             if (nrow(s_data) == 0) return(list())
+
+                             s_data[[y]] = ifelse(s_data$side == "top" | s_data$side == "right",
+                                                  s_data[[ymin]],
+                                                  ifelse(s_data$side == "both",
+                                                         (s_data[[ymin]] + s_data[[ymax]]) / 2,
+                                                         s_data[[ymax]]))
+
+                             if (!coord$is_linear()) {
+                               stop("geom_weighted_dots does not support non-linear coordinates.")
+                             }
+
+                             if (inherits(coord, "CoordFlip")) {
+                               orientation = ifelse(orientation %in% c("y", "horizontal"), "x", "y")
+                               define_orientation_variables(orientation)
+                             }
+
+                             s_data = coord$transform(s_data, panel_params)
+
+                             xscale = max(panel_params[[x.range]]) - min(panel_params[[x.range]])
+
+                             if (!is.na(binwidth) && !grid::is.unit(binwidth)) {
+                               binwidth = binwidth / xscale
+                             }
+
+                             s_data = s_data[order(s_data[["order"]] %||% s_data[[x]]), ]
+
+                             list(dots_grob(
+                               s_data,
+                               x, y,
+                               xscale = xscale,
+                               dotsize = dotsize,
+                               stackratio = stackratio,
+                               binwidth = binwidth,
+                               layout = layout,
+                               overlaps = overlaps,
+                               overflow = overflow,
+                               subguide = subguide,
+                               verbose = verbose,
+                               orientation = orientation,
+                               make_points_grob = make_weighted_points_grob
+                             ))
+                           }
+)
+
+
+#' Weighted Dot Plot Geom
+#'
+#' `geom_weighted_dots()` creates a dot plot where each dot's vertical size reflects a `weight` aesthetic.
+#' This is useful for visualizing weighted observations or distributions, especially when working with `rvar`s or quantile-based summaries.
+#'
+#' @inheritParams ggplot2::geom_point
+#' @param weight A numeric aesthetic mapping representing the relative "importance" or magnitude of each dot.
+#'        This controls the vertical stretch of each dot (e.g., makes it elliptical if `weight > 1`).
+#' @param binwidth Width of bins used to layout dots. If `NA` (default), an optimal binwidth is selected automatically.
+#' @param dotsize Relative size of dots within each bin (default is 1.07 to slightly overfill for visual consistency).
+#' @param stackratio Controls vertical spacing between stacked dots (default `1` = just touching).
+#' @param layout Layout algorithm to arrange dots (e.g., `"bin"`, `"hex"`, `"swarm"`).
+#' @param overlaps How to resolve dot overlaps (e.g., `"nudge"`, `"keep"`).
+#' @param overflow How to handle dots that would overflow the geometry (`"warn"`, `"compress"`, `"keep"`).
+#' @param orientation Orientation of the plot, usually automatically detected.
+#' @param show.legend Should this layer be included in the legends? (default: `NA`)
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics, rather than combining with them.
+#'
+#' @return A ggplot2 layer that adds a weighted dotplot to the plot.
+#'
+#' @examples
+#' library(ggplot2)
+#' set.seed(123)
+#' df <- data.frame(
+#'   x = rnorm(100),
+#'   y = "group1",
+#'   weight = runif(100, 0.5, 2)
+#' )
+#'
+#' ggplot(df, aes(x = x, y = y, weight = weight)) +
+#'   geom_weighted_dots()
+#'
+#' @export
+
+
+# principal function we aim to modify in order to scale height
+make_weighted_points_grob = function(
+    x, y, pch, col, fill, fontfamily, fontsize, lwd, lty, sd, axis, weight = NULL
+) {
+  # Convert weights to vertical scale if available
+  scale_y = if (!is.null(weight)) weight else rep(1, length(y))
+  scale_y = scale_y / max(scale_y)
+
+  # Use custom glyphs (e.g., ellipses/squares) with affine scaling
+  grid::grobTree(
+    mapply(function(x0, y0, w, size) {
+      grid::ellipseGrob(
+        x = unit(x0, "native"),
+        y = unit(y0, "native"),
+        width = unit(size, "points"),
+        height = unit(size * w, "points"),
+        gp = gpar(col = col, fill = fill, lwd = lwd, lty = lty)
+      )
+    }, x, y, scale_y, fontsize, SIMPLIFY = FALSE)
+  )
+}
+
+#' Weighted Dotplot Geom
+#'
+#' @export
+#' @rdname ggdist
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2
+
+# Defining the geom wrapper function to make weighted dots
+geom_weighted_dots = function(mapping = NULL, data = NULL, stat = "identity",
+                              position = "identity", ..., na.rm = FALSE,
+                              orientation = NA, show.legend = NA, inherit.aes = TRUE) {
+  layer(
+    geom = GeomWeightedDots, mapping = mapping, data = data, stat = stat,
+    position = position, show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, orientation = orientation, ...)
+  )
+}
+
+# making an ellipse function to get ellipse for each dot
+ellipseGrob = function(x = unit(0.5, "npc"),
+                       y = unit(0.5, "npc"),
+                       width = unit(1, "cm"),
+                       height = unit(1, "cm"),
+                       gp = gpar(),
+                       name = NULL,
+                       vp = NULL) {
+  # Use circleGrob and apply scaling to turn it into an ellipse
+  circle = grid::circleGrob(
+    x = x, y = y, r = unit(0.5, "npc"), gp = gp,
+    name = name, vp = vp
+  )
+
+  # Apply viewport with scaling to make it elliptical
+  ellipse_vp = grid::viewport(
+    x = x, y = y,
+    width = width, height = height,
+    just = c("center", "center")
+  )
+
+  # Return grob tree
+  grid::grobTree(circle, vp = ellipse_vp)
+}
+
