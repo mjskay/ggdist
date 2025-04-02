@@ -233,7 +233,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
         GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes)
       )
       list(
-        order = mean(d[["order"]], na.rm = TRUE),
+        order = median(d[["order"]], na.rm = TRUE),
         grobs = group_grobs
       )
     })
