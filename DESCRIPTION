@@ -93,6 +93,7 @@ Collate:
     "geom_spike.R"
     "geom_swarm.R"
     "guide_rampbar.R"
+    "interval_widths.R"
     "lkjcorr_marginal.R"
     "parse_dist.R"
     "partial_colour_ramp.R"

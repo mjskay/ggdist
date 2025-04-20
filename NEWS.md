@@ -16,6 +16,8 @@ Major changes:
   estimator (#220).
 * Bin edge openness can now be set via the `right_closed` and `outermost_closed`
   arguments to `density_histogram()` (#238).
+* New helper functions `interval_widths()` and `pretty_widths()` make it 
+  easier to create nicely-spaced sets of nested intervals.
 
 Documentation:
 
