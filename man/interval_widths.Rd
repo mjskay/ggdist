@@ -5,16 +5,11 @@
 \alias{pretty_widths}
 \title{Nicely-spaced sets of interval widths}
 \usage{
-interval_widths(
-  n,
-  dist = distributional::dist_normal(),
-  max = 1 - 0.1/n,
-  precision = NULL
-)
+interval_widths(n, dist = dist_normal(), max = 1 - 0.1/n, precision = NULL)
 
 pretty_widths(
   n,
-  dist = distributional::dist_normal(),
+  dist = dist_normal(),
   max = if (n <= 4) 0.95 else 1 - 0.1/n,
   precision = if (n <= 4) 0.05 else 0.01
 )
@@ -28,9 +23,9 @@ distribution.}
 \item{max}{<\link{numeric}> in \eqn{(0, 1)}: Maximum interval width.}
 
 \item{precision}{<\link{numeric} | \link{NULL}>: If not \code{NULL}, a value in \eqn{(0, 1)}
-giving the precision to round resulting intervals to. Intervals will only be
-rounded if the result does not create collisions (in order to guarantee \code{n}
-unique intervals are returned).}
+giving the precision to round resulting widths to. In order to guarantee
+\code{n} unique intervals are returned, widths will only be rounded if the
+result does not create duplicate values.}
 }
 \value{
 A length-\code{n} numeric vector of interval widths (masses) between
@@ -39,38 +34,40 @@ A length-\code{n} numeric vector of interval widths (masses) between
 \description{
 Create nicely-spaced sets of nested interval widths for use with (e.g.)
 the \code{.width} parameter of \code{\link[=point_interval]{point_interval()}}, \code{\link[=stat_slabinterval]{stat_slabinterval()}}, or
-\code{\link[=stat_lineribbon]{stat_lineribbon()}}.
-
-Creates a sequence of $n$ interval widths \eqn{p_i} such that
-\eqn{0 < p_i \le \textrm{max} < 1} representing the masses of nested intervals
-that are evenly-spaced on a reference distribution (by default a
-normal distribution). \code{interval_widths()} generalizes the idea behind
-the default use of the ~66\% and 95\% intervals in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and
-50\%, 80\%, and 95\% intervals in \code{\link[=stat_lineribbon]{stat_lineribbon()}}: applied to a Normal
+\code{\link[=stat_lineribbon]{stat_lineribbon()}}:
+\itemize{
+\item \code{interval_widths(n)} creates a sequence of \code{n} interval widths
+\eqn{p_1 \ldots p_n}, where \eqn{0 < p_i \le \textrm{max} < 1}, corresponding
+to the masses of nested intervals that are evenly-spaced on a reference
+distribution (by default a Normal distribution). This generalizes the idea
+behind the default ~66\% and 95\% intervals in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and
+50\%, 80\%, and 95\% intervals in \code{\link[=stat_lineribbon]{stat_lineribbon()}}: when applied to a Normal
 distribution, those intervals are roughly evenly-spaced and allow one to
-see deviations from the Normal distribution (such as excess kurtosis) when
-the resulting intervals are \emph{not} evenly spaced. \code{interval_widths()}
-creates intervals with this property on any distribution (though if the
-distribution is not symmetric, the intervals will only appear evenly-spaced
-on the upper half of the distribution).
+see deviations from the reference distribution (such as excess kurtosis) when
+the resulting intervals are \emph{not} evenly spaced.
+\item \code{pretty_widths(n)} is a variant of \code{interval_widths()} with defaults for
+\code{max} and \code{precision} that make the resulting intervals more human-readable,
+for labelling purposes.
+}
 
-\code{pretty_widths()} is a variant of \code{interval_widths()} with defaults for
-\code{max} and \code{precision} that make the resulting intervals more human-readable
-(for labelling purposes).
+Intervals should be evenly-spaced on any symmetric reference distribution
+when applied to data from distributions with the same shape. If \code{dist}
+is not symmetric, intervals may only be approximately evenly-spaced above the
+median.
 }
 \details{
-Given the cumulative distribution function (CDF) \eqn{F_\textrm{dist}(q)}
-and the inverse CDF (quantile function) \eqn{F^{-1}_\textrm{dist}(p)}
-of \code{dist}, the following is a sequence of \eqn{n + 1} evenly-spaced
-quantiles of \code{dist} that could represent upper limits of nested intervals,
-where \eqn{q_i = q_0 + i\frac{q_n - q_0}{n}}:
+Given the cumulative distribution function \eqn{F_\textrm{dist}(q)}
+and the quantile function \eqn{F^{-1}_\textrm{dist}(p)} of \code{dist}, the
+following is a sequence of \eqn{n + 1} evenly-spaced quantiles of \code{dist}
+that could represent upper limits of nested intervals, where
+\eqn{q_i = q_0 + i\frac{q_n - q_0}{n}}:
 
 \deqn{\begin{array}{rcl}
 q_0, \ldots, q_n &=& F^{-1}_\textrm{dist}(0.5), \ldots, F^{-1}_\textrm{dist}(0.5 + \frac{\textrm{max}}{2})
 \end{array}}
 
 \code{interval_widths(n)} returns the \code{n} interval widths corresponding to the
-upper endpoints \eqn{q_1, \ldots q_n}:
+upper interval limits \eqn{q_1, \ldots, q_n}:
 
 \deqn{
 2\cdot\left[F_\textrm{dist}(q_1) - 0.5\right], \ldots, 2\cdot\left[F_\textrm{dist}(q_n) - 0.5\right]
@@ -89,7 +86,7 @@ pretty_widths(3)     # 0.50, 0.80, 0.95
 
 # larger numbers of intervals can be useful for plots
 data.frame(x = 1:20/20) |>
-  ggplot(aes(x, ydist = distributional::dist_normal((x * 5) ^2, 1 + x * 5))) +
+  ggplot(aes(x, ydist = dist_normal((x * 5) ^2, 1 + x * 5))) +
   stat_lineribbon(.width = pretty_widths(10))
 
 # large numbers of intervals can be used to create gradients -- particularly
@@ -97,7 +94,7 @@ data.frame(x = 1:20/20) |>
 # (this is currently experimental)
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
   data.frame(x = 1:20/20) |>
-    ggplot(aes(x, ydist = distributional::dist_normal((x * 5) ^2, 1 + x * 5))) +
+    ggplot(aes(x, ydist = dist_normal((x * 5) ^2, 1 + x * 5))) +
     stat_lineribbon(
       aes(fill_ramp = after_stat(ave(pdf_min, level))),
       .width = interval_widths(40),
