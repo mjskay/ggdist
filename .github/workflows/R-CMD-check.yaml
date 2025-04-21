@@ -36,7 +36,9 @@ jobs:
           - {os: ubuntu-latest,  r: 'oldrel-2'}
           - {os: ubuntu-latest,  r: 'oldrel-3'}
           - {os: ubuntu-latest,  r: 'oldrel-4'}
-          - {os: ubuntu-latest,  r: 'oldrel-5'}
+          # not working on 4.0 currently because distributional is not, but this will
+          # be fixed by https://github.com/mitchelloharawild/distributional/issues/128
+          # - {os: ubuntu-latest,  r: 'oldrel-5'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
