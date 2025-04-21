@@ -62,6 +62,7 @@
 #' [stat_lineribbon()], etc.
 #' @examples
 #' library(ggplot2)
+#' library(distributional)
 #'
 #' interval_widths(1)   # 0.9
 #' # this is roughly +/- 1 SD and +/- 2 SD
