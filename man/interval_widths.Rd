@@ -96,7 +96,7 @@ ggplot(data.frame(x = 1:20/20)) +
 # (this is currently experimental)
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
   ggplot(data.frame(x = 1:20/20)) +
-    aes(x, ydist = dist_normal((x * 5)^2, 1 + x * 5))) +
+    aes(x, ydist = dist_normal((x * 5)^2, 1 + x * 5)) +
     stat_lineribbon(
       aes(fill_ramp = after_stat(ave(pdf_min, level))),
       .width = interval_widths(40),
