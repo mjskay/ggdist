@@ -49,10 +49,11 @@ either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
 \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_lineribbon]{geom_lineribbon()}},
-these include:
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These
+are often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They
+may also be parameters to the paired geom/stat. When paired with the
+default geom, \code{\link[=geom_lineribbon]{geom_lineribbon()}}, these include:
 \describe{
 \item{\code{step}}{<scalar \link{logical} | \link[=character]{string}> Should the line/ribbon be drawn
 as a step function? One of:
@@ -208,12 +209,15 @@ These \code{stat}s support the following aesthetics:
 (when \code{orientation = "vertical"} with sample data).}
 \item{\code{weight}: When using samples (i.e. the \code{x} and \code{y} aesthetics, not \code{xdist} or \code{ydist}), optional
 weights to be applied to each draw.}
-\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
-\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
-\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a
+\code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
 \item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
 }
 

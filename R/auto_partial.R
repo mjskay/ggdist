@@ -275,7 +275,7 @@ waiver = ggplot2::waiver
 
 #' waiver-coalescing operator
 #' @noRd
-`%|W|%` = function (x, y) {
+`%|W|%` = function(x, y) {
   if (inherits(x, "waiver")) y
   else x
 }

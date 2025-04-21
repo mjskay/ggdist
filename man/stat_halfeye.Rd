@@ -59,10 +59,11 @@ either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
 \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slabinterval]{geom_slabinterval()}},
-these include:
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These
+are often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They
+may also be parameters to the paired geom/stat. When paired with the
+default geom, \code{\link[=geom_slabinterval]{geom_slabinterval()}}, these include:
 \describe{
 \item{\code{subscale}}{<\link{function} | \link[=character]{string}> Sub-scale used to scale values of the
 \code{thickness} aesthetic within the groups determined by \code{normalize}. One of:
@@ -113,8 +114,9 @@ if you are using a graphics device that support gradients.
 \item{\code{interval_size_domain}}{<length-2 \link{numeric}> Minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics
 that will be translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the
 documentation for that argument.)}
-\item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when drawing interval
-and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+\item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when
+drawing interval and point sizes, as they tend to be too thick when using
+the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
 argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
@@ -225,12 +227,14 @@ highest-density interval, \code{hdi}; or highest-density continuous interval, \c
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
-\item{limits}{<length-2 \link{numeric}> Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
-be determined by either \code{p_limits} or the scale settings.}
+\item{limits}{<length-2 \link{numeric}> Manually-specified limits for the slab, as
+a vector of length two. These limits are combined with those computed based on
+\code{p_limits} as well as the limits defined by the scales of the plot to
+determine the limits used to draw the slab functions: these limits specify
+the maximal limits; i.e., if specified, the limits will not be wider than
+these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but
+let the upper limit be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{<scalar \link{numeric}> Number of points at which to evaluate the function that defines the slab. Also
 passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}). Default \code{waiver()} uses the value \code{501}
@@ -356,12 +360,15 @@ These \code{stat}s support the following aesthetics:
 (when \code{orientation = "vertical"} with sample data).}
 \item{\code{weight}: When using samples (i.e. the \code{x} and \code{y} aesthetics, not \code{xdist} or \code{ydist}), optional
 weights to be applied to each draw.}
-\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
-\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
-\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a
+\code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
 \item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
 }
 

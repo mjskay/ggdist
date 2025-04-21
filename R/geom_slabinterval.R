@@ -376,9 +376,10 @@ transform_size = function(size, size_domain, size_range) {
 #' @eval rd_layer_params("slabinterval")
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
-#' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat.
+#' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are
+#' often aesthetics, used to set an aesthetic to a fixed value, like `colour = "red"`
+#' or `linewidth = 3` (see **Aesthetics**, below). They may also be parameters
+#' to the paired geom/stat.
 #' @param position <[Position][ggplot2::Position] | [string][character]> Position adjustment,
 #' either as a string, or the result of a call to a position adjustment function.
 #' Setting this equal to `"dodge"` ([`position_dodge()`][ggplot2::position_dodge]) or
@@ -654,8 +655,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       documentation for that argument.)
       '),
     interval_size_range = glue_doc('
-      <length-2 [numeric]> This geom scales the raw size aesthetic values when drawing interval
-      and point sizes, as they tend to be too thick when using the default settings of [`scale_size_continuous()`][ggplot2::scale_size_continuous],
+      <length-2 [numeric]> This geom scales the raw size aesthetic values when
+      drawing interval and point sizes, as they tend to be too thick when using
+      the default settings of [`scale_size_continuous()`][ggplot2::scale_size_continuous],
       which give sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the
       input domain of raw size values (typically this should be equal to the value of the `range`
       argument of the [`scale_size_continuous()`][ggplot2::scale_size_continuous] function), and

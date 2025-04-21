@@ -22,7 +22,8 @@ smooth_bar(x, width = 0.7, ...)
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{width}{<scalar \link{numeric}> approximate width of the bars as a fraction of data \code{\link[ggplot2:resolution]{resolution()}}.}
+\item{width}{<scalar \link{numeric}> approximate width of the bars as a fraction
+of data \code{\link[ggplot2:resolution]{resolution()}}.}
 
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
 \code{\link[=smooth_unbounded]{smooth_unbounded()}} and thereby to \code{\link[=density_unbounded]{density_unbounded()}}; \code{\link[=smooth_bar]{smooth_bar()}}

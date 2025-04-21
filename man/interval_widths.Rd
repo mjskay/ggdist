@@ -47,7 +47,7 @@ see deviations from the reference distribution (such as excess kurtosis) when
 the resulting intervals are \emph{not} evenly spaced.
 \item \code{pretty_widths(n)} is a variant of \code{interval_widths()} with defaults for
 \code{max} and \code{precision} that make the resulting intervals more human-readable,
-for labelling purposes.
+for labeling purposes.
 }
 
 Intervals should be evenly-spaced on any symmetric reference distribution

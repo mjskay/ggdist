@@ -152,7 +152,7 @@ apply_subscale.data.frame = function(x, subscale) {
 #' @noRd
 validate_expand = function(expand) {
   stopifnot(is.numeric(expand), length(expand) %in% c(2, 4))
-  rep(expand, length.out = 4)
+  rep_len(expand, 4)
 }
 
 #' Validate a `limits` argument and return a canonical version

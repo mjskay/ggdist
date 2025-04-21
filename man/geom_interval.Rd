@@ -60,9 +60,10 @@ either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
 \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat.}
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like \code{colour = "red"}
+or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be parameters
+to the paired geom/stat.}
 
 \item{orientation}{<\link[=character]{string}> Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
@@ -79,8 +80,9 @@ For compatibility with the base ggplot naming scheme for \code{orientation}, \co
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
-\item{interval_size_range}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when drawing interval
-and point sizes, as they tend to be too thick when using the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+\item{interval_size_range}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when
+drawing interval and point sizes, as they tend to be too thick when using
+the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
 argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and

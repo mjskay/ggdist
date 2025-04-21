@@ -30,9 +30,10 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @eval rd_lineribbon_aesthetics("lineribbon")
 #' @inheritParams ggplot2::geom_line
 #' @inheritParams ggplot2::layer
-#' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat.
+#' @param ...  Other arguments passed to [`layer()`][ggplot2::layer]. These are
+#' often aesthetics, used to set an aesthetic to a fixed value, like `colour = "red"`
+#' or `linewidth = 3` (see **Aesthetics**, below). They may also be parameters
+#' to the paired geom/stat.
 #' @return A [ggplot2::Geom] representing a combined line + multiple-ribbon geometry which can
 #' be added to a [`ggplot()`][ggplot2::ggplot] object.
 #' @author Matthew Kay

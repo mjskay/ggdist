@@ -337,12 +337,14 @@ compute_interval_slabinterval = function(
 #' see the outlines).
 #' @param expand <[logical]> For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be a length-two logical vector to control expansion to the lower and upper limit respectively.
-#' @param limits <length-2 [numeric]> Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-#' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
-#' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-#' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
-#' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
-#' be determined by either `p_limits` or the scale settings.
+#' @param limits <length-2 [numeric]> Manually-specified limits for the slab, as
+#' a vector of length two. These limits are combined with those computed based on
+#' `p_limits` as well as the limits defined by the scales of the plot to
+#' determine the limits used to draw the slab functions: these limits specify
+#' the maximal limits; i.e., if specified, the limits will not be wider than
+#' these (but may be narrower). Use `NA` to leave a limit alone; e.g.
+#' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but
+#' let the upper limit be determined by either `p_limits` or the scale settings.
 #' @param n <scalar [numeric]> Number of points at which to evaluate the function that defines the slab. Also
 #' passed to `density` (e.g. [density_bounded()]). Default `waiver()` uses the value `501`
 #' for analytical distributions and defers to the default of the density estimator for
@@ -457,12 +459,15 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     (when `orientation = "vertical"` with sample data).',
     weight = 'When using samples (i.e. the `x` and `y` aesthetics, not `xdist` or `ydist`), optional
     weights to be applied to each draw.',
-    xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
-    object (e.g. [`dist_normal()`][distributional::dist_normal]) or a [posterior::rvar()] object.',
-    ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
-    object (e.g. [`dist_normal()`][distributional::dist_normal]) or a [posterior::rvar()] object.',
+    xdist = 'When using analytical distributions, distribution to map on the x axis:
+    a \\pkg{distributional} object (e.g. [`dist_normal()`][distributional::dist_normal])
+    or a [posterior::rvar()] object.',
+    ydist = 'When using analytical distributions, distribution to map on the y axis:
+    a \\pkg{distributional} object (e.g. [`dist_normal()`][distributional::dist_normal])
+    or a [posterior::rvar()] object.',
     dist = 'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
-    \\pkg{distributional} object (e.g. [`dist_normal()`][distributional::dist_normal]), or a [posterior::rvar()] object. See **Details**.',
+    \\pkg{distributional} object (e.g. [`dist_normal()`][distributional::dist_normal]), or a
+    [posterior::rvar()] object. See **Details**.',
     args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
   ), AbstractStatSlabinterval$aes_docs),
 

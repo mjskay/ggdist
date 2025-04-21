@@ -129,7 +129,7 @@ found a bug, please file it
 reproduce the issue. Pull requests should be filed against the
 [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch. I am not
 particularly reliable over email, though you can try to contact me at
-<mjskay@northwestern.edu>. A [Twitter](https://twitter.com/mjskay) DM is
+<mjskay@northwestern.edu>. A [Bluesky](https://bsky.app/) message is
 more likely to elicit a response.
 
 ## Citing `ggdist`
@@ -139,7 +139,7 @@ Uncertainty in the Grammar of Graphics. *IEEE Transactions on
 Visualization and Computer Graphics*, 30(1), 414–424. DOI:
 [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
 
-Matthew Kay (2024). ggdist: Visualizations of Distributions and
-Uncertainty. R package version 3.3.2,
+Matthew Kay (2025). ggdist: Visualizations of Distributions and
+Uncertainty. R package version 3.3.3,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

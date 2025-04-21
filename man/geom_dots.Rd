@@ -66,9 +66,10 @@ either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
 \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat.}
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like \code{colour = "red"}
+or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be parameters
+to the paired geom/stat.}
 
 \item{binwidth}{<\link{numeric} | \link{unit}> The bin width to use for laying out the dots.
 One of:

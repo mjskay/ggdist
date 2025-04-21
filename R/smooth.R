@@ -144,7 +144,8 @@ smooth_unbounded = auto_partial(name = "smooth_unbounded", function(
 #' @template description-auto-partial-waivable
 #'
 #' @param x <[numeric]> Values to smooth.
-#' @param width <scalar [numeric]> approximate width of the bars as a fraction of data [`resolution()`][ggplot2::resolution].
+#' @param width <scalar [numeric]> approximate width of the bars as a fraction
+#' of data [`resolution()`][ggplot2::resolution].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
 #' [smooth_unbounded()] and thereby to [density_unbounded()]; [smooth_bar()]
 #' ignores them.

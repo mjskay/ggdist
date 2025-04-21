@@ -23,7 +23,7 @@ See Details.'><meta property="og:image" content="https://mjskay.github.io/ggdist
 
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,10 +132,11 @@ Setting this equal to <code>"dodge"</code> (<code><a href="https://ggplot2.tidyv
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are often aesthetics, used to set an aesthetic
-to a fixed value, like <code>colour = "red"</code> or <code>linewidth = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
-parameters to the paired geom/stat. When paired with the default geom, <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code>,
-these include:</p><dl><dt><code>subscale</code></dt>
+<dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These
+are often aesthetics, used to set an aesthetic to a fixed value, like
+<code>colour = "red"</code> or <code>linewidth = 3</code> (see <strong>Aesthetics</strong>, below). They
+may also be parameters to the paired geom/stat. When paired with the
+default geom, <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code>, these include:</p><dl><dt><code>subscale</code></dt>
 <dd><p>&lt;<a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> | <a href="https://rdrr.io/r/base/character.html" class="external-link">string</a>&gt; Sub-scale used to scale values of the
 <code>thickness</code> aesthetic within the groups determined by <code>normalize</code>. One of:</p><ul><li><p>A function that takes an <code>x</code> argument giving a numeric vector
 of values to be scaled and then returns a <a href="thickness.html">thickness</a> vector representing
@@ -185,8 +186,9 @@ that will be translated into actual sizes for intervals drawn according to <code
 documentation for that argument.)</p></dd>
 
 <dt><code>interval_size_range</code></dt>
-<dd><p>&lt;length-2 <a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a>&gt; This geom scales the raw size aesthetic values when drawing interval
-and point sizes, as they tend to be too thick when using the default settings of <code><a href="https://ggplot2.tidyverse.org/reference/scale_size.html" class="external-link">scale_size_continuous()</a></code>,
+<dd><p>&lt;length-2 <a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a>&gt; This geom scales the raw size aesthetic values when
+drawing interval and point sizes, as they tend to be too thick when using
+the default settings of <code><a href="https://ggplot2.tidyverse.org/reference/scale_size.html" class="external-link">scale_size_continuous()</a></code>,
 which give sizes with a range of <code>c(1, 6)</code>. The <code>interval_size_domain</code> value indicates the
 input domain of raw size values (typically this should be equal to the value of the <code>range</code>
 argument of the <code><a href="https://ggplot2.tidyverse.org/reference/scale_size.html" class="external-link">scale_size_continuous()</a></code> function), and
@@ -315,12 +317,14 @@ See the <code><a href="point_interval.html">point_interval()</a></code> family o
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
-<dd><p>&lt;length-2 <a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a>&gt; Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed based on <code>p_limits</code> as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use <code>NA</code> to leave a limit alone; e.g.
-<code>limits = c(0, NA)</code> will ensure that the lower limit does not go below 0, but let the upper limit
-be determined by either <code>p_limits</code> or the scale settings.</p></dd>
+<dd><p>&lt;length-2 <a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a>&gt; Manually-specified limits for the slab, as
+a vector of length two. These limits are combined with those computed based on
+<code>p_limits</code> as well as the limits defined by the scales of the plot to
+determine the limits used to draw the slab functions: these limits specify
+the maximal limits; i.e., if specified, the limits will not be wider than
+these (but may be narrower). Use <code>NA</code> to leave a limit alone; e.g.
+<code>limits = c(0, NA)</code> will ensure that the lower limit does not go below 0, but
+let the upper limit be determined by either <code>p_limits</code> or the scale settings.</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
@@ -465,12 +469,15 @@ the <strong>interval</strong>.</p>
 (when <code>orientation = "vertical"</code> with sample data).</p></li>
 <li><p><code>weight</code>: When using samples (i.e. the <code>x</code> and <code>y</code> aesthetics, not <code>xdist</code> or <code>ydist</code>), optional
 weights to be applied to each draw.</p></li>
-<li><p><code>xdist</code>: When using analytical distributions, distribution to map on the x axis: a <span class="pkg">distributional</span>
-object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>) or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
-<li><p><code>ydist</code>: When using analytical distributions, distribution to map on the y axis: a <span class="pkg">distributional</span>
-object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>) or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
+<li><p><code>xdist</code>: When using analytical distributions, distribution to map on the x axis:
+a <span class="pkg">distributional</span> object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>)
+or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
+<li><p><code>ydist</code>: When using analytical distributions, distribution to map on the y axis:
+a <span class="pkg">distributional</span> object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>)
+or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object.</p></li>
 <li><p><code>dist</code>: When using analytical distributions, a name of a distribution (e.g. <code>"norm"</code>), a
-<span class="pkg">distributional</span> object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>), or a <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object. See <strong>Details</strong>.</p></li>
+<span class="pkg">distributional</span> object (e.g. <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal()</a></code>), or a
+<code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> object. See <strong>Details</strong>.</p></li>
 <li><p><code>args</code>: Distribution arguments (<code>args</code> or <code>arg1</code>, ... <code>arg9</code>). See <strong>Details</strong>.</p></li>
 </ul><p>In addition, in their default configuration (paired with <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code>)
 the following aesthetics are supported by the underlying geom:</p>

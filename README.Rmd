@@ -279,7 +279,7 @@ packages with few dependencies and a clear need within `{ggdist}`:
 
 ## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, issues, and contributions! If you have found a bug, please file it [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch. I am not particularly reliable over email, though you can try to contact me at <mjskay@northwestern.edu>. A [Twitter](https://twitter.com/mjskay) DM is more likely to elicit a response.
+I welcome feedback, suggestions, issues, and contributions! If you have found a bug, please file it [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch. I am not particularly reliable over email, though you can try to contact me at <mjskay@northwestern.edu>. A [Bluesky](https://bsky.app/) message is more likely to elicit a response.
 
 ## Citing `ggdist`
 

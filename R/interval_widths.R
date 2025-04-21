@@ -24,7 +24,7 @@
 #'
 #' - `pretty_widths(n)` is a variant of `interval_widths()` with defaults for
 #' `max` and `precision` that make the resulting intervals more human-readable,
-#' for labelling purposes.
+#' for labeling purposes.
 #'
 #' Intervals should be evenly-spaced on any symmetric reference distribution
 #' when applied to data from distributions with the same shape. If `dist`

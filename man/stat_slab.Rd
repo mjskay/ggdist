@@ -57,10 +57,11 @@ either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[ggplot2:position_dodge]{position_dodge()}}) or
 \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if you have overlapping geometries.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slab]{geom_slab()}},
-these include:
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{layer()}}. These
+are often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They
+may also be parameters to the paired geom/stat. When paired with the
+default geom, \code{\link[=geom_slab]{geom_slab()}}, these include:
 \describe{
 \item{\code{subscale}}{<\link{function} | \link[=character]{string}> Sub-scale used to scale values of the
 \code{thickness} aesthetic within the groups determined by \code{normalize}. One of:
@@ -195,12 +196,14 @@ see the outlines).}
 \item{expand}{<\link{logical}> For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
 Can be a length-two logical vector to control expansion to the lower and upper limit respectively.}
 
-\item{limits}{<length-2 \link{numeric}> Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
-be determined by either \code{p_limits} or the scale settings.}
+\item{limits}{<length-2 \link{numeric}> Manually-specified limits for the slab, as
+a vector of length two. These limits are combined with those computed based on
+\code{p_limits} as well as the limits defined by the scales of the plot to
+determine the limits used to draw the slab functions: these limits specify
+the maximal limits; i.e., if specified, the limits will not be wider than
+these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but
+let the upper limit be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{<scalar \link{numeric}> Number of points at which to evaluate the function that defines the slab. Also
 passed to \code{density} (e.g. \code{\link[=density_bounded]{density_bounded()}}). Default \code{waiver()} uses the value \code{501}
@@ -332,12 +335,15 @@ These \code{stat}s support the following aesthetics:
 (when \code{orientation = "vertical"} with sample data).}
 \item{\code{weight}: When using samples (i.e. the \code{x} and \code{y} aesthetics, not \code{xdist} or \code{ydist}), optional
 weights to be applied to each draw.}
-\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
-\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
-object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis:
+a \pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}})
+or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
 \item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
-\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\pkg{distributional} object (e.g. \code{\link[distributional:dist_normal]{dist_normal()}}), or a
+\code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
 \item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
 }
 
