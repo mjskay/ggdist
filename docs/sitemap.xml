@@ -1,249 +1,89 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://mjskay.github.io/ggdist/404.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/dotsinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/lineribbon.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/slabinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/thickness.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/index.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/align.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/auto_partial.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/bandwidth.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/blur.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/bounder_cdf.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/bounder_cooke.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/bounder_range.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/breaks.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/curve_interval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/cut_cdf_qi.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/density_bounded.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/density_histogram.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/density_unbounded.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/find_dotplot_binwidth.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_blur_dots.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_dots.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_dotsinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_interval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_lineribbon.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_pointinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_slab.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_slabinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_spike.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_swarm.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/geom_weave.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/ggdist-deprecated.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/ggdist-ggproto.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/ggdist-package.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/guide_rampbar.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/lkjcorr_marginal.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/marginalize_lkjcorr.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/parse_dist.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/partial_colour_ramp.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/point_interval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/position_dodgejust.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/Pr_.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/ramp_colours.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/RankCorr.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/scale_side_mirrored.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/scale_thickness.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/smooth_density.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/smooth_discrete.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/smooth_none.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_ccdfinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_cdfinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_dots.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_dotsinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_eye.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_gradientinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_halfeye.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_histinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_interval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_lineribbon.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_mcse_dots.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_pointinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_ribbon.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_slab.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_slabinterval.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_spike.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/student_t.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/sub-geometry-scales.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/subguide_axis.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/subguide_none.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/theme_ggdist.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/tidy-format-translators.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/weighted_ecdf.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/reference/weighted_quantile.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://mjskay.github.io/ggdist/404.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/dotsinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/lineribbon.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/slabinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/articles/thickness.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/authors.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/LICENSE-text.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/news/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/align.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/auto_partial.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/bandwidth.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/bin_dots.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/blur.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/bounder_cdf.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/bounder_cooke.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/bounder_range.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/breaks.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/curve_interval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/cut_cdf_qi.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/density_bounded.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/density_histogram.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/density_unbounded.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/find_dotplot_binwidth.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_blur_dots.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_dots.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_dotsinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_interval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_lineribbon.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_pointinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_slab.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_slabinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_spike.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_swarm.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/geom_weave.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/ggdist-deprecated.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/ggdist-ggproto.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/ggdist-package.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/guide_rampbar.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/interval_widths.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/lkjcorr_marginal.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/marginalize_lkjcorr.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/parse_dist.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/partial_colour_ramp.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/point_interval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/position_dodgejust.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/Pr_.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/ramp_colours.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/RankCorr.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/scale_side_mirrored.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/scale_thickness.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/smooth_density.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/smooth_discrete.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/smooth_none.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_ccdfinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_cdfinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_dots.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_dotsinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_eye.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_gradientinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_halfeye.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_histinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_interval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_lineribbon.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_mcse_dots.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_pointinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_ribbon.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_slab.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_slabinterval.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/stat_spike.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/student_t.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/sub-geometry-scales.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/subguide_axis.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/subguide_none.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/subscale_identity.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/subscale_thickness.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/theme_ggdist.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/thickness.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/tidy-format-translators.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/waiver.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/weighted_ecdf.html</loc></url>
+<url><loc>https://mjskay.github.io/ggdist/reference/weighted_quantile.html</loc></url>
 </urlset>
+

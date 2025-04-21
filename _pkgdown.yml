@@ -115,7 +115,9 @@ reference:
     aesthetics, such as `slab_colour`, `point_size`, etc.
   contents:
   - scale_thickness
+  - thickness
   - subscale_thickness
+  - subscale_identity
   - scale_colour_ramp
   - scale_side_mirrored
   - sub-geometry-scales
@@ -153,6 +155,7 @@ reference:
     application (aka "currying") provided by `auto_partial()`.
   contents:
   - automatic-partial-functions
+  - waiver
 
 - subtitle: "Dotplot layout algorithms"
   desc: >

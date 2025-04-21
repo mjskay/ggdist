@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="ggdist">
 <title>Slab + interval stats and geoms • ggdist</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -15,17 +14,12 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.8/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
-<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Slab + interval stats and geoms">
-<meta property="og:description" content="ggdist">
-<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script><script>
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Slab + interval stats and geoms">
+<!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -35,53 +29,43 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">ggdist</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.2.9000</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/dotsinterval.html">Dots + interval stats and geoms</a>
-    <a class="dropdown-item" href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
-    <a class="dropdown-item" href="../articles/lineribbon.html">Lineribbon stats and geoms</a>
-    <a class="dropdown-item" href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
-    <a class="dropdown-item" href="../articles/thickness.html">Thickness scale</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/dotsinterval.html">Dots + interval stats and geoms</a></li>
+    <li><a class="dropdown-item" href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a></li>
+    <li><a class="dropdown-item" href="../articles/lineribbon.html">Lineribbon stats and geoms</a></li>
+    <li><a class="dropdown-item" href="../articles/slabinterval.html">Slab + interval stats and geoms</a></li>
+    <li><a class="dropdown-item" href="../articles/thickness.html">Thickness scale</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/mjskay/ggdist/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mjskay/ggdist/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -94,7 +78,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2024-03-04</h4>
+            <h4 data-toc-skip class="date">2025-04-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/slabinterval.Rmd" class="external-link"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="d-none name"><code>slabinterval.Rmd</code></div>
@@ -130,7 +114,7 @@ plots, and histograms.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
@@ -168,7 +152,7 @@ combination of the geometry’s <code>height</code>/<code>width</code>,
 its <code>scale</code>, the <code>normalize</code> parameter, and any
 <code>thickness</code> scales added to the plot (such as
 <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code>). For a comprehensive discussion
-and examples of slab scaling and normalization, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link"><code>thickness</code>
+and examples of slab scaling and normalization, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html"><code>thickness</code>
 scale article</a>.</p>
 <p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not always advisable: they
@@ -422,7 +406,7 @@ distributions. For examples of this, see
 </h3>
 <p>A particularly good use of the <code>xdist</code>/<code>ydist</code>
 aesthetics is to visualize priors. For example, with <code>brms</code>
-you can specify priors using the <code><a href="https://paul-buerkner.github.io/brms/reference/set_prior.html" class="external-link">brms::prior()</a></code> function,
+you can specify priors using the <code><a href="https://paulbuerkner.com/brms/reference/set_prior.html" class="external-link">brms::prior()</a></code> function,
 which creates data frames with a <code>"prior"</code> column indicating
 the name of the prior distribution as a string. E.g., one might set some
 priors on the betas and the standard deviation in a model with something
@@ -458,7 +442,7 @@ names (e.g. “normal”) into their equivalent R function names
 (<code>"norm"</code>). It also creates a <code>.dist_obj</code> vector
 using <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_wrap.html" class="external-link">distributional::dist_wrap()</a></code>. This distribution vector
 respects truncation bounds set by the <code>lb</code> and
-<code>ub</code> columns output by <code><a href="https://paul-buerkner.github.io/brms/reference/set_prior.html" class="external-link">brms::prior()</a></code>, as on the
+<code>ub</code> columns output by <code><a href="https://paulbuerkner.com/brms/reference/set_prior.html" class="external-link">brms::prior()</a></code>, as on the
 half-Normal prior for the <code>sigma</code> parameter. The
 <code>.dist_obj</code> vector can be assigned to the <code>xdist</code>
 or <code>ydist</code> aesthetic in ggdist:</p>
@@ -477,7 +461,7 @@ or <code>ydist</code> aesthetic in ggdist:</p>
 <p>This example also demonstrates the use of subguides to label the
 <code>thickness</code> axis. For more on subguides, see the
 documentation for the <code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> function, and for
-more on scaling of the <code>thickness</code> aesthetic, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+more on scaling of the <code>thickness</code> aesthetic, see the <a href="https://mjskay.github.io/ggdist/articles/thickness.html">thickness
 article</a>.</p>
 <p>The <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> function in <code>format(.dist_obj)</code>
 generates a string containing a human-readable name for the distribution
@@ -523,7 +507,7 @@ plot. The difference is illustrated below:</p>
 <p><img src="slabinterval_files/figure-html/prior_post-1.png" width="648"></p>
 <p>With <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> applied, both densities
 have the same area under their curves. Further details of scaling of the
-<code>thickness</code> aesthetic are discussed in the <a href="https://mjskay.github.io/ggdist/articles/thickness.html" class="external-link">thickness
+<code>thickness</code> aesthetic are discussed in the <a href="https://mjskay.github.io/ggdist/articles/thickness.html">thickness
 article</a></p>
 </div>
 <div class="section level3">
@@ -761,10 +745,11 @@ does not support gradients.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_gradientinterval(position = 'dodge', fill_type = 'gradient')"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/gradient_dodge_nice-1.png" width="648"></p>
 <p>As of this writing, in R version 4.1 or greater the graphics devices
-that support gradients — i.e. device that support the
+that support gradients — i.e. devices that support the
 <code><a href="https://rdrr.io/r/grid/patterns.html" class="external-link">grid::linearGradient()</a></code> function — include
-<code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code>, <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">svg()</a></code>, and
-<code>png(type = "cairo")</code>. See <a href="https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/" class="external-link">here</a>
+<code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code>, <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">svg()</a></code>,
+<code>png(type = "cairo")</code>, and <code><a href="https://ragg.r-lib.org/reference/agg_png.html" class="external-link">ragg::agg_png()</a></code>. See
+<a href="https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/" class="external-link">here</a>
 for more about the changes to the R graphics engine.</p>
 </div>
 <div class="section level3">
@@ -936,9 +921,11 @@ also supply <code>cdf</code> and <code>pdf</code> aesthetics to create
 charts that make use of both the CDF and the PDF in their aesthetic
 mappings. For example, we could create <a href="https://doi.org/10.1109/TVCG.2014.2346298" class="external-link">Correll &amp;
 Gleicher</a>-style gradient plots by fading the tails outside of the 95%
-interval in proportion to <span class="math inline">\(|1 -
-2F(x)|\)</span> (where <span class="math inline">\(F(x)\)</span> is the
-CDF):</p>
+interval in proportion to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">|</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><annotation encoding="application/x-tex">|1 - 2F(x)|</annotation></semantics></math>
+(where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">F(x)</annotation></semantics></math>
+is the CDF):</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">priors</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span>, xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1334,15 +1321,16 @@ approach can be to specify those geometries separately.</p>
 <p>For example, the following uses a separate specification of a
 <code><a href="../reference/stat_slab.html">stat_slab()</a></code> and a <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code> instead
 of a combined <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> in order to use
-<code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge()</a></code> on the intervals but not the slabs:</p>
+<code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code> on the intervals but not the
+slabs:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">group</span>, color <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.4</span>, preserve <span class="op">=</span> <span class="st">"single"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="../reference/position_dodgejust.html">position_dodgejust</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span>, justification <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"stat_slab() and stat_pointinterval()"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"with position_dodge() applied to the intervals"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"with position_dodgejust() applied to the intervals"</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
@@ -1351,28 +1339,26 @@ of a combined <code><a href="../reference/stat_slabinterval.html">stat_slabinter
 example</a>.)</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by <a href="https://www.mjskay.com" class="external-link">Matthew Kay</a>.</p>
+  <p>Developed by <a href="https://www.mjskay.com" class="external-link">Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

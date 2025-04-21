@@ -1,5 +1,5 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   dotsinterval: dotsinterval.html
@@ -7,8 +7,7 @@ articles:
   lineribbon: lineribbon.html
   slabinterval: slabinterval.html
   thickness: thickness.html
-last_built: 2024-03-04T05:38Z
+last_built: 2025-04-21T03:43Z
 urls:
-  reference: http://mjskay.github.io/ggdist/reference
-  article: http://mjskay.github.io/ggdist/articles
-
+  reference: https://mjskay.github.io/ggdist/reference
+  article: https://mjskay.github.io/ggdist/articles
