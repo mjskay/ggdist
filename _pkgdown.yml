@@ -87,6 +87,7 @@ reference:
   contents:
   - point_interval
   - curve_interval
+  - interval_widths
   - Mode
   - ends_with("hdci")
   - ends_with("hdi")
