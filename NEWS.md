@@ -1,5 +1,12 @@
 # ggdist (development version)
 
+Bug fixes:
+
+* `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
+  determine order from the `order` aesthetic to be robust to infinities 
+  (#255; thanks @damonbayer).
+
+
 # ggdist 3.3.3
 
 Major changes:

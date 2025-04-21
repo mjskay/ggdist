@@ -295,3 +295,19 @@ test_that("stat_lineribbon draw order works", {
     p + stat_lineribbon(aes(order = after_stat(interaction(level, group))))
   )
 })
+
+test_that("geom_lineribbon draw order works with infinite values", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(
+    x = c(1:5, 1:5),
+    y = c(1:5, 1:5),
+    lower = c(0:4, c(0.5, 1.5, -Inf, 3.5, 4.5)),
+    upper = c(2:6, 2:6 - 0.5),
+    .width = rep(c(0.75, 0.5), each = 5)
+  ) %>%
+    ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
+    geom_lineribbon()
+
+  vdiffr::expect_doppelganger("draw order with infinities", p)
+})
