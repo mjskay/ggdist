@@ -74,6 +74,8 @@ upper interval limits \eqn{q_1, \ldots, q_n}:
 }
 }
 \examples{
+library(ggplot2)
+
 interval_widths(1)   # 0.9
 # this is roughly +/- 1 SD and +/- 2 SD
 interval_widths(2)   # 0.672..., 0.95
@@ -85,16 +87,16 @@ pretty_widths(2)     # 0.65, 0.95
 pretty_widths(3)     # 0.50, 0.80, 0.95
 
 # larger numbers of intervals can be useful for plots
-data.frame(x = 1:20/20) |>
-  ggplot(aes(x, ydist = dist_normal((x * 5) ^2, 1 + x * 5))) +
+ggplot(data.frame(x = 1:20/20)) +
+  aes(x, ydist = dist_normal((x * 5)^2, 1 + x * 5)) +
   stat_lineribbon(.width = pretty_widths(10))
 
 # large numbers of intervals can be used to create gradients -- particularly
 # useful if you shade ribbons according to density (not interval width)
 # (this is currently experimental)
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
-  data.frame(x = 1:20/20) |>
-    ggplot(aes(x, ydist = dist_normal((x * 5) ^2, 1 + x * 5))) +
+  ggplot(data.frame(x = 1:20/20)) +
+    aes(x, ydist = dist_normal((x * 5)^2, 1 + x * 5))) +
     stat_lineribbon(
       aes(fill_ramp = after_stat(ave(pdf_min, level))),
       .width = interval_widths(40),
