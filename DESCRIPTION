@@ -58,7 +58,7 @@ Suggests:
     pkgdown
 License: GPL (>= 3)
 Language: en-US
-BugReports: https://github.com/mjskay/ggdist/issues/new
+BugReports: https://github.com/mjskay/ggdist/issues
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2

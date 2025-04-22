@@ -33,7 +33,7 @@ Useful links:
 \itemize{
   \item \url{https://mjskay.github.io/ggdist/}
   \item \url{https://github.com/mjskay/ggdist/}
-  \item Report bugs at \url{https://github.com/mjskay/ggdist/issues/new}
+  \item Report bugs at \url{https://github.com/mjskay/ggdist/issues}
 }
 
 }
