@@ -38,11 +38,13 @@ within columns.
 alternates placing dots \code{+ binwidth/4} or \code{- binwidth/4} in the
 off-axis from the bin center. This allows hexagonal packing by setting
 a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
-\item \code{"swarm"}: uses the \code{"compactswarm"} layout from
-\code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or columns,
-but can be more compact and neat looking, especially for sample data
-(as opposed to quantile dotplots of theoretical distributions, which
-may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"swarm"}: uses a version of the \code{"compactswarm"} layout from
+\code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}} (with minor modifications to improve visual
+symmetry when \code{side = "both"}). Does not maintain alignment of rows or
+columns, but can be more compact and neat-looking, especially for
+sample data (as opposed to quantile dotplots of theoretical
+distributions, which may look better with \code{"bin"}, \code{"weave"}, or
+\code{"hex"}).
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}

@@ -549,11 +549,13 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           alternates placing dots `+ binwidth/4` or `- binwidth/4` in the
           off-axis from the bin center. This allows hexagonal packing by setting
           a `stackratio` less than 1 (something like `0.9` tends to work).
-        \\item `"swarm"`: uses the `"compactswarm"` layout from
-          [beeswarm::beeswarm()]. Does not maintain alignment of rows or columns,
-          but can be more compact and neat looking, especially for sample data
-          (as opposed to quantile dotplots of theoretical distributions, which
-          may look better with `"bin"`, `"weave"`, or `"hex"`).
+        \\item `"swarm"`: uses a version of the `"compactswarm"` layout from
+          [beeswarm::beeswarm()] (with minor modifications to improve visual
+          symmetry when `side = "both"`). Does not maintain alignment of rows or
+          columns, but can be more compact and neat-looking, especially for
+          sample data (as opposed to quantile dotplots of theoretical
+          distributions, which may look better with `"bin"`, `"weave"`, or
+          `"hex"`).
         \\item `"bar"`: for discrete distributions, lays out duplicate values in
           rectangular bars.
       }'),
