@@ -55,7 +55,19 @@ variant_mac = function() {
 #' After a run on MacOS on Github CI, download the zip archive of the test
 #' output, extract it, and run this function on the _snap folder in the archive.
 #' @noRd
-update_mac_snapshots = function(mac_snap_folder) {
+update_mac_snapshots = function(mac_snap_folder = NULL) {
+  if (is.null(mac_snap_folder)) {
+    cli::cli_text("Downloading snapshots...")
+    temp_folder = tempfile("mac_snaps")
+    dir.create(temp_folder)
+    failure = system(paste0("gh run download --pattern macOS-*-testthat-snapshots --repo mjskay/ggdist --dir ", temp_folder))
+    if (failure) stop("Could not download testthat snapshots")
+    base_folder = list.dirs(temp_folder, recursive = FALSE)
+    mac_snap_folder = file.path(base_folder, "ggdist.Rcheck", "tests", "testthat", "_snaps")
+    stopifnot(length(mac_snap_folder) == 1, dir.exists(mac_snap_folder))
+    cli::cli_text("Snapshots downloaded here: {.file {mac_snap_folder}}")
+  }
+
   any_updates = FALSE
   snap_folder = file.path("tests", "testthat", "_snaps")
 
@@ -70,7 +82,7 @@ update_mac_snapshots = function(mac_snap_folder) {
       snap_new_svg = paste0(snap_name, ".new.svg")
       snap_svg = paste0(snap_name, ".svg")
 
-      cat("New Mac-specific test:", test_name, snap_name, "\n")
+      cli::cli_text("New Mac-specific test:", test_name, snap_name, "\n")
 
       dir.create(mac_test_folder, showWarnings = FALSE)
       dir.create(not_mac_test_folder, showWarnings = FALSE)
@@ -108,7 +120,7 @@ update_mac_snapshots = function(mac_snap_folder) {
       snap_new_svg = paste0(snap_name, ".new.svg")
       snap_svg = paste0(snap_name, ".svg")
 
-      cat("Updated Mac-specific test:", test_name, snap_name, "\n")
+      cli::cli_text("Updated Mac-specific test:", test_name, snap_name, "\n")
 
       file.copy(
         file.path(source_test_folder, snap_new_svg),
@@ -122,6 +134,8 @@ update_mac_snapshots = function(mac_snap_folder) {
 
   if (any_updates) {
     cli::cli_text("Run {.run [testthat::snapshot_review()](testthat::snapshot_review())} to update the snapshots.")
+  } else {
+    cli::cli_text("No new snapshots\n")
   }
 }
 
