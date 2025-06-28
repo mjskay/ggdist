@@ -85,14 +85,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # manual install of ragg because we get graphics API mismatches
-          # sometimes from pak builds on r devel
-          install.packages("ragg")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
-      - uses: r-lib/actions/check-r-package@v2
+      - name: Install source version of ragg
+        if: runner.r == 'devel'
+        run: |
+          # manual install of ragg because we get graphics API mismatches
+          # sometimes from binary builds on r devel
+          install.packages("ragg", type = "source")
+        shell: Rscript {0}
+
+      - name: Check package
+        uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
