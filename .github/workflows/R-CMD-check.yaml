@@ -55,11 +55,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: ${{ matrix.config.r != 'devel' }}
 
-      - name: Install pngquant
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install -y pngquant
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -79,6 +74,7 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
+          sudo apt-get install -y pngquant libcurl4-openssl-dev
           Rscript -e "install.packages('pak')"
           sysreqs=$(Rscript -e "cat(tryCatch(pak::pkg_sysreqs('.', dependencies = TRUE), error = function(e) pak::pkg_sysreqs('.'))[['install_scripts']])")
           sudo -s eval "$sysreqs"
@@ -87,14 +83,6 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-        shell: Rscript {0}
-
-      - name: Install source version of ragg
-        if: matrix.config.r == 'devel'
-        run: |
-          # manual install of ragg because we get graphics API mismatches
-          # sometimes from binary builds on r devel
-          install.packages("ragg", type = "source", repos = "https://cloud.r-project.org")
         shell: Rscript {0}
 
       - name: Check package

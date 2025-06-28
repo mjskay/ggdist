@@ -56,7 +56,10 @@ variant_mac = function() {
 #' output, extract it, and run this function on the _snap folder in the archive.
 #' @noRd
 update_mac_snapshots = function(mac_snap_folder) {
+  any_updates = FALSE
   snap_folder = file.path("tests", "testthat", "_snaps")
+
+  # new mac-specific tests
   for (test_name in list.dirs(mac_snap_folder, full.names = FALSE, recursive = FALSE)) {
     source_test_folder = file.path(mac_snap_folder, test_name)
     test_folder = file.path(snap_folder, test_name)
@@ -67,13 +70,18 @@ update_mac_snapshots = function(mac_snap_folder) {
       snap_new_svg = paste0(snap_name, ".new.svg")
       snap_svg = paste0(snap_name, ".svg")
 
-      cat("Updating", test_name, snap_name, "\n")
+      cat("New Mac-specific test:", test_name, snap_name, "\n")
 
       dir.create(mac_test_folder, showWarnings = FALSE)
       dir.create(not_mac_test_folder, showWarnings = FALSE)
 
       file.copy(
         file.path(source_test_folder, snap_new_svg),
+        file.path(mac_test_folder, snap_new_svg),
+        overwrite = TRUE
+      )
+      file.copy(
+        file.path(source_test_folder, snap_svg),
         file.path(mac_test_folder, snap_svg),
         overwrite = TRUE
       )
@@ -85,7 +93,35 @@ update_mac_snapshots = function(mac_snap_folder) {
       file.remove(
         file.path(test_folder, snap_svg)
       )
+
+      any_updates = TRUE
     }
+  }
+
+  # Updated snapshots
+  mac_snap_folder = file.path(mac_snap_folder, "mac")
+  for (test_name in list.dirs(mac_snap_folder, full.names = FALSE, recursive = FALSE)) {
+    source_test_folder = file.path(mac_snap_folder, test_name)
+    mac_test_folder = file.path(snap_folder, "mac", test_name)
+    for (snap_file in list.files(source_test_folder, pattern = ".*\\.new\\.svg")) {
+      snap_name = substr(snap_file, 1, nchar(snap_file) - 8)
+      snap_new_svg = paste0(snap_name, ".new.svg")
+      snap_svg = paste0(snap_name, ".svg")
+
+      cat("Updated Mac-specific test:", test_name, snap_name, "\n")
+
+      file.copy(
+        file.path(source_test_folder, snap_new_svg),
+        file.path(mac_test_folder, snap_new_svg),
+        overwrite = TRUE
+      )
+
+      any_updates = TRUE
+    }
+  }
+
+  if (any_updates) {
+    cli::cli_text("Run {.run [testthat::snapshot_review()](testthat::snapshot_review())} to update the snapshots.")
   }
 }
 
