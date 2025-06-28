@@ -713,14 +713,14 @@ test_that("flattened indices retain index order", {
   skip_if_no_vdiffr()
   skip_if_not_installed("mvtnorm")  # needed for dist_multivariate_normal()
 
-  vdiffr::expect_doppelganger("flattened indices with geom_pointinterval",
+  vdiffr::expect_doppelganger("flattened indices geom_pointinterval",
     tibble(x = dist_multivariate_normal(list(1:10), list(diag(10)))) %>%
       median_qi(x, .width = c(.66, .95)) %>%
       ggplot(aes(x, xmin = .lower, xmax = .upper, y = .index)) +
       geom_pointinterval()
   )
 
-  vdiffr::expect_doppelganger("flattened indices with stat_pointinterval",
+  vdiffr::expect_doppelganger("flattened indices stat_pointinterval",
     variant = variant_mac(),
     tibble(
       x = c(

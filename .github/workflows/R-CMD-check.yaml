@@ -90,7 +90,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Install source version of ragg
-        if: runner.r == 'devel'
+        if: matrix.config.r == 'devel'
         run: |
           # manual install of ragg because we get graphics API mismatches
           # sometimes from binary builds on r devel
