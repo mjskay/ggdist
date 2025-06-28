@@ -1,5 +1,12 @@
 # ggdist (development version)
 
+Minor changes:
+
+* `geom_dots(layout = "swarm")` now re-centers contiguous clusters of dots
+  around their mean y position. This makes the swarm more visually symmetrical,
+  and particularly makes small, isolated clusters less likely to appear lopsided
+  (inspired by a question from @jbengler at the ggextenders talk).
+
 Bug fixes:
 
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to

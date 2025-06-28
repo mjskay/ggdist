@@ -141,8 +141,22 @@ bin_dots = function(x, y, binwidth,
         compact = TRUE
       )
 
+      y_origin = d[[y]]
       d[[x]] = swarm_xy[["x"]]
       d[[y]] = swarm_xy[["y"]] + y_start
+
+      if (side == "both") {
+        # re-center contiguous clusters around their mean y position so that
+        # small clusters are visually centered (rather than e.g. a cluster of
+        # two points having one point on the origin line and one above it)
+        d$y_origin = y_origin
+        d$bin = cumsum(c(1L, diff(d[[x]]) >= h$binwidth))
+        d = ddply_(d, "bin", function(bin_df) {
+          bin_df[[y]] = bin_df[[y]] - mean(bin_df[[y]]) + bin_df$y_origin
+          bin_df
+        })
+        d$y_origin = NULL
+      }
     }
   )
 
