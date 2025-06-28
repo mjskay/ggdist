@@ -29,9 +29,9 @@
 <rect x='37.69' y='22.78' width='676.83' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <polygon points='527.94,521.37 531.58,487.45 541.32,453.54 562.10,419.62 596.91,385.70 641.10,351.78 680.01,317.87 695.72,283.95 680.01,250.03 641.10,216.11 596.91,182.20 562.10,148.28 541.32,114.36 531.58,80.44 527.94,46.53 526.51,46.53 526.51,80.44 526.51,114.36 526.51,148.28 526.51,182.20 526.51,216.11 526.51,250.03 526.51,283.95 526.51,317.87 526.51,351.78 526.51,385.70 526.51,419.62 526.51,453.54 526.51,487.45 526.51,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <polyline points='527.94,521.37 531.58,487.45 541.32,453.54 562.10,419.62 596.91,385.70 641.10,351.78 680.01,317.87 695.72,283.95 680.01,250.03 641.10,216.11 596.91,182.20 562.10,148.28 541.32,114.36 531.58,80.44 527.94,46.53 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
-<polygon points='338.50,384.35 507.71,384.35 338.50,384.35 338.50,384.35 338.50,384.35 338.50,384.35 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polygon points='338.50,384.35 507.71,384.35 338.50,384.35 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <polyline points='338.50,384.35 507.71,384.35 338.50,384.35 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
-<polygon points='150.49,260.70 319.70,260.70 150.49,260.70 150.49,260.70 150.49,260.70 150.49,260.70 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polygon points='150.49,260.70 319.70,260.70 150.49,260.70 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <polyline points='150.49,260.70 319.70,260.70 150.49,260.70 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <line x1='526.51' y1='434.53' x2='526.51' y2='133.36' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <line x1='526.51' y1='357.26' x2='526.51' y2='210.64' style='stroke-width: 2.99; stroke-linecap: butt;' />

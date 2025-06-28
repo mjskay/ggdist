@@ -27,10 +27,10 @@
 </defs>
 <g clip-path='url(#cpMzcuNjl8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='37.69' y='22.78' width='676.83' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<polygon points='259.77,521.37 259.77,260.70 259.77,260.70 259.77,260.70 259.77,46.53 259.77,46.53 259.77,260.70 259.77,260.70 69.41,260.70 69.41,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='259.77,46.53 259.77,260.70 259.77,260.70 69.41,260.70 69.41,521.37 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
-<polygon points='471.28,521.37 471.28,384.35 471.28,384.35 471.28,384.35 471.28,46.53 471.28,46.53 471.28,384.35 471.28,384.35 280.92,384.35 280.92,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='471.28,46.53 471.28,384.35 471.28,384.35 280.92,384.35 280.92,521.37 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
+<polygon points='259.77,521.37 259.77,260.70 259.77,46.53 259.77,260.70 69.41,260.70 69.41,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polyline points='259.77,46.53 259.77,260.70 69.41,260.70 69.41,521.37 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
+<polygon points='471.28,521.37 471.28,384.35 471.28,46.53 471.28,384.35 280.92,384.35 280.92,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polyline points='471.28,46.53 471.28,384.35 280.92,384.35 280.92,521.37 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <polygon points='682.79,521.37 682.79,487.45 682.79,453.54 682.79,419.62 682.79,385.70 682.79,351.78 682.79,317.87 682.79,283.95 682.79,250.03 682.79,216.11 682.79,182.20 682.79,148.28 682.79,114.36 682.79,80.44 682.79,46.53 682.60,46.53 682.03,80.44 680.20,114.36 675.43,148.28 665.15,182.20 646.88,216.11 620.08,250.03 587.61,283.95 555.15,317.87 528.34,351.78 510.08,385.70 499.80,419.62 495.03,453.54 493.20,487.45 492.63,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <polyline points='682.60,46.53 682.03,80.44 680.20,114.36 675.43,148.28 665.15,182.20 646.88,216.11 620.08,250.03 587.61,283.95 555.15,317.87 528.34,351.78 510.08,385.70 499.80,419.62 495.03,453.54 493.20,487.45 492.63,521.37 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <line x1='587.61' y1='434.53' x2='587.61' y2='133.36' style='stroke-width: 1.28; stroke-linecap: butt;' />

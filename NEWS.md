@@ -12,6 +12,9 @@ Bug fixes:
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
   determine order from the `order` aesthetic to be robust to infinities 
   (#255; thanks @damonbayer).
+* Ensure duplicate points in paths are removed before drawing (e.g. when slabs
+  are split up). This does not change the appearance of output but should make 
+  snapshot testing across different graphical devices / platforms more reliable.
 
 
 # ggdist 3.3.3

@@ -39,9 +39,9 @@ test_that("infinite thickness is squished", {
 
   geom_grob = layer_grob(p)[[1]]
   slab_grob = geom_grob$children[[1]]
-  expect_equal(slab_grob$x, unit(c(0, 0.5, 1, 1, 0.5, 0), "native"))
+  expect_equal(slab_grob$x, unit(c(0, 0.5, 1, 0.5, 0), "native"))
   # Inf should be squished to 0.9 and -Inf to 0
-  expect_equal(slab_grob$y, unit(c(0, 0.9, 0, 0, 0, 0), "native"))
+  expect_equal(slab_grob$y, unit(c(0, 0.9, 0, 0, 0), "native"))
 })
 
 test_that("expand works", {

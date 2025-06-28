@@ -27,9 +27,9 @@
 </defs>
 <g clip-path='url(#cpMzUuMjR8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='35.24' y='22.78' width='679.28' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<polygon points='258.13,521.37 258.13,521.37 258.13,521.37 258.13,521.37 258.13,46.53 258.13,46.53 258.13,521.37 258.13,521.37 67.08,521.37 67.08,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polygon points='470.40,521.37 470.40,283.95 470.40,283.95 470.40,283.95 470.40,46.53 470.40,46.53 470.40,283.95 470.40,283.95 279.36,283.95 279.36,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polygon points='682.68,521.37 682.68,46.53 682.68,46.53 682.68,46.53 682.68,46.53 682.68,46.53 682.68,46.53 682.68,46.53 491.63,46.53 491.63,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polygon points='258.13,521.37 258.13,46.53 258.13,521.37 67.08,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polygon points='470.40,521.37 470.40,283.95 470.40,46.53 470.40,283.95 279.36,283.95 279.36,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polygon points='682.68,521.37 682.68,46.53 491.63,46.53 491.63,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <line x1='162.60' y1='521.37' x2='162.60' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <line x1='162.60' y1='521.37' x2='162.60' y2='521.37' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <line x1='374.88' y1='283.95' x2='374.88' y2='283.95' style='stroke-width: 2.99; stroke-linecap: butt;' />

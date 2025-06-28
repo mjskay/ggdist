@@ -261,7 +261,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
 
 draw_path = function(data, panel_params, coord) {
   do.call(gList, dlply_(data, "group", function(outline_data) {
-    munched_path = ggplot2::coord_munch(coord, outline_data, panel_params)
+    munched_path = fast_coord_munch(coord, outline_data, panel_params)
     grid::polylineGrob(
       munched_path$x,
       munched_path$y,
@@ -278,6 +278,29 @@ draw_path = function(data, panel_params, coord) {
   }))
 }
 
+#' version of ggplot2::coord_munch that drops columns not used in calls to grobs
+#' first to avoid unecessary expensive operations (e.g., replications of
+#' distribution vectors).
+#' @noRd
+fast_coord_munch = function(coord, data, ...) {
+  cols = intersect(
+    names(data),
+    c("x", "y", "group", "subgroup", "colour", "fill", "alpha", "linewidth", "linetype")
+  )
+
+  # Sort by group to make sure that colors, fill, etc. come in same order
+  # We also subset just to the columns needed for drawing here because some
+  # of the operations we are about to do would otherwise be unnecessarily
+  # expensive (e.g. vec_unrep on custom vectors like distributions or rvars)
+  data = data[order(data$group), cols]
+
+  # duplicate points may occur when cutting up geometries, we eliminate them
+  # here because different graphics devices seem to pass (or not) these all the
+  # way through to output (thus, for reliable testing we eliminate them)
+  data = vec_unrep(data)$key
+
+  coord_munch(coord, data, ...)
+}
 
 # aesthetic overrides -----------------------------------------------------
 
@@ -1058,17 +1081,12 @@ make_gradient_fill = function(slab_data, orientation = "horizontal") {
 #' allows for linearGradient fills
 #' @noRd
 draw_polygon = function(data, panel_params, coord, fill = NULL) {
-  n = nrow(data)
-
   # NOTE: this condition should always be false given where draw_polygon()
   # is currently used (after group_slab_data_by(), which returns data in pairs)
   # but leaving it in for safety and setting nocov
-  if (n == 1) return(zeroGrob())  # nocov
+  if (nrow(data) == 1L) return(zeroGrob())  # nocov
 
-  munched = coord_munch(coord, data, panel_params)
-
-  # Sort by group to make sure that colors, fill, etc. come in same order
-  munched = munched[order(munched$group), ]
+  munched = fast_coord_munch(coord, data, panel_params)
 
   # For gpar(), there is one entry per polygon (not one entry per point).
   # We'll pull the first value from each group, and assume all these values
