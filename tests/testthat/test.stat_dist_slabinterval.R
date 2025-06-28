@@ -354,14 +354,13 @@ test_that("scale transformation works", {
 test_that("scale transformation works on dist_sample", {
   skip_if_no_vdiffr()
   skip_if_sensitive_to_density()
-  # skip on Mac OS due to minor numerical variations
-  skip_if_mac()
 
 
   p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%
     ggplot(aes(xdist = x, y = 0))
 
-  vdiffr::expect_doppelganger("transformed scale with dist_sample",
+  vdiffr::expect_doppelganger("trans scale dist_sample",
+    variant = variant_mac(),
     p_log_dist +
       stat_dist_halfeye(n = 20, point_interval = mode_hdci) +
       scale_x_log10() +
@@ -371,7 +370,8 @@ test_that("scale transformation works on dist_sample", {
   p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
     ggplot(aes(x = x, y = 0))
 
-  vdiffr::expect_doppelganger("transformed scale with sample data on x",
+  vdiffr::expect_doppelganger("trans scale sample data",
+    variant = variant_mac(),
     p_log_samp + stat_dist_halfeye(n = 20, point_interval = mode_hdi) + scale_x_log10()
   )
 })

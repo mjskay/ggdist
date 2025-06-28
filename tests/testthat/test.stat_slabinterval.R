@@ -164,8 +164,6 @@ test_that("scale transformation works on halfeye", {
 test_that("pdf and cdf aesthetics work", {
   skip_if_no_vdiffr()
   skip_if_sensitive_to_density()
-  # skip on Mac OS due to minor numerical variations
-  skip_if_mac()
 
 
   p = data.frame(
@@ -176,6 +174,7 @@ test_that("pdf and cdf aesthetics work", {
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
+    variant = variant_mac(),
     p + stat_sample_slabinterval(aes(fill = x, thickness = after_stat(pdf), slab_alpha = after_stat(cdf)), n = 15)
   )
 })

@@ -112,7 +112,6 @@ test_that("coordinate transformations work", {
 
 test_that("scale transformations work", {
   skip_if_no_vdiffr()
-  skip_if_mac()
 
 
   p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%

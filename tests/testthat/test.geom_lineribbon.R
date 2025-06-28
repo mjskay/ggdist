@@ -73,11 +73,6 @@ test_that("one-group geom_lineribbons work", {
       geom_lineribbon() +
       scale_fill_brewer()
   )
-
-
-  # skip on Mac OS due to minor numerical variations
-  skip_if_mac()
-
   vdiffr::expect_doppelganger("one-group geom_lineribbon (reverse order)",
     df %>%
       group_by(x, g) %>%

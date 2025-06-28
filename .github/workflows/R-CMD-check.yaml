@@ -53,7 +53,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
+          use-public-rspm: ${{ matrix.config.r != 'devel' }}
 
       - name: Install pngquant
         if: runner.os == 'Linux'
@@ -94,7 +94,7 @@ jobs:
         run: |
           # manual install of ragg because we get graphics API mismatches
           # sometimes from binary builds on r devel
-          install.packages("ragg", type = "source")
+          install.packages("ragg", type = "source", repos = "https://cloud.r-project.org")
         shell: Rscript {0}
 
       - name: Check package
