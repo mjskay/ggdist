@@ -85,6 +85,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # manual install of ragg because we get graphics API mismatches
+          # sometimes from pak builds on r devel
+          install.packages("ragg")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
