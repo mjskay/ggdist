@@ -11,7 +11,6 @@
 #' @noRd
 skip_if_no_vdiffr = function() {
   testthat::skip_if_not_installed("vdiffr")
-  testthat::skip_if_not_installed("ggplot2", "3.3.3.9000")
 }
 
 #' skip tests of plot() on old versions of R (minor changes appear to
@@ -43,6 +42,57 @@ skip_if_no_gradient = function() {
   testthat::skip_if_not_installed("fontquiver")
   testthat::skip_if_not_installed("sysfonts")
   testthat::skip_if_not_installed("showtext")
+}
+
+
+# variants ----------------------------------------------------------------
+
+system_os = function() tolower(Sys.info()[["sysname"]])
+
+#' A variant for vdiffr tests that distinguishes between mac platforms and
+#' non-mac platforms (since there are minor numerical variations due to this)
+#' @noRd
+variant_mac = function() {
+  if (system_os() == "darwin") "mac" else "not_mac"
+}
+
+#' update the mac snapshots in the package using the tests/_snaps folder from
+#' an R CMD CHECK run on a mac.
+#' After a run on MacOS on Github CI, download the zip archive of the test
+#' output, extract it, and run this function on the _snap folder in the archive.
+#' @noRd
+update_mac_snapshots = function(mac_snap_folder) {
+  snap_folder = file.path("tests", "testthat", "_snaps")
+  for (test_name in list.dirs(mac_snap_folder, full.names = FALSE, recursive = FALSE)) {
+    source_test_folder = file.path(mac_snap_folder, test_name)
+    test_folder = file.path(snap_folder, test_name)
+    mac_test_folder = file.path(snap_folder, "mac", test_name)
+    not_mac_test_folder = file.path(snap_folder, "not_mac", test_name)
+    for (snap_file in list.files(source_test_folder, pattern = ".*\\.new\\.svg")) {
+      snap_name = substr(snap_file, 1, nchar(snap_file) - 8)
+      snap_new_svg = paste0(snap_name, ".new.svg")
+      snap_svg = paste0(snap_name, ".svg")
+
+      cat("Updating", test_name, snap_name, "\n")
+
+      dir.create(mac_test_folder, showWarnings = FALSE)
+      dir.create(not_mac_test_folder, showWarnings = FALSE)
+
+      file.copy(
+        file.path(source_test_folder, snap_new_svg),
+        file.path(mac_test_folder, snap_svg),
+        overwrite = TRUE
+      )
+      file.copy(
+        file.path(source_test_folder, snap_svg),
+        file.path(not_mac_test_folder, snap_svg),
+        overwrite = TRUE
+      )
+      file.remove(
+        file.path(test_folder, snap_svg)
+      )
+    }
+  }
 }
 
 

@@ -721,6 +721,7 @@ test_that("flattened indices retain index order", {
   )
 
   vdiffr::expect_doppelganger("flattened indices with stat_pointinterval",
+    variant = variant_mac(),
     tibble(
       x = c(
         dist_multivariate_normal(list(1:10), list(diag(10))),

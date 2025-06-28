@@ -1080,6 +1080,7 @@ test_that("rvars work", {
     ggplot(aes(y = mu, xdist = x, fill = after_stat(cdf)))
 
   vdiffr::expect_doppelganger("halfeye with rvar and cdf",
+    variant = variant_mac(),
     p + stat_halfeye(n = 20, trim = FALSE, expand = TRUE, slab_color = "black")
   )
 })

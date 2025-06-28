@@ -74,13 +74,15 @@ test_that("histinterval outline works", {
     ggplot()
 
   vdiffr::expect_doppelganger("histinterval with outline",
-    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black")
+    variant = variant_mac(),
+    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black"),
   )
   vdiffr::expect_doppelganger("histintervalh with outline",
     p + stat_histinterval(aes(y = dist, x = x), slab_color = "black", breaks = seq(-5, 7, length.out = 20))
   )
   vdiffr::expect_doppelganger("histinterval with outlines bw bars",
-    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black", outline_bars = TRUE)
+    variant = variant_mac(),
+    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black", outline_bars = TRUE),
   )
 })
 
@@ -297,9 +299,10 @@ test_that("trim and expand work", {
   )
 
   vdiffr::expect_doppelganger("untrimmed and expanded",
+    variant = variant_mac(),
     df %>%
       ggplot(aes(x = x, y = g)) +
-      stat_sample_slabinterval(n = 15, slab_color = "black", expand = TRUE, trim = FALSE)
+      stat_sample_slabinterval(n = 15, slab_color = "black", expand = TRUE, trim = FALSE),
   )
 })
 
