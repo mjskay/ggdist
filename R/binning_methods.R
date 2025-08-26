@@ -66,7 +66,7 @@
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
   overlaps = "nudge"
@@ -131,15 +131,21 @@ bin_dots = function(x, y, binwidth,
 
       d$row = NULL
     },
-    swarm = {
-      stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
-
-      swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
-        xsize = h$binwidth, ysize = h$y_spacing,
-        log = "", cex = 1,
-        side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
-        compact = TRUE
-      )
+    swarm2 = , swarm = {
+      swarm_xy = if (layout == "swarm") {
+        stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
+        beeswarm::swarmy(d[[x]], d[[y]],
+          xsize = h$binwidth, ysize = h$y_spacing,
+          log = "", cex = 1,
+          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
+          compact = TRUE
+        )
+      } else {
+        weave_swarm(d[[x]], d[[y]],
+          xsize = h$binwidth, ysize = h$y_spacing,
+          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0)
+        )
+      }
 
       y_origin = d[[y]]
       d[[x]] = swarm_xy[["x"]]
@@ -260,7 +266,7 @@ find_dotplot_binwidth = function(
   maxheight,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar")
+  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar")
 ) {
   layout = match.arg(layout)
   x = sort(as.numeric(x), na.last = TRUE)
@@ -617,6 +623,98 @@ wilkinson_bin_from_center = function(x, width) {
   }
 }
 
+
+# weave swarm -------------------------------------------------------------
+
+#' Weave/swarm hybrid
+#'
+#' @param x sorted x values
+#' @param y y values (must be constant)
+#' @noRd
+weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
+  y_grid = 4
+
+  can_place_candidate = function(candidate, last_placed, last_rows) {
+    candidate >= last_placed + xsize &&
+      all(map_lgl(seq_len(y_grid - 1), function(i) {
+        y_offset = i / y_grid
+        candidate >= (tail(last_rows[[i]][last_rows[[i]] <= candidate], 1) + sqrt(1 - y_offset^2) * xsize) &&
+          candidate <= (head(last_rows[[i]][candidate < last_rows[[i]]], 1) - sqrt(1 - y_offset^2) * xsize)
+      }))
+  }
+
+  place_row = function(reverse = FALSE, both = side == 0) {
+    if (length(remaining) == 0) return()
+
+    kth_last_row = function(k, rows) c(-Inf, rows[max(length(rows) + 1 - k, 0)][1][[1]] %||% numeric(), Inf)
+    last_rows = lapply(seq_len(y_grid), kth_last_row, rows)
+    if (both) last_rows_bottom = lapply(seq_len(y_grid), kth_last_row, rows_bottom)
+    candidates = remaining
+    if (reverse) {
+      last_rows = lapply(last_rows, function(r) rev(-r))
+      if (both) last_rows_bottom = lapply(last_rows_bottom, function(r) rev(-r))
+      candidates = rev(-candidates)
+    }
+
+    row = numeric()
+    if (both) row_bottom = numeric()
+    next_remaining = numeric()
+    last_placed = -Inf
+    if (both) last_placed_bottom = -Inf
+
+    for (candidate in candidates) {
+      if (can_place_candidate(candidate, last_placed, last_rows)) {
+        row = c(row, candidate)
+        last_placed = candidate
+      } else if (both && can_place_candidate(candidate, last_placed_bottom, last_rows_bottom)) {
+        row_bottom = c(row_bottom, candidate)
+        last_placed_bottom = candidate
+      } else {
+        next_remaining = c(next_remaining, candidate)
+      }
+    }
+
+    if (reverse) {
+      row = rev(-row)
+      if (both) row_bottom = rev(-row_bottom)
+      next_remaining = rev(-next_remaining)
+    }
+    rows <<- c(rows, list(row))
+    if (both) rows_bottom <<- c(rows_bottom, list(row_bottom))
+    remaining <<- next_remaining
+  }
+
+  remaining = x
+  rows = list()
+  both = side == 0
+
+  place_row(both = FALSE)
+  rows_bottom = rows
+
+  while (length(remaining) > 0) {
+    for (i in seq_len(y_grid - 1)) place_row()
+    for (i in seq_len(y_grid)) place_row(reverse = TRUE)
+    place_row()
+  }
+
+  row_y = function(rows, side) (seq_along(rows) - 1) / y_grid * ysize * side
+  df = data.frame(
+    x = unlist(rows),
+    y = rep(row_y(rows, side = if (both) 1 else side), lengths(rows))
+  )
+  if (both) {
+    df = rbind(
+      df,
+      data.frame(
+        x = unlist(rows_bottom[-1]),
+        y = rep(row_y(rows_bottom, side = -1)[-1], lengths(rows_bottom[-1]))
+      )
+    )
+  }
+  df = df[order(df$x), ]
+  df$y = df$y + y
+  df
+}
 
 # dynamic binning method selection ----------------------------------------
 
