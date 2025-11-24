@@ -4,7 +4,6 @@
 ###############################################################################
 
 
-
 # pdf, cdf, and quantile functions ----------------------------------------
 
 #' Helper function to create pdf/cdf/quantile functions

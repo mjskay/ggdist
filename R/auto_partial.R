@@ -4,7 +4,6 @@
 ###############################################################################
 
 
-
 #' Automatic partial function application in ggdist
 #'
 #' @description

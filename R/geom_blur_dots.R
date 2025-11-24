@@ -1,10 +1,9 @@
-#' @include geom_dotsinterval.R
-NULL
-
 # Geom for blurry dotplots
 #
 # Author: mjskay
 ###############################################################################
+#' @include geom_dotsinterval.R
+NULL
 
 
 # grob construction -------------------------------------------------------

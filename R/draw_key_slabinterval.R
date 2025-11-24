@@ -3,6 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
+
 #' Key glyph for geom_slabinterval and related geoms
 #'
 #' Glyph drawing function for use with [geom_slabinterval()]. Automatically determines
@@ -26,7 +27,6 @@ draw_key_slabinterval_ = function(self, data, params, size) {
 
   grobTree(slab_grob, interval_grob, point_grob)
 }
-
 
 
 # keys for sub-parts of the geom ------------------------------------------

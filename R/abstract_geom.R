@@ -1,11 +1,9 @@
-#' @include rd.R
-NULL
-
 # A geom base class designed to reduce boilerplate
 #
 # Author: mjskay
 ###############################################################################
-
+#' @include rd.R
+NULL
 
 
 # AbstractGeom ------------------------------------------------------------

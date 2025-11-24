@@ -3,6 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
+
 #' Simple, light ggplot2 theme for ggdist and tidybayes
 #'
 #' A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.

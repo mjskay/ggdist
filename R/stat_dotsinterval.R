@@ -1,10 +1,9 @@
-#' @include stat_pointinterval.R
-NULL
-
 # stats for dotsintervals
 #
 # Author: mjskay
 ###############################################################################
+#' @include stat_pointinterval.R
+NULL
 
 
 # compute_slab ------------------------------------------------------------

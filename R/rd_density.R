@@ -4,7 +4,6 @@
 ###############################################################################
 
 
-
 # shared parameter docs ---------------------------------------------------
 
 #' construct the first part of the `@param` docstring for a parameter of one of the

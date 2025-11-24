@@ -1,10 +1,9 @@
-#' @include util.R
-NULL
-
 # A stat designed for use with geom_slabinterval
 #
 # Author: mjskay
 ###############################################################################
+#' @include util.R
+NULL
 
 
 #' @importFrom rlang as_function

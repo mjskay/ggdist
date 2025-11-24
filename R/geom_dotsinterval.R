@@ -1,11 +1,9 @@
-#' @include geom_slabinterval.R
-NULL
-
 #Geom for quick / quantile dotplots
 #
 # Author: mjskay
 ###############################################################################
-
+#' @include geom_slabinterval.R
+NULL
 
 
 # dots_grob ---------------------------------------------------------------

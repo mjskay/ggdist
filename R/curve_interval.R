@@ -5,6 +5,7 @@
 
 globalVariables(".value")
 
+
 #' Curvewise point and interval summaries for tidy data frames of draws from distributions
 #'
 #' Translates draws from distributions in a grouped data frame into a set of point and

@@ -3,9 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
 globalVariables(".width")
 
 

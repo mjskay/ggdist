@@ -1,11 +1,9 @@
-#' @include validate.R
-NULL
-
 # dots layouts for use with bin_dots
 #
 # Author: mjskay
 ###############################################################################
-
+#' @include validate.R
+NULL
 
 
 # dots_layout -----------------------------------------------------------------

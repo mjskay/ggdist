@@ -14,7 +14,7 @@ bin_dots(
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge"
+  overlaps = c("nudge", "keep")
 )
 }
 \arguments{

@@ -3,6 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
+
 # Summarise a data frame using the given function within the specified
 # groups, but keep any columns in the groups that have only one value in them
 # (i.e. columns where every value in the column is the same)

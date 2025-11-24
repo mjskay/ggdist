@@ -1,10 +1,9 @@
-#' @include stat_pointinterval.R
-NULL
-
 # A stat_summary with a geom_lineribbon
 #
 # Author: mjskay
 ###############################################################################
+#' @include stat_pointinterval.R
+NULL
 
 
 StatLineribbon = ggproto("StatLineribbon", StatPointinterval,

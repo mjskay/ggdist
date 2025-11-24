@@ -1,10 +1,9 @@
-#' @include stat_slabinterval.R
-NULL
-
 # A stat_summary with a geom_pointinterval
 #
 # Author: mjskay
 ###############################################################################
+#' @include stat_slabinterval.R
+NULL
 
 
 #' @rdname ggdist-ggproto

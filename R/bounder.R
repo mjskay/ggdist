@@ -4,7 +4,6 @@
 ###############################################################################
 
 
-
 #' Estimate bounds of a distribution using the CDF of its order statistics
 #'
 #' Estimate the bounds of the distribution a sample came from using the CDF of

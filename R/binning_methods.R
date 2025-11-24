@@ -1,11 +1,9 @@
-#' @include dots_layout.R
-NULL
-
 # binning methods for use with dots geom
 #
 # Author: mjskay
 ###############################################################################
-
+#' @include dots_layout.R
+NULL
 
 
 # binning -----------------------------------------------------------------
