@@ -12,8 +12,8 @@ NULL
 
 #' Bin data values using a dotplot algorithm
 #'
+#' @description
 #' Bins the provided data values using one of several dotplot algorithms.
-#'
 #' @param x <[numeric]> *x* values.
 #' @param y <[numeric]> *y* values (same length as `x`).
 #' @param binwidth <scalar [numeric]> Bin width.
@@ -72,17 +72,21 @@ bin_dots = function(x, y, binwidth,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge"
+  overlaps = c("nudge", "keep")
 ) {
-  layout = match.arg(layout)
-  side = match.arg(side)
-  orientation = match.arg(orientation)
-
+  layout = new_layout(
+    match.arg(layout),
+    heightratio = heightratio,
+    stackratio = stackratio,
+    side = match.arg(side),
+    orientation = match.arg(orientation),
+    overlaps = match.arg(overlaps)
+  )
   d = data_frame0(x = x, y = y)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation
-  define_orientation_variables(orientation)
+  define_orientation_variables(layout@orientation)
 
   # Sort the x values, because they must be sorted for bin methods to maintain
   # the correct connection between input values and output bins.
@@ -93,114 +97,10 @@ bin_dots = function(x, y, binwidth,
   d = d[order(d[[x]]), ]
 
   # bin the dots
-  bin_method = select_bin_method(d[[x]], layout)
-  h = dot_heap(d[[x]], binwidth = binwidth, heightratio = heightratio, stackratio = stackratio, bin_method = bin_method)
-  d$bin = h$binning$bins
-
-  # determine x positions (for bin/weave) or x and y positions (for swarm)
-  y_start = switch_side(side, orientation,
-    topright = h$y_spacing / stackratio / 2,
-    bottomleft = - h$y_spacing / stackratio / 2,
-    both = 0
-  )
-  switch(layout,
-    bin = , hex = , bar = {
-      bin_midpoints = h$binning$bin_midpoints
-      if (overlaps == "nudge" && layout != "bar") {
-        bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
-      }
-      d[[x]] = bin_midpoints[h$binning$bins]
-      # maintain original data order within each bin when finding y positions
-      d = d[order(d$bin, d$order), ]
-    },
-    weave = {
-      # keep original x positions, but re-order within bins so that overlaps
-      # across bins are less likely
-      d = ddply_(d, "bin", function(bin_df) {
-        seq_fun = if (side == "both") seq_interleaved_centered else seq_interleaved
-        bin_df = bin_df[seq_fun(nrow(bin_df)),]
-        bin_df$row = seq_len(nrow(bin_df))
-        if (side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
-        bin_df
-      })
-
-      if (overlaps == "nudge") {
-        # nudge values within each row to ensure there are no overlaps
-        d = ddply_(d, "row", function(row_df) {
-          row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
-          row_df
-        })
-      }
-
-      d$row = NULL
-    },
-    swarm2 = , swarm = {
-      swarm_xy = if (layout == "swarm") {
-        stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
-        beeswarm::swarmy(d[[x]], d[[y]],
-          xsize = h$binwidth, ysize = h$y_spacing,
-          log = "", cex = 1,
-          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
-          compact = TRUE
-        )
-      } else {
-        weave_swarm(d[[x]], d[[y]],
-          xsize = h$binwidth, ysize = h$y_spacing,
-          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0)
-        )
-      }
-
-      y_origin = d[[y]]
-      d[[x]] = swarm_xy[["x"]]
-      d[[y]] = swarm_xy[["y"]] + y_start
-
-      if (side == "both") {
-        # re-center contiguous clusters around their mean y position so that
-        # small clusters are visually centered (rather than e.g. a cluster of
-        # two points having one point on the origin line and one above it)
-        d$y_origin = y_origin
-        d$bin = cumsum(c(1L, diff(d[[x]]) >= h$binwidth))
-        d = ddply_(d, "bin", function(bin_df) {
-          bin_df[[y]] = bin_df[[y]] - mean(bin_df[[y]]) + bin_df$y_origin
-          bin_df
-        })
-        d$y_origin = NULL
-      }
-    }
-  )
-
-  # determine y positions (for bin/weave/bar) and also x offsets (for hex)
-  if (layout %in% c("bin", "weave", "hex", "bar")) {
-    d = ddply_(d, "bin", function(bin_df) {
-      y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-      row_offset = 0
-      switch_side(side, orientation,
-        topright = {},
-        bottomleft = {
-          y_offset = - y_offset
-        },
-        both = {
-          row_offset = (nrow(bin_df) - 1) / 2
-          if (layout %in% c("weave", "hex", "bar")) {
-            # weave and hex require rows to be aligned exactly so that x offsets
-            # can be applied within rows; bar because it looks weird otherwise
-            row_offset = round(row_offset)
-          }
-          y_offset = y_offset - h$y_spacing * row_offset
-        }
-      )
-      bin_df[[y]] = bin_df[[y]] + y_start + y_offset
-
-      if (layout == "hex") {
-        # depending on whether this is an even or odd row, need to start the
-        # x offset to the left or to the right
-        x_offset_start = if (row_offset %% 2 == 0) 1 else -1
-        bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, nrow(bin_df)) * binwidth
-      }
-
-      bin_df
-    })
-  }
+  layout = prepare_layout_for_data(layout, d[[x]])
+  h = dot_heap(layout, d[[x]], binwidth = binwidth)
+  d$bin = h$bins
+  d = find_dots_xy(layout, d, h)
 
   # restore the original data order in case it was destroyed
   d = d[order(d$order), ]
@@ -208,6 +108,194 @@ bin_dots = function(x, y, binwidth,
 
   d
 }
+
+#' Find the x and y position of dots given a layout and dot heap
+#' @param layout dots layout
+#' @param d data frame of dots with at least `x`, `y`, and `bin` columns
+#' @param h dot heap
+#' @noRd
+find_dots_xy = new_generic("find_dots_xy", c("layout"), function(layout, d, h) {
+  S7_dispatch()
+})
+
+
+# find_dots_xy for bin, hex, weave, bar ---------------------------------------
+
+method(find_dots_xy, layout_bin) = function(layout, d, h) {
+  d = find_dots_x_binned(layout, d, h)
+  d = find_dots_y_binned(layout, d, h)
+  d
+}
+
+#' Find the x positions of dots in binned layouts
+#' @param layout dots layout
+#' @param d data frame of dots with at least `x`, `y`, and `bin` columns
+#' @param h dot heap
+#' @noRd
+find_dots_x_binned = function(layout, d, h) {
+  define_orientation_variables(layout@orientation)
+
+  bin_midpoints = h$bin_midpoints
+  if (layout@overlaps == "nudge") {
+    bin_midpoints = nudge_bins(bin_midpoints, h$binwidth, h$bin_counts)
+  }
+  d[[x]] = bin_midpoints[h$bins]
+  # maintain original data order within each bin when finding y positions
+  d = d[order(d$bin, d$order), ]
+  d
+}
+
+#' Find the y positions of dots in binned layouts
+#' @param layout dots layout
+#' @param d data frame of dots with at least `x`, `y`, and `bin` columns
+#' @param h dot heap
+#' @noRd
+find_dots_y_binned = function(layout, d, h) {
+  define_orientation_variables(layout@orientation)
+
+  d = ddply_(d, "bin", function(bin_df) {
+    y_offset = seq(
+      0,
+      h$y_spacing * (nrow(bin_df) - 1),
+      length.out = nrow(bin_df)
+    )
+    row_start_offset = get_row_start_offset(layout, h, nrow(bin_df))
+    switch_side(layout@side, layout@orientation,
+      topright = {},
+      bottomleft = {
+        y_offset = -y_offset
+      },
+      both = {
+        y_offset = y_offset - h$y_spacing * row_start_offset
+      }
+    )
+    bin_df[[y]] = bin_df[[y]] + h$y_start + y_offset
+
+    bin_df
+  })
+  d
+}
+
+#' Get the number of rows the start of a dot column will be offset by
+#' @param layout dots layout
+#' @param h dot heap
+#' @param n_dots number of dots in the column
+#' @noRd
+get_row_start_offset = function(layout, h, n_dots) {
+  if (layout@side == "both") {
+    row_start_offset = (n_dots - 1) / 2
+    if (layout@align_rows) {
+      # weave and hex require rows to be aligned exactly so that x offsets
+      # can be applied within rows; bar because it looks weird otherwise
+      row_start_offset = round(row_start_offset)
+    }
+    row_start_offset
+  } else {
+    0
+  }
+}
+
+method(find_dots_xy, layout_hex) = function(layout, d, h) {
+  define_orientation_variables(layout@orientation)
+
+  d = find_dots_xy(super(layout, layout_bin), d, h)
+  d = ddply_(d, "bin", function(bin_df) {
+    n_dots = nrow(bin_df)
+    row_start_offset = get_row_start_offset(layout, h, n_dots)
+    # depending on whether this is an even or odd column, need to start the
+    # x offset to the left or to the right
+    x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
+    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * h$binwidth
+    bin_df
+  })
+  d
+}
+
+method(find_dots_xy, layout_weave) = function(layout, d, h) {
+  define_orientation_variables(layout@orientation)
+
+  # keep original x positions, but re-order within bins so that overlaps
+  # across bins are less likely
+  d = ddply_(d, "bin", function(bin_df) {
+    seq_fun = if (layout@side == "both") seq_interleaved_centered else seq_interleaved
+    bin_df = bin_df[seq_fun(nrow(bin_df)),]
+    bin_df$row = seq_len(nrow(bin_df))
+    if (layout@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
+    bin_df
+  })
+
+  if (layout@overlaps == "nudge") {
+    # nudge values within each row to ensure there are no overlaps
+    d = ddply_(d, "row", function(row_df) {
+      row_df[[x]] = nudge_bins(row_df[[x]], h$binwidth)
+      row_df
+    })
+  }
+
+  d$row = NULL  
+  d = find_dots_y_binned(layout, d, h)
+  d
+}
+
+
+# find_dots_xy for swarm -------------------------------------------------
+
+method(find_dots_xy, layout_swarm) = function(layout, d, h) {
+  stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
+  define_orientation_variables(layout@orientation)
+
+  swarm_xy = beeswarm::swarmy(
+    d[[x]], d[[y]],
+    xsize = h$binwidth, ysize = h$y_spacing,
+    log = "", cex = 1,
+    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0),
+    compact = TRUE
+  )
+
+  d$y_origin = d[[y]]
+  d[[x]] = swarm_xy[["x"]]
+  d[[y]] = swarm_xy[["y"]] + h$y_start
+  d = recenter_swarm_clusters(layout, d, h)
+  d$y_origin = NULL
+  d
+}
+
+method(find_dots_xy, layout_swarm2) = function(layout, d, h) {
+  define_orientation_variables(layout@orientation)
+
+  swarm_xy = weave_swarm(d[[x]], d[[y]],
+    xsize = h$binwidth, ysize = h$y_spacing,
+    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0)
+  )
+
+  d$y_origin = d[[y]]
+  d[[x]] = swarm_xy[["x"]]
+  d[[y]] = swarm_xy[["y"]] + h$y_start
+  d = recenter_swarm_clusters(layout, d, h)
+  d$y_origin = NULL
+  d
+}
+
+#' Re-center swarm clusters for side = "both" in swarm layouts
+#' @param layout dots layout
+#' @param d data frame of dots with at least `x`, `y`, `bin`, and `y_origin` columns
+#' @param h dot heap
+#' @noRd
+recenter_swarm_clusters = function(layout, d, h) {
+  if (layout@side != "both") return(d)
+  define_orientation_variables(layout@orientation)
+
+  # re-center contiguous clusters around their mean y position so that
+  # small clusters are visually centered (rather than e.g. a cluster of
+  # two points having one point on the origin line and one above it)
+  d$bin = cumsum(c(1L, diff(d[[x]]) >= h$binwidth))
+  d = ddply_(d, "bin", function(bin_df) {
+    bin_df[[y]] = bin_df[[y]] - mean(bin_df[[y]]) + bin_df$y_origin
+    bin_df
+  })
+  d
+}
+
 
 # dynamic binwidth selection ----------------------------------------------
 
@@ -271,7 +359,6 @@ find_dotplot_binwidth = function(
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar")
 ) {
-  layout = match.arg(layout)
   x = sort(as.numeric(x), na.last = TRUE)
 
   # figure out a reasonable minimum number of bins based on histogram binning
@@ -280,17 +367,13 @@ find_dotplot_binwidth = function(
   } else {
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  bin_method = select_bin_method(x, layout)
-  dot_heap_ = function(...) {
-    dot_heap(
-      x,
-      ...,
-      maxheight = maxheight,
-      heightratio = heightratio,
-      stackratio = stackratio,
-      bin_method = bin_method
-    )
-  }
+  layout = new_layout(match.arg(layout),
+    maxheight = maxheight,
+    heightratio = heightratio,
+    stackratio = stackratio
+  )
+  layout = prepare_layout_for_data(layout, x)
+  dot_heap_ = function(...) dot_heap(layout, x, ...)
   min_h = dot_heap_(nbins = min_nbins)
 
   if (min_h$is_valid) {
@@ -302,7 +385,8 @@ find_dotplot_binwidth = function(
     # figure out a maximum number of bins based on data resolution (except
     # for bars, which handle duplicate values differently, so must go by
     # number of data points instead of unique data points)
-    max_h = if (layout == "bar") {
+    # TODO: don't special case bar here
+    max_h = if (S7_inherits(layout, layout_bar)) {
       dot_heap_(nbins = length(x))
     } else {
       dot_heap_(binwidth = resolution(x))
@@ -345,7 +429,7 @@ find_dotplot_binwidth = function(
       binwidth = optimize(
         function(binwidth) {
           h = dot_heap_(binwidth = binwidth)
-          (h$max_bin_count * h$max_y_spacing - h$maxheight)^2
+          (h$max_bin_count * h$max_y_spacing - maxheight)^2
         },
         candidate_binwidths,
         tol = sqrt(.Machine$double.eps)
@@ -381,18 +465,14 @@ find_dotplot_binwidth = function(
 #' @param x a vector values
 #' @param nbins,binwidth must provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @param maxheight maximum height of a single bin
 #' @param heightratio ratio between the bin width and the y spacing
 #' @return  a list of properties of this dot "heap"
 #' @noRd
 dot_heap = function(
+  layout,
   x,
   nbins = NULL,
-  binwidth = NULL,
-  maxheight = Inf,
-  heightratio = 1,
-  stackratio = 1,
-  bin_method = automatic_bin
+  binwidth = NULL
 ) {
   xspread = diff(range(x))
   if (xspread == 0) xspread = 1
@@ -402,20 +482,25 @@ dot_heap = function(
   } else {
     nbins = max(floor(xspread / binwidth), 1)
   }
-  binning = bin_method(x, binwidth)
+  binning = layout@bin_method(x, binwidth)
   bin_counts = tabulate(binning$bins)
   # max bin count is the max "effective" number of elements in a bin, which
   # is the number of elements in the bin modified by the stackratio to account
   # for how dots align with tops and bottoms of stacks when stackratio != 1
-  max_bin_count = max(bin_counts) - 1 + 1/stackratio
+  max_bin_count = max(bin_counts) - 1 + 1/layout@stackratio
 
-  y_spacing = binwidth * heightratio
+  y_spacing = binwidth * layout@heightratio
+  y_start = switch_side(layout@side, layout@orientation,
+    topright = y_spacing / layout@stackratio / 2,
+    bottomleft = - y_spacing / layout@stackratio / 2,
+    both = 0
+  )
 
   if (length(bin_counts) == 1) {
     # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
     # let's back out a max bin size based on that...
-    max_y_spacing = maxheight / max_bin_count
-    max_binwidth = max_y_spacing / heightratio
+    max_y_spacing = layout@maxheight / max_bin_count
+    max_binwidth = max_y_spacing / layout@heightratio
   } else {
     # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
     max_y_spacing = y_spacing
@@ -423,10 +508,23 @@ dot_heap = function(
   }
 
   # is this a "valid" heap of dots; i.e. is its tallest bin less than max height?
-  is_valid = isTRUE(max_bin_count * max_y_spacing <= maxheight)
-  is_valid_approx = isTRUE(max_bin_count * max_y_spacing <= maxheight + .Machine$double.eps^0.25)
+  is_valid = isTRUE(max_bin_count * max_y_spacing <= layout@maxheight)
+  is_valid_approx = isTRUE(max_bin_count * max_y_spacing <= layout@maxheight + .Machine$double.eps^0.25)
 
-  as.list(environment())
+  list(
+    nbins = nbins,
+    binwidth = binwidth,
+    bins = binning$bins,
+    bin_midpoints = binning$bin_midpoints,
+    bin_counts = bin_counts,
+    max_bin_count = max_bin_count,
+    y_spacing = y_spacing,
+    y_start = y_start,
+    max_y_spacing = max_y_spacing,
+    max_binwidth = max_binwidth,
+    is_valid = is_valid,
+    is_valid_approx = is_valid_approx
+  )
 }
 
 # modified wilkinson methods ----------------------------------------------
@@ -635,11 +733,11 @@ wilkinson_bin_from_center = function(x, width) {
 #' @param y y values (must be constant)
 #' @noRd
 weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
-  y_grid = 4
+  y_grid = 5
 
   can_place_candidate = function(candidate, last_placed, last_rows) {
     candidate >= last_placed + xsize &&
-      all(map_lgl(seq_len(y_grid - 1), function(i) {
+      all(map_lgl_(seq_len(y_grid - 1), function(i) {
         y_offset = i / y_grid
         candidate >= (tail(last_rows[[i]][last_rows[[i]] <= candidate], 1) + sqrt(1 - y_offset^2) * xsize) &&
           candidate <= (head(last_rows[[i]][candidate < last_rows[[i]]], 1) - sqrt(1 - y_offset^2) * xsize)
@@ -695,9 +793,10 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
   rows_bottom = rows
 
   while (length(remaining) > 0) {
-    for (i in seq_len(y_grid - 1)) place_row()
+    # place_row()
+    for (i in seq_len(y_grid)) place_row()
     for (i in seq_len(y_grid)) place_row(reverse = TRUE)
-    place_row()
+    # place_row()
   }
 
   row_y = function(rows, side) (seq_along(rows) - 1) / y_grid * ysize * side
@@ -717,54 +816,6 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
   df = df[order(df$x), ]
   df$y = df$y + y
   df
-}
-
-# dynamic binning method selection ----------------------------------------
-
-automatic_bin = function(x, width, layout = "bin") {
-  select_bin_method(x, layout)(x, width)[c("bins", "bin_midpoints")]
-}
-
-# examines a vector x and determines an appropriate binning method based on its properties
-select_bin_method = function(x, layout = "bin") {
-  if (layout == "bar") return(bar_bin)
-
-  diff_x = diff(x)
-  if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
-    # x is symmetric, used centered binning
-    wilkinson_bin_from_center
-  } else {
-    wilkinson_bin
-  }
-}
-
-
-# bar layout --------------------------------------------------------------
-
-#' Bin dots into bars
-#' @param x data (original positions of dots)
-#' @param width width of the bins in data units
-#' @param bar_scale width of the bars as a proportion of the data resolution
-#' @noRd
-bar_bin = function(x, width, bar_scale = 0.9) {
-  # determine the amount of space that each bar will take up
-  # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
-  max_bar_width = resolution(as.numeric(x), zero = FALSE) * bar_scale
-  n_bins = max(floor(max_bar_width / width), 1)
-  actual_bar_width = n_bins * width
-
-  # determine new x positions
-  bin_positions = (ppoints(n_bins, a = 0.5) - 0.5) * actual_bar_width
-  split(x, x) = lapply(split(x, x), function(x) {
-    offset_to_center = max((n_bins - length(x)) / n_bins * actual_bar_width / 2, 0)
-    rep_len(bin_positions, length(x)) + x[[1]] + offset_to_center
-  })
-
-  bin_midpoints = unique(x)
-  list(
-    bins = match(x, bin_midpoints),
-    bin_midpoints = bin_midpoints
-  )
 }
 
 

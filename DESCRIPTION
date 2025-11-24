@@ -34,6 +34,7 @@ Imports:
     distributional (>= 0.3.2),
     numDeriv,
     quadprog,
+    S7,
     Rcpp
 Suggests:
     tidyselect,

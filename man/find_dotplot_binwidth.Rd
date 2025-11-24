@@ -9,7 +9,7 @@ find_dotplot_binwidth(
   maxheight,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar")
+  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar")
 )
 }
 \arguments{

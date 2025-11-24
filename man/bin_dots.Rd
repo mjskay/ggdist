@@ -10,7 +10,7 @@ bin_dots(
   binwidth,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
