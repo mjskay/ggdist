@@ -1,3 +1,6 @@
+#' @include geom_dotsinterval.R
+NULL
+
 # Geom for blurry dotplots
 #
 # Author: mjskay

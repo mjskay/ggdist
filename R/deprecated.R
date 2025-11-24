@@ -1,3 +1,10 @@
+#' @include stat_slabinterval.R
+#' @include stat_pointinterval.R
+#' @include stat_interval.R
+#' @include stat_lineribbon.R
+#' @include stat_dotsinterval.R
+NULL
+
 # Deprecated functions and arguments
 #
 # Author: mjskay

@@ -1,3 +1,6 @@
+#' @include stat_pointinterval.R
+NULL
+
 # A stat_summary with a geom_interval
 #
 # Author: mjskay
