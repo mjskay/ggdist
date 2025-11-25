@@ -1,4 +1,4 @@
-# dots layouts for use with bin_dots
+# dot binners for use with bin_dots
 #
 # Author: mjskay
 ###############################################################################
@@ -6,22 +6,25 @@
 NULL
 
 
-# dots_layout -----------------------------------------------------------------
+# binner -----------------------------------------------------------------
 
-#' Base class for dot plot layouts created with `bin_dots()`
+#' Base class for dot plot binners created with `bin_dots()`
 #' @description
-#' This class defines the layout parameters for dot plots created with `bin_dots()`.
+#' Layout/binning method for dot plots created with `bin_dots()`.
+#' @details
+#' A `binner` defines how dots are arranged in a dot plot created with
+#' `bin_dots()`. Different types of binners implement different layouts.
 #' @param maxheight <scalar [numeric]> maximum height of the dots layout.
 #' @param heightratio <scalar [numeric]> height ratio of the dots layout.
 #' @param stackratio <scalar [numeric]> stack ratio of the dots layout.
 #' @param side <[string][character]> side where the dots layout should be placed.
 #' @param orientation <[string][character]> orientation of the dots layout.
 #' @param overlaps <[string][character]> how to handle overlaps in the dots layout.
-#' @return An object of class `dots_layout`.
+#' @return An object of class `binner`.
 #' @import S7
 #' @noRd
-dots_layout = new_class(
-  "dots_layout",
+binner = new_class(
+  "binner",
   properties = list(
     maxheight = new_property(
       class_numeric,
@@ -59,54 +62,53 @@ dots_layout = new_class(
 )
 
 
-# layout setup -----------------------------------------------------------
+# binner setup -----------------------------------------------------------
 
-#' Create a new dots layout
-#' @param layout <[string][character]> type of layout to create. One of "weave", "bin", "hex", "swarm", "swarm2", or "bar".
-#' @param ... Additional arguments passed to the layout constructor.
-#' @return An object of the specified layout class.
+#' Create a new dot binner
+#' @param layout <[string][character]> name of layout as passed to `bin_dots()`.
+#' @param ... Additional arguments passed to the binner constructor.
+#' @return An object of the specified `binner` class.
 #' @noRd
-new_layout = function(layout, ...) {
-  match_function(layout, "layout_")(...)
+new_binner = function(layout, ...) {
+  match_function(layout, "binner_")(...)
 }
 
-#' Prepare layout for data
+#' Prepare binner for data
 #' @description
-#' This generic function updates a layout object based on the provided data points.
+#' This generic function updates a dot binner based on the provided data points.
 #' Used for pre-calculations that depend on the data that can be used
 #' to speed up automatic binwidth selection.
-#' @param layout <`dots_layout`> layout object to update.
+#' @param binner <`binner`> dot binner to update.
 #' @param x <[numeric]> numeric vector of data points.
-#' @return An updated layout object.
+#' @return An updated `binner`.
 #' @noRd
-prepare_layout_for_data = new_generic("prepare_layout_for_data", c("layout"), function(layout, x, ...) {
+prepare_binner = new_generic("prepare_binner", c("binner"), function(binner, x, ...) {
   S7_dispatch()
 })
 
-method(prepare_layout_for_data, dots_layout) = function(layout, x, ...) {
-  layout
+method(prepare_binner, binner) = function(binner, x, ...) {
+  binner
 }
 
 
 # bin-based layouts ----------------------------------------------------------------
 
 # TODO: remove
-automatic_bin = function(x, width, layout = layout_bin()) {
-  prepare_layout_for_data(layout, x)@bin_method(x, width)[c("bins", "bin_midpoints")]
+automatic_bin = function(x, width, binner = binner_bin()) {
+  prepare_binner(binner, x)@bin_method(x, width)[c("bins", "bin_midpoints")]
 }
 
 #' Bin layout
 #' @description
-#' This class defines a bin layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
+#' Wilkinson-esque binner for dot plots created with `bin_dots()`.
+#' @inheritParams binner
 #' @param bin_method <function> function that takes data and bin width as input and returns a list with components `bins` and `bin_midpoints`.
 #' @param align_rows <logical> whether to align rows of dots when `side` is "both".
-#' @return An object of class `layout_bin`.
+#' @return An object of class `binner_bin`.
 #' @noRd
-layout_bin = new_class(
-  "layout_bin",
-  parent = dots_layout,
+binner_bin = new_class(
+  "binner_bin",
+  parent = binner,
   properties = list(
     bin_method = new_property(
       class_function,
@@ -119,29 +121,28 @@ layout_bin = new_class(
   )
 )
 
-method(prepare_layout_for_data, layout_bin) = function(layout, x, ...) {
+method(prepare_binner, binner_bin) = function(binner, x, ...) {
   # examines a vector of data and determines an appropriate binning method based on its properties
   # doing this up front allows us to doing this repeatedly when finding binwidth via optimization
   diff_x = diff(x)
   if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
     # x is symmetric, use centered binning
-    layout@bin_method = wilkinson_bin_from_center
+    binner@bin_method = wilkinson_bin_from_center
   } else {
-    layout@bin_method = wilkinson_bin
+    binner@bin_method = wilkinson_bin
   }
-  layout
+  binner
 }
 
-#' Weave layout
+#' Weave binner
 #' @description
-#' This class defines a weave layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
-#' @return An object of class `layout_weave`.
+#' Weave `binner` for dot plots created with `bin_dots()`.
+#' @inheritParams binner
+#' @return An object of class `binner_weave`.
 #' @noRd
-layout_weave = new_class(
-  "layout_weave",
-  parent = layout_bin,
+binner_weave = new_class(
+  "binner_weave",
+  parent = binner_bin,
   properties = list(
     align_rows = new_property(
       class_logical,
@@ -150,16 +151,15 @@ layout_weave = new_class(
   )
 )
 
-#' Hex layout
+#' Hex binner
 #' @description
-#' This class defines a hex layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
-#' @return An object of class `layout_hex`.
+#' Hex `binner` for dot plots created with `bin_dots()`.
+#' @inheritParams binner
+#' @return An object of class `binner_hex`.
 #' @noRd
-layout_hex = new_class(
-  "layout_hex",
-  parent = layout_bin,
+binner_hex = new_class(
+  "binner_hex",
+  parent = binner_bin,
   properties = list(
     align_rows = new_property(
       class_logical,
@@ -169,7 +169,7 @@ layout_hex = new_class(
 )
 
 
-# bar layout -------------------------------------------------------------
+# bar binner -------------------------------------------------------------
 
 #' Bin dots into bars
 #' @param x data (original positions of dots)
@@ -197,16 +197,15 @@ bar_bin = function(x, width, bar_scale = 0.9) {
   )
 }
 
-#' Bar layout
+#' Bar binner
 #' @description
-#' This class defines a bar layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
-#' @return An object of class `layout_bar`.
+#' Bar `binner` for dot plots created with `bin_dots()`.
+#' @inheritParams binner
+#' @return An object of class `binner_bar`.
 #' @noRd
-layout_bar = new_class(
-  "layout_bar",
-  parent = layout_bin,
+binner_bar = new_class(
+  "binner_bar",
+  parent = binner_bin,
   properties = list(
     bin_method = new_property(
       class_function,
@@ -223,23 +222,22 @@ layout_bar = new_class(
   )
 )
 
-method(prepare_layout_for_data, layout_bar) = function(layout, x, ...) {
-  layout
+method(prepare_binner, binner_bar) = function(binner, x, ...) {
+  binner
 }
 
 
-# swarm layouts ----------------------------------------------------------
+# swarm binners ----------------------------------------------------------
 
-#' Swarm layout
+#' Swarm binner
 #' @description
-#' This class defines a swarm layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
-#' @return An object of class `layout_swarm`.
+#' Swarm `binner` for dot plots created with `bin_dots()`.
+#' @inheritParams binner
+#' @return An object of class `binner_swarm`.
 #' @noRd
-layout_swarm = new_class(
-  "layout_swarm",
-  parent = dots_layout,
+binner_swarm = new_class(
+  "binner_swarm",
+  parent = binner,
   properties = list(
     # TODO: remove this default method when dots_heap is refactored not to call this
     bin_method = new_property(
@@ -249,14 +247,13 @@ layout_swarm = new_class(
   )
 )
 
-#' Swarm2 layout
+#' Swarm2 binner
 #' @description
-#' This class defines a swarm2 layout for dot plots created with `bin_dots()`.
-#' It inherits from the `dots_layout` class.
-#' @inheritParams dots_layout
-#' @return An object of class `layout_swarm2`.
+#' Swarm2 `binner` for dot plots created with `bin_dots()`.
+#' @inheritParams binner
+#' @return An object of class `binner_swarm2`.
 #' @noRd
-layout_swarm2 = new_class(
-  "layout_swarm2",
-  parent = layout_swarm
+binner_swarm2 = new_class(
+  "binner_swarm2",
+  parent = binner_swarm
 )

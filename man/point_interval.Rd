@@ -158,7 +158,7 @@ mode_hdci(.data, ..., .width = 0.95)
 \item{.data}{<\link{data.frame} | \link[dplyr:grouped_df]{grouped_df}> Data frame (or grouped
 data frame as returned by \code{\link[dplyr:group_by]{dplyr::group_by()}}) that contains draws to summarize.}
 
-\item{...}{<bare \link[tidyselect:language]{tidyselect::language}> Column names or expressions that, when evaluated in the context of
+\item{...}{<bare \link{language}> Column names or expressions that, when evaluated in the context of
 \code{.data}, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.

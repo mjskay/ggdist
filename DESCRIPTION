@@ -62,7 +62,7 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
+RoxygenNote: 7.3.3.9000
 LazyData: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -78,8 +78,8 @@ Collate:
     'abstract_stat_slabinterval.R'
     'auto_partial.R'
     'validate.R'
-    'dots_layout.R'
-    'binning_methods.R'
+    'binner.R'
+    'bin_dots.R'
     'bounder.R'
     'compat.R'
     'curve_interval.R'

@@ -146,6 +146,8 @@ You can create your own transformation with \code{\link[scales:new_transform]{sc
 \code{transform}.}
     \item{\code{position}}{For position scales, The position of the axis.
 \code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
+    \item{\code{fallback.palette}}{Function to use when \code{palette = NULL} and the
+palette is not represented in the theme.}
     \item{\code{call}}{The \code{call} used to construct the scale for reporting messages.}
     \item{\code{super}}{The super class to use for the constructed scale}
   }}

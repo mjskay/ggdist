@@ -10,7 +10,7 @@ Pr_(x)
 p_(x)
 }
 \arguments{
-\item{x}{<bare \link[tidyselect:language]{tidyselect::language}> Expressions. See \emph{Probability expressions}, below.}
+\item{x}{<bare \link{language}> Expressions. See \emph{Probability expressions}, below.}
 }
 \description{
 \strong{Experimental} probability-like expressions that can be used in place of

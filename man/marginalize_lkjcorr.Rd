@@ -20,7 +20,7 @@ and a list column of distribution arguments (\code{".args"} by default), such as
 
 \item{K}{<\link{numeric}> Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
-\item{predicate}{<bare \link[tidyselect:language]{tidyselect::language} | \link{NULL}> Expression for selecting the rows of \code{data} to modify.
+\item{predicate}{<bare \link{language} | \link{NULL}> Expression for selecting the rows of \code{data} to modify.
 This is useful if \code{data} contains more than one row with an LKJ prior in it and you only want
 to modify some of the distributions; if this is the case, give row a predicate expression that
 evaluates to \code{TRUE} on the rows you want to modify.

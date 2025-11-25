@@ -84,6 +84,8 @@ every level in a legend, the layer should use \code{show.legend = TRUE}.}
 \code{\link[ggplot2:guides]{guides()}} for more information.}
     \item{\code{position}}{For position scales, The position of the axis.
 \code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
+    \item{\code{fallback.palette}}{Function to use when \code{palette = NULL} and the
+palette is not represented in the theme.}
     \item{\code{call}}{The \code{call} used to construct the scale for reporting messages.}
     \item{\code{super}}{The super class to use for the constructed scale}
   }}
