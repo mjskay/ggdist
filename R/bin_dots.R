@@ -96,9 +96,8 @@ bin_dots = function(x, y, binwidth,
 
   # bin the dots
   binner = prepare_binner(binner, d[[x]])
-  binning = make_binning(binner, d[[x]], binwidth = binwidth)
-  d$bin = binning$bins
-  d = bin_dots_xy(binner, d, binning)
+  binning = arrange_bins(binner, d[[x]], binwidth = binwidth)
+  d = place_dots(binner, d, binning)
 
   # restore the original data order in case it was destroyed
   d = d[order(d$order), ]
@@ -107,30 +106,280 @@ bin_dots = function(x, y, binwidth,
   d
 }
 
-#' Find the x and y position of dots given a binner and a binning
-#' @param binner <`binner`> dot binning method
-#' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `make_binning()`
+
+# prepare_binner ---------------------------------------------------------
+
+#' Prepare binner for data
+#' @description
+#' This generic function updates a dot binner based on the provided data points.
+#' Used for pre-calculations that depend on the data but not the binwidth, so they only
+#' need to be calculated once at the beginning of automatic binwidth selection.
+#' @param binner <`binner`> dot binner to update.
+#' @param x <[numeric]> numeric vector of data points.
+#' @return <`binner`> possibly-modified copy of the input `binner`.
 #' @noRd
-bin_dots_xy = new_generic("bin_dots_xy", c("binner"), function(binner, d, binning) {
+prepare_binner = new_generic("prepare_binner", c("binner"), function(binner, x, ...) {
   S7_dispatch()
 })
 
+method(prepare_binner, binner) = function(binner, x, ...) {
+  binner
+}
 
-# bin_dots_xy for bin, hex, weave, bar ---------------------------------------
+method(prepare_binner, binner_bin) = function(binner, x, ...) {
+  # examines a vector of data and determines an appropriate binning method based on its properties
+  # doing this up front allows us to doing this repeatedly when finding binwidth via optimization
+  diff_x = diff(x)
+  if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
+    # x is symmetric, use centered binning
+    binner@bin_method = wilkinson_bin_from_center
+  } else {
+    binner@bin_method = wilkinson_bin
+  }
+  binner
+}
 
-method(bin_dots_xy, binner_bin) = function(binner, d, binning) {
-  d = find_dots_x_binned(binner, d, binning)
-  d = find_dots_y_binned(binner, d, binning)
+method(prepare_binner, binner_bar) = function(binner, x, ...) {
+  binner
+}
+
+
+# arrange_bins -----------------------------------------------------------
+
+#' Arrange a binning of dots
+#' 
+#' Create a dot binning, which includes a set of bins of dots and other properties of the
+#' binning, such as what the bins are, what the dot widths are, what the y spacing between 
+#' dots should be, etc.
+#' @param binner <`binner`> the binning method
+#' @param x <[numeric]> vector of dot positions
+#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
+#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @return <[list]> properties of this dot binning, with elements:
+#' - `nbins`: <scalar [integer]> number of bins
+#' - `binwidth`: <scalar [numeric]> bin width
+#' - `y_spacing`: <scalar [numeric]> vertical distance between dot centers
+#' - `y_start`: <scalar [numeric]> starting y offset for the first dot in each bin
+#' Subclasses may also add additional elements. They *must* add at least the following elements:
+#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' @noRd
+arrange_bins = new_generic("arrange_bins", c("binner"), function(binner, x, nbins = NULL, binwidth = NULL) {
+  S7_dispatch()
+})
+  
+method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL) {
+  # determine binwidth and number of bins
+  x_spread = diff(range(x))
+  if (x_spread == 0) x_spread = 1
+  if (is.null(binwidth)) {
+    nbins = floor(nbins)
+    binwidth = x_spread / nbins
+  } else {
+    nbins = max(floor(x_spread / binwidth), 1)
+  }
+
+  # determine y positioning parameters
+  y_spacing = binwidth * binner@heightratio
+  y_start = switch_side(binner@side, binner@orientation,
+    topright = y_spacing / binner@stackratio / 2,
+    bottomleft = - y_spacing / binner@stackratio / 2,
+    both = 0
+  )
+
+  list(
+    nbins = nbins,
+    binwidth = binwidth,
+    y_spacing = y_spacing,
+    y_start = y_start
+  )
+}
+
+## arrange_bins for bin, hex, weave, bar ----------------------------------
+
+#' Arrange a binning of dots for binned layouts
+#' @param binner <`binner_bin`> the binning method
+#' @param x <[numeric]> vector of dot positions
+#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
+#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @return <[list]> properties of this dot binning, with additional elements:
+#' - `bins`: <[integer]> vector of same length as `x` giving the bin number (in {1 ... `nbins`}) for each element in `x`
+#' - `bin_midpoints`: <[numeric]> vector of length `nbins` giving the midpoint of each bin
+#' - `bin_counts`: <[integer]> vector of length `nbins` giving the number of elements in each bin
+#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' @noRd
+method(arrange_bins, binner_bin) = function(binner, x, nbins = NULL, binwidth = NULL) {
+  binning = arrange_bins(super(binner, binner_bin@parent), x, nbins, binwidth)
+  binning = c(binning, binner@bin_method(x, binning$binwidth))
+
+  # determine height of the tallest bin
+  binning$bin_counts = tabulate(binning$bins)
+  # max bin count is the max "effective" number of elements in a bin, which
+  # is the number of elements in the bin modified by the stackratio to account
+  # for how dots align with tops and bottoms of stacks when stackratio != 1
+  max_bin_count = max(binning$bin_counts) - 1 + 1/binner@stackratio
+  binning$height = max_bin_count * binning$y_spacing
+
+  # height = bin_count*y_spacing + y_spacing * (1/stackratio - 1)
+
+  binning
+}
+
+## arrange_bins for swarm, swarm2 -----------------------------------------
+
+#' Arrange a binning of dots for swarm layouts
+#' @param binner <`binner_bin`> the binning method
+#' @param x <[numeric]> vector of dot positions
+#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
+#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @return <[list]> properties of this dot binning, with additional elements:
+#' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
+#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' @noRd
+method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth = NULL) {
+  stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
+
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
+  binning$dots = beeswarm::swarmy(
+    x, 0,
+    xsize = binning$binwidth, ysize = binning$y_spacing,
+    log = "", cex = 1,
+    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0),
+    compact = TRUE
+  )
+  binning$dots = recenter_swarm_clusters(binner, binning$dots, binning)
+  binning$height = get_swarm_height(binner, binning$dots, binning)
+
+  binning
+}
+
+#' Arrange a binning of dots for swarm2 layouts
+#' @param binner <`binner_bin`> the binning method
+#' @param x <[numeric]> vector of dot positions
+#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
+#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @return <[list]> properties of this dot binning, with additional elements:
+#' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
+#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' @noRd
+method(arrange_bins, binner_swarm2) = function(binner, x, nbins = NULL, binwidth = NULL) {
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
+  binning$dots = weave_swarm(
+    x, 0,
+    xsize = binning$binwidth, ysize = binning$y_spacing,
+    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0)
+  )
+  binning$dots = recenter_swarm_clusters(binner, binning$dots, binning)
+  binning$height = get_swarm_height(binner, binning$dots, binning)
+
+  binning
+}
+
+#' Re-center swarm clusters for side = "both" in swarm layouts
+#' @param binner <`binner`> dot binning method
+#' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
+#' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @noRd
+recenter_swarm_clusters = function(binner, dots, binning) {
+  if (binner@side != "both") return(dots)
+
+  # re-center contiguous clusters around their mean y position so that
+  # small clusters are visually centered (rather than e.g. a cluster of
+  # two points having one point on the origin line and one above it)
+  dots$bin = cumsum(c(1L, diff(dots$x) >= binning$binwidth))
+  ddply_(dots, "bin", function(bin_df) {
+    bin_df$y = bin_df$y - mean(bin_df$y)
+    bin_df
+  })
+}
+
+#' Get the height of a swarm binning
+#' @param binner <`binner`> dot binning method
+#' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
+#' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @returns <scalar [numeric]> height of the swarm binning
+#' @noRd
+get_swarm_height = function(binner, dots, binning) {
+  height_minus_1_dot = max(abs(binning$dots$y)) * if (binner@side == "both") 2 else 1
+  dot_height = binning$y_spacing / binner@stackratio
+  height_minus_1_dot + dot_height
+}
+
+# place_dots -------------------------------------------------------------
+
+#' Find the x and y position of dots given a binner and a binning
+#' @param binner <`binner`> dot binning method
+#' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @returns <[data.frame]> modified version of `d` with updated `x` and `y` columns
+#' @noRd
+place_dots = new_generic("place_dots", c("binner"), function(binner, d, binning) {
+  S7_dispatch()
+})
+
+## place_dots for bin, hex, weave, bar ---------------------------------------
+
+method(place_dots, binner_bin) = function(binner, d, binning) {
+  d$bin = binning$bins
+  d = place_dots_x_binned(binner, d, binning)
+  d = place_dots_y_binned(binner, d, binning)
+  d
+}
+
+method(place_dots, binner_hex) = function(binner, d, binning) {
+  define_orientation_variables(binner@orientation)
+
+  d = place_dots(super(binner, binner_bin), d, binning)
+  d = ddply_(d, "bin", function(bin_df) {
+    n_dots = nrow(bin_df)
+    row_start_offset = get_row_start_offset(binner, binning, n_dots)
+    # depending on whether this is an even or odd column, need to start the
+    # x offset to the left or to the right
+    x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
+    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * binning$binwidth
+    bin_df
+  })
+
+  d
+}
+
+method(place_dots, binner_weave) = function(binner, d, binning) {
+  define_orientation_variables(binner@orientation)
+
+  # keep original x positions, but re-order within bins so that overlaps
+  # across bins are less likely
+  d$bin = binning$bins
+  d = ddply_(d, "bin", function(bin_df) {
+    seq_fun = if (binner@side == "both") seq_interleaved_centered else seq_interleaved
+    bin_df = bin_df[seq_fun(nrow(bin_df)),]
+    bin_df$row = seq_len(nrow(bin_df))
+    if (binner@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
+    bin_df
+  })
+
+  if (binner@overlaps == "nudge") {
+    # nudge values within each row to ensure there are no overlaps
+    d = ddply_(d, "row", function(row_df) {
+      row_df[[x]] = nudge_bins(row_df[[x]], binning$binwidth)
+      row_df
+    })
+  }
+
+  d$row = NULL
+
+  d = place_dots_y_binned(binner, d, binning)
+
   d
 }
 
 #' Find the x positions of dots in binned layouts
 #' @param binner <`binner`> dot binning method
 #' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `make_binning()`
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
 #' @noRd
-find_dots_x_binned = function(binner, d, binning) {
+place_dots_x_binned = function(binner, d, binning) {
   define_orientation_variables(binner@orientation)
 
   bin_midpoints = binning$bin_midpoints
@@ -146,9 +395,10 @@ find_dots_x_binned = function(binner, d, binning) {
 #' Find the y positions of dots in binned layouts
 #' @param binner <`binner`> dot binning method
 #' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `make_binning()`
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
 #' @noRd
-find_dots_y_binned = function(binner, d, binning) {
+place_dots_y_binned = function(binner, d, binning) {
   define_orientation_variables(binner@orientation)
 
   d = ddply_(d, "bin", function(bin_df) {
@@ -176,8 +426,9 @@ find_dots_y_binned = function(binner, d, binning) {
 
 #' Get the number of rows the start of a dot column will be offset by
 #' @param binner <`binner`> dot binning method
-#' @param binning <[list]> dot binning properties as returned by `make_binning()`
-#' @param n_dots number of dots in the column
+#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param n_dots <[integer]> number of dots in the column
+#' @returns <[integer]> number of rows the start of the column is offset by
 #' @noRd
 get_row_start_offset = function(binner, binning, n_dots) {
   if (binner@side == "both") {
@@ -193,329 +444,16 @@ get_row_start_offset = function(binner, binning, n_dots) {
   }
 }
 
-method(bin_dots_xy, binner_hex) = function(binner, d, binning) {
+## place_dots for swarm, swarm2 -------------------------------------------------
+
+method(place_dots, binner_swarm) = function(binner, d, binning) {
   define_orientation_variables(binner@orientation)
 
-  d = bin_dots_xy(super(binner, binner_bin), d, binning)
-  d = ddply_(d, "bin", function(bin_df) {
-    n_dots = nrow(bin_df)
-    row_start_offset = get_row_start_offset(binner, binning, n_dots)
-    # depending on whether this is an even or odd column, need to start the
-    # x offset to the left or to the right
-    x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
-    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * binning$binwidth
-    bin_df
-  })
+  d[[x]] = binning$dots$x
+  d[[y]] = d[[y]] + binning$y_start + binning$dots$y
   d
 }
 
-method(bin_dots_xy, binner_weave) = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
-
-  # keep original x positions, but re-order within bins so that overlaps
-  # across bins are less likely
-  d = ddply_(d, "bin", function(bin_df) {
-    seq_fun = if (binner@side == "both") seq_interleaved_centered else seq_interleaved
-    bin_df = bin_df[seq_fun(nrow(bin_df)),]
-    bin_df$row = seq_len(nrow(bin_df))
-    if (binner@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
-    bin_df
-  })
-
-  if (binner@overlaps == "nudge") {
-    # nudge values within each row to ensure there are no overlaps
-    d = ddply_(d, "row", function(row_df) {
-      row_df[[x]] = nudge_bins(row_df[[x]], binning$binwidth)
-      row_df
-    })
-  }
-
-  d$row = NULL  
-  d = find_dots_y_binned(binner, d, binning)
-  d
-}
-
-
-# bin_dots_xy for swarm -------------------------------------------------
-
-method(bin_dots_xy, binner_swarm) = function(binner, d, binning) {
-  stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
-  define_orientation_variables(binner@orientation)
-
-  swarm_xy = beeswarm::swarmy(
-    d[[x]], d[[y]],
-    xsize = binning$binwidth, ysize = binning$y_spacing,
-    log = "", cex = 1,
-    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0),
-    compact = TRUE
-  )
-
-  d$y_origin = d[[y]]
-  d[[x]] = swarm_xy[["x"]]
-  d[[y]] = swarm_xy[["y"]] + binning$y_start
-  d = recenter_swarm_clusters(binner, d, binning)
-  d$y_origin = NULL
-  d
-}
-
-method(bin_dots_xy, binner_swarm2) = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
-
-  swarm_xy = weave_swarm(d[[x]], d[[y]],
-    xsize = binning$binwidth, ysize = binning$y_spacing,
-    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0)
-  )
-
-  d$y_origin = d[[y]]
-  d[[x]] = swarm_xy[["x"]]
-  d[[y]] = swarm_xy[["y"]] + binning$y_start
-  d = recenter_swarm_clusters(binner, d, binning)
-  d$y_origin = NULL
-  d
-}
-
-#' Re-center swarm clusters for side = "both" in swarm layouts
-#' @param binner <`binner`> dot binning method
-#' @param d <[data.frame]> dot positions with at least `x`, `y`, `bin`, and `y_origin` columns
-#' @param binning <[list]> dot binning properties as returned by `make_binning()`
-#' @noRd
-recenter_swarm_clusters = function(binner, d, binning) {
-  if (binner@side != "both") return(d)
-  define_orientation_variables(binner@orientation)
-
-  # re-center contiguous clusters around their mean y position so that
-  # small clusters are visually centered (rather than e.g. a cluster of
-  # two points having one point on the origin line and one above it)
-  d$bin = cumsum(c(1L, diff(d[[x]]) >= binning$binwidth))
-  d = ddply_(d, "bin", function(bin_df) {
-    bin_df[[y]] = bin_df[[y]] - mean(bin_df[[y]]) + bin_df$y_origin
-    bin_df
-  })
-  d
-}
-
-
-# dynamic binwidth selection ----------------------------------------------
-
-#' Dynamically select a good bin width for a dotplot
-#'
-#' Searches for a nice-looking bin width to use to draw a dotplot such that
-#' the height of the dotplot fits within a given space (`maxheight`).
-#'
-#' @param x <[numeric]> Data values.
-#' @param maxheight <scalar [numeric]> Maximum height of the dotplot.
-#' @param heightratio <scalar [numeric]> Ratio of bin width to dot height.
-#' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
-#' between dot centers
-#' @eval rd_param_dots_layout()
-#'
-#' @details
-#' This dynamic bin selection algorithm uses a binary search over the number of
-#' bins to find a bin width such that if the input data (`x`) is binned
-#' using a Wilkinson-style dotplot algorithm the height of the tallest bin
-#' will be less than `maxheight`.
-#'
-#' This algorithm is used by [geom_dotsinterval()] (and its variants) to automatically
-#' select bin widths. Unless you are manually implementing you own dotplot [`grob`]
-#' or `geom`, you probably do not need to use this function directly
-#'
-#' @return A suitable bin width such that a dotplot created with this bin width
-#' and `heightratio` should have its tallest bin be less than or equal to `maxheight`.
-#'
-#' @seealso [bin_dots()] for an algorithm can bin dots using bin widths selected
-#' by this function; [geom_dotsinterval()] for geometries that use
-#' these algorithms to create dotplots.
-#' @examples
-#'
-#' library(dplyr)
-#' library(ggplot2)
-#'
-#' x = qnorm(ppoints(20))
-#' binwidth = find_dotplot_binwidth(x, maxheight = 4, heightratio = 1)
-#' binwidth
-#'
-#' bin_df = bin_dots(x = x, y = 0, binwidth = binwidth, heightratio = 1)
-#' bin_df
-#'
-#' # we can manually plot the binning above, though this is only recommended
-#' # if you are using find_dotplot_binwidth() and bin_dots() to build your own
-#' # grob. For practical use it is much easier to use geom_dots(), which will
-#' # automatically select good bin widths for you (and which uses
-#' # find_dotplot_binwidth() and bin_dots() internally)
-#' bin_df %>%
-#'   ggplot(aes(x = x, y = y)) +
-#'   geom_point(size = 4) +
-#'   coord_fixed()
-#'
-#' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
-#' @importFrom stats optimize
-#' @export
-find_dotplot_binwidth = function(
-  x,
-  maxheight,
-  heightratio = 1,
-  stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar")
-) {
-  x = sort(as.numeric(x), na.last = TRUE)
-
-  # figure out a reasonable minimum number of bins based on histogram binning
-  min_nbins = if (length(x) <= 1) {
-    1
-  } else {
-    min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
-  }
-  binner = new_binner(match.arg(layout),
-    maxheight = maxheight,
-    heightratio = heightratio,
-    stackratio = stackratio
-  )
-  binner = prepare_binner(binner, x)
-  min_binning = make_binning(binner, x, nbins = min_nbins)
-
-  if (isTRUE(min_binning$height <= maxheight)) {
-    # if the minimum binning (i.e. the binning constructed from the smallest
-    # number of bins --- thus, at the upper limit of the height we will allow)
-    # is valid, then we don't need to search and can just use it.
-    binning = min_binning
-  } else {
-    # figure out a maximum number of bins based on data resolution (except
-    # for bars, which handle duplicate values differently, so must go by
-    # number of data points instead of unique data points)
-    # TODO: don't special case bar here
-    max_binning = if (S7_inherits(binner, binner_bar)) {
-      make_binning(binner, x, nbins = length(x))
-    } else {
-      make_binning(binner, x, binwidth = resolution(x))
-    }
-
-    if (max_binning$nbins <= min_binning$nbins + 1) {
-      # nowhere to search, use maximum number of bins
-      binning = max_binning
-    } else {
-      # use binary search to find a reasonable number of bins
-      repeat {
-        binning = make_binning(binner, x, nbins = (min_binning$nbins + max_binning$nbins) / 2)
-        if (isTRUE(binning$height <= maxheight)) {
-          # binning is valid, search downwards
-          if (binning$nbins - 1 <= min_binning$nbins) {
-            # found it, we're done
-            break
-          }
-          max_binning = binning
-        } else {
-          # binning is not valid, search upwards
-          if (binning$nbins + 1 >= max_binning$nbins) {
-            # found it, we're done
-            binning = max_binning
-            break
-          }
-          min_binning = binning
-        }
-      }
-    }
-
-    # attempt to refine binwidth using optimization.
-    # after finding a reasonable candidate based on number of bins, we refine
-    # the binwidth around that number of bins using optimization. We do this
-    # only as a second step because just using optimization on binwidth as a
-    # first step tends to end up in a local minimum, sometimes very far from
-    # maxheight.
-    candidate_binwidths = c(min_binning$binwidth, max_binning$binwidth, binning$binwidth)
-    if (length(unique(candidate_binwidths)) != 1) {
-      binwidth = optimize(
-        function(binwidth) {
-          binning = make_binning(binner, x, binwidth = binwidth)
-          (binning$height - maxheight)^2
-        },
-        candidate_binwidths,
-        tol = sqrt(.Machine$double.eps)
-      )$minimum
-      new_binning = make_binning(binner, x, binwidth = binwidth)
-
-      # approximate test that binning is valid, used here to tolerate approximation with optimize()
-      if (isTRUE(new_binning$height <= maxheight + .Machine$double.eps^0.25)) {
-        binning = new_binning
-      }
-    }
-  }
-
-  # check if the selected binning is valid....
-  if (isTRUE(binning$height <= maxheight + .Machine$double.eps^0.25)) {
-    binning$max_binwidth
-  } else {
-    # ... if it isn't, this means we've ended up with some bin that's too
-    # tall, probably because we have discrete data --- we'll just
-    # conservatively shrink things down so they fit by backing out a bin
-    # width that works with the tallest bin
-    binning$max_binwidth * maxheight / binning$height
-  }
-}
-
-
-# a binning: a collections of bins of dots -----------------------------------
-
-#' Create a dot binning, which includes a set of bins of dots and other properties of the
-#' binning, such as what the bins are, what the dot widths are, what the y spacing between 
-#' dots should be, etc.
-#' @param binner a `binner` object defining the binning method
-#' @param x a vector values
-#' @param nbins,binwidth must provide either the desired number of bins (`nbins`)
-#' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return  a list of properties of this dot binning
-#' @noRd
-make_binning = function(
-  binner,
-  x,
-  nbins = NULL,
-  binwidth = NULL
-) {
-  x_spread = diff(range(x))
-  if (x_spread == 0) x_spread = 1
-  if (is.null(binwidth)) {
-    nbins = floor(nbins)
-    binwidth = x_spread / nbins
-  } else {
-    nbins = max(floor(x_spread / binwidth), 1)
-  }
-
-  y_spacing = binwidth * binner@heightratio
-  y_start = switch_side(binner@side, binner@orientation,
-    topright = y_spacing / binner@stackratio / 2,
-    bottomleft = - y_spacing / binner@stackratio / 2,
-    both = 0
-  )
-
-  binning = binner@bin_method(x, binwidth)
-  bin_counts = tabulate(binning$bins)
-  # max bin count is the max "effective" number of elements in a bin, which
-  # is the number of elements in the bin modified by the stackratio to account
-  # for how dots align with tops and bottoms of stacks when stackratio != 1
-  max_bin_count = max(bin_counts) - 1 + 1/binner@stackratio
-
-  if (length(bin_counts) == 1) {
-    # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
-    # let's back out a max bin size based on that...
-    height = binner@maxheight
-    max_binwidth = height / max_bin_count / binner@heightratio
-  } else {
-    # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
-    height = max_bin_count * y_spacing
-    max_binwidth = binwidth
-  }
-
-  list(
-    nbins = nbins,
-    binwidth = binwidth,
-    y_spacing = y_spacing,
-    y_start = y_start,
-    bins = binning$bins,
-    bin_midpoints = binning$bin_midpoints,
-    bin_counts = bin_counts,
-    height = height,
-    max_binwidth = max_binwidth
-  )
-}
 
 # modified wilkinson methods ----------------------------------------------
 
@@ -723,7 +661,7 @@ wilkinson_bin_from_center = function(x, width) {
 #' @param y y values (must be constant)
 #' @noRd
 weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
-  y_grid = 5
+  y_grid = 4
 
   can_place_candidate = function(candidate, last_placed, last_rows) {
     candidate >= last_placed + xsize &&
@@ -783,10 +721,9 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
   rows_bottom = rows
 
   while (length(remaining) > 0) {
-    # place_row()
-    for (i in seq_len(y_grid)) place_row()
+    for (i in seq_len(y_grid - 1)) place_row()
     for (i in seq_len(y_grid)) place_row(reverse = TRUE)
-    # place_row()
+    place_row()
   }
 
   row_y = function(rows, side) (seq_along(rows) - 1) / y_grid * ysize * side

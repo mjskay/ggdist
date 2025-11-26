@@ -100,7 +100,7 @@ makeContent.dots_grob = function(x) {
     # find the best bin widths across all the dotplots we are going to draw
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
-      find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio, layout = layout)
+      find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio, layout = layout, side = d$side[[1]])
     })
 
     binwidth = min(binwidths, user_max_binwidth)

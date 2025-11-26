@@ -83,7 +83,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2025-10-04</h4>
+            <h4 data-toc-skip class="date">2025-11-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/dotsinterval.Rmd" class="external-link"><code>vignettes/dotsinterval.Rmd</code></a></small>
       <div class="d-none name"><code>dotsinterval.Rmd</code></div>
@@ -134,7 +134,7 @@ interval is a summary point (e.g., mean, median, mode) with an arbitrary
 number of intervals.</p>
 <p>The base <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> uses a variety of custom
 aesthetics to create the composite geometry:</p>
-<p><img src="dotsinterval_files/figure-html/dotsinterval_components-1.png" width="624"></p>
+<p><img src="dotsinterval_files/figure-html/dotsinterval_components-1.png" class="r-plt" width="624"></p>
 <p>Depending on whether you want a horizontal or vertical orientation,
 you can provide <code>ymin</code> and <code>ymax</code> instead of
 <code>xmin</code> and <code>xmax</code>. By default, some aesthetics
@@ -149,7 +149,7 @@ family, aesthetics specific to the “dots” sub-geometry are referred to
 with the prefix <code>slab_</code>. When using the standalone
 <code><a href="../reference/geom_dots.html">geom_dots()</a></code> geometry, it is not necessary to use these
 custom aesthetics:</p>
-<p><img src="dotsinterval_files/figure-html/dots_components-1.png" width="624"></p>
+<p><img src="dotsinterval_files/figure-html/dots_components-1.png" class="r-plt" width="624"></p>
 <p><code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> is often most useful when paired
 with <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code>, which will automatically
 calculate points and intervals and map these onto endpoints of the
@@ -189,7 +189,7 @@ correct result, the orientation can be overridden by setting
 <p>Size and layout of dots in the dotplot are controlled by four
 parameters: <code>scale</code>, <code>binwidth</code>,
 <code>dotsize</code>, and <code>stackratio</code>.</p>
-<p><img src="dotsinterval_files/figure-html/layout_params-1.png" width="576"></p>
+<p><img src="dotsinterval_files/figure-html/layout_params-1.png" class="r-plt" width="576"></p>
 <ul>
 <li><p><code>scale</code>: If <code>binwidth</code> is not set (is
 <code>NA</code>), then the <code>binwidth</code> is determined
@@ -279,13 +279,13 @@ plot.</li>
 <span><span class="fu">side_plot</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Horizontal geom_dots() with different values of side"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/horizontal_side-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/horizontal_side-1.png" class="r-plt" width="648"></p>
 <p>When <code>orientation = "vertical"</code>, this yields:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">side_plot</span><span class="op">(</span>y <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Vertical geom_dots() with different values of side"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/vertical_side-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/vertical_side-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level2">
 <h2 id="layout">Layout<a class="anchor" aria-label="anchor" href="#layout"></a>
@@ -340,14 +340,14 @@ this:</p>
 <span><span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"bin"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"hex"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span></span>
 <span>  <span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"weave"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"swarm"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'geom_dots() layouts with side = "top"'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/layout_top-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/layout_top-1.png" class="r-plt" width="648"></p>
 <p>When <code>side</code> is <code>"both"</code>, these layouts look
 like this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"bin"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"hex"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span></span>
 <span>  <span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"weave"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"swarm"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'geom_dots() layouts with side = "both"'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/layout_both-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/layout_both-1.png" class="r-plt" width="648"></p>
 <div class="section level3">
 <h3 id="beeswarm-plots">Beeswarm plots<a class="anchor" aria-label="anchor" href="#beeswarm-plots"></a>
 </h3>
@@ -365,7 +365,7 @@ like this:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">abc</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'geom_dots(side = "both")'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_bin-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_bin-1.png" class="r-plt" width="648"></p>
 <p><code>side = "both"</code> also tends to work well with the
 <code>"hex"</code> and <code>"swarm"</code> layouts for more
 classic-looking “beeswarm” plots:</p>
@@ -374,7 +374,7 @@ classic-looking “beeswarm” plots:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">abc</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, layout <span class="op">=</span> <span class="st">"hex"</span>, stackratio <span class="op">=</span> <span class="fl">0.92</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'geom_dots(side = "both", layout = "hex")'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_hex-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_hex-1.png" class="r-plt" width="648"></p>
 <p>The combination of <code>binwidth = unit(1.5, "mm")</code> and
 <code>overflow = "compress"</code> (see the section on large samples,
 below) can be used to set the dot size to a specific size while
@@ -404,7 +404,7 @@ settings:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"geom_weave()"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">swarm_plot</span> <span class="op">+</span> <span class="va">weave_plot</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/geom_weave-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/geom_weave-1.png" class="r-plt" width="648"></p>
 </div>
 </div>
 <div class="section level2">
@@ -435,7 +435,7 @@ drawn:</p>
 <span>    <span class="st">'geom_weave(position = "dodge")'</span>,</span>
 <span>    <span class="st">'aes(fill = hi, shape = hi)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_dodge-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_dodge-1.png" class="r-plt" width="648"></p>
 <div class="section level3">
 <h3 id="varying-discrete-aesthetics-within-dot-groups">Varying discrete aesthetics within dot groups<a class="anchor" aria-label="anchor" href="#varying-discrete-aesthetics-within-dot-groups"></a>
 </h3>
@@ -457,7 +457,7 @@ within the layout but allow aesthetics to vary across them.</p>
 <span>    <span class="st">'geom_dots()'</span>,</span>
 <span>    <span class="st">'aes(fill = hi, group = NA)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together-1.png" class="r-plt" width="648"></p>
 <p>By default, dot positions within bins for the <code>"bin"</code>
 layout are determined by their data values (e.g. by the <code>y</code>
 values in the above chart). You can override this by passing a variable
@@ -473,7 +473,7 @@ within bins. This can be used to create “stacked” dotplots by setting
 <span>    <span class="st">'geom_dots()'</span>,</span>
 <span>    <span class="st">'aes(fill = hi, group = NA, order = hi)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together_stacked-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together_stacked-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="varying-continuous-aesthetics-within-dot-groups">Varying continuous aesthetics within dot groups<a class="anchor" aria-label="anchor" href="#varying-continuous-aesthetics-within-dot-groups"></a>
@@ -491,7 +491,7 @@ vary:</p>
 <span>    <span class="st">'geom_dots()'</span>,</span>
 <span>    <span class="st">'aes(color = value)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_continuous-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_continuous-1.png" class="r-plt" width="648"></p>
 </div>
 </div>
 <div class="section level2">
@@ -520,7 +520,7 @@ desired. Consider the following increasingly large samples:</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_dots()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"on large samples, dots may get too small"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/increasing_samples-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/increasing_samples-1.png" class="r-plt" width="648"></p>
 <p>The dots become quite small on the 5000-dot dotplot, making it harder
 to read.</p>
 <p>You can set constraints on the desired dot size / bin width by using
@@ -562,7 +562,7 @@ units (using <code><a href="https://rdrr.io/r/grid/unit.html" class="external-li
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> For more information, see the documentation of the `binwidth` and `overflow` arguments of</span></span>
 <span><span class="co">##   `?ggdist::geom_dots()` or the section on constraining dot sizes in vignette("dotsinterval")</span></span>
 <span><span class="co">##   (`vignette(ggdist::dotsinterval)`).</span></span></code></pre>
-<p><img src="dotsinterval_files/figure-html/increasing_samples_min_binwidth-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/increasing_samples_min_binwidth-1.png" class="r-plt" width="648"></p>
 <p>Notice how the dots now go off the page and we receive a warning with
 suggestions on how to fix the layout. If we set
 <code>overflow = "compress"</code>, instead of overflowing, the layout
@@ -577,7 +577,7 @@ geometry’s bounds:</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_dots()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">'binwidth = unit(c(1, Inf), "mm"), overflow = "compress"'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/increasing_samples_min_binwidth_compress-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/increasing_samples_min_binwidth_compress-1.png" class="r-plt" width="648"></p>
 <p>These settings give reasonable displays in small sample sizes and
 scale up to larger sample sizes without changing settings.</p>
 </div>
@@ -603,7 +603,7 @@ small:</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_dots()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/discrete_dots_too_small-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_too_small-1.png" class="r-plt" width="648"></p>
 <p>The automatic bin width algorithm selects a dot size that is very
 small in order to ensure the tallest bin fits in the plot, but this
 means the dots are hard to see.</p>
@@ -618,7 +618,7 @@ means the dots are hard to see.</p>
 <span>    title <span class="op">=</span> <span class="st">'geom_dots(aes(fill = g), layout = "bar", group = NA)'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/discrete_dots_bar-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_bar-1.png" class="r-plt" width="648"></p>
 <p>Notice how we set <code>group = NA</code> to override the default
 <code>ggplot2</code> behavior of grouping data by all discrete
 variables. This allows the layout to be calculated taking all groups
@@ -651,7 +651,7 @@ shapes. We’ll abbreviate the kernel <code>"ep"</code> to save typing out
 <span>    title <span class="op">=</span> <span class="st">'geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both")'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/discrete_dots_ep-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_ep-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level2">
 <h2 id="on-analytical-distributions">On analytical distributions<a class="anchor" aria-label="anchor" href="#on-analytical-distributions"></a>
@@ -711,7 +711,7 @@ functions such as <code><a href="https://pkg.mitchelloharawild.com/distributiona
 <span>    <span class="st">"stat_dotsinterval(subguide = 'integer')"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist)"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/dotsinterval_dist-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/dotsinterval_dist-1.png" class="r-plt" width="648"></p>
 <p>This example also shows the use of sub-guides to label dot counts.
 See the documentation of <code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> and its shortcuts
 (particularly <code><a href="../reference/subguide_axis.html">subguide_integer()</a></code> and
@@ -741,7 +741,7 @@ layout):</p>
 <span>    <span class="st">"stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/dotsinterval_dist_1000_level_color-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/dotsinterval_dist_1000_level_color-1.png" class="r-plt" width="648"></p>
 <p>When summarizing sample distributions with
 <code><a href="../reference/stat_dots.html">stat_dots()</a></code>/<code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> (e.g. samples
 from Bayesian posteriors), one can also use the <code>quantiles</code>
@@ -769,7 +769,7 @@ from <code>ggplot2</code> to map those variables. For example:</p>
 <span>    <span class="st">"stat_dotsinterval(slab_shape = 19, quantiles = 500)"</span>,</span>
 <span>    <span class="st">'aes(slab_color = after_stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/dotsinterval_dist_color-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/dotsinterval_dist_color-1.png" class="r-plt" width="648"></p>
 <p>This example also demonstrates the use of sub-geometry scales: the
 <code>slab_</code>-prefixed aesthetics <code>slab_color</code> and
 <code>slab_shape</code> must be used to target the color and shape of
@@ -812,7 +812,7 @@ positions, rather than at bin centers:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">6</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/dist_dots_weave-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/dist_dots_weave-1.png" class="r-plt" width="648"></p>
 </div>
 </div>
 <div class="section level2">
@@ -851,7 +851,7 @@ reasonably-sized dataset.</p>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="st">'aes(fill = abc)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/halfeye_dotplot-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/halfeye_dotplot-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level2">
 <h2 id="dotplots-with-monte-carlo-standard-error">Dotplots with Monte Carlo Standard Error<a class="anchor" aria-label="anchor" href="#dotplots-with-monte-carlo-standard-error"></a>
@@ -871,7 +871,7 @@ quantile of a quantile dotplot:</p>
 <span>    title <span class="op">=</span> <span class="st">"stat_mcse_dots(quantiles = 100)"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Monte Carlo Standard Error of each quantile shown as blur"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/mcse_blur_dots-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/mcse_blur_dots-1.png" class="r-plt" width="648"></p>
 <p>Custom blur functions can be selected using the <code>blur</code>
 parameter, including the built-in <code><a href="../reference/blur.html">blur_interval()</a></code>, which
 draws an interval with a default width of 95%:</p>
@@ -884,7 +884,7 @@ draws an interval with a default width of 95%:</p>
 <span>    title <span class="op">=</span> <span class="st">'stat_mcse_dots(quantiles = 100, blur = "interval")'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Monte Carlo Standard Error of each quantile shown as 95% intervals"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/mcse_interval_dots-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/mcse_interval_dots-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level2">
 <h2 id="logit-dotplots">Logit dotplots<a class="anchor" aria-label="anchor" href="#logit-dotplots"></a>
@@ -912,7 +912,7 @@ categories are assigned to <code>side</code>“. We also adjust the
 <span>    <span class="st">"geom_dots(scale = 0.5)"</span>,</span>
 <span>    <span class="st">'aes(side = Species) + scale_side_mirrored()'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/iris_v-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/iris_v-1.png" class="r-plt" width="648"></p>
 <p>This can also be accomplished by setting side directly and omitting
 <code><a href="../reference/scale_side_mirrored.html">scale_side_mirrored()</a></code>; e.g. via
 <code>aes(side = ifelse(Species == "virginica", "bottom", "top"))</code>.</p>
@@ -967,7 +967,7 @@ dotplots to create a <em>logit dotplot</em>:</p>
 <span>    x <span class="op">=</span> <span class="st">"Petal Length"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Pr(Species = virginica)"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/logit_dotplot-1.png" width="648"></p>
+<p><img src="dotsinterval_files/figure-html/logit_dotplot-1.png" class="r-plt" width="648"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -980,7 +980,7 @@ dotplots to create a <em>logit dotplot</em>:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

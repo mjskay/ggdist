@@ -25,6 +25,7 @@ NULL
 #' @noRd
 binner = new_class(
   "binner",
+  abstract = TRUE,
   properties = list(
     maxheight = new_property(
       class_numeric,
@@ -61,9 +62,6 @@ binner = new_class(
   )
 )
 
-
-# binner setup -----------------------------------------------------------
-
 #' Create a new dot binner
 #' @param layout <[string][character]> name of layout as passed to `bin_dots()`.
 #' @param ... Additional arguments passed to the binner constructor.
@@ -73,30 +71,8 @@ new_binner = function(layout, ...) {
   match_function(layout, "binner_")(...)
 }
 
-#' Prepare binner for data
-#' @description
-#' This generic function updates a dot binner based on the provided data points.
-#' Used for pre-calculations that depend on the data that can be used
-#' to speed up automatic binwidth selection.
-#' @param binner <`binner`> dot binner to update.
-#' @param x <[numeric]> numeric vector of data points.
-#' @return An updated `binner`.
-#' @noRd
-prepare_binner = new_generic("prepare_binner", c("binner"), function(binner, x, ...) {
-  S7_dispatch()
-})
-
-method(prepare_binner, binner) = function(binner, x, ...) {
-  binner
-}
-
 
 # bin-based layouts ----------------------------------------------------------------
-
-# TODO: remove
-automatic_bin = function(x, width, binner = binner_bin()) {
-  prepare_binner(binner, x)@bin_method(x, width)[c("bins", "bin_midpoints")]
-}
 
 #' Bin layout
 #' @description
@@ -112,7 +88,7 @@ binner_bin = new_class(
   properties = list(
     bin_method = new_property(
       class_function,
-      default = automatic_bin
+      default = function(...) cli_abort("`prepare_binner()` must be called to set `bin_method`.")
     ),
     align_rows = new_property(
       class_logical,
@@ -120,19 +96,6 @@ binner_bin = new_class(
     )
   )
 )
-
-method(prepare_binner, binner_bin) = function(binner, x, ...) {
-  # examines a vector of data and determines an appropriate binning method based on its properties
-  # doing this up front allows us to doing this repeatedly when finding binwidth via optimization
-  diff_x = diff(x)
-  if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
-    # x is symmetric, use centered binning
-    binner@bin_method = wilkinson_bin_from_center
-  } else {
-    binner@bin_method = wilkinson_bin
-  }
-  binner
-}
 
 #' Weave binner
 #' @description
@@ -222,10 +185,6 @@ binner_bar = new_class(
   )
 )
 
-method(prepare_binner, binner_bar) = function(binner, x, ...) {
-  binner
-}
-
 
 # swarm binners ----------------------------------------------------------
 
@@ -237,14 +196,7 @@ method(prepare_binner, binner_bar) = function(binner, x, ...) {
 #' @noRd
 binner_swarm = new_class(
   "binner_swarm",
-  parent = binner,
-  properties = list(
-    # TODO: remove this default method when dots_heap is refactored not to call this
-    bin_method = new_property(
-      class_function,
-      default = automatic_bin
-    )
-  )
+  parent = binner
 )
 
 #' Swarm2 binner

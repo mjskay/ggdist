@@ -6,6 +6,10 @@ Minor changes:
   around their mean y position. This makes the swarm more visually symmetrical,
   and particularly makes small, isolated clusters less likely to appear lopsided
   (inspired by a question from @jbengler at the ggextenders talk).
+* Automatic binwidth detection in dots geometries now accounts for `layout` and
+  `side` parameters to improve binwidth selection for non-default layouts, most
+  notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to 
+  existing plots that use automatic binwidths.
 
 Internal changes:
 

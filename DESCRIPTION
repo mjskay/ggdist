@@ -94,6 +94,7 @@ Collate:
     'deprecated.R'
     'distributions.R'
     'draw_key_slabinterval.R'
+    'find_dotplot_binwidth.R'
     'geom.R'
     'geom_slabinterval.R'
     'geom_dotsinterval.R'

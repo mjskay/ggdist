@@ -83,7 +83,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2025-10-04</h4>
+            <h4 data-toc-skip class="date">2025-11-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/slabinterval.Rmd" class="external-link"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="d-none name"><code>slabinterval.Rmd</code></div>
@@ -128,7 +128,7 @@ plots, and histograms.</p>
 <div class="section level2">
 <h2 id="roadmap-the-slabinterval-meta-geometry">Roadmap: The <code>slabinterval</code> meta-geometry<a class="anchor" aria-label="anchor" href="#roadmap-the-slabinterval-meta-geometry"></a>
 </h2>
-<p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" width="595.2"></p>
+<p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" class="r-plt" width="595.2"></p>
 <p><code>ggdist</code> has a pantheon of geoms and stats that stem from
 a common root: <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>. These geoms consist of a “slab” (say,
@@ -137,7 +137,7 @@ components may be computed in a number of different ways, and different
 variants of the geom will or will not include all components.</p>
 <p>The base <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> uses a variety of custom
 aesthetics to create the composite geometry:</p>
-<p><img src="slabinterval_files/figure-html/slabinterval_components-1.png" width="624"></p>
+<p><img src="slabinterval_files/figure-html/slabinterval_components-1.png" class="r-plt" width="624"></p>
 <p>Depending on whether you want a horizontal or vertical orientation,
 you can provide <code>ymin</code> and <code>ymax</code> instead of
 <code>xmin</code> and <code>xmax</code>. By default, some aesthetics
@@ -240,7 +240,7 @@ combines a density plot with intervals (ignoring subgroups for now):</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_halfeye() (or stat_slabinterval())"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/group_halfeye-1.png" width="352"></p>
+<p><img src="slabinterval_files/figure-html/group_halfeye-1.png" class="r-plt" width="352"></p>
 <p>We can use the <code>side</code> parameter to more finely control
 where the slab (in this case, the density) is drawn;
 <code><a href="../reference/stat_eye.html">stat_eye()</a></code> is also a shortcut for
@@ -261,7 +261,7 @@ plots:</p>
 <span>  <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/stat_slabinterval.html">stat_slabinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"side = 'right'"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/eye_side-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/eye_side-1.png" class="r-plt" width="648"></p>
 <p>Note how the above chart was drawn vertically instead of
 horizontally: all slabinterval geoms automatically detect their
 orientation based on the input data. For example, because we used a
@@ -289,7 +289,7 @@ with both horizontal and vertical versions of the geoms:</p>
 <span>  <span class="co"># side = "right" would give the same result</span></span>
 <span>  <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/stat_slabinterval.html">stat_slabinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"side = 'top'"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/eyeh_side-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/eyeh_side-1.png" class="r-plt" width="648"></p>
 <p>The slabinterval geoms support dodging through the standard mechanism
 of <code>position = "dodge"</code>. Unlike with
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin()</a></code>, densities in groups that are not dodged
@@ -300,7 +300,7 @@ that are dodged (‘c’):</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_eye.html">stat_eye</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_eye(position = 'dodge')"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/eye_dodge-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/eye_dodge-1.png" class="r-plt" width="648"></p>
 <p>Dodging works whether geoms are horizontal or vertical.</p>
 </div>
 <div class="section level3">
@@ -362,7 +362,7 @@ the distributions drawn along the <code>y</code> axis:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, ydist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_eye.html">stat_eye</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_eye(position = 'dodge')"</span>, <span class="st">"aes(ydist = dist_normal(mean, sd))"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_eye_dodge_distributional-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/dist_eye_dodge_distributional-1.png" class="r-plt" width="648"></p>
 <p>Distributional vectors, combined with the <code>xdist</code> and
 <code>ydist</code> aesthetics, make it easy to visualize a variety of
 distributions. E.g., here are some Beta distributions:</p>
@@ -375,7 +375,7 @@ distributions. E.g., here are some Beta distributions:</p>
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(xdist = dist_beta(alpha, 10), y = alpha)"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Beta(alpha,10) distribution"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/beta_stacked-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/beta_stacked-1.png" class="r-plt" width="648"></p>
 <p>If you want to plot all of these on top of each other (instead of
 stacked), you could turn off plotting of the interval to make the plot
 easier to read using
@@ -396,7 +396,7 @@ outline <code>color</code> to show the value of <code>alpha</code>:</p>
 <span>    x <span class="op">=</span> <span class="st">"Beta(alpha,10) distribution"</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="visualizing-frequentist-uncertainty">Visualizing frequentist uncertainty<a class="anchor" aria-label="anchor" href="#visualizing-frequentist-uncertainty"></a>
@@ -462,7 +462,7 @@ or <code>ydist</code> aesthetic in ggdist:</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" class="r-plt" width="648"></p>
 <p>This example also demonstrates the use of subguides to label the
 <code>thickness</code> axis. For more on subguides, see the
 documentation for the <code><a href="../reference/subguide_axis.html">subguide_axis()</a></code> function, and for
@@ -509,7 +509,7 @@ plot. The difference is illustrated below:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"with scale_thickness_shared()"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">separate_scale_plot</span> <span class="op">+</span> <span class="va">shared_scale_plot</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"prior (slab) + posterior (halfeye)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/prior_post-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/prior_post-1.png" class="r-plt" width="648"></p>
 <p>With <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> applied, both densities
 have the same area under their curves. Further details of scaling of the
 <code>thickness</code> aesthetic are discussed in the <a href="https://mjskay.github.io/ggdist/articles/thickness.html">thickness
@@ -526,7 +526,7 @@ is a log-Normal distribution plotted on a log scale:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_log10</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">7</span>, by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_halfeyeh_log_scale-1.png" width="432"></p>
+<p><img src="slabinterval_files/figure-html/dist_halfeyeh_log_scale-1.png" class="r-plt" width="432"></p>
 <p>As expected, a log-Normal density plotted on the log scale appears
 Normal. The Jacobian correction for the scale transformation is applied
 to the density so that the correct density is shown on the log scale.
@@ -576,7 +576,7 @@ it is roughly equivalent to
 <span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span></span>
 <span>  <span class="va">ph</span> <span class="op">+</span> <span class="fu"><a href="../reference/stat_histinterval.html">stat_histinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/stat_histinterval_horizontal-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/stat_histinterval_horizontal-1.png" class="r-plt" width="648"></p>
 <p>You can use the <code>slab_color</code> aesthetic to show the outline
 of the bars. By default the outlines are only drawn along the tops of
 the bars, as typical tasks with histograms involve area estimation, so
@@ -591,7 +591,7 @@ distracting. However, if you wish to include those outlines, you can set
 <span>  <span class="va">ph</span> <span class="op">+</span> <span class="fu"><a href="../reference/stat_histinterval.html">stat_histinterval</a></span><span class="op">(</span>slab_color <span class="op">=</span> <span class="st">"gray45"</span>, outline_bars <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"outline_bars = TRUE"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/stat_histintervalh_outlines-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/stat_histintervalh_outlines-1.png" class="r-plt" width="648"></p>
 <div class="section level3">
 <h3 id="histograms-of-analytical-distributions">Histograms of analytical distributions<a class="anchor" aria-label="anchor" href="#histograms-of-analytical-distributions"></a>
 </h3>
@@ -619,7 +619,7 @@ to the default mapping onto <code>thickness</code>):</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">lambda</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Pr(y)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_slab()"</span>, <span class="st">"aes(ydist = dist_poisson(lambda), fill = after_stat(pdf))"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_slab_discrete-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/dist_slab_discrete-1.png" class="r-plt" width="648"></p>
 <p>This was inspired by an example from Isabella Ghement.</p>
 </div>
 </div>
@@ -651,7 +651,7 @@ CCDF bar plots:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span>, group <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_ccdfinterval.html">stat_ccdfinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_ccdfinterval(position = 'dodge')"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_barplot-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_barplot-1.png" class="r-plt" width="648"></p>
 <p>The extents of the bars are determined automatically by range of the
 data in the samples. However, for bar charts it is often good practice
 to draw the bars from a meaningful reference point (this point is often
@@ -666,7 +666,7 @@ parameter:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_ccdfinterval(position = 'dodge', justification = 1)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_justification-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_justification-1.png" class="r-plt" width="648"></p>
 <p>All other parameters, like <code>orientation</code> and
 <code>side</code>, work in the same way it does with the basic
 <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>.</p>
@@ -717,7 +717,7 @@ plots:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_gradientinterval.html">stat_gradientinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" class="r-plt" width="648"></p>
 <p><code><a href="../reference/stat_gradientinterval.html">stat_gradientinterval()</a></code> maps density onto the
 <code>slab_alpha</code> aesthetic, which is a variant of the ggplot
 <code>alpha</code> scale that specifically targets alpha (opacity)
@@ -748,7 +748,7 @@ does not support gradients.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_gradientinterval.html">stat_gradientinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, fill_type <span class="op">=</span> <span class="st">"gradient"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_gradientinterval(position = 'dodge', fill_type = 'gradient')"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/gradient_dodge_nice-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/gradient_dodge_nice-1.png" class="r-plt" width="648"></p>
 <p>As of this writing, in R version 4.1 or greater the graphics devices
 that support gradients — i.e. devices that support the
 <code><a href="https://rdrr.io/r/grid/patterns.html" class="external-link">grid::linearGradient()</a></code> function — include
@@ -794,7 +794,7 @@ to the outline <code>color</code> of the dots as well:</p>
 <span>    title <span class="op">=</span> <span class="st">"stat_dots()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = subgroup, color = subgroup))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dots_dodge_nocolor-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/dots_dodge_nocolor-1.png" class="r-plt" width="648"></p>
 <p>Unlike the base <code><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html" class="external-link">ggplot2::geom_dotplot()</a></code> geom,
 <code><a href="../reference/geom_dots.html">ggdist::geom_dots()</a></code> automatically determines a bin width to
 ensure that the dot stacks fit within the available space. You can set
@@ -820,7 +820,7 @@ Here is one with 50 quantiles, so each dot represents approximately a 2%
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_dots.html">stat_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodgejust"</span>, quantiles <span class="op">=</span> <span class="fl">50</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_dots(quantiles = 50)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/quantile_dots_dodge-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/quantile_dots_dodge-1.png" class="r-plt" width="648"></p>
 <p>For more on dotplots, see <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code></p>
 </div>
 </div>
@@ -877,7 +877,7 @@ the <code>slab_alpha</code> aesthetic instead, and setting
 <span>  <span class="co"># plus coord_cartesian so there is no space between bars and axis</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_ccdfinterval(thickness = 1)"</span>, <span class="st">"aes(slab_alpha = after_stat(f))"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_gradient-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_gradient-1.png" class="r-plt" width="648"></p>
 <p>If this approach were applied to bins in a histogram, where each bin
 had some uncertainty associated with its height, the result would be a
 so-called <em>fuzzygram</em> (<a href="https://doi.org/10.1109/MCG.1982.1674217" class="external-link">Haber and Wilkinson
@@ -902,7 +902,7 @@ say ±1.5:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_halfeye()"</span>, <span class="st">"aes(fill = after_stat(abs(x) &lt; 1.5)))"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># we'll use a nicer palette than the default for highlighting:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gray85"</span>, <span class="st">"skyblue"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t_highlight-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t_highlight-1.png" class="r-plt" width="648"></p>
 <p>We could also combine these aesthetics arbitrarily. Here is a
 (probably not very useful) eye plot + gradient plot combination, with
 the portion of the distribution above 1 highlighted:</p>
@@ -916,7 +916,7 @@ the portion of the distribution above 1 highlighted:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># we'll use a nicer palette than the default for highlighting:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gray75"</span>, <span class="st">"skyblue"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="mashups-with-correll-and-gleicher-style-gradients">Mashups with Correll and Gleicher-style gradients<a class="anchor" aria-label="anchor" href="#mashups-with-correll-and-gleicher-style-gradients"></a>
@@ -940,7 +940,7 @@ CDF):</p>
 <span>    <span class="st">"stat_gradientinterval(fill_type = 'gradient')"</span>,</span>
 <span>    <span class="st">"aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/correll_gradient-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/correll_gradient-1.png" class="r-plt" width="648"></p>
 <p>We could also do a mashup of faded-tail gradients with violin plots
 by starting with an eye plot and then using the generated
 <code>cdf</code> aesthetic to fade the tails, producing plots like those
@@ -955,7 +955,7 @@ al.</em></a>:</p>
 <span>    <span class="st">"stat_eye(fill_type = 'gradient')"</span>,</span>
 <span>    <span class="st">"aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/helske_gradient_eye-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/helske_gradient_eye-1.png" class="r-plt" width="648"></p>
 <p>A related idea is one from <a href="https://doi.org/10.1080/00031305.1986.10475361" class="external-link">Tukey</a>: rather
 than visually emphasizing where a value is likely, emphasize where it is
 <em>unlikely</em>. While Tukey used a visual representation showing both
@@ -982,7 +982,7 @@ low likelihood:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill_ramp <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/tukey_pencils-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/tukey_pencils-1.png" class="r-plt" width="648"></p>
 <p>Thanks to a Jessica Hullman for suggesting the Tukey paper that
 inspired this idea.</p>
 </div>
@@ -1011,7 +1011,7 @@ the slab fill:</p>
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = after_stat(level))"</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"interval"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals-1.png" class="r-plt" width="648"></p>
 <p>(<strong>Note:</strong> in previous versions of ggdist, using
 <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> was the recommended way to achieve this
 affect. That function still exists for backwards compatibility, but
@@ -1033,7 +1033,7 @@ then include a “100%” interval in <code>.width</code>:</p>
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = after_stat(level), .width = c(.66, .95, 1))"</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"interval"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals_2-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals_2-1.png" class="r-plt" width="648"></p>
 <p>If we change the interval type used, the resulting
 <code>.width</code> and <code>level</code> computed variables change
 correspondingly, allowing us to highlight other types of intervals
@@ -1053,7 +1053,7 @@ besides quantile intervals; for example, highest-density intervals:</p>
 <span></span>
 <span><span class="va">qi_plot</span> <span class="op">/</span></span>
 <span>  <span class="va">hdi_plot</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_qi_vs_hdi-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_qi_vs_hdi-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="annotating-slabs-with-spikes">Annotating slabs with spikes<a class="anchor" aria-label="anchor" href="#annotating-slabs-with-spikes"></a>
@@ -1096,7 +1096,7 @@ densities:</p>
 <span></span>
 <span><span class="va">qi_plot_spikes</span> <span class="op">/</span></span>
 <span>  <span class="va">hdi_plot_spikes</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_qi_vs_hdi_spikes-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_qi_vs_hdi_spikes-1.png" class="r-plt" width="648"></p>
 <p>Note the use of <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code>, which ensures
 that the <code>thickness</code> values for the slabs and the
 <code>thickness</code> values for the spikes (which determine their
@@ -1137,7 +1137,7 @@ another column in the original data table, such as the
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = subgroup, fill_ramp = after_stat(level))"</span>,</span>
 <span>    fill_ramp <span class="op">=</span> <span class="st">"interval"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals_subgroup-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_filled_intervals_subgroup-1.png" class="r-plt" width="648"></p>
 <p>We could similarly use <code><a href="../reference/stat_interval.html">stat_interval()</a></code> with the
 <code>color_ramp</code> aesthetic to vary subgroup color separately from
 the whiteness of the intervals. Here, <code>level</code> is a variable
@@ -1152,7 +1152,7 @@ factor.</p>
 <span>    title <span class="op">=</span> <span class="st">"stat_interval()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"aes(color = subgroup, color_ramp = after_stat(level))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_interval_color_ramp-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/dist_interval_color_ramp-1.png" class="r-plt" width="648"></p>
 <p>See <code><a href="../reference/scale_colour_ramp.html">help("scale_color_ramp")</a></code> for more information on the
 color ramp aesthetics/scales.</p>
 </div>
@@ -1189,7 +1189,7 @@ superimposed on a 99% raindrop, which we can replicate:</p>
 <span>      <span class="st">"and aes(thickness = after_stat(ifelse(.width &lt;= 0.99, log(pdf), NA)))"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/raindrop-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/raindrop-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="creating-ridge-plots">Creating ridge plots<a class="anchor" aria-label="anchor" href="#creating-ridge-plots"></a>
@@ -1215,7 +1215,7 @@ as it will correctly adjust plot boundaries (unless you need to use
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"stat_slab(height = 2, color = 'black')"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/slab_ridge-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/slab_ridge-1.png" class="r-plt" width="648"></p>
 <p>Depending on if it makes sense for your data (for example, if the
 scale is unbounded), you may also wish to adjust the
 <code>density</code> and <code>trim</code> parameters. The default
@@ -1252,7 +1252,7 @@ provides a “softer” form of region of practical equivalence:</p>
 <span>    <span class="st">'aes(fill = group, fill_ramp = after_stat(abs(x)), color_ramp = after_stat(-dnorm(x, 0, 2)))'</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/slab_ridge_ramp-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/slab_ridge_ramp-1.png" class="r-plt" width="648"></p>
 <p>We use a tighter ramp on <code>color</code> compared to
 <code>fill</code> (via <code>-dnorm()</code> instead of
 <code><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs()</a></code>) because we want the outlines to quickly ramp back to
@@ -1277,7 +1277,7 @@ example) different groups to hang above or below the interval:</p>
 <span>    subtitle <span class="op">=</span> <span class="st">'aes(xdist = dist_normal(mean, sd), side = c("top","both","bottom"))'</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/varying_side_dotplot-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/varying_side_dotplot-1.png" class="r-plt" width="648"></p>
 </div>
 <div class="section level3">
 <h3 id="multiple-slabs-and-intervals-in-composite-plots">Multiple slabs and intervals in composite plots<a class="anchor" aria-label="anchor" href="#multiple-slabs-and-intervals-in-composite-plots"></a>
@@ -1314,7 +1314,7 @@ Wiernik).</p>
 <span>    <span class="st">'stat_dotsinterval(quantiles = 100) +\n'</span>,</span>
 <span>    <span class="st">'stat_pointinterval(geom = "label")'</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_quantile_dotplot-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/halfeye_quantile_dotplot-1.png" class="r-plt" width="648"></p>
 <p>When constructing composite plots it may be useful to position the
 slab and interval parts of the geometry separately. While some relative
 positioning of these geometries is supported by manipulating the
@@ -1337,7 +1337,7 @@ slabs:</p>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/slab_and_pointinterval-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/slab_and_pointinterval-1.png" class="r-plt" width="648"></p>
 <p>(Thanks to Brenton Wiernik for <a href="https://github.com/mjskay/ggdist/issues/27#issuecomment-725578437" class="external-link">this
 example</a>.)</p>
 </div>
@@ -1353,7 +1353,7 @@ example</a>.)</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

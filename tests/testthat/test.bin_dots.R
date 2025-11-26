@@ -3,9 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
+automatic_bin = function(x, width, binner = binner_bin()) {
+  prepare_binner(binner, x)@bin_method(x, width)[c("bins", "bin_midpoints")]
+}
 
 test_that("binning works on symmetric distributions", {
-
   expect_equal(
     automatic_bin(0, width = .5),
     list(bins = 1, bin_midpoints = 0)
@@ -177,17 +179,9 @@ test_that("swarm layout works", {
 
   ref = data.frame(
     x = 1:5,
-    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
-    bin = c(1, 1, 2, 3, 3)
+    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1)
   )
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
-})
-
-
-test_that("find_dotplot_binwidth edge cases work", {
-  # tests that when the minimum and maximum number of bin in the search
-  # are next to each other the max is chosen correctly
-  expect_equal(find_dotplot_binwidth(c(1,1,2,2,3,3,4,4), 1), 0.5)
 })
 
 

@@ -282,14 +282,16 @@ test_that("dotplot layouts work", {
   vdiffr::expect_doppelganger("swarm",
     df %>%
       ggplot(aes(x = mpg)) +
-      geom_dots(aes(side = side), layout = "swarm") +
-      facet_grid(~ side)
+      geom_dots(aes(side = side), layout = "swarm", scale = 1) +
+      facet_grid(~ side) +
+      geom_hline(yintercept = c(1, 0.5, -0.5, -1))
   )
 
   vdiffr::expect_doppelganger("swarm vertical",
     mtcars %>%
       ggplot(aes(y = mpg)) +
-      geom_dots(layout = "swarm")
+      geom_dots(layout = "swarm") +
+      geom_vline(xintercept = 0.9)
   )
 })
 
@@ -303,7 +305,8 @@ test_that("dot order is correct", {
   ) %>%
     ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
     scale_fill_brewer(palette = "Set1") +
-    scale_color_brewer(palette = "Paired")
+    scale_color_brewer(palette = "Paired") +
+    geom_hline(yintercept = 0.9)
 
   vdiffr::expect_doppelganger("bin dot order",
     p +
