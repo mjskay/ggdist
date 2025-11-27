@@ -15,16 +15,31 @@ IntegerVector wilkinson_bin_to_right_(const NumericVector& x, double width);
 RcppExport SEXP _ggdist_wilkinson_bin_to_right_(SEXP xSEXP, SEXP widthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type width(widthSEXP);
     rcpp_result_gen = Rcpp::wrap(wilkinson_bin_to_right_(x, width));
     return rcpp_result_gen;
 END_RCPP
 }
+// can_place_candidate_
+bool can_place_candidate_(const double candidate, const double last_placed, std::vector<std::vector<double>> last_rows, const int y_grid, const double xsize, const bool reverse);
+RcppExport SEXP _ggdist_can_place_candidate_(SEXP candidateSEXP, SEXP last_placedSEXP, SEXP last_rowsSEXP, SEXP y_gridSEXP, SEXP xsizeSEXP, SEXP reverseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const double >::type candidate(candidateSEXP);
+    Rcpp::traits::input_parameter< const double >::type last_placed(last_placedSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::vector<double>> >::type last_rows(last_rowsSEXP);
+    Rcpp::traits::input_parameter< const int >::type y_grid(y_gridSEXP);
+    Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
+    Rcpp::traits::input_parameter< const bool >::type reverse(reverseSEXP);
+    rcpp_result_gen = Rcpp::wrap(can_place_candidate_(candidate, last_placed, last_rows, y_grid, xsize, reverse));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
+    {"_ggdist_can_place_candidate_", (DL_FUNC) &_ggdist_can_place_candidate_, 6},
     {NULL, NULL, 0}
 };
 

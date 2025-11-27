@@ -5,3 +5,7 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
+can_place_candidate_ <- function(candidate, last_placed, last_rows, y_grid, xsize, reverse) {
+    .Call(`_ggdist_can_place_candidate_`, candidate, last_placed, last_rows, y_grid, xsize, reverse)
+}
+

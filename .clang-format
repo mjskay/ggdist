@@ -1,0 +1,45 @@
+---
+BasedOnStyle: Google
+ColumnLimit: 100
+---
+Language: Cpp
+ContinuationIndentWidth: 2
+UseTab: Never
+ConstructorInitializerIndentWidth: 2
+# BracketAlignmentStyle: BlockIndent
+AlignAfterOpenBracket: BlockIndent
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: false
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: "Empty"
+DerivePointerAlignment: false
+PointerAlignment: Left
+RequiresClausePosition: OwnLineWithBrace
+IndentRequiresClause: false
+BreakConstructorInitializers: BeforeColon
+PackConstructorInitializers: NextLineOnly
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterRequiresInClause: false
+SpaceAfterTemplateKeyword: false
+SeparateDefinitionBlocks: Leave
+WrapNamespaceBodyWithEmptyLines: Always
+NamespaceIndentation: Inner
+AllowShortFunctionsOnASingleLine: Empty
+BinPackArguments: false
+BinPackParameters: OnePerLine
+# BreakBeforeTemplateCloser: true
+# RequiresExpressionIndentation: OuterScope
+IncludeCategories:
+  - Regex:           '<R[[:alnum:]._]+>'
+    Priority:        2
+    CaseSensitive:   true
+  - Regex:           '<[[:alnum:]._]+>'
+    Priority:        3
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0
+---

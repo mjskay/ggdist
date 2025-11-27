@@ -655,6 +655,64 @@ wilkinson_bin_from_center = function(x, width) {
 
 # weave swarm -------------------------------------------------------------
 
+#' Find the last value in `values` less than or equal to `target`
+#' @param values <[numeric]> sorted vector
+#' @param target <[numeric]> value to compare to
+#' @returns <[numeric]> last value in x less than or equal to val, or -Inf if none
+#' @noRd
+last_lte = function(values, target) {
+  i = findInterval(target, values)
+  if (i == 0) -Inf else values[[i]]
+}
+
+#' Find the first value in `values` greater than `target`
+#' @param values <[numeric]> sorted vector
+#' @param target <[numeric]> value to compare to
+#' @returns <[numeric]> first value in x greater than val
+#' @noRd
+first_gt = function(values, target) {
+  i = findInterval(target, values) + 1
+  if (i > length(values)) Inf else values[[i]]
+}
+
+#' Can we place candidate at this position given the last placed dot and
+#' the previous rows of dots placed so far?
+#' @param candidate <scalar [numeric]> candidate x position
+#' @param last_placed <scalar [numeric]> last placed x position in this row
+#' @param last_rows <[list] of [numeric]> list of previous rows of placed dots
+#' @param y_grid <scalar [integer]> number of previous rows in the y grid that 
+#' could overlap with this candidate
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param reverse <scalar [logical]> are we placing dots in reverse order?
+#' @returns <scalar [logical]> can we place candidate here?
+#' @noRd
+can_place_candidate_old = function(candidate, last_placed, last_rows, y_grid, xsize, reverse) {
+  if (reverse) {
+    if (candidate > last_placed - xsize) return(FALSE)
+  } else {
+    if (candidate < last_placed + xsize) return(FALSE)
+  }
+  for (i in seq_len(y_grid - 1)) {
+    last_row_i = last_rows[[i]]
+    if (length(last_row_i) == 0) next
+
+    y_offset = i / y_grid
+    min_x_dist = sqrt(1 - y_offset^2) * xsize
+    last_val_lte_candidate_idx = findInterval(candidate, last_row_i)
+    if (last_val_lte_candidate_idx > 0) {
+      last_val_lte_candidate = last_row_i[[last_val_lte_candidate_idx]]
+      if (candidate < last_val_lte_candidate + min_x_dist) return(FALSE)
+    }
+    if (last_val_lte_candidate_idx < length(last_row_i)) {
+      first_val_gt_candidate = last_row_i[[last_val_lte_candidate_idx + 1]]
+      if (candidate > first_val_gt_candidate - min_x_dist) return(FALSE)
+    }
+  }
+  TRUE
+}
+
+can_place_candidate = can_place_candidate_
+
 #' Weave/swarm hybrid
 #'
 #' @param x sorted x values
@@ -663,39 +721,34 @@ wilkinson_bin_from_center = function(x, width) {
 weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
   y_grid = 4
 
-  can_place_candidate = function(candidate, last_placed, last_rows) {
-    candidate >= last_placed + xsize &&
-      all(map_lgl_(seq_len(y_grid - 1), function(i) {
-        y_offset = i / y_grid
-        candidate >= (tail(last_rows[[i]][last_rows[[i]] <= candidate], 1) + sqrt(1 - y_offset^2) * xsize) &&
-          candidate <= (head(last_rows[[i]][candidate < last_rows[[i]]], 1) - sqrt(1 - y_offset^2) * xsize)
-      }))
-  }
+  both = side == 0
+  remaining = x
+  rows = list()
+  if (both) rows_bottom = list()
 
   place_row = function(reverse = FALSE, both = side == 0) {
     if (length(remaining) == 0) return()
 
-    kth_last_row = function(k, rows) c(-Inf, rows[max(length(rows) + 1 - k, 0)][1][[1]] %||% numeric(), Inf)
+    kth_last_row = function(k, rows) {
+      i = length(rows) + 1 - k
+      if (i <= 0) numeric() else rows[[i]]
+    }
     last_rows = lapply(seq_len(y_grid), kth_last_row, rows)
     if (both) last_rows_bottom = lapply(seq_len(y_grid), kth_last_row, rows_bottom)
     candidates = remaining
-    if (reverse) {
-      last_rows = lapply(last_rows, function(r) rev(-r))
-      if (both) last_rows_bottom = lapply(last_rows_bottom, function(r) rev(-r))
-      candidates = rev(-candidates)
-    }
+    if (reverse) candidates = rev(candidates)
 
     row = numeric()
     if (both) row_bottom = numeric()
     next_remaining = numeric()
-    last_placed = -Inf
-    if (both) last_placed_bottom = -Inf
+    last_placed = if (reverse) Inf else -Inf
+    if (both) last_placed_bottom = last_placed
 
     for (candidate in candidates) {
-      if (can_place_candidate(candidate, last_placed, last_rows)) {
+      if (can_place_candidate(candidate, last_placed, last_rows, y_grid, xsize, reverse)) {
         row = c(row, candidate)
         last_placed = candidate
-      } else if (both && can_place_candidate(candidate, last_placed_bottom, last_rows_bottom)) {
+      } else if (both && can_place_candidate(candidate, last_placed_bottom, last_rows_bottom, y_grid, xsize, reverse)) {
         row_bottom = c(row_bottom, candidate)
         last_placed_bottom = candidate
       } else {
@@ -704,21 +757,19 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
     }
 
     if (reverse) {
-      row = rev(-row)
-      if (both) row_bottom = rev(-row_bottom)
-      next_remaining = rev(-next_remaining)
+      row = rev(row)
+      if (both) row_bottom = rev(row_bottom)
+      next_remaining = rev(next_remaining)
     }
     rows <<- c(rows, list(row))
     if (both) rows_bottom <<- c(rows_bottom, list(row_bottom))
     remaining <<- next_remaining
   }
 
-  remaining = x
-  rows = list()
-  both = side == 0
-
+  # first row is special when both == TRUE: it is a "middle" row that is
+  # treated as the first row (for placement purposes) on both the top and bottom sides
   place_row(both = FALSE)
-  rows_bottom = rows
+  if (both) rows_bottom = rows
 
   while (length(remaining) > 0) {
     for (i in seq_len(y_grid - 1)) place_row()
