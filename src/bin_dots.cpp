@@ -43,8 +43,7 @@ IntegerVector wilkinson_bin_to_right_(const NumericVector& x, double width) {
 //' @param reverse <scalar [logical]> are we placing dots in reverse order?
 //' @returns <scalar [logical]> can we place candidate here?
 //' @noRd
-// [[Rcpp::export(rng = false)]]
-bool can_place_candidate_(
+bool can_place_candidate(
   const double candidate,
   const double last_placed,
   std::vector<std::vector<double>>& rows,
@@ -104,7 +103,7 @@ bool can_place_candidate_(
 //' @returns <[data.frame]> data frame with columns x and y giving the new positions
 //' @noRd
 // [[Rcpp::export(rng = false)]]
-SEXP weave_swarm_new_(
+SEXP weave_swarm_(
   std::vector<double> x,
   const double xsize,
   const double ysize,
@@ -150,10 +149,10 @@ SEXP weave_swarm_new_(
     }
     for (; i != end_index; i += increment) {
       double candidate = (*remaining)[i];
-      if (can_place_candidate_(candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse)) {
+      if (can_place_candidate(candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse)) {
         row->push_back(candidate);
         last_placed = candidate;
-      } else if (both && can_place_candidate_(candidate, last_placed_bottom, rows_bottom, n_rows_back, y_grid, xsize, reverse)) {
+      } else if (both && can_place_candidate(candidate, last_placed_bottom, rows_bottom, n_rows_back, y_grid, xsize, reverse)) {
         row_bottom->push_back(candidate);
         last_placed_bottom = candidate;
       } else {
