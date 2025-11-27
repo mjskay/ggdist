@@ -711,14 +711,12 @@ can_place_candidate_old = function(candidate, last_placed, last_rows, y_grid, xs
   TRUE
 }
 
-can_place_candidate = can_place_candidate_
-
 #' Weave/swarm hybrid
 #'
 #' @param x sorted x values
 #' @param y y values (must be constant)
 #' @noRd
-weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
+weave_swarm_old = function(x, y, xsize, ysize = xsize, side = 1) {
   y_grid = 4
 
   both = side == 0
@@ -745,10 +743,10 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
     if (both) last_placed_bottom = last_placed
 
     for (candidate in candidates) {
-      if (can_place_candidate(candidate, last_placed, last_rows, y_grid, xsize, reverse)) {
+      if (can_place_candidate_old(candidate, last_placed, last_rows, y_grid, xsize, reverse)) {
         row = c(row, candidate)
         last_placed = candidate
-      } else if (both && can_place_candidate(candidate, last_placed_bottom, last_rows_bottom, y_grid, xsize, reverse)) {
+      } else if (both && can_place_candidate_old(candidate, last_placed_bottom, last_rows_bottom, y_grid, xsize, reverse)) {
         row_bottom = c(row_bottom, candidate)
         last_placed_bottom = candidate
       } else {
@@ -796,6 +794,93 @@ weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
   df
 }
 
+#' Weave/swarm hybrid
+#'
+#' @param x sorted x values
+#' @param y y values (must be constant)
+#' @noRd
+weave_swarm_new = function(x, y, xsize, ysize = xsize, side = 1) {
+  y_grid = 4
+
+  both = side == 0
+  remaining = x
+  rows = list()
+  if (both) rows_bottom = list()
+
+  place_row = function(reverse = FALSE, both = side == 0) {
+    if (length(remaining) == 0) return()
+
+    candidates = remaining
+    if (reverse) candidates = rev(candidates)
+
+    row = numeric()
+    if (both) row_bottom = numeric()
+    next_remaining = numeric()
+    last_placed = if (reverse) Inf else -Inf
+    if (both) last_placed_bottom = last_placed
+
+    n_rows_back = min(y_grid, length(rows))
+    for (candidate in candidates) {
+      if (can_place_candidate_(candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse)) {
+        row = c(row, candidate)
+        last_placed = candidate
+      } else if (both && can_place_candidate_(candidate, last_placed_bottom, rows_bottom, n_rows_back, y_grid, xsize, reverse)) {
+        row_bottom = c(row_bottom, candidate)
+        last_placed_bottom = candidate
+      } else {
+        next_remaining = c(next_remaining, candidate)
+      }
+    }
+
+    if (reverse) {
+      row = rev(row)
+      if (both) row_bottom = rev(row_bottom)
+      next_remaining = rev(next_remaining)
+    }
+    rows <<- c(rows, list(row))
+    if (both) rows_bottom <<- c(rows_bottom, list(row_bottom))
+    remaining <<- next_remaining
+  }
+
+  # first row is special when both == TRUE: it is a "middle" row that is
+  # treated as the first row (for placement purposes) on both the top and bottom sides
+  place_row(both = FALSE)
+  if (both) rows_bottom = rows
+
+  while (length(remaining) > 0) {
+    for (i in seq_len(y_grid - 1)) place_row()
+    for (i in seq_len(y_grid)) place_row(reverse = TRUE)
+    place_row()
+  }
+
+  row_y = function(rows, side) (seq_along(rows) - 1) / y_grid * ysize * side
+  print(seq_along(rows) - 1)
+  df = data.frame(
+    x = unlist(rows),
+    y = rep(row_y(rows, side = if (both) 1 else side), lengths(rows))
+  )
+  if (both) {
+    df = rbind(
+      df,
+      data.frame(
+        x = unlist(rows_bottom[-1]),
+        y = rep(row_y(rows_bottom, side = -1)[-1], lengths(rows_bottom[-1]))
+      )
+    )
+  }
+  df = df[order(df$x), ]
+  df$y = df$y + y
+  df
+}
+
+weave_swarm_new2 = function(x, y, xsize, ysize = xsize, side = 1) {
+  df = weave_swarm_new_(x, xsize, ysize, side)
+  df = df[order(df$x), ]
+  df$y = df$y + y
+  df
+}
+
+weave_swarm = weave_swarm_new2
 
 # bin nudging for overlaps ------------------------------------------------
 

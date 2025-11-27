@@ -22,24 +22,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // can_place_candidate_
-bool can_place_candidate_(const double candidate, const double last_placed, std::vector<std::vector<double>> last_rows, const int y_grid, const double xsize, const bool reverse);
-RcppExport SEXP _ggdist_can_place_candidate_(SEXP candidateSEXP, SEXP last_placedSEXP, SEXP last_rowsSEXP, SEXP y_gridSEXP, SEXP xsizeSEXP, SEXP reverseSEXP) {
+bool can_place_candidate_(const double candidate, const double last_placed, std::vector<std::vector<double>>& rows, const int n_rows_back, const int y_grid, const double xsize, const bool reverse);
+RcppExport SEXP _ggdist_can_place_candidate_(SEXP candidateSEXP, SEXP last_placedSEXP, SEXP rowsSEXP, SEXP n_rows_backSEXP, SEXP y_gridSEXP, SEXP xsizeSEXP, SEXP reverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const double >::type candidate(candidateSEXP);
     Rcpp::traits::input_parameter< const double >::type last_placed(last_placedSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::vector<double>> >::type last_rows(last_rowsSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::vector<double>>& >::type rows(rowsSEXP);
+    Rcpp::traits::input_parameter< const int >::type n_rows_back(n_rows_backSEXP);
     Rcpp::traits::input_parameter< const int >::type y_grid(y_gridSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const bool >::type reverse(reverseSEXP);
-    rcpp_result_gen = Rcpp::wrap(can_place_candidate_(candidate, last_placed, last_rows, y_grid, xsize, reverse));
+    rcpp_result_gen = Rcpp::wrap(can_place_candidate_(candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse));
+    return rcpp_result_gen;
+END_RCPP
+}
+// weave_swarm_new_
+SEXP weave_swarm_new_(std::vector<double> x, const double xsize, const double ysize, const int side);
+RcppExport SEXP _ggdist_weave_swarm_new_(SEXP xSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< std::vector<double> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
+    Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
+    Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
+    rcpp_result_gen = Rcpp::wrap(weave_swarm_new_(x, xsize, ysize, side));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
-    {"_ggdist_can_place_candidate_", (DL_FUNC) &_ggdist_can_place_candidate_, 6},
+    {"_ggdist_can_place_candidate_", (DL_FUNC) &_ggdist_can_place_candidate_, 7},
+    {"_ggdist_weave_swarm_new_", (DL_FUNC) &_ggdist_weave_swarm_new_, 4},
     {NULL, NULL, 0}
 };
 

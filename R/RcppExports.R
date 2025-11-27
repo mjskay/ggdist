@@ -5,7 +5,31 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
-can_place_candidate_ <- function(candidate, last_placed, last_rows, y_grid, xsize, reverse) {
-    .Call(`_ggdist_can_place_candidate_`, candidate, last_placed, last_rows, y_grid, xsize, reverse)
+#' Can we place `candidate` at this position given the last placed dot and
+#' the previous rows of dots placed so far?
+#' @param candidate <scalar [numeric]> candidate x position
+#' @param last_placed <scalar [numeric]> last placed x position in this row
+#' @param rows <[list] of [numeric]> list of previous rows of placed dots
+#' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
+#' @param y_grid <scalar [integer]> max possible number of previous rows in the
+#' y grid that  could overlap with this candidate
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param reverse <scalar [logical]> are we placing dots in reverse order?
+#' @returns <scalar [logical]> can we place candidate here?
+#' @noRd
+can_place_candidate_ <- function(candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse) {
+    .Call(`_ggdist_can_place_candidate_`, candidate, last_placed, rows, n_rows_back, y_grid, xsize, reverse)
+}
+
+#' Weave/swarm hybrid
+#'
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+weave_swarm_new_ <- function(x, xsize, ysize, side) {
+    .Call(`_ggdist_weave_swarm_new_`, x, xsize, ysize, side)
 }
 
