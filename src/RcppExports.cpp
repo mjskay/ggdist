@@ -11,12 +11,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // wilkinson_bin_to_right_
-IntegerVector wilkinson_bin_to_right_(const NumericVector& x, double width);
+IntegerVector wilkinson_bin_to_right_(const NumericVector& x, const double width);
 RcppExport SEXP _ggdist_wilkinson_bin_to_right_(SEXP xSEXP, SEXP widthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type width(widthSEXP);
+    Rcpp::traits::input_parameter< const double >::type width(widthSEXP);
     rcpp_result_gen = Rcpp::wrap(wilkinson_bin_to_right_(x, width));
     return rcpp_result_gen;
 END_RCPP

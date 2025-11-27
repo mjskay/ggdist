@@ -15,6 +15,39 @@
 #' @noRd
 NULL
 
+#' const begin iterator for forward or reverse iteration
+#' @tparam reverse iterate in reverse?
+#' @tparam T iterable type
+#' @param vec object to iterate over
+#' @noRd
+NULL
+
+#' const end iterator for forward or reverse iteration
+#' @tparam reverse iterate in reverse?
+#' @tparam T iterable type
+#' @param vec object to iterate over
+#' @noRd
+NULL
+
+#' Place dots in a single row in the weave_swarm algorithm
+#' @tparam reverse are we placing dots in reverse order?
+#' @param both is this a mirrored layout (`side == "both"`?)
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param y_grid <scalar [integer]> max possible number of previous rows in the
+#' y grid that  could overlap with this candidate
+#' @param remaining vector of dots to be placed
+#' @param next_remaining swap space to move next set of dots to be placed into
+#' @param rows <[list] of [numeric]> list of previous rows of placed dots
+#' @param rows_bottom <[list] of [numeric]> list of previous bottom rows of placed dots
+#' (when `both == true`)
+#' @noRd
+NULL
+
+#' Place dots `n` rows in the weave_swarm algorithm
+#' See `place_row()`
+#' @noRd
+NULL
+
 wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }

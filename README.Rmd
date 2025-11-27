@@ -258,7 +258,7 @@ categories:
 
 2. Packages that `{ggplot2}` also depends on. These packages add no additional
 dependency cost because `{ggplot2}` already requires them: `{rlang}`, `{cli}`, 
-`{scales}`, `{tibble}`, `{vctrs}`, `{withr}`, `{gtable}`, and `{glue}`.
+`{scales}`, `{tibble}`, `{vctrs}`, `{withr}`, `{gtable}`, `{glue}`, and `{S7}`.
 
 3. Packages that `{ggplot2}` does not depend on. These are all well-maintained 
 packages with few dependencies and a clear need within `{ggdist}`:
