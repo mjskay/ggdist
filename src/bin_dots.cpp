@@ -204,8 +204,9 @@ inline auto place_row(
 //' See `place_row()`
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
-template<std::size_t n, bool reverse>
+template<bool reverse>
 inline auto place_rows(
+  std::size_t n,
   const bool both,
   const double xsize,
   const std::size_t y_grid,
@@ -214,13 +215,11 @@ inline auto place_rows(
   std::vector<std::vector<double>>& rows,
   std::vector<std::vector<double>>& rows_bottom
 ) -> bool {
-  if constexpr (n > 0) {
-    return
-      place_row<reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
-      place_rows<n - 1, !reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
-  } else {
-    return true;
+  auto any_left = true;
+  while (n --> 0_z && any_left) {
+    any_left = place_row<reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
   }
+  return any_left;
 }
 
 //' Weave/swarm hybrid
@@ -238,7 +237,7 @@ SEXP weave_swarm_(
   const double ysize,
   const int side
 ) {
-  constexpr auto y_grid = 1_z;
+  constexpr auto y_grid = 4_z;
   const auto n_out = x.size();
   const auto both = side == 0;
 
@@ -259,9 +258,10 @@ SEXP weave_swarm_(
 
   // place dots in rows, alternating direction (but also ensuring every y_grid-th row alternates)
   while (
-    // start with <y_grid - 1, true> instead of <y_grid, false> because we already placed the first row above
-    place_rows<y_grid - 1, true>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
-    place_rows<y_grid, true>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
+    // start with <true>(y_grid - 1, ...) instead of <false>(y_grid, ...) because
+    // we already placed the first row above
+    place_rows<true>(y_grid - 1, both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
+    place_rows<true>(y_grid, both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
     place_row<false>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom)
   );
 
