@@ -2,30 +2,45 @@
 #include <Rinternals.h>
 
 #include <algorithm>
-#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <vector>
 
-using namespace Rcpp;
+// constants --------------------------------------------------------------------------
+
+constexpr auto INF = std::numeric_limits<double>::infinity();
+constexpr auto EPS = std::numeric_limits<double>::epsilon();
+
+// literals ---------------------------------------------------------------------------
+
+//' Size literal for C++ arrays / vectors
+//' @noRd
+constexpr std::size_t operator""_z(unsigned long long n) {
+  return n;
+}
+
+//' Size literal for R vectors
+//' @noRd
+constexpr R_xlen_t operator""_rz(unsigned long long n) {
+  return n;
+}
 
 // wilkinson-esque methods ------------------------------------------------------------
 
 // [[Rcpp::export(rng = false)]]
-IntegerVector wilkinson_bin_to_right_(const NumericVector& x, const double width) {
-  using index_t = decltype(x.size());
+Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const double width) {
   const auto n = x.size();
 
-  auto bins = IntegerVector(n);
-  auto current_bin = index_t{1};
+  auto bins = Rcpp::IntegerVector(n);
+  auto current_bin = 1_rz;
   auto first_x = x[0];
 
   bins[0] = 1;
-  for (auto i = index_t{1}; i < n; ++i) {
+  for (auto i = 1_rz; i < n; ++i) {
     // This is equivalent to x[i] - first_x >= width but it accounts for machine precision.
     // If we instead used `>=` directly some things that should be symmetric will not be
-    if (x[i] - first_x - width >= -DBL_EPSILON) {
-      current_bin = current_bin + 1;
+    if (x[i] - first_x - width >= -EPS) {
+      current_bin = current_bin + 1_rz;
       first_x = x[i];
     }
     bins[i] = current_bin;
@@ -53,8 +68,8 @@ inline auto can_place_candidate(
   const double candidate,
   const double last_placed,
   std::vector<std::vector<double>>& rows,
-  const int n_rows_back,
-  const int y_grid,
+  const std::size_t n_rows_back,
+  const std::size_t y_grid,
   const double xsize
 ) -> bool {
   if constexpr (reverse) {
@@ -65,9 +80,9 @@ inline auto can_place_candidate(
 
   // for the n_rows_back previous rows, check if candidate is overlapping an existing dot
   const auto n_rows = rows.size();
-  for (int i = 1; i <= n_rows_back; i++) {
+  for (auto i = 1_z; i <= n_rows_back; i++) {
     // rows[n_rows - i] is the current row being placed, so previous rows start at n_rows - i - 1
-    auto& prev_row_vec = rows[n_rows - i - 1];
+    auto& prev_row_vec = rows[n_rows - i - 1_z];
     const auto n = prev_row_vec.size();
     if (n == 0) continue;
 
@@ -137,18 +152,19 @@ inline auto cend(const T& vec) {
 //' @param rows <[list] of [numeric]> list of previous rows of placed dots
 //' @param rows_bottom <[list] of [numeric]> list of previous bottom rows of placed dots
 //' (when `both == true`)
+//' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
 template<bool reverse>
-inline void place_row(
+inline auto place_row(
   const bool both,
   const double xsize,
-  const size_t y_grid,
+  const std::size_t y_grid,
   std::vector<double>*& remaining,
   std::vector<double>*& next_remaining,
   std::vector<std::vector<double>>& rows,
   std::vector<std::vector<double>>& rows_bottom
-) {
-  if (remaining->empty()) return;
+) -> bool {
+  if (remaining->empty()) return false;
 
   // must calculate n_rows_back here before adding a new row
   const auto n_rows_back = std::min(y_grid, rows.size());
@@ -156,7 +172,7 @@ inline void place_row(
   const auto row = &rows.emplace_back();
   const auto row_bottom = both ? &rows_bottom.emplace_back() : nullptr;
 
-  auto last_placed = std::numeric_limits<double>::infinity() * (reverse ? 1.0 : -1.0);
+  auto last_placed = reverse ? INF : -INF;
   auto last_placed_bottom = last_placed;
 
   next_remaining->clear();
@@ -180,23 +196,30 @@ inline void place_row(
     std::reverse(next_remaining->begin(), next_remaining->end());
   }
   std::swap(remaining, next_remaining);
+
+  return true;
 }
 
 //' Place dots `n` rows in the weave_swarm algorithm
 //' See `place_row()`
+//' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
-template<size_t n, bool reverse>
-inline void place_rows(
+template<std::size_t n, bool reverse>
+inline auto place_rows(
   const bool both,
   const double xsize,
-  const size_t y_grid,
+  const std::size_t y_grid,
   std::vector<double>*& remaining,
   std::vector<double>*& next_remaining,
   std::vector<std::vector<double>>& rows,
   std::vector<std::vector<double>>& rows_bottom
-) {
-  for (size_t i = 0; i < n; ++i) {
-    place_row<reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
+) -> bool {
+  if constexpr (n > 0) {
+    return
+      place_row<reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
+      place_rows<n - 1, !reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
+  } else {
+    return true;
   }
 }
 
@@ -215,7 +238,7 @@ SEXP weave_swarm_(
   const double ysize,
   const int side
 ) {
-  constexpr auto y_grid = size_t{4};
+  constexpr auto y_grid = 1_z;
   const auto n_out = x.size();
   const auto both = side == 0;
 
@@ -234,39 +257,39 @@ SEXP weave_swarm_(
   place_row<false>(false, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
   if (both) rows_bottom.push_back(rows.back());
 
-  // place dots in rows, alternating direction every y_grid rows
-  while (!remaining->empty()) {
-    // start with y_grid - 1 because we already placed the first row above
-    place_rows<y_grid - 1, false>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
-    place_rows<y_grid, true>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
-    place_row<false>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
-  }
+  // place dots in rows, alternating direction (but also ensuring every y_grid-th row alternates)
+  while (
+    // start with <y_grid - 1, true> instead of <y_grid, false> because we already placed the first row above
+    place_rows<y_grid - 1, true>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
+    place_rows<y_grid, true>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
+    place_row<false>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom)
+  );
 
   // construct output data frame
-  auto out_x_vec = NumericVector(n_out);
-  auto out_y_vec = NumericVector(n_out);
+  auto out_x_vec = Rcpp::NumericVector(n_out);
+  auto out_y_vec = Rcpp::NumericVector(n_out);
   auto out_x_arr = REAL(out_x_vec);
   auto out_y_arr = REAL(out_y_vec);
-  auto i = std::ptrdiff_t{0};
+  auto i = 0_z;
   const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, y_grid, ysize](
     const std::vector<std::vector<double>>& rows,
-    const std::ptrdiff_t row_start,
+    const std::size_t row_start,
     const double side
   ) {
-    for (size_t row_i = row_start; row_i < rows.size(); ++row_i) {
+    for (auto row_i = row_start; row_i < rows.size(); ++row_i) {
       const auto& row = rows[row_i];
-      for (const auto& x_val : row) {
+      for (const auto x_val : row) {
         out_x_arr[i] = x_val;
         out_y_arr[i] = double(row_i) / double(y_grid) * ysize * side;
         ++i;
       }
     }
   };
-  copy_rows_to_output(rows, 0, both ? 1 : side);
-  if (both) copy_rows_to_output(rows_bottom, 1, -1);
+  copy_rows_to_output(rows, 0_z, both ? 1.0 : double(side));
+  if (both) copy_rows_to_output(rows_bottom, 1_z, -1.0);
 
-  return DataFrame::create(
-    Named("x") = out_x_vec,
-    Named("y") = out_y_vec
+  return Rcpp::DataFrame::create(
+    Rcpp::Named("x") = out_x_vec,
+    Rcpp::Named("y") = out_y_vec
   );
 }
