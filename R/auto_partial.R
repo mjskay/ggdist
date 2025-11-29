@@ -122,13 +122,23 @@ partial_self = function(name = NULL, waivable = TRUE) {
 }
 
 #' @rdname auto_partial
-#' @param f <[function]> Function to automatically partially-apply.
+#' @param f <[function] | [S7_class][S7::new_class]> Function to automatically partially-apply.
+#' If an [S7_class][S7::new_class] is supplied (which is also function), returns a new
+#' version of the class with an automatically partially-applied constructor.
 #' @param name <[string][character]> Name of the function, to be used
-#' when printing.
+#' when printing. If `f` is an [S7_class][S7::new_class] and `name` is `NULL`,
+#' uses the name of the class.
 #' @param waivable <scalar [logical]> If `TRUE`, optional arguments that get
 #' passed a [waiver()] will keep their default value (or whatever
 #' non-`waiver` value has been most recently partially applied for that
 #' argument).
+#' @param required <[character]> Names of arguments that will be made to be
+#' required arguments. By default all arguments without defaults are required
+#' to be passed before the function is evaluated; any arguments in this list 
+#' will also be made to be required. Particularly useful to specify required
+#' arguments when `f` is an [S7_class][S7::new_class], as by default \pkg{S7}
+#' constructors do not contain arguments without a default value (and thus 
+#' have no required arguments).
 #' @returns A modified version of `f` that will automatically be partially
 #' applied if all of its required arguments are not given.
 #' @examples
@@ -145,7 +155,24 @@ partial_self = function(name = NULL, waivable = TRUE) {
 #' f(z = 4)(z = waiver())(1, 2)  # uses z = 4
 #' @export
 #' @importFrom rlang new_function expr
-auto_partial = function(f, name = NULL, waivable = TRUE) {
+auto_partial = function(f, name = NULL, waivable = TRUE, required = character()) {
+  if (inherits(f, "S7_class")) {
+    return(new_class(
+      name = f@name, 
+      parent = f@parent, 
+      package = f@package, 
+      properties = f@properties,
+      abstract = f@abstract,
+      constructor = auto_partial(
+        f@constructor, 
+        name = name %||% f@name, 
+        waivable = waivable,
+        required = required
+      ),
+      validator = f@validator
+    ))
+  }
+
   f_body = body(f)
   # must ensure the function body is a { ... } block, not a single expression,
   # so we can splice it in later with !!!f_body
@@ -159,7 +186,8 @@ auto_partial = function(f, name = NULL, waivable = TRUE) {
   # find the required arguments
   is_required_arg = map_lgl_(f_args, rlang::is_missing)
   required_arg_names = names(f_args)[is_required_arg]
-  required_arg_names = required_arg_names[required_arg_names != "..."]
+  stopifnot(all(required %in% names(f_args)))
+  required_arg_names = setdiff(union(required_arg_names, required), "...")
 
   # build a logical expression testing to see if any required args are missing
   any_required_args_missing = Reduce(

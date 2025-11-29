@@ -10,6 +10,7 @@ Minor changes:
   `side` parameters to improve binwidth selection for non-default layouts, most
   notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to 
   existing plots that use automatic binwidths.
+* `auto_partial()` can now wrap S7 class constructors.
 
 Internal changes:
 

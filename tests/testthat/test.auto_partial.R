@@ -71,3 +71,25 @@ test_that("waivers work", {
 
   expect_equal(foo(a = waiver(), b = 5)(1)(y = -2, b = waiver()), c(1, -2, 3, 5))
 })
+
+test_that("S7 classes work", {
+  A = auto_partial(
+    new_class(
+      "A",
+      properties = list(
+        x = new_property(class_numeric, default = 1),
+        y = new_property(class_numeric, default = 2),
+        z = new_property(class_numeric, default = 3)
+      )
+    ),
+    required = c("x", "y")
+  )
+
+  expect_s3_class(A, "S7_class")
+  expect_s3_class(A(x = 5), "ggdist_partial_function")
+  expect_s7_class(A(x = 5)(y = 6), A)
+  expect_s7_class(A(x = 5, y = 6), A)
+  expect_equal(props(A(x = 5)(y = 6)), list(x = 5, y = 6, z = 3))
+  expect_equal(props(A(x = 5, y = 6)), list(x = 5, y = 6, z = 3))
+  expect_equal(props(A(x = waiver(), y = waiver(), z = 5)), list(x = 1, y = 2, z = 5))
+})

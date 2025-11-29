@@ -5,18 +5,29 @@
 \alias{automatic-partial-functions}
 \title{Automatic partial function application in ggdist}
 \usage{
-auto_partial(f, name = NULL, waivable = TRUE)
+auto_partial(f, name = NULL, waivable = TRUE, required = character())
 }
 \arguments{
-\item{f}{<\link{function}> Function to automatically partially-apply.}
+\item{f}{<\link{function} | \link[S7:new_class]{S7_class}> Function to automatically partially-apply.
+If an \link[S7:new_class]{S7_class} is supplied (which is also function), returns a new
+version of the class with an automatically partially-applied constructor.}
 
 \item{name}{<\link[=character]{string}> Name of the function, to be used
-when printing.}
+when printing. If \code{f} is an \link[S7:new_class]{S7_class} and \code{name} is \code{NULL},
+uses the name of the class.}
 
 \item{waivable}{<scalar \link{logical}> If \code{TRUE}, optional arguments that get
 passed a \code{\link[=waiver]{waiver()}} will keep their default value (or whatever
 non-\code{waiver} value has been most recently partially applied for that
 argument).}
+
+\item{required}{<\link{character}> Names of arguments that will be made to be
+required arguments. By default all arguments without defaults are required
+to be passed before the function is evaluated; any arguments in this list
+will also be made to be required. Particularly useful to specify required
+arguments when \code{f} is an \link[S7:new_class]{S7_class}, as by default \pkg{S7}
+constructors do not contain arguments without a default value (and thus
+have no required arguments).}
 }
 \value{
 A modified version of \code{f} that will automatically be partially
