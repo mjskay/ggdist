@@ -72,19 +72,16 @@ bin_dots = function(x, y, binwidth,
   orientation = c("horizontal", "vertical", "y", "x"),
   overlaps = c("nudge", "keep")
 ) {
-  binner = new_binner(
-    match.arg(layout),
-    heightratio = heightratio,
-    stackratio = stackratio,
-    side = match.arg(side),
-    orientation = match.arg(orientation),
-    overlaps = match.arg(overlaps)
-  )
+  layout = match.arg(layout)
+  side = match.arg(side)
+  orientation = match.arg(orientation)
+  overlaps = match.arg(overlaps)
+
   d = data_frame0(x = x, y = y)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation
-  define_orientation_variables(binner@orientation)
+  define_orientation_variables(orientation)
 
   # Sort the x values, because they must be sorted for bin methods to maintain
   # the correct connection between input values and output bins.
@@ -95,7 +92,15 @@ bin_dots = function(x, y, binwidth,
   d = d[order(d[[x]]), ]
 
   # bin the dots
-  binner = prepare_binner(binner, d[[x]])
+  binner = new_binner(
+    layout,
+    x = d[[x]],
+    heightratio = heightratio,
+    stackratio = stackratio,
+    side = side,
+    orientation = orientation,
+    overlaps = overlaps
+  )
   binning = arrange_bins(binner, d[[x]], binwidth = binwidth)
   d = place_dots(binner, d, binning)
 
@@ -104,43 +109,6 @@ bin_dots = function(x, y, binwidth,
   d$order = NULL
 
   d
-}
-
-
-# prepare_binner ---------------------------------------------------------
-
-#' Prepare binner for data
-#' @description
-#' This generic function updates a dot binner based on the provided data points.
-#' Used for pre-calculations that depend on the data but not the binwidth, so they only
-#' need to be calculated once at the beginning of automatic binwidth selection.
-#' @param binner <`binner`> dot binner to update.
-#' @param x <[numeric]> numeric vector of data points.
-#' @return <`binner`> possibly-modified copy of the input `binner`.
-#' @noRd
-prepare_binner = new_generic("prepare_binner", c("binner"), function(binner, x, ...) {
-  S7_dispatch()
-})
-
-method(prepare_binner, binner) = function(binner, x, ...) {
-  binner
-}
-
-method(prepare_binner, binner_bin) = function(binner, x, ...) {
-  # examines a vector of data and determines an appropriate binning method based on its properties
-  # doing this up front allows us to doing this repeatedly when finding binwidth via optimization
-  diff_x = diff(x)
-  if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
-    # x is symmetric, use centered binning
-    binner@bin_method = wilkinson_bin_from_center
-  } else {
-    binner@bin_method = wilkinson_bin
-  }
-  binner
-}
-
-method(prepare_binner, binner_bar) = function(binner, x, ...) {
-  binner
 }
 
 
@@ -197,7 +165,7 @@ method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL
 ## arrange_bins for bin, hex, weave, bar ----------------------------------
 
 #' Arrange a binning of dots for binned layouts
-#' @param binner <`binner_bin`> the binning method
+#' @param binner <`binner_bin` | `binner_bar`> the binning method
 #' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
@@ -207,8 +175,8 @@ method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL
 #' - `bin_counts`: <[integer]> vector of length `nbins` giving the number of elements in each bin
 #' - `height`: <scalar [numeric]> height of the tallest bin in this binning
 #' @noRd
-method(arrange_bins, binner_bin) = function(binner, x, nbins = NULL, binwidth = NULL) {
-  binning = arrange_bins(super(binner, binner_bin@parent), x, nbins, binwidth)
+method(arrange_bins, binner_bin | binner_bar) = function(binner, x, nbins = NULL, binwidth = NULL) {
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
   binning = c(binning, binner@bin_method(x, binning$binwidth))
 
   # determine height of the tallest bin
@@ -227,7 +195,7 @@ method(arrange_bins, binner_bin) = function(binner, x, nbins = NULL, binwidth = 
 ## arrange_bins for swarm, swarm2 -----------------------------------------
 
 #' Arrange a binning of dots for swarm layouts
-#' @param binner <`binner_bin`> the binning method
+#' @param binner <`binner_swarm`> the binning method
 #' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
@@ -253,7 +221,7 @@ method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth 
 }
 
 #' Arrange a binning of dots for swarm2 layouts
-#' @param binner <`binner_bin`> the binning method
+#' @param binner <`binner_swarm2`> the binning method
 #' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
@@ -320,7 +288,7 @@ place_dots = new_generic("place_dots", c("binner"), function(binner, d, binning)
 
 ## place_dots for bin, hex, weave, bar ---------------------------------------
 
-method(place_dots, binner_bin) = function(binner, d, binning) {
+method(place_dots, binner_bin | binner_bar) = function(binner, d, binning) {
   d$bin = binning$bins
   d = place_dots_x_binned(binner, d, binning)
   d = place_dots_y_binned(binner, d, binning)

@@ -24,21 +24,21 @@ NULL
 NULL
 
 #' const begin iterator for forward or reverse iteration
-#' @tparam reverse iterate in reverse?
-#' @tparam T iterable type
+#' @param reverse iterate in reverse?
+#' @param T iterable type
 #' @param vec object to iterate over
 #' @noRd
 NULL
 
 #' const end iterator for forward or reverse iteration
-#' @tparam reverse iterate in reverse?
-#' @tparam T iterable type
+#' @param reverse iterate in reverse?
+#' @param T iterable type
 #' @param vec object to iterate over
 #' @noRd
 NULL
 
 #' Place dots in a single row in the weave_swarm algorithm
-#' @tparam reverse are we placing dots in reverse order?
+#' @param reverse are we placing dots in reverse order?
 #' @param both is this a mirrored layout (`side == "both"`?)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param y_grid <scalar [integer]> max possible number of previous rows in the

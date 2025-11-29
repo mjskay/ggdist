@@ -62,6 +62,9 @@ find_dotplot_binwidth = function(
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both")
 ) {
+  layout = match.arg(layout)
+  side = match.arg(side)
+
   x = sort(as.numeric(x), na.last = TRUE)
 
   # figure out a reasonable minimum number of bins based on histogram binning
@@ -70,13 +73,14 @@ find_dotplot_binwidth = function(
   } else {
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  binner = new_binner(match.arg(layout),
+  binner = new_binner(
+    layout,
+    x,
     maxheight = maxheight,
     heightratio = heightratio,
     stackratio = stackratio,
-    side = match.arg(side)
+    side = side
   )
-  binner = prepare_binner(binner, x)
   min_binning = arrange_bins(binner, x, nbins = min_nbins)
 
   if (isTRUE(min_binning$height <= maxheight)) {

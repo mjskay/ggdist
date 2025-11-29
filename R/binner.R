@@ -14,6 +14,7 @@ NULL
 #' @details
 #' A `binner` defines how dots are arranged in a dot plot created with
 #' `bin_dots()`. Different types of binners implement different layouts.
+#' @param x <[numeric]> Positions of dots.
 #' @param maxheight <scalar [numeric]> maximum height of the dots layout.
 #' @param heightratio <scalar [numeric]> height ratio of the dots layout.
 #' @param stackratio <scalar [numeric]> stack ratio of the dots layout.
@@ -27,6 +28,10 @@ binner = new_class(
   "binner",
   abstract = TRUE,
   properties = list(
+    x = new_property(
+      class_numeric,
+      default = double()
+    ),
     maxheight = new_property(
       class_numeric,
       validator = validate_positive_scalar,
@@ -86,15 +91,33 @@ binner_bin = new_class(
   "binner_bin",
   parent = binner,
   properties = list(
+    x = new_property(
+      class_numeric,
+      setter = function(self, value) {
+        self@x = value
+        # examines data to determine an appropriate binning method based on its properties
+        # doing this up front allows us to avoid doing it repeatedly when finding binwidth via optimization
+        diff_x = diff(value)
+        if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
+          # x is symmetric, use centered binning
+          self@bin_method = wilkinson_bin_from_center
+        } else {
+          self@bin_method = wilkinson_bin
+        }
+        self
+      },
+      default = double()
+    ),
     bin_method = new_property(
       class_function,
-      default = function(...) cli_abort("`prepare_binner()` must be called to set `bin_method`.")
+      default = function(...) cli_abort("`x` must be set to determine `bin_method`.")
     ),
     align_rows = new_property(
       class_logical,
       getter = function(self) FALSE
     )
-  )
+  ),
+  constructor = binner@constructor
 )
 
 #' Weave binner
@@ -168,7 +191,7 @@ bar_bin = function(x, width, bar_scale = 0.9) {
 #' @noRd
 binner_bar = new_class(
   "binner_bar",
-  parent = binner_bin,
+  parent = binner,
   properties = list(
     bin_method = new_property(
       class_function,
@@ -176,6 +199,10 @@ binner_bar = new_class(
     ),
     overlaps = new_property(
       class_character,
+      # setting this argument is ignored since it doesn't make a difference 
+      # for this layout (overlaps are impossible) but internally if we fix
+      # it to "keep" we can skip nudging computations
+      setter = function(self, value) self,
       getter = function(self) "keep"
     ),
     align_rows = new_property(

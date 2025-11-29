@@ -3,8 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
-automatic_bin = function(x, width, binner = binner_bin()) {
-  prepare_binner(binner, x)@bin_method(x, width)[c("bins", "bin_midpoints")]
+automatic_bin = function(x, width) {
+  binner_bin(x = x)@bin_method(x, width)[c("bins", "bin_midpoints")]
 }
 
 test_that("binning works on symmetric distributions", {
@@ -95,19 +95,19 @@ test_that("bin sweeping fixes edge effects", {
 
 test_that("binning works on empty data", {
 
-  expect_equal(automatic_bin(NULL, width = 1),
+  expect_equal(automatic_bin(double(), width = 1),
     list(bins = integer(0), bin_midpoints = numeric(0))
   )
 
-  expect_equal(wilkinson_bin_from_center(NULL, width = 1),
+  expect_equal(wilkinson_bin_from_center(double(), width = 1),
     list(bins = integer(0), bin_midpoints = numeric(0))
   )
 
-  expect_equal(wilkinson_bin_to_right(NULL, width = 1),
+  expect_equal(wilkinson_bin_to_right(double(), width = 1),
     list(bins = integer(0), bin_midpoints = numeric(0), bin_left = numeric(0), bin_right = numeric(0))
   )
 
-  expect_equal(wilkinson_bin(NULL, width = 1),
+  expect_equal(wilkinson_bin(double(), width = 1),
     list(bins = integer(0), bin_midpoints = numeric(0))
   )
 })
