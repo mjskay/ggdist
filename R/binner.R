@@ -8,6 +8,8 @@ NULL
 
 # binner -----------------------------------------------------------------
 
+new_binner_class = function(...) auto_partial(new_class(...), required = "x")
+
 #' Base class for dot plot binners created with `bin_dots()`
 #' @description
 #' Layout/binning method for dot plots created with `bin_dots()`.
@@ -24,7 +26,7 @@ NULL
 #' @return An object of class `binner`.
 #' @import S7
 #' @noRd
-binner = new_class(
+binner = new_binner_class(
   "binner",
   abstract = TRUE,
   properties = list(
@@ -87,7 +89,7 @@ new_binner = function(layout, ...) {
 #' @param align_rows <logical> whether to align rows of dots when `side` is "both".
 #' @return An object of class `binner_bin`.
 #' @noRd
-binner_bin = new_class(
+binner_bin = new_binner_class(
   "binner_bin",
   parent = binner,
   properties = list(
@@ -126,7 +128,7 @@ binner_bin = new_class(
 #' @inheritParams binner
 #' @return An object of class `binner_weave`.
 #' @noRd
-binner_weave = new_class(
+binner_weave = new_binner_class(
   "binner_weave",
   parent = binner_bin,
   properties = list(
@@ -143,7 +145,7 @@ binner_weave = new_class(
 #' @inheritParams binner
 #' @return An object of class `binner_hex`.
 #' @noRd
-binner_hex = new_class(
+binner_hex = new_binner_class(
   "binner_hex",
   parent = binner_bin,
   properties = list(
@@ -151,7 +153,7 @@ binner_hex = new_class(
       class_logical,
       getter = function(self) TRUE
     )
-  )  
+  )
 )
 
 
@@ -189,7 +191,7 @@ bar_bin = function(x, width, bar_scale = 0.9) {
 #' @inheritParams binner
 #' @return An object of class `binner_bar`.
 #' @noRd
-binner_bar = new_class(
+binner_bar = new_binner_class(
   "binner_bar",
   parent = binner,
   properties = list(
@@ -199,7 +201,7 @@ binner_bar = new_class(
     ),
     overlaps = new_property(
       class_character,
-      # setting this argument is ignored since it doesn't make a difference 
+      # setting this argument is ignored since it doesn't make a difference
       # for this layout (overlaps are impossible) but internally if we fix
       # it to "keep" we can skip nudging computations
       setter = function(self, value) self,
@@ -221,7 +223,7 @@ binner_bar = new_class(
 #' @inheritParams binner
 #' @return An object of class `binner_swarm`.
 #' @noRd
-binner_swarm = new_class(
+binner_swarm = new_binner_class(
   "binner_swarm",
   parent = binner
 )
@@ -232,7 +234,14 @@ binner_swarm = new_class(
 #' @inheritParams binner
 #' @return An object of class `binner_swarm2`.
 #' @noRd
-binner_swarm2 = new_class(
+binner_swarm2 = new_binner_class(
   "binner_swarm2",
-  parent = binner_swarm
+  parent = binner_swarm,
+  properties = list(
+    grid = new_property(
+      class_numeric,
+      validator = validate_positive_scalar_integerish,
+      default = 4L
+    )
+  )
 )

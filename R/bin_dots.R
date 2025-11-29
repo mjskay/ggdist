@@ -70,12 +70,10 @@ bin_dots = function(x, y, binwidth,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = c("nudge", "keep")
+  overlaps = "nudge"
 ) {
-  layout = match.arg(layout)
   side = match.arg(side)
   orientation = match.arg(orientation)
-  overlaps = match.arg(overlaps)
 
   d = data_frame0(x = x, y = y)
 
@@ -115,9 +113,9 @@ bin_dots = function(x, y, binwidth,
 # arrange_bins -----------------------------------------------------------
 
 #' Arrange a binning of dots
-#' 
+#'
 #' Create a dot binning, which includes a set of bins of dots and other properties of the
-#' binning, such as what the bins are, what the dot widths are, what the y spacing between 
+#' binning, such as what the bins are, what the dot widths are, what the y spacing between
 #' dots should be, etc.
 #' @param binner <`binner`> the binning method
 #' @param x <[numeric]> vector of dot positions
@@ -134,7 +132,7 @@ bin_dots = function(x, y, binwidth,
 arrange_bins = new_generic("arrange_bins", c("binner"), function(binner, x, nbins = NULL, binwidth = NULL) {
   S7_dispatch()
 })
-  
+
 method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL) {
   # determine binwidth and number of bins
   x_spread = diff(range(x))
@@ -208,9 +206,12 @@ method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth 
 
   binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
   binning$dots = beeswarm::swarmy(
-    x, 0,
-    xsize = binning$binwidth, ysize = binning$y_spacing,
-    log = "", cex = 1,
+    x,
+    0,
+    xsize = binning$binwidth,
+    ysize = binning$y_spacing,
+    log = "",
+    cex = 1,
     side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0),
     compact = TRUE
   )
@@ -231,9 +232,12 @@ method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth 
 #' @noRd
 method(arrange_bins, binner_swarm2) = function(binner, x, nbins = NULL, binwidth = NULL) {
   binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
-  binning$dots = weave_swarm(
-    x, 0,
-    xsize = binning$binwidth, ysize = binning$y_spacing,
+  binning$dots = grid_swarm(
+    x,
+    0,
+    xsize = binning$binwidth,
+    ysize = binning$y_spacing,
+    ygrid = binner@grid,
     side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0)
   )
   binning$dots = recenter_swarm_clusters(binner, binning$dots, binning)
@@ -621,19 +625,22 @@ wilkinson_bin_from_center = function(x, width) {
 }
 
 
-# weave swarm -------------------------------------------------------------
+# grid swarm -------------------------------------------------------------
 
-#' Weave/swarm hybrid
+#' Beeswarm layout using a fractional grid.
 #'
+#' Lays out dots by sweeping one row at a time on a fractional grid, alternating the direction of
+#' sweeps on each row.
 #' @param x <[numeric]> sorted x values
-#' @param x <[numeric]> y values (should be constant)
+#' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param ygrid <scalar [integer]> \eqn{\ge 1} resolution of the fractional grid used to place dots.
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-weave_swarm = function(x, y, xsize, ysize = xsize, side = 1) {
-  df = weave_swarm_(x, xsize, ysize, side)
+grid_swarm = function(x, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
+  df = grid_swarm_(x, xsize, ysize, ygrid, side)
   df = df[order(df$x), ]
   df$y = df$y + y
   df

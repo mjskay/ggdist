@@ -73,7 +73,7 @@ defaults = function(x, defaults) {
 match_function = function(f, prefix = "", env = globalenv()) {
   if (is.function(f)) return(f)
 
-  f = paste0(prefix, f)
+  f = paste0(prefix, f[[1]])
   get0(f, mode = "function", envir = env) %||%
     get(f, mode = "function", envir = getNamespace("ggdist"))
 }

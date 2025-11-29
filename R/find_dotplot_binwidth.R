@@ -62,7 +62,6 @@ find_dotplot_binwidth = function(
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both")
 ) {
-  layout = match.arg(layout)
   side = match.arg(side)
 
   x = sort(as.numeric(x), na.last = TRUE)

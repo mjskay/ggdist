@@ -49,7 +49,7 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
   return bins;
 }
 
-// weave_swarm ------------------------------------------------------------
+// grid_swarm ------------------------------------------------------------
 
 //' Can we place `candidate` at this position given the last placed dot and
 //' the previous rows of dots placed so far?
@@ -57,7 +57,7 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 //' @param last_placed <scalar [numeric]> last placed x position in this row
 //' @param rows <[list] of [numeric]> list of previous rows of placed dots
 //' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
-//' @param y_grid <scalar [integer]> max possible number of previous rows in the
+//' @param ygrid <scalar [integer]> max possible number of previous rows in the
 //' y grid that  could overlap with this candidate
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param reverse <scalar [logical]> are we placing dots in reverse order?
@@ -69,7 +69,7 @@ inline auto can_place_candidate(
   const double last_placed,
   std::vector<std::vector<double>>& rows,
   const std::size_t n_rows_back,
-  const std::size_t y_grid,
+  const std::size_t ygrid,
   const double xsize
 ) -> bool {
   if constexpr (reverse) {
@@ -86,7 +86,7 @@ inline auto can_place_candidate(
     const auto n = prev_row_vec.size();
     if (n == 0) continue;
 
-    const auto y_offset = double(i) / double(y_grid);
+    const auto y_offset = double(i) / double(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * xsize;
 
     auto prev_row_arr = prev_row_vec.data();
@@ -141,11 +141,11 @@ inline auto cend(const T& vec) {
   }
 }
 
-//' Place dots in a single row in the weave_swarm algorithm
+//' Place dots in a single row in the grid_swarm algorithm
 //' @param reverse are we placing dots in reverse order?
 //' @param both is this a mirrored layout (`side == "both"`?)
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @param y_grid <scalar [integer]> max possible number of previous rows in the
+//' @param ygrid <scalar [integer]> max possible number of previous rows in the
 //' y grid that  could overlap with this candidate
 //' @param remaining vector of dots to be placed
 //' @param next_remaining swap space to move next set of dots to be placed into
@@ -158,7 +158,7 @@ template<bool reverse>
 inline auto place_row(
   const bool both,
   const double xsize,
-  const std::size_t y_grid,
+  const std::size_t ygrid,
   std::vector<double>*& remaining,
   std::vector<double>*& next_remaining,
   std::vector<std::vector<double>>& rows,
@@ -167,7 +167,7 @@ inline auto place_row(
   if (remaining->empty()) return false;
 
   // must calculate n_rows_back here before adding a new row
-  const auto n_rows_back = std::min(y_grid, rows.size());
+  const auto n_rows_back = std::min(ygrid, rows.size());
 
   const auto row = &rows.emplace_back();
   const auto row_bottom = both ? &rows_bottom.emplace_back() : nullptr;
@@ -179,10 +179,10 @@ inline auto place_row(
 
   for (auto it = cbegin<reverse>(*remaining); it != cend<reverse>(*remaining); ++it) {
     const auto candidate = *it;
-    if (can_place_candidate<reverse>(candidate, last_placed, rows, n_rows_back, y_grid, xsize)) {
+    if (can_place_candidate<reverse>(candidate, last_placed, rows, n_rows_back, ygrid, xsize)) {
       row->push_back(candidate);
       last_placed = candidate;
-    } else if (both && can_place_candidate<reverse>(candidate, last_placed_bottom, rows_bottom, n_rows_back, y_grid, xsize)) {
+    } else if (both && can_place_candidate<reverse>(candidate, last_placed_bottom, rows_bottom, n_rows_back, ygrid, xsize)) {
       row_bottom->push_back(candidate);
       last_placed_bottom = candidate;
     } else {
@@ -200,7 +200,7 @@ inline auto place_row(
   return true;
 }
 
-//' Place dots `n` rows in the weave_swarm algorithm
+//' Place dots in `n` rows in the grid_swarm algorithm
 //' See `place_row()`
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
@@ -209,7 +209,7 @@ inline auto place_rows(
   std::size_t n,
   const bool both,
   const double xsize,
-  const std::size_t y_grid,
+  const std::size_t ygrid,
   std::vector<double>*& remaining,
   std::vector<double>*& next_remaining,
   std::vector<std::vector<double>>& rows,
@@ -217,13 +217,12 @@ inline auto place_rows(
 ) -> bool {
   auto any_left = true;
   while (n --> 0_z && any_left) {
-    any_left = place_row<reverse>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
+    any_left = place_row<reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom);
   }
   return any_left;
 }
 
-//' Weave/swarm hybrid
-//'
+//' Fractional grid swarm layout
 //' @param x <[numeric]> sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
@@ -231,13 +230,13 @@ inline auto place_rows(
 //' @returns <[data.frame]> data frame with columns x and y giving the new positions
 //' @noRd
 // [[Rcpp::export(rng = false)]]
-SEXP weave_swarm_(
+SEXP grid_swarm_(
   std::vector<double> x,
   const double xsize,
   const double ysize,
+  const std::size_t ygrid,
   const int side
 ) {
-  constexpr auto y_grid = 4_z;
   const auto n_out = x.size();
   const auto both = side == 0;
 
@@ -253,16 +252,16 @@ SEXP weave_swarm_(
   // first row is special: when both == true, it is a "middle" row that is
   // treated as the first row (for placement purposes) on both the top and bottom sides
   // so we always treat it as both = false and just copy it to rows_bottom
-  place_row<false>(false, xsize, y_grid, remaining, next_remaining, rows, rows_bottom);
+  place_row<false>(false, xsize, ygrid, remaining, next_remaining, rows, rows_bottom);
   if (both) rows_bottom.push_back(rows.back());
 
-  // place dots in rows, alternating direction (but also ensuring every y_grid-th row alternates)
+  // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
   while (
-    // start with <true>(y_grid - 1, ...) instead of <false>(y_grid, ...) because
+    // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
     // we already placed the first row above
-    place_rows<true>(y_grid - 1, both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
-    place_rows<true>(y_grid, both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom) &&
-    place_row<false>(both, xsize, y_grid, remaining, next_remaining, rows, rows_bottom)
+    place_rows<true>(ygrid - 1, both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom) &&
+    place_rows<true>(ygrid, both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom) &&
+    place_row<false>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom)
   );
 
   // construct output data frame
@@ -271,7 +270,7 @@ SEXP weave_swarm_(
   auto out_x_arr = REAL(out_x_vec);
   auto out_y_arr = REAL(out_y_vec);
   auto i = 0_z;
-  const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, y_grid, ysize](
+  const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
     const std::vector<std::vector<double>>& rows,
     const std::size_t row_start,
     const double side
@@ -280,7 +279,7 @@ SEXP weave_swarm_(
       const auto& row = rows[row_i];
       for (const auto x_val : row) {
         out_x_arr[i] = x_val;
-        out_y_arr[i] = double(row_i) / double(y_grid) * ysize * side;
+        out_y_arr[i] = double(row_i) / double(ygrid) * ysize * side;
         ++i;
       }
     }

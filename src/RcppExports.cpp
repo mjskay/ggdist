@@ -21,23 +21,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// weave_swarm_
-SEXP weave_swarm_(std::vector<double> x, const double xsize, const double ysize, const int side);
-RcppExport SEXP _ggdist_weave_swarm_(SEXP xSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
+// grid_swarm_
+SEXP grid_swarm_(std::vector<double> x, const double xsize, const double ysize, const std::size_t ygrid, const int side);
+RcppExport SEXP _ggdist_grid_swarm_(SEXP xSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< std::vector<double> >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
+    Rcpp::traits::input_parameter< const std::size_t >::type ygrid(ygridSEXP);
     Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(weave_swarm_(x, xsize, ysize, side));
+    rcpp_result_gen = Rcpp::wrap(grid_swarm_(x, xsize, ysize, ygrid, side));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
-    {"_ggdist_weave_swarm_", (DL_FUNC) &_ggdist_weave_swarm_, 4},
+    {"_ggdist_grid_swarm_", (DL_FUNC) &_ggdist_grid_swarm_, 5},
     {NULL, NULL, 0}
 };
 

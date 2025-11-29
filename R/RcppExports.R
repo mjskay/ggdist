@@ -15,7 +15,7 @@ NULL
 #' @param last_placed <scalar [numeric]> last placed x position in this row
 #' @param rows <[list] of [numeric]> list of previous rows of placed dots
 #' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
-#' @param y_grid <scalar [integer]> max possible number of previous rows in the
+#' @param ygrid <scalar [integer]> max possible number of previous rows in the
 #' y grid that  could overlap with this candidate
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param reverse <scalar [logical]> are we placing dots in reverse order?
@@ -37,11 +37,11 @@ NULL
 #' @noRd
 NULL
 
-#' Place dots in a single row in the weave_swarm algorithm
+#' Place dots in a single row in the grid_swarm algorithm
 #' @param reverse are we placing dots in reverse order?
 #' @param both is this a mirrored layout (`side == "both"`?)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
-#' @param y_grid <scalar [integer]> max possible number of previous rows in the
+#' @param ygrid <scalar [integer]> max possible number of previous rows in the
 #' y grid that  could overlap with this candidate
 #' @param remaining vector of dots to be placed
 #' @param next_remaining swap space to move next set of dots to be placed into
@@ -52,7 +52,7 @@ NULL
 #' @noRd
 NULL
 
-#' Place dots `n` rows in the weave_swarm algorithm
+#' Place dots in `n` rows in the grid_swarm algorithm
 #' See `place_row()`
 #' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 #' @noRd
@@ -62,15 +62,14 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
-#' Weave/swarm hybrid
-#'
+#' Fractional grid swarm layout
 #' @param x <[numeric]> sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-weave_swarm_ <- function(x, xsize, ysize, side) {
-    .Call(`_ggdist_weave_swarm_`, x, xsize, ysize, side)
+grid_swarm_ <- function(x, xsize, ysize, ygrid, side) {
+    .Call(`_ggdist_grid_swarm_`, x, xsize, ysize, ygrid, side)
 }
 
