@@ -437,7 +437,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
         'The order in which data points are stacked within bins. Can be used to create the effect of
       "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
       value of the data points themselves are used to determine stacking order. Only applies when
-      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.'
+      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.',
+      side = rd_aes_side("dots")
     ), aes_docs[[dots_aes_i]])
     aes_docs
   },

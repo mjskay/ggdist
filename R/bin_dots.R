@@ -20,7 +20,7 @@ NULL
 #' between dot centers
 #' @eval rd_param_dots_layout()
 #' @eval rd_param_dots_overlaps()
-#' @eval rd_param_slab_side()
+#' @eval rd_param_side("dots")
 #' @param orientation <[string][character]> Whether the dots are laid out horizontally
 #' or vertically. Follows the naming scheme of [geom_slabinterval()]:
 #'

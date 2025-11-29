@@ -199,8 +199,26 @@ rd_slabinterval_aesthetics = function(
 }
 
 
+# shared aesthethic docs -------------------------------------------------
+
+rd_aes_side = function(slab = "slab") {
+  glue_doc('
+    Which side to place the <<slab>> on. One of:
+    \\itemize{
+      \\item `"topright"`, `"top"`, and `"right"` are synonyms which draw the <<slab>> on the top or the 
+        right depending on if `orientation` is `"horizontal"` or `"vertical"`.
+      \\item `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which draw the <<slab>> on the bottom
+        or the left depending on if `orientation` is `"horizontal"` or `"vertical"`.
+      \\item `"topleft"` draws the <<slab>> on the top or the left.
+      \\item `"bottomright"` draws the <<slab>> on the bottom or the right.
+      \\item `"both"` draws the <<slab>> on both sides (like in a violin plot).
+    }'
+  )
+}
+
+
 # shared parameter docs ---------------------------------------------------
 
-rd_param_slab_side = function() {
-  paste0("@param side ", GeomSlabinterval$get_aes_docs()[["Slab-specific aesthetics"]]$side)
+rd_param_side = function(slab = "slab") {
+  paste0("@param side ", rd_aes_side(slab))
 }

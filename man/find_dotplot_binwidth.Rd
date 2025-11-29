@@ -51,13 +51,16 @@ distributions, which may look better with \code{"bin"}, \code{"weave"}, or
 rectangular bars.
 }}
 
-\item{side}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).}
+\item{side}{Which side to place the dots on. One of:
+\itemize{
+\item \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms which draw the dots on the top or the
+right depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
+\item \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which draw the dots on the bottom
+or the left depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
+\item \code{"topleft"} draws the dots on the top or the left.
+\item \code{"bottomright"} draws the dots on the bottom or the right.
+\item \code{"both"} draws the dots on both sides (like in a violin plot).
+}}
 }
 \value{
 A suitable bin width such that a dotplot created with this bin width

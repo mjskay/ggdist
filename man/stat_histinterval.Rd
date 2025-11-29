@@ -387,13 +387,16 @@ the following aesthetics are supported by the underlying geom:
 \itemize{
 \item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
 \code{y} value (if \code{orientation = "vertical"}) of the slab.}
-\item{\code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).}
+\item{\code{side}: Which side to place the slab on. One of:
+\itemize{
+\item \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms which draw the slab on the top or the
+right depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
+\item \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which draw the slab on the bottom
+or the left depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.
+\item \code{"topleft"} draws the slab on the top or the left.
+\item \code{"bottomright"} draws the slab on the bottom or the right.
+\item \code{"both"} draws the slab on both sides (like in a violin plot).
+}}
 \item{\code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
 slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space
 between adjacent slabs. For a comprehensive discussion and examples of slab scaling and normalization,

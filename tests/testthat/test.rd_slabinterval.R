@@ -77,5 +77,5 @@ test_that("shortcut geom_slabinterval documentation generator works", {
 })
 
 test_that("param docs work", {
-  expect_match(rd_param_slab_side(), "@param side")
+  expect_match(rd_param_side(), "@param side")
 })

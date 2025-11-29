@@ -11,7 +11,7 @@
 #' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
 #' between dot centers
 #' @eval rd_param_dots_layout()
-#' @eval rd_param_slab_side()
+#' @eval rd_param_side("dots")
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
