@@ -507,11 +507,11 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       <[function] | [string][character]> Smoother to apply to dot positions.
       One of:
         - A function that takes a numeric vector of dot positions and returns a
-          smoothed version of that vector, such as `smooth_bounded()`,
-          `smooth_unbounded()`, smooth_discrete()`, or `smooth_bar()`.
+          smoothed version of that vector, such as [smooth_bounded()],
+          [smooth_unbounded()], [smooth_discrete()], or [smooth_bar()].
         - A string indicating what smoother to use, as the suffix to a function
           name starting with `smooth_`; e.g. `"none"` (the default) applies
-          `smooth_none()`, which simply returns the given vector without
+          [smooth_none()], which simply returns the given vector without
           applying smoothing.
 
       Smoothing is most effective when the smoother is matched to the support of

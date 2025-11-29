@@ -447,18 +447,8 @@ wilkinson_bin_to_right = function(x, width) {
   bins = wilkinson_bin_to_right_(x, width)
 
   # determine bin positions
-  # can take advantage of the fact that bins is sorted runs of numbers to
-  # get the first and last entry from each bin
-  bin_left = x[!duplicated(bins)]
-  bin_right = x[!duplicated(bins, fromLast = TRUE)]
-  bin_midpoints = (bin_left + bin_right) / 2
-
-  list(
-    bins = bins,
-    bin_midpoints = bin_midpoints,
-    bin_left = bin_left,
-    bin_right = bin_right
-  )
+  bin_runs = rle_bins(bins)
+  locate_bins(bin_runs, x)
 }
 
 #' do a backwards sweep after a left-to-right wilkinson binning, trying to
@@ -507,16 +497,9 @@ wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
   b$bins[changed_x_is] = bins_changed
 
   # re-number bins to be consecutive in case some bins got removed completely
-  first_x_in_bin = !duplicated(b$bins)
-  b$bins = cumsum(first_x_in_bin)
-
-  # can take advantage of the fact that b$bins is sorted runs of numbers to
-  # get the first and last entry from each bin
-  b$bin_left = x[first_x_in_bin]
-  b$bin_right = x[!duplicated(b$bins, fromLast = TRUE)]
-  b$bin_midpoints = (b$bin_left + b$bin_right) / 2
-
-  b
+  bin_runs = rle_bins(b$bins)
+  bin_runs = renumber_bins(bin_runs)
+  locate_bins(bin_runs, x)
 }
 
 #' a rightward or leftward wilkinson binning followed by a backwards sweep to
@@ -536,17 +519,19 @@ wilkinson_bin = function(x, width, right = TRUE, first_slack = Inf) {
 
   if (right) {
     b = wilkinson_bin_to_right(x, width)
-    wilkinson_sweep_back(x, b, width, first_slack = first_slack)
+    b = wilkinson_sweep_back(x, b, width, first_slack = first_slack)
   } else {
     rev_x = -rev(x)
     b = wilkinson_bin_to_right(rev_x, width)
     b = wilkinson_sweep_back(rev_x, b, width, first_slack = first_slack)
-    list(
+    b = list(
       # renumber bins so 1,2,3,3 => 3,2,1,1 (then reverse so it matches original vector order)
       bins = rev(max(b$bins) + 1 - b$bins),
       bin_midpoints = -rev(b$bin_midpoints)
     )
   }
+
+  wilkinson_smooth(x, b, width)
 }
 
 #' A modified wilkinson-style binning that expands outward from the center of
@@ -617,13 +602,98 @@ wilkinson_bin_from_center = function(x, width) {
     )
 
     center_bin_i = length(left$bin_midpoints) + 1
-    list(
+    b = list(
       bins = c(left$bins, rep(center_bin_i, n_center), center_bin_i + right$bins),
       bin_midpoints = c(left$bin_midpoints, center_midpoint, right$bin_midpoints)
     )
+
+    wilkinson_smooth(x, b, width)
   }
 }
 
+#' Get the run-length encoding of the bins in a Wilkinson binning
+#' @param bins <[list]> sorted bin numbers starting at `1`, as in the
+#' `"bins"` element of output from `wilkinson_` functions.
+#' @returns <[data.frame]> with columns:
+#' - `"bin"`: `unique(bins)`
+#' - `"count"`: occurrences of each bin.
+#' @noRd
+rle_bins = function(bins) {
+  out = vec_unrep(bins)
+  names(out) = c("bin", "count")
+  out
+}
+
+#' Re-number bins to be consecutive
+#'
+#' Removes empty bins and gaps in bins
+#' @param bin_runs <[data.frame]> as returned by `rle_bins()`. Missing bins
+#' will be removed: the `"bin"` element should be increasing but need
+#' not be consecutive and the `"count"` element may have zeros.
+#' @returns modified `bin_runs` with consecutive `"bin"` element starting
+#' at zero and `"count"` all positive.
+#' @noRd
+renumber_bins = function(bin_runs) {
+  bin_runs = bin_runs[bin_runs$count > 0, ]
+  bin_runs$bin = seq_len(nrow(bin_runs))
+  bin_runs
+}
+
+#' Convert run-length encoded bins into wilkinson binning format and find bin locations
+#' @param bin_runs <[data.frame]> as returned by `rle_bins()`. The
+#' `"bin"` element should be consecutive starting from `1`and the
+#' `"count"` element should not have zeros.
+#' @param x <[numeric]> data values to be binned
+#' @param b <[list]> as returned by `wilkinson_` methods.
+#' @returns <[list]> binning format returned by `wilkinson_` methods, with
+#' elements `"bins"`, `"bin_left"`, `"bin_right"`, `"bin_midpoints"`.
+#' @noRd
+locate_bins = function(bin_runs, x) {
+  bins = rep.int(bin_runs$bin, times = bin_runs$count)
+
+  # can take advantage of the fact that bins is sorted runs of numbers to
+  # get the first and last entry from each bin
+  bin_left = x[bins != c(0, bins[-length(bins)])]
+  bin_right = x[bins != c(bins[-1], 0)]
+  bin_midpoints = (bin_left + bin_right) / 2
+
+  list(
+    bins = bins,
+    bin_left = bin_left,
+    bin_right = bin_right,
+    bin_midpoints = bin_midpoints
+  )
+}
+
+#' Adjacent-bin moving average smooth as described in Wilkinson
+#' @description
+#' Exchanges dots between adjacent bins in a dotplot as described in Wilkinson.
+#' @param x <[numeric]> sorted data values
+#' @param b <[numeric]> binning as returned by other `wilkinson_` functions: a
+#' [list] with elements `bins` (consecutive integers starting at `1` with the same
+#' length as `x`) and `bin_midpoints` (having length equal to `max(bins)`).
+#' @param width <scalar [numeric]> positive bin width
+#' @param span <scalar [numeric]> multiple of bin width giving the window within
+#' which to consider the next bin "adjacent". If `0`, no smoothing is done. A value
+#' of `1.25` is equivalent to Wilkinson's recommended smoothing if bins are within
+#' `width/4` of each other.
+#' @noRd
+wilkinson_smooth = function(x, b, width, span = 0) {
+  if (span == 0) return(b)
+  window = width * span
+
+  bin_runs = rle_bins(b$bins)
+  for (i in seq_len(nrow(bin_runs) - 1)) {
+    if (b$bin_midpoints[[i + 1]] - b$bin_midpoints[[i]] <= window) {
+      dots_to_move = floor((bin_runs$count[[i + 1]] - bin_runs$count[[i]]) / 2)
+      bin_runs$count[[i]] = bin_runs$count[[i]] + dots_to_move
+      bin_runs$count[[i + 1]] = bin_runs$count[[i + 1]] - dots_to_move
+    }
+  }
+
+  bin_runs = renumber_bins(bin_runs)
+  locate_bins(bin_runs, x)
+}
 
 # grid swarm -------------------------------------------------------------
 

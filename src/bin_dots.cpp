@@ -216,9 +216,12 @@ inline auto place_rows(
   std::vector<std::vector<double>>& rows_bottom
 ) -> bool {
   auto any_left = true;
-  while (n --> 0_z && any_left) {
-    any_left = place_row<reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom);
-  }
+  while (
+    n-- > 0_z &&
+    (any_left = place_row<reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom)) &&
+    n-- > 0_z &&
+    (any_left = place_row<!reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom))
+  );
   return any_left;
 }
 
