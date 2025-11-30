@@ -23,6 +23,7 @@ new_binner_class = function(...) auto_partial(new_class(...), required = "x")
 #' @param side <[string][character]> side where the dots layout should be placed.
 #' @param orientation <[string][character]> orientation of the dots layout.
 #' @param overlaps <[string][character]> how to handle overlaps in the dots layout.
+#' @param span <scalar [numeric]> smoothing/spacing parameter used in some layouts.
 #' @return An object of class `binner`.
 #' @import S7
 #' @noRd
@@ -65,6 +66,11 @@ binner = new_binner_class(
       class_character,
       validator = validate_in(c("keep", "nudge")),
       default = "nudge"
+    ),
+    span = new_property(
+      class_numeric,
+      validator = validate_nonnegative_scalar,
+      default = 0
     )
   )
 )
@@ -161,15 +167,15 @@ binner_hex = new_binner_class(
 
 #' Bin dots into bars
 #' @param x data (original positions of dots)
-#' @param width width of the bins in data units
-#' @param bar_scale width of the bars as a proportion of the data resolution
+#' @param binwidth width of the bins in data units
+#' @param span max width of the bars as a proportion of the data resolution
 #' @noRd
-bar_bin = function(x, width, bar_scale = 0.9) {
+bar_bin = function(x, binwidth, span = 0.9) {
   # determine the amount of space that each bar will take up
   # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
-  max_bar_width = resolution(as.numeric(x), zero = FALSE) * bar_scale
-  n_bins = max(floor(max_bar_width / width), 1)
-  actual_bar_width = n_bins * width
+  max_bar_width = resolution(as.numeric(x), zero = FALSE) * span
+  n_bins = max(floor(max_bar_width / binwidth), 1)
+  actual_bar_width = n_bins * binwidth
 
   # determine new x positions
   bin_positions = (ppoints(n_bins, a = 0.5) - 0.5) * actual_bar_width
@@ -210,6 +216,11 @@ binner_bar = new_binner_class(
     align_rows = new_property(
       class_logical,
       getter = function(self) TRUE
+    ),
+    span = new_property(
+      class_numeric,
+      validator = validate_nonnegative_scalar,
+      default = 0.9
     )
   )
 )

@@ -3,6 +3,12 @@
 # Author: mjskay
 ###############################################################################
 
+validate_nonnegative_scalar = function(value) {
+  if (!is.numeric(value) || length(value) != 1 || value < 0) {
+    "must be a non-negative scalar."
+  }
+}
+
 validate_positive_scalar = function(value) {
   if (!is.numeric(value) || length(value) != 1 || value <= 0) {
     "must be a positive scalar."

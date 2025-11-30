@@ -175,7 +175,7 @@ method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL
 #' @noRd
 method(arrange_bins, binner_bin | binner_bar) = function(binner, x, nbins = NULL, binwidth = NULL) {
   binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
-  binning = c(binning, binner@bin_method(x, binning$binwidth))
+  binning = c(binning, binner@bin_method(x, binning$binwidth, span = binner@span))
 
   # determine height of the tallest bin
   binning$bin_counts = tabulate(binning$bins)
@@ -277,6 +277,7 @@ get_swarm_height = function(binner, dots, binning) {
   dot_height = binning$y_spacing / binner@stackratio
   height_minus_1_dot + dot_height
 }
+
 
 # place_dots -------------------------------------------------------------
 
@@ -431,9 +432,9 @@ method(place_dots, binner_swarm) = function(binner, d, binning) {
 
 #' a variant of the basic wilkinson binning method, a single left-to-right sweep
 #' @param x sorted numeric vector
-#' @param width bin width
+#' @param binwidth bin width
 #' @noRd
-wilkinson_bin_to_right = function(x, width) {
+wilkinson_bin_to_right = function(x, binwidth) {
   if (length(x) == 0) {
     return(list(
       bins = integer(0),
@@ -444,7 +445,7 @@ wilkinson_bin_to_right = function(x, width) {
   }
 
   # determine bins
-  bins = wilkinson_bin_to_right_(x, width)
+  bins = wilkinson_bin_to_right_(x, binwidth)
 
   # determine bin positions
   bin_runs = rle_bins(bins)
@@ -456,19 +457,19 @@ wilkinson_bin_to_right = function(x, width) {
 #' bins
 #' @param x sorted numeric vector
 #' @param b a binning returned by wilkinson_bin_to_right
-#' @param width bin width
+#' @param binwidth bin width
 #' @param first_slack max amount of slack on the first bin
 #' @noRd
-wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
+wilkinson_sweep_back = function(x, b, binwidth, first_slack = Inf) {
   n_bin = length(b$bin_left)
   if (n_bin < 2) return(b)
 
   # amount we want to move left is the extra space at the end of the last bin
-  move_left = width - b$bin_right[[n_bin]] + b$bin_left[[n_bin]] - .Machine$double.eps
+  move_left = binwidth - b$bin_right[[n_bin]] + b$bin_left[[n_bin]] - .Machine$double.eps
   if (move_left <= 0) return(b)
 
   # slack is the distance between bins
-  slack = b$bin_left[-1] - (b$bin_left[-n_bin] + width)
+  slack = b$bin_left[-1] - (b$bin_left[-n_bin] + binwidth)
 
   # slack on first bin is at most half the move_left amount; this makes it so that
   # in the worst case we are compromising between first and last bins being
@@ -505,11 +506,12 @@ wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
 #' a rightward or leftward wilkinson binning followed by a backwards sweep to
 #' reduce edge effects by taking up slack in the binning (spaces between bins)
 #' @param x numeric vector
-#' @param width bin width
+#' @param binwidth bin width
+#' @param span adjacent bin smoothing window as a fraction of `binwidth`
 #' @param right bin left-to-right (TRUE) or right-to-left (FALSE)?
 #' @param first_slack maximum slack on the first bin (passed to wilkinson_sweep_back)
 #' @noRd
-wilkinson_bin = function(x, width, right = TRUE, first_slack = Inf) {
+wilkinson_bin = function(x, binwidth, span = 0, right = TRUE, first_slack = Inf) {
   if (length(x) == 0) {
     return(list(
       bins = integer(0),
@@ -518,12 +520,12 @@ wilkinson_bin = function(x, width, right = TRUE, first_slack = Inf) {
   }
 
   if (right) {
-    b = wilkinson_bin_to_right(x, width)
-    b = wilkinson_sweep_back(x, b, width, first_slack = first_slack)
+    b = wilkinson_bin_to_right(x, binwidth)
+    b = wilkinson_sweep_back(x, b, binwidth, first_slack = first_slack)
   } else {
     rev_x = -rev(x)
-    b = wilkinson_bin_to_right(rev_x, width)
-    b = wilkinson_sweep_back(rev_x, b, width, first_slack = first_slack)
+    b = wilkinson_bin_to_right(rev_x, binwidth)
+    b = wilkinson_sweep_back(rev_x, b, binwidth, first_slack = first_slack)
     b = list(
       # renumber bins so 1,2,3,3 => 3,2,1,1 (then reverse so it matches original vector order)
       bins = rev(max(b$bins) + 1 - b$bins),
@@ -531,22 +533,23 @@ wilkinson_bin = function(x, width, right = TRUE, first_slack = Inf) {
     )
   }
 
-  wilkinson_smooth(x, b, width)
+  wilkinson_smooth(x, b, binwidth, span = span)
 }
 
 #' A modified wilkinson-style binning that expands outward from the center of
 #' the data. Works best on symmetric data.
 #'  x must be sorted
 #' @param x numeric vector
-#' @param width bin width
+#' @param binwidth bin width
+#' @param span adjacent bin smoothing window as a fraction of `binwidth`
 #' @noRd
-wilkinson_bin_from_center = function(x, width) {
+wilkinson_bin_from_center = function(x, binwidth, span = 0) {
   if (length(x) == 0) {
     list(
       bins = integer(0),
       bin_midpoints = numeric(0)
     )
-  } else if (length(x) == 1 || abs(x[[length(x)]] - x[[1]]) < width) {
+  } else if (length(x) == 1 || abs(x[[length(x)]] - x[[1]]) < binwidth) {
     # everything is in 1 bin
     list(
       bins = rep(1, length(x)),
@@ -560,8 +563,8 @@ wilkinson_bin_from_center = function(x, width) {
         # even number of items and items in middle not equal => even number of bins and
         # we bin out from center on either side of the middle
         first_slack = (x[[length(x)/2 + 1]] - x[[length(x)/2]])/2
-        left = wilkinson_bin(x[1:(length(x)/2)], width, right = FALSE, first_slack = first_slack)
-        right = wilkinson_bin(x[(length(x)/2 + 1):length(x)], width, first_slack = first_slack)
+        left = wilkinson_bin(x[1:(length(x)/2)], binwidth, right = FALSE, first_slack = first_slack)
+        right = wilkinson_bin(x[(length(x)/2 + 1):length(x)], binwidth, first_slack = first_slack)
         return(list(
           bins = c(left$bins, length(left$bin_midpoints) + right$bins),
           bin_midpoints = c(left$bin_midpoints, right$bin_midpoints)
@@ -581,7 +584,7 @@ wilkinson_bin_from_center = function(x, width) {
     # a center bin first and then bin out from around it.
     center_i = length(x) / 2 + 0.5
     for (offset in (1:floor(length(x) / 2)) - edge_offset_from_center) {
-      if (abs(x[[center_i + offset]] - x[[center_i - offset]]) < width) {
+      if (abs(x[[center_i + offset]] - x[[center_i - offset]]) < binwidth) {
         # can add both points
         edge_offset_from_center = offset
       } else {
@@ -593,11 +596,11 @@ wilkinson_bin_from_center = function(x, width) {
 
     # construct bins for regions left / right of center
     left = wilkinson_bin(
-      x[1:(center_i - edge_offset_from_center - 1)], width, right = FALSE,
+      x[1:(center_i - edge_offset_from_center - 1)], binwidth, right = FALSE,
       first_slack = x[[center_i - edge_offset_from_center]] - x[[center_i - edge_offset_from_center - 1]]
     )
     right = wilkinson_bin(
-      x[(center_i + edge_offset_from_center + 1):length(x)], width,
+      x[(center_i + edge_offset_from_center + 1):length(x)], binwidth,
       first_slack = x[[center_i + edge_offset_from_center + 1]] - x[[center_i + edge_offset_from_center]]
     )
 
@@ -607,7 +610,7 @@ wilkinson_bin_from_center = function(x, width) {
       bin_midpoints = c(left$bin_midpoints, center_midpoint, right$bin_midpoints)
     )
 
-    wilkinson_smooth(x, b, width)
+    wilkinson_smooth(x, b, binwidth, span = span)
   }
 }
 
@@ -672,15 +675,15 @@ locate_bins = function(bin_runs, x) {
 #' @param b <[numeric]> binning as returned by other `wilkinson_` functions: a
 #' [list] with elements `bins` (consecutive integers starting at `1` with the same
 #' length as `x`) and `bin_midpoints` (having length equal to `max(bins)`).
-#' @param width <scalar [numeric]> positive bin width
+#' @param binwidth <scalar [numeric]> positive bin width
 #' @param span <scalar [numeric]> multiple of bin width giving the window within
 #' which to consider the next bin "adjacent". If `0`, no smoothing is done. A value
 #' of `1.25` is equivalent to Wilkinson's recommended smoothing if bins are within
-#' `width/4` of each other.
+#' `binwidth/4` of each other.
 #' @noRd
-wilkinson_smooth = function(x, b, width, span = 0) {
+wilkinson_smooth = function(x, b, binwidth, span = 0) {
   if (span == 0) return(b)
-  window = width * span
+  window = binwidth * span
 
   bin_runs = rle_bins(b$bins)
   for (i in seq_len(nrow(bin_runs) - 1)) {
@@ -695,10 +698,11 @@ wilkinson_smooth = function(x, b, width, span = 0) {
   locate_bins(bin_runs, x)
 }
 
+
 # grid swarm -------------------------------------------------------------
 
 #' Beeswarm layout using a fractional grid.
-#'
+#' @description
 #' Lays out dots by sweeping one row at a time on a fractional grid, alternating the direction of
 #' sweeps on each row.
 #' @param x <[numeric]> sorted x values
@@ -725,11 +729,11 @@ grid_swarm = function(x, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
 #' new bin midpoints to old (weighted by number of items in each bin), subject
 #' to adjacent bins being at least `width` apart.
 #' @param bin_midpoints vector: midpoints of each bin
-#' @param width scalar: width of bins
+#' @param binwidth scalar: width of bins
 #' @param count vector of length(bin_midpoints): number of items in each bin
 #' @returns vector of length(bin_midpoints) giving new bin midpoints
 #' @noRd
-nudge_bins = function(bin_midpoints, width, count = rep(1, length(bin_midpoints))) {
+nudge_bins = function(bin_midpoints, binwidth, count = rep(1, length(bin_midpoints))) {
   n = length(bin_midpoints)
   if (n < 2) return(bin_midpoints)
 
@@ -748,7 +752,7 @@ nudge_bins = function(bin_midpoints, width, count = rep(1, length(bin_midpoints)
     seq_len(n - 1),
     seq(2, n)
   )
-  b = rep(width, n - 1)
+  b = rep(binwidth, n - 1)
 
   quadprog::solve.QP.compact(R_inv, d, Amat, Aind, b, factorized = TRUE)$solution
 }
