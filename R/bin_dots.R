@@ -20,6 +20,7 @@ NULL
 #' between dot centers
 #' @eval rd_param_dots_layout()
 #' @eval rd_param_dots_overlaps()
+#' @eval rd_param_dots_span()
 #' @eval rd_param_side("dots")
 #' @param orientation <[string][character]> Whether the dots are laid out horizontally
 #' or vertically. Follows the naming scheme of [geom_slabinterval()]:
@@ -70,7 +71,8 @@ bin_dots = function(x, y, binwidth,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge"
+  overlaps = "nudge",
+  span = waiver()
 ) {
   side = match.arg(side)
   orientation = match.arg(orientation)
@@ -97,7 +99,8 @@ bin_dots = function(x, y, binwidth,
     stackratio = stackratio,
     side = side,
     orientation = orientation,
-    overlaps = overlaps
+    overlaps = overlaps,
+    span = span
   )
   binning = arrange_bins(binner, d[[x]], binwidth = binwidth)
   d = place_dots(binner, d, binning)

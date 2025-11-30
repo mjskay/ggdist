@@ -35,6 +35,7 @@ rd_dotsinterval_shortcut_geom = function(
       '),
     '@template details-dotsinterval-family',
     '@template references-quantile-dotplots',
+    '@template references-dotplots',
     rd_dotsinterval_aesthetics(geom_name),
     if (exists(paste0("stat_", geom_name))) glue_doc('
       @seealso See [stat_<<geom_name>>()] for the stat version, intended for
@@ -104,6 +105,7 @@ rd_dotsinterval_shortcut_stat = function(
       the default connection between [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
     '@template details-dotsinterval-family',
     '@template references-quantile-dotplots',
+    '@template references-dotplots',
     '@template details-x-y-xdist-ydist',
     glue_doc('
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can
@@ -179,4 +181,8 @@ rd_param_dots_layout = function() {
 
 rd_param_dots_overlaps = function() {
   paste0("@param overlaps ", GeomDotsinterval$get_param_docs()$overlaps)
+}
+
+rd_param_dots_span = function() {
+  paste0("@param span ", GeomDotsinterval$get_param_docs()$span)
 }

@@ -1,5 +1,16 @@
 # ggdist (development version)
 
+Major changes:
+
+* The `geom_dots()` family gains a `span` parameter. This parameter controls
+  smoothing/spacing in various dotplot layouts. In bin-based layouts (`"bin"`,
+  `"weave"`, `"hex"`), it implements moving-average dotplot smoothing as
+  described in Wilkinson (1999) by exchanging dots between adjacent bins
+  that are within `span * binwidth` of each other (try
+  `geom_dots(span = 1.25)`). In the `"bar"` layout it controls the width
+  of the bars relative to the data resolution (try
+  `geom_dots(layout = "bar", span = 0.5)`).
+
 Minor changes:
 
 * `geom_dots(layout = "swarm")` now re-centers contiguous clusters of dots
@@ -8,15 +19,15 @@ Minor changes:
   (inspired by a question from @jbengler at the ggextenders talk).
 * Automatic binwidth detection in dots geometries now accounts for `layout` and
   `side` parameters to improve binwidth selection for non-default layouts, most
-  notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to 
+  notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to
   existing plots that use automatic binwidths.
 * `auto_partial()` can now wrap S7 class constructors.
 
 Internal changes:
 
 * Ensure duplicate points in paths are removed before drawing (e.g. when slabs
-  are split up). This does not change the appearance of output but should 
-  (hopefully) make snapshot testing across different graphical devices / 
+  are split up). This does not change the appearance of output but should
+  (hopefully) make snapshot testing across different graphical devices /
   platforms more reliable.
 * Set up `variant` testing with `vdiffr` so that platform-specific snapshots can
   be tested.
@@ -24,14 +35,14 @@ Internal changes:
 Bug fixes:
 
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
-  determine order from the `order` aesthetic to be robust to infinities 
+  determine order from the `order` aesthetic to be robust to infinities
   (#255; thanks @damonbayer).
 * Key glyphs draw correctly again on ggplot2 4.0 (#262; thanks @mitchelloharawild
   for pinpointing the solution).
 * Sub-geom color and fill scales now register theme elements for setting default
   palettes using `ggplot2::register_theme_elements()`. This means that, just like
-  base `{ggplot2}` scales, the default palette for (e.g.) 
-  `scale_point_color_continuous()` can be set via 
+  base `{ggplot2}` scales, the default palette for (e.g.)
+  `scale_point_color_continuous()` can be set via
   `theme(palette.point_color.continuous = ...)`. This also fixes #263.
 
 
@@ -41,11 +52,11 @@ Major changes:
 
 * Require R > 4.0 due to several dependencies now requiring it.
 * To complement the `subguide`s for `geom_slab()`, there are now `subscale`s,
-  which can be used to adjust the `limits` or the `expand` parameter of the 
-  `thickness` per-geometry sub-scales (in much the same way those 
+  which can be used to adjust the `limits` or the `expand` parameter of the
+  `thickness` per-geometry sub-scales (in much the same way those
   parameters can be set on `scale_thickness_shared()`) (#219).
 * Default subscales and subguides can be set by assigning `subscale_thickness`,
-  `subguide_slab`, `subguide_dots`, and `subguide_spike` in the global 
+  `subguide_slab`, `subguide_dots`, and `subguide_spike` in the global
   environment (#225).
 * Allow use of square `shape`s in `geom_blur_dots()`.
 * More arguments to `stat_slabinterval()` now use `waiver()`s so that they
@@ -53,13 +64,13 @@ Major changes:
   estimator (#220).
 * Bin edge openness can now be set via the `right_closed` and `outermost_closed`
   arguments to `density_histogram()` (#238).
-* New helper functions `interval_widths()` and `pretty_widths()` make it 
+* New helper functions `interval_widths()` and `pretty_widths()` make it
   easier to create nicely-spaced sets of nested intervals.
 
 Documentation:
 
 * Almost all parameter documentation (except some inherited from other packages)
-  now includes an annotation listing valid data types for that parameter (#243). 
+  now includes an annotation listing valid data types for that parameter (#243).
 
 Bug fixes:
 
@@ -91,14 +102,14 @@ Major changes:
 * The new `breaks_quantiles()` histogram breaks function allows the construction
   of quantile histograms with `density_histogram()`, `stat_histinterval()`, etc.
 * The color ramp scales (e.g. `scale_colour_ramp_continuous()`, ...) now use
-  an explicit data type, `partial_colour_ramp()`, to encode color ramps and 
+  an explicit data type, `partial_colour_ramp()`, to encode color ramps and
   their origin colors, and provide the `ramp_colours()` function for applying
   colour ramps. This should make it easier to pass explicit color ramps
   without using scale functions, and for packages building on {ggdist} to
   use the colour ramp scales (#209).
-  
+
 Minor changes:
-  
+
 * The default histogram bin selection algorithm is now `"Scott"` instead of
   `"Sturges"`, as `"Sturges"` tends to be too conservative (#214).
 * The `at` parameter to `stat_spike()` (or its names) now determines values of
@@ -109,14 +120,14 @@ Minor changes:
 * The default value of `overflow` in `geom_dotsinterval()` is now the new
   `"warn"` mode, which works the same as `"keep"` except that it warns users
   if the dots will overflow the geometry bounds and suggests solutions (#213).
-* Optional arguments to automatically partially-applied functions can now be 
+* Optional arguments to automatically partially-applied functions can now be
   passed a `waiver()` to use their default value (see `auto_partial()`).
-* Several dependency reductions: removed {cowplot}, {purrr}, {forcats}, 
+* Several dependency reductions: removed {cowplot}, {purrr}, {forcats},
   {palmerpenguins}, and {modelr} from *Suggests*; moved {tidyselect} and {dplyr}
-  from *Imports* to *Suggests*. The latter two are only strictly necessary for 
-  `curve_interval()` due to its use of grouped data frames and tidy selection to 
+  from *Imports* to *Suggests*. The latter two are only strictly necessary for
+  `curve_interval()` due to its use of grouped data frames and tidy selection to
   specify which columns are conditional and which are joint (the use of grouped
-  data frames with `point_interval()` is less strictly necessary, and not used 
+  data frames with `point_interval()` is less strictly necessary, and not used
   by stats, so is easier to avoid as an absolute dependency).
 
 Documentation:
@@ -136,10 +147,10 @@ New features and enhancements:
 
 * Use derivatives supplied by transformations in *scales* >= 1.2.2 to make
   transformations of densities more reliable (r-lib/scales#341).
-* New `layout = "bar"` for `geom_dotsinterval()` that provides better bar 
+* New `layout = "bar"` for `geom_dotsinterval()` that provides better bar
   dotplots (with thanks to @sharoz for feedback; #190).
 * Bandwidth estimators (including the default, `bandwidth_dpi()`) now fall back
-  to `bandwidth_nrd0()` when they fail, with a warning that suggests trying 
+  to `bandwidth_nrd0()` when they fail, with a warning that suggests trying
   a dotplot or histogram (as these failures tend to happen on data that is not
   a good candidate for a density plot in the first place) (#196).
 * Much faster (C++) implementation of Wilkinson dotplot binning, especially
@@ -157,19 +168,19 @@ Bug fixes:
 
 # ggdist 3.3.0
 
-Breaking changes: The following changes, mostly due to new default density 
+Breaking changes: The following changes, mostly due to new default density
 estimators, may cause some plots on sample data to change. Changes should usually
 be small, and generally should result in more accurate density estimation. Revert
 to the old behavior by setting `density = density_unbounded(bandwidth = "nrd0")`.
 
 * `stat_slabinterval()` now uses `density_bounded()` as its default density
-  estimator, which uses a bounded density estimator that also estimates the 
+  estimator, which uses a bounded density estimator that also estimates the
   bounds of the data. The default bandwidth estimator is also now `bandwidth_dpi()`,
   which is the Sheather-Jones direct plug-in estimator (the same as
   `stats::bw.SJ(..., method = "dpi")`). These changes may cause existing charts
   using densities to change; usually only slightly. These changes should be worth
-  it, as they should drastically improve the accuracy of density estimates, 
-  especially on bounded data, and should have little noticeable impact on densities 
+  it, as they should drastically improve the accuracy of density estimates,
+  especially on bounded data, and should have little noticeable impact on densities
   on unbounded data.
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
@@ -194,19 +205,19 @@ New features and enhancements:
 * `marginalize_lkjcorr()` adjusts the `.dist_obj` column output by `parse_dist()`
   in addition to the `.dist` and `.args` columns.
 * `geom_lineribbon()` now obeys the `order` aesthetic, allowing you to arbitrarily
-  set the draw order of ribbons (#171). Enabled by this change, `stat_lineribbon()` 
+  set the draw order of ribbons (#171). Enabled by this change, `stat_lineribbon()`
   now sets `order = after_stat(level)` by default, making its draw order more correct
   by ensuring all ribbons of the same level are drawn together.
 * Some improved error messages using `cli`.
-* *Very* experimental adaptive KDE is available through the `adapt` parameter; 
-  note that it is unsupported and both the implementation and interface are 
+* *Very* experimental adaptive KDE is available through the `adapt` parameter;
+  note that it is unsupported and both the implementation and interface are
   highly likely to change.
 
 Deprecations:
 
 * The `slab_type` parameter for `stat_slabinterval()` is now deprecated in favor
   of mapping the corresponding computed variable (`pdf` or `cdf`) onto the desired
-  aesthetic. For `slab_type = "histogram"`, use the `pdf` computed variable 
+  aesthetic. For `slab_type = "histogram"`, use the `pdf` computed variable
   combined with the new `density_histogram()` density estimator (e.g. set
   `density = "histogram"`). (#165)
 
@@ -215,7 +226,7 @@ Bug fixes:
 * Ensure scale transformations work even when no slab is present; e.g. in
   `stat_interval()`. (#168)
 * Ensure `curve_interval()` works with `posterior::rvar`s. (#158)
-* `geom_lineribbon()` draw order is now correct even when some portions of a 
+* `geom_lineribbon()` draw order is now correct even when some portions of a
   ribbon has `NA` widths. (#171)
 * Improve the appearance of logical fill conditions at bin edges on histograms. (#175)
 
@@ -224,14 +235,14 @@ Bug fixes:
 
 New features and enhancements:
 
-* Support for non-numeric distributions in `stat_slabinterval()` and 
+* Support for non-numeric distributions in `stat_slabinterval()` and
   `stat_dotsinterval()`, including `dist_categorical()`, `dist_bernoulli()`,
   and the upcoming `posterior::rvar_factor()` type. (#108)
 * Various improvements to dotplot layout in `geom_dotsinterval()`:
   * new `layout = "hex"` allows a hexagonal circle-packing style layout (#161).
-  * new mechanism for smoothing dotplots using the `smooth` parameter, including 
-    `smooth = "bounded"` / `smooth = "unbounded"` (for "density dotplots") and 
-    `smooth = "discrete"` / `smooth = "bar"` (for improved layout of large-n 
+  * new mechanism for smoothing dotplots using the `smooth` parameter, including
+    `smooth = "bounded"` / `smooth = "unbounded"` (for "density dotplots") and
+    `smooth = "discrete"` / `smooth = "bar"` (for improved layout of large-n
     discrete distributions). (#161)
   * a better bin/dot-nudging algorithm using constrained optimization (#163)
   * new `overlaps = "keep"` option disables bin/dot nudging in `"bin"`, `"hex"`,
@@ -259,7 +270,7 @@ New features and enhancements:
 * A new **experimental** mini domain-specific language for probability expressions
   in *ggdist* `stat`s: the `Pr_()` and `p_()` functions can be used to generate
   `after_stat()` expressions in terms of *ggdist* computed variables; e.g.
-  `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the 
+  `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the
   `thickness` aesthetic; `aes(thickness = !!p_(x))` maps the PDF onto the
   `thickness` aesthetic. (#160)
 * Several function families in *ggdist* now use "currying" (automatic partial
@@ -287,11 +298,11 @@ New features and enhancements:
     filled according to a set of intervals (this approach which also works on
     highest-density intervals, which `cut_cdf_qi()` does not). Examples in
     `vignette("slabinterval")` have been updated to use the new approach, and
-    an example has been added to `vignette("dotsinterval")` showing how to 
+    an example has been added to `vignette("dotsinterval")` showing how to
     color dots by intervals.
   * As an experimental feature (currently a bit fragile) enabled via
     `options(ggdist.experimental.slab_data_in_intervals = TRUE)`,
-    the `pdf` and `cdf` computed variables can now be used in interval 
+    the `pdf` and `cdf` computed variables can now be used in interval
     sub-geometries to get the PDF and CDF at the point summary. `pdf_min`,
     `pdf_max`, `cdf_min`, and `cdf_max` also give the PDF and CDF at the lower
     and upper ends of the interval. An example in `vignette("lineribbon")`
@@ -305,21 +316,21 @@ New features and enhancements:
 * If `thickness` is less than 0 it is normalized to have a minimum of zero when
   normalization is turned on; this makes it easier to use slab functions that
   go below zero. A new example in `vignette("slabinterval")` shows how to use
-  this to create [raindrop plots](https://doi.org/10.1198/0003130032369). 
+  this to create [raindrop plots](https://doi.org/10.1198/0003130032369).
 * The stacking order of dots within bins for `geom_dotsinterval(layout = "bin")`
-  can now be set using the `order` aesthetic. This makes it possible to create 
+  can now be set using the `order` aesthetic. This makes it possible to create
   "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic
   (#132). As part of this change, `bin_dots()` now maintains the original data
-  order within bins when `layout = "bin"`. See an example in 
+  order within bins when `layout = "bin"`. See an example in
   `vignette("dotsinterval")`.
 * A new `verbose = TRUE` flag in `geom_dotsinterval()` outputs the selected
   `binwidth` in both data units and normalized parent coordinates. This may be
-  useful if you want to start with an automatically-selected bin width and then 
+  useful if you want to start with an automatically-selected bin width and then
   adjust it manually. Though note: if you just want to scale the selected
-  bin width to fit within a desired area, it is probably better to use `scale`, 
-  and if you want to provide constraints on the bin width, you can pass a 
+  bin width to fit within a desired area, it is probably better to use `scale`,
+  and if you want to provide constraints on the bin width, you can pass a
   2-vector to `binwidth`.
-* The `expand` argument in `stat_slabinterval()` can now take a length-two logical 
+* The `expand` argument in `stat_slabinterval()` can now take a length-two logical
   vector to control expansion to the lower and upper limits respectively (#129).
   Thanks to @teunbrand.
 * `geom_dotsinterval()` now supports the `family` aesthetic for setting the font
@@ -361,7 +372,7 @@ New features and enhancements:
     error message suggesting you probably want to use `xdist` or `ydist`.
   * Restructured internals for stats and geoms makes it much easier to maintain
     shortcut geoms and stats, eliminating a large amount of code duplication (#106).
-  * New `expand` parameter to `stat_slabinterval()` allows explicitly setting 
+  * New `expand` parameter to `stat_slabinterval()` allows explicitly setting
     whether or not the slab is expanded to the limits of the scale (rather than
     implicitly setting this based on `slab_type`).
 * The `point_interval()` family of functions can now be passed `distributional`
@@ -376,7 +387,7 @@ New features and enhancements:
   `geom_lineribbon()`, you will get ribbons without a line (#127).
 * One-sided intervals (i.e. quantiles) can now be calculated using `ul()` (upper
   limit) or `ll()` (lower limit), e.g. with `point_interval()` explicitly or
-  via `mean_ll()`, `median_ll()`, `mode_ll()`, `mean_ul()`, `median_ul()`, 
+  via `mean_ll()`, `median_ll()`, `mode_ll()`, `mean_ul()`, `median_ul()`,
   or `mode_ul()` (#49).
 * Constant distributions are now reliably detected in a variety of situations
   and rendered as point masses in both density plots and histograms (#103, #32).
@@ -387,10 +398,10 @@ New features and enhancements:
   * A formerly-internal fudge factor of `1.07` for dot sizes is now exposed as
     the default value of the `dotsize` parameter instead of being applied
     internally. This fudge factor tends (in my opinion) to make dotplots look a
-    bit better due to the visual distance between circles, but is (I think) 
+    bit better due to the visual distance between circles, but is (I think)
     better used as an explicit value than an implicit one, hence the change.
-    This may create subtle changes to plots that use the `dotsize` or `stackratio` 
-    parameters, but allows those parameters to have a more precise 
+    This may create subtle changes to plots that use the `dotsize` or `stackratio`
+    parameters, but allows those parameters to have a more precise
     geometric interpretation.
 
 Documentation:
@@ -405,7 +416,7 @@ Documentation:
   documentation pages with a comprehensive listing of aesthetics and parameters (#107).
 * Ridge plot-like example in `vignette("slabinterval")` using the new `expand`
   parameter (#115).
-  
+
 Deprecations and removals:
 
 * The `.prob` argument, a long-deprecated alias for `.width`, was removed.
@@ -413,16 +424,16 @@ Deprecations and removals:
   and `interval_args` arguments to `stat_slabinterval()` were removed: these were
   largely internal-use parameters only needed by subclasses of the base class for
   creating shortcut stats, yet added a lot of noise to the documentation, so these
-  were replaced with the `$compute_limits()`, `$compute_slabs()`, and 
-  `$compute_intervals()` methods on the new `AbstractStatSlabinterval` 
+  were replaced with the `$compute_limits()`, `$compute_slabs()`, and
+  `$compute_intervals()` methods on the new `AbstractStatSlabinterval`
   internal base class.
-  
+
 Bug fixes:
 
 * Improved handling of `NA`s for analytical distributions.
 * Fixed bug where within-bin order of dots in dotplots for `"bin"` and `"weave"`
   layouts could be incorrect with aesthetics mapped at a sub-bin level.
-* `stackratio`s that are not equal to `1` are now accounted for in 
+* `stackratio`s that are not equal to `1` are now accounted for in
   `find_dotplot_binwidth()` (i.e. automatic dotplot bin width selection).
 * Ensure distinct fill colors in lineribbons are still treated as distinct for
   grouping even if the `fill_ramp` aesthetic ramps them to the same color.
@@ -457,7 +468,7 @@ New features:
   within the same geom.
 * Varying `fill`s within a slab  in `geom_slabinterval()` can now be drawn as
   true gradients rather than segmented polygons in R >= 4.1 by setting
-  `fill_type = "gradient"`. This substantially improves the appearance of 
+  `fill_type = "gradient"`. This substantially improves the appearance of
   gradient fills in graphics engines that support it (#44).
 * Improved support for discrete distributions:
   * `stat_dist_slabinterval()` and company now detect discrete distributions and
@@ -476,7 +487,7 @@ New features:
   conservative and tends to create intervals that are too wide; `curve_interval()`
   now searches for a cutoff in data depth such that X% of curves are contained
   within its envelope (#67).
-* `point_interval()` and company now accept `distributional` objects and 
+* `point_interval()` and company now accept `distributional` objects and
   `posterior::rvar()`s (full support for `distributional` objects requires
   `distributional` > 0.2.2).
 * Reduce dependencies substantially, making the geoms more suitable for use by
@@ -488,7 +499,7 @@ New documentation:
   variables in `geom_slabinterval()`, `stat_slabinterval()`, and company, listing
   all custom aesthetics, computed variables, and their usage.
 
-* Several new examples in `vignette("slabinterval")`, including "rain cloud" 
+* Several new examples in `vignette("slabinterval")`, including "rain cloud"
   plots and an example of histograms for discrete analytical distributions.
 
 Bug fixes:
@@ -503,10 +514,10 @@ Bug fixes:
 
 New features:
 
-* Added `"weave"` and `"swarm"` layouts for dots geoms (#64). These provide 
+* Added `"weave"` and `"swarm"` layouts for dots geoms (#64). These provide
   alternative layouts that keep datapoints in their actual positions on the
-  data axis. The `"weave"` layout maintains rows but not columns and works well 
-  for quantile dotplots; the `"swarm"` layout uses the `"compactswarm"` method from 
+  data axis. The `"weave"` layout maintains rows but not columns and works well
+  for quantile dotplots; the `"swarm"` layout uses the `"compactswarm"` method from
   `beeswarm::beeswarm()` (courtesy James Trimble) and works well on sample data.
   See the dotplot section of `vignette("slabinterval")` for comparisons.
 * Allow the use of `unit()` to specify bin widths manually for dots geoms and stats,
@@ -535,7 +546,7 @@ New features:
 
 * add `pdf` and `cdf` computed variables for the `stat_sample_slabinterval()` subfamily. See
   new examples of usage in the last section of `vignette("slabinterval")`. (#11)
-* add `cut_cdf_qi()` for creating (amongst other things) interval-filled halfeyes, in the 
+* add `cut_cdf_qi()` for creating (amongst other things) interval-filled halfeyes, in the
   style of `bayesplot::mcmc_areas()` (#11)
 * add `fill_ramp` and `color_ramp` scales to `geom_slabinterval()` and `geom_lineribbon()` families,
   making it easier to separate group colors from interval/density/CDF colors. See new examples in
@@ -578,7 +589,7 @@ Bug fixes:
 
 * Support for [distributional](https://pkg.mitchelloharawild.com/distributional/), including new
   examples in `vignette("slabinterval")` (#14).
-* `stat_dist_...` geoms now calculate `pdf` and `cdf` columns to allow mashup geoms that involve both 
+* `stat_dist_...` geoms now calculate `pdf` and `cdf` columns to allow mashup geoms that involve both
   functions, such as Correll-style gradient plots combined with violins, as in Helske *et al.* (#11).
 * `stat_dist_...` geoms should now work with `gganimate` (#15).
 * Examples updated to fix errors introduced by `broom::augment()` defaulting to `se_fit = FALSE`.
@@ -593,7 +604,7 @@ Bug fixes:
 * All stats and geoms now support automatic orientation determination. Thus, all `h`-suffix geoms are now
   deprecated. Those geoms have been left in `tidybayes` and give a deprecation warning when used; they
   cannot be used from `ggdist` directly.
-* `geom_interval()`, `geom_pointinterval()`, and `geom_lineribbon()` no longer automatically set the 
+* `geom_interval()`, `geom_pointinterval()`, and `geom_lineribbon()` no longer automatically set the
   `ymin` and `ymax` aesthetics if `.lower` or `.upper` are present in the data. This allows them to work
   better with automatic orientation detection (and was a bad feature to have existed in the first place
   anyway). The deprecated `tidybayes::geom_intervalh()` and `tidybayes::geom_pointintervalh()` still

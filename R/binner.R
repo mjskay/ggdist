@@ -124,8 +124,7 @@ binner_bin = new_binner_class(
       class_logical,
       getter = function(self) FALSE
     )
-  ),
-  constructor = binner@constructor
+  )
 )
 
 #' Weave binner

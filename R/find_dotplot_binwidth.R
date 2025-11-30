@@ -60,7 +60,8 @@ find_dotplot_binwidth = function(
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both")
+  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
+  span = waiver()
 ) {
   side = match.arg(side)
 
@@ -78,7 +79,8 @@ find_dotplot_binwidth = function(
     maxheight = maxheight,
     heightratio = heightratio,
     stackratio = stackratio,
-    side = side
+    side = side,
+    span = span
   )
   min_binning = arrange_bins(binner, x, nbins = min_nbins)
 

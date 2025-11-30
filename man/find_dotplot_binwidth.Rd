@@ -11,7 +11,8 @@ find_dotplot_binwidth(
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
-    "bottomright", "both")
+    "bottomright", "both"),
+  span = waiver()
 )
 }
 \arguments{
@@ -26,32 +27,36 @@ between dot centers}
 
 \item{layout}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of
-their bins as in the classic Wilkinson dotplot. This maintains the
+their bins as in the classic Wilkinson (1999) dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly
-different from the classic Wilkinson algorithm in that: (1) it nudges
-bins slightly to avoid overlapping bins and (2) if the input data are
-symmetrical it will return a symmetrical layout.
+different from the Wilkinson algorithm: (1) it nudges bin positions
+slightly to avoid overlaps (see the \code{overlaps} parameter); (2) by default
+it does not apply a smoothing pass (but Wilkinson-style smoothing can be
+applied via passing \code{span = 1.25}); (3) it uses a backwards sweep to
+reduce right-edge binning effects; (4) if the input data are symmetrical,
+it bins out from the center to return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but
 places dots in the off-axis at their actual positions (unless
-\code{overlaps = "nudge"}, in which case overlaps may be nudged out of the
-way). This maintains the alignment of rows but does not align dots
+\code{overlaps = "nudge"}, in which case overlaps within rows are nudged out
+of the way). This maintains the alignment of rows but does not align dots
 within columns.
 \item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but
-alternates placing dots \code{+ binwidth/4} or \code{- binwidth/4} in the
-off-axis from the bin center. This allows hexagonal packing by setting
-a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
+alternates placing dots at \eqn{\pm} \code{binwidth/4} in the
+off-axis from the bin center, giving a hexagonal layout. For
+an equilateral hexagonal packing, set \code{dotsize = k} and
+\code{stackratio = sqrt(3/4) / k} for some \code{k} (e.g. \code{0.9}).
 \item \code{"swarm"}: uses a version of the \code{"compactswarm"} layout from
-\code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}} (with minor modifications to improve visual
-symmetry when \code{side = "both"}). Does not maintain alignment of rows or
-columns, but can be more compact and neat-looking, especially for
-sample data (as opposed to quantile dotplots of theoretical
-distributions, which may look better with \code{"bin"}, \code{"weave"}, or
-\code{"hex"}).
+\link[beeswarm:beeswarm]{beeswarm}, with minor modifications to improve visual
+symmetry when \code{side = "both"}. Ensures dot are positioned exacty at their
+underlying data values. Does not maintain alignment of rows or
+columns, but can be more compact, especially for sample data (as opposed
+to quantile dotplots of theoretical distributions, which may look better
+with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
 
-\item{side}{Which side to place the dots on. One of:
+\item{side}{<\link[=character]{string}> Which side to place the dots on. One of:
 \itemize{
 \item \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms which draw the dots on the top or the
 right depending on if \code{orientation} is \code{"horizontal"} or \code{"vertical"}.

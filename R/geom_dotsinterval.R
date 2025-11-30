@@ -12,7 +12,7 @@ NULL
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  overlaps = "nudge", overflow = "warn",
+  overlaps = "nudge", overflow = "warn", span = waiver(),
   subguide = "dots",
   verbose = FALSE,
   orientation = "vertical",
@@ -29,7 +29,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    overlaps = overlaps, overflow = overflow,
+    overlaps = overlaps, overflow = overflow, span = span,
     subguide = subguide,
     verbose = verbose,
     orientation = orientation,
@@ -60,6 +60,7 @@ makeContent.dots_grob = function(x) {
   binwidth = grob_$binwidth
   layout = grob_$layout
   overlaps = grob_$overlaps
+  span = grob_$span
   overflow = grob_$overflow
   subguide = grob_$subguide
   stackratio = grob_$stackratio
@@ -100,7 +101,15 @@ makeContent.dots_grob = function(x) {
     # find the best bin widths across all the dotplots we are going to draw
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
-      find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio, layout = layout, side = d$side[[1]])
+      find_dotplot_binwidth(
+        d[[x]],
+        maxheight,
+        heightratio,
+        stackratio,
+        layout = layout,
+        side = d$side[[1]],
+        span = span
+      )
     })
 
     binwidth = min(binwidths, user_max_binwidth)
@@ -151,7 +160,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
-      overlaps = overlaps,
+      overlaps = overlaps, span = span,
       layout = layout, side = d$side[[1]], orientation = orientation
     )
 
@@ -274,7 +283,7 @@ draw_slabs_dots = function(
   ...,
   fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
-  overlaps, overflow,
+  overlaps, overflow, span,
   subguide,
   verbose
 ) {
@@ -337,6 +346,7 @@ draw_slabs_dots = function(
     binwidth = binwidth,
     layout = layout,
     overlaps = overlaps,
+    span = span,
     overflow = overflow,
     subguide = subguide,
     verbose = verbose,
@@ -505,6 +515,12 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       '),
     smooth = glue_doc('
       <[function] | [string][character]> Smoother to apply to dot positions.
+
+      **Note:** in most cases, more reliable forms of smoothing can be achieved via
+      changing layouts (e.g. using `layout = "bar"` instead of `smooth = "bar"`)
+      or via other parameters (e.g. using `span = 1.25` for `"bin"`, `"hex"`,
+      or `"weave"` layouts).
+
       One of:
         - A function that takes a numeric vector of dot positions and returns a
           smoothed version of that vector, such as [smooth_bounded()],
@@ -536,27 +552,31 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     layout = glue_doc('
       <[string][character]> The layout method used for the dots. One of: \\itemize{
         \\item `"bin"` (default): places dots on the off-axis at the midpoint of
-          their bins as in the classic Wilkinson dotplot. This maintains the
+          their bins as in the classic Wilkinson (1999) dotplot. This maintains the
           alignment of rows and columns in the dotplot. This layout is slightly
-          different from the classic Wilkinson algorithm in that: (1) it nudges
-          bins slightly to avoid overlapping bins and (2) if the input data are
-          symmetrical it will return a symmetrical layout.
+          different from the Wilkinson algorithm: (1) it nudges bin positions
+          slightly to avoid overlaps (see the `overlaps` parameter); (2) by default
+          it does not apply a smoothing pass (but Wilkinson-style smoothing can be
+          applied via passing `span = 1.25`); (3) it uses a backwards sweep to
+          reduce right-edge binning effects; (4) if the input data are symmetrical,
+          it bins out from the center to return a symmetrical layout.
         \\item `"weave"`: uses the same basic binning approach of `"bin"`, but
           places dots in the off-axis at their actual positions (unless
-          `overlaps = "nudge"`, in which case overlaps may be nudged out of the
-          way). This maintains the alignment of rows but does not align dots
+          `overlaps = "nudge"`, in which case overlaps within rows are nudged out
+          of the way). This maintains the alignment of rows but does not align dots
           within columns.
         \\item `"hex"`: uses the same basic binning approach of `"bin"`, but
-          alternates placing dots `+ binwidth/4` or `- binwidth/4` in the
-          off-axis from the bin center. This allows hexagonal packing by setting
-          a `stackratio` less than 1 (something like `0.9` tends to work).
+          alternates placing dots at \\eqn{\\pm} `binwidth/4` in the
+          off-axis from the bin center, giving a hexagonal layout. For
+          an equilateral hexagonal packing, set `dotsize = k` and
+          `stackratio = sqrt(3/4) / k` for some `k` (e.g. `0.9`).
         \\item `"swarm"`: uses a version of the `"compactswarm"` layout from
-          [beeswarm::beeswarm()] (with minor modifications to improve visual
-          symmetry when `side = "both"`). Does not maintain alignment of rows or
-          columns, but can be more compact and neat-looking, especially for
-          sample data (as opposed to quantile dotplots of theoretical
-          distributions, which may look better with `"bin"`, `"weave"`, or
-          `"hex"`).
+          [beeswarm][beeswarm::beeswarm()], with minor modifications to improve visual
+          symmetry when `side = "both"`. Ensures dot are positioned exacty at their
+          underlying data values. Does not maintain alignment of rows or
+          columns, but can be more compact, especially for sample data (as opposed
+          to quantile dotplots of theoretical distributions, which may look better
+          with `"bin"`, `"weave"`, or `"hex"`).
         \\item `"bar"`: for discrete distributions, lays out duplicate values in
           rectangular bars.
       }'),
@@ -573,6 +593,29 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           using a constrained optimization which minimizes the squared distance of
           dots to their desired positions, subject to the constraint that adjacent
           dots do not overlap.
+      }'),
+    span = glue_doc('
+      <scalar [numeric]> Non-negative smoothing/spacing parameter expressed as a
+      fraction. The specific use and default value (`waiver()`) depend on the
+      `layout`:
+      \\itemize{
+        \\item{For `layout = "bin"`, `"hex"`, or `"weave"`: A smoothing parameter
+          expressed as a proportion of the `binwidth` (default: `0`, no smoothing).
+          Use `span = 1.25` to apply moderate smoothing.
+          A positive `span` applies a moving average to adjacent
+          bins whose midpoints are within `span * binwidth` of each other,
+          exchanging dots between bins using the method described
+          by Wilkinson (1999). Specifically, for every bin \\eqn{i} with midpoint
+          \\eqn{m_i} containing \\eqn{f(i)} dots, the algorithm moves
+          \\eqn{\\left\\lfloor\\frac{f(i + 1) - f(i)}{2}\\right\\rfloor} dots from bin
+          \\eqn{i + 1} to bin \\eqn{i} if \\eqn{m_{i + 1} - m_i \\le} `span`.
+          Good values for `span` are typically between `1` and `2`. `span = 1.25` is
+          equivalent to Wilkinson\'s recommendation, which smooths bins that are at most
+          `binwidth/4` apart.
+        }
+        \\item For `layout = "bar"`: Width of bars expressed as a proportion of the data resolution
+          (default: 0.9). Values are typically between `0` and `1`. Use smaller values to
+          increase the spacing between bars.
       }'),
     verbose = glue_doc('
       <scalar [logical]> If `TRUE`, print out the bin width of the dotplot. Can be useful
@@ -594,6 +637,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     stackratio = 1,
     layout = "bin",
     overlaps = "nudge",
+    span = waiver(),
     smooth = "none",
     overflow = "warn",
     verbose = FALSE

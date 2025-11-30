@@ -88,27 +88,31 @@ stack relative to the dot height. The default, \code{1}, makes dots in the same
 stack just touch each other.}
 \item{\code{layout}}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of
-their bins as in the classic Wilkinson dotplot. This maintains the
+their bins as in the classic Wilkinson (1999) dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly
-different from the classic Wilkinson algorithm in that: (1) it nudges
-bins slightly to avoid overlapping bins and (2) if the input data are
-symmetrical it will return a symmetrical layout.
+different from the Wilkinson algorithm: (1) it nudges bin positions
+slightly to avoid overlaps (see the \code{overlaps} parameter); (2) by default
+it does not apply a smoothing pass (but Wilkinson-style smoothing can be
+applied via passing \code{span = 1.25}); (3) it uses a backwards sweep to
+reduce right-edge binning effects; (4) if the input data are symmetrical,
+it bins out from the center to return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but
 places dots in the off-axis at their actual positions (unless
-\code{overlaps = "nudge"}, in which case overlaps may be nudged out of the
-way). This maintains the alignment of rows but does not align dots
+\code{overlaps = "nudge"}, in which case overlaps within rows are nudged out
+of the way). This maintains the alignment of rows but does not align dots
 within columns.
 \item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but
-alternates placing dots \code{+ binwidth/4} or \code{- binwidth/4} in the
-off-axis from the bin center. This allows hexagonal packing by setting
-a \code{stackratio} less than 1 (something like \code{0.9} tends to work).
+alternates placing dots at \eqn{\pm} \code{binwidth/4} in the
+off-axis from the bin center, giving a hexagonal layout. For
+an equilateral hexagonal packing, set \code{dotsize = k} and
+\code{stackratio = sqrt(3/4) / k} for some \code{k} (e.g. \code{0.9}).
 \item \code{"swarm"}: uses a version of the \code{"compactswarm"} layout from
-\code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}} (with minor modifications to improve visual
-symmetry when \code{side = "both"}). Does not maintain alignment of rows or
-columns, but can be more compact and neat-looking, especially for
-sample data (as opposed to quantile dotplots of theoretical
-distributions, which may look better with \code{"bin"}, \code{"weave"}, or
-\code{"hex"}).
+\link[beeswarm:beeswarm]{beeswarm}, with minor modifications to improve visual
+symmetry when \code{side = "both"}. Ensures dot are positioned exacty at their
+underlying data values. Does not maintain alignment of rows or
+columns, but can be more compact, especially for sample data (as opposed
+to quantile dotplots of theoretical distributions, which may look better
+with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
 \item \code{"bar"}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
@@ -125,15 +129,43 @@ using a constrained optimization which minimizes the squared distance of
 dots to their desired positions, subject to the constraint that adjacent
 dots do not overlap.
 }}
+\item{\code{span}}{<scalar \link{numeric}> Non-negative smoothing/spacing parameter expressed as a
+fraction. The specific use and default value (\code{waiver()}) depend on the
+\code{layout}:
+\itemize{
+\item{For \code{layout = "bin"}, \code{"hex"}, or \code{"weave"}: A smoothing parameter
+expressed as a proportion of the \code{binwidth} (default: \code{0}, no smoothing).
+Use \code{span = 1.25} to apply moderate smoothing.
+A positive \code{span} applies a moving average to adjacent
+bins whose midpoints are within \code{span * binwidth} of each other,
+exchanging dots between bins using the method described
+by Wilkinson (1999). Specifically, for every bin \eqn{i} with midpoint
+\eqn{m_i} containing \eqn{f(i)} dots, the algorithm moves
+\eqn{\left\lfloor\frac{f(i + 1) - f(i)}{2}\right\rfloor} dots from bin
+\eqn{i + 1} to bin \eqn{i} if \eqn{m_{i + 1} - m_i \le} \code{span}.
+Good values for \code{span} are typically between \code{1} and \code{2}. \code{span = 1.25} is
+equivalent to Wilkinson's recommendation, which smooths bins that are at most
+\code{binwidth/4} apart.
+}
+\item For \code{layout = "bar"}: Width of bars expressed as a proportion of the data resolution
+(default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
+increase the spacing between bars.
+}}
 \item{\code{smooth}}{<\link{function} | \link[=character]{string}> Smoother to apply to dot positions.
+
+\strong{Note:} in most cases, more reliable forms of smoothing can be achieved via
+changing layouts (e.g. using \code{layout = "bar"} instead of \code{smooth = "bar"})
+or via other parameters (e.g. using \code{span = 1.25} for \code{"bin"}, \code{"hex"},
+or \code{"weave"} layouts).
+
 One of:
 \itemize{
 \item A function that takes a numeric vector of dot positions and returns a
-smoothed version of that vector, such as \code{smooth_bounded()},
-\code{smooth_unbounded()}, smooth_discrete()\verb{, or }smooth_bar()`.
+smoothed version of that vector, such as \code{\link[=smooth_bounded]{smooth_bounded()}},
+\code{\link[=smooth_unbounded]{smooth_unbounded()}}, \code{\link[=smooth_discrete]{smooth_discrete()}}, or \code{\link[=smooth_bar]{smooth_bar()}}.
 \item A string indicating what smoother to use, as the suffix to a function
 name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
-\code{smooth_none()}, which simply returns the given vector without
+\code{\link[=smooth_none]{smooth_none()}}, which simply returns the given vector without
 applying smoothing.
 }
 
@@ -561,6 +593,9 @@ in Computing Systems - CHI '16}, 5092--5103. \doi{10.1145/2858036.2858558}.
 Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
 or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Computing Systems - CHI '18}.
 \doi{10.1145/3173574.3173718}.
+
+Wilkinson, L. (1999). Dot plots. \emph{The American Statistician}, 53(3), 276--281.
+\doi{10.1080/00031305.1999.10474474}
 }
 \seealso{
 See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geom underlying this stat.

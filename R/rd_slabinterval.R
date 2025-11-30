@@ -205,7 +205,7 @@ rd_aes_side = function(slab = "slab") {
   glue_doc('
     Which side to place the <<slab>> on. One of:
     \\itemize{
-      \\item `"topright"`, `"top"`, and `"right"` are synonyms which draw the <<slab>> on the top or the 
+      \\item `"topright"`, `"top"`, and `"right"` are synonyms which draw the <<slab>> on the top or the
         right depending on if `orientation` is `"horizontal"` or `"vertical"`.
       \\item `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which draw the <<slab>> on the bottom
         or the left depending on if `orientation` is `"horizontal"` or `"vertical"`.
@@ -220,5 +220,5 @@ rd_aes_side = function(slab = "slab") {
 # shared parameter docs ---------------------------------------------------
 
 rd_param_side = function(slab = "slab") {
-  paste0("@param side ", rd_aes_side(slab))
+  paste0("@param side <[string][character]> ", rd_aes_side(slab))
 }

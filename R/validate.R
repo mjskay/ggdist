@@ -16,7 +16,7 @@ validate_positive_scalar = function(value) {
 }
 
 validate_positive_scalar_integerish = function(value) {
-  validate_positive_scalar(value) %||% if (as.integer(value) != value) {
+  validate_positive_scalar(value) %||% if (!is.infinite(value) && as.integer(value) != value) {
     "must be an integer."
   }
 }
