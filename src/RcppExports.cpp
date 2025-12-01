@@ -22,11 +22,11 @@ BEGIN_RCPP
 END_RCPP
 }
 // grid_swarm_
-SEXP grid_swarm_(std::vector<double> x, const double xsize, const double ysize, const std::size_t ygrid, const int side);
+SEXP grid_swarm_(std::deque<double> x, const double xsize, const double ysize, const std::size_t ygrid, const int side);
 RcppExport SEXP _ggdist_grid_swarm_(SEXP xSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< std::vector<double> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::deque<double> >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
     Rcpp::traits::input_parameter< const std::size_t >::type ygrid(ygridSEXP);

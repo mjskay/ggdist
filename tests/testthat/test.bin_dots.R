@@ -184,6 +184,31 @@ test_that("swarm layout works", {
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
 })
 
+test_that("grid_swarm layout works", {
+  ref = data.frame(
+    x = 1:7,
+    y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5)
+  )
+  expect_equal(bin_dots(1:7, 0, binwidth = 3, layout = "swarm2"), ref)
+
+  ref = data.frame(
+    x = 1:7,
+    y = 0.5
+  )
+  expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "swarm2"), ref)
+
+  ref = data.frame(
+    x = 1:9,
+    y = rep_len(c(1, 3), 9)
+  )
+  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = "swarm2"), ref)
+
+  ref = data.frame(
+    x = 1:9,
+    y = rep_len(c(1, 2.75), 9)
+  )
+  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = binner_swarm2(grid = 8)), ref)
+})
 
 test_that("small bins work", {
   expect_equal(wilkinson_bin(c(0, .Machine$double.eps*2), .Machine$double.eps)$bins, 1:2)

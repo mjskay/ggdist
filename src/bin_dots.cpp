@@ -67,15 +67,17 @@ template<bool reverse>
 inline auto can_place_candidate(
   const double candidate,
   const double last_placed,
-  std::vector<std::vector<double>>& rows,
+  std::vector<std::deque<double>>& rows,
   const std::size_t n_rows_back,
   const std::size_t ygrid,
   const double xsize
 ) -> bool {
+  const auto eps = 8 * EPS * xsize;
+
   if constexpr (reverse) {
-    if (candidate > last_placed - xsize) return false;
+    if (candidate > last_placed - xsize + eps) return false;
   } else {
-    if (candidate < last_placed + xsize) return false;
+    if (candidate < last_placed + xsize - eps) return false;
   }
 
   // for the n_rows_back previous rows, check if candidate is overlapping an existing dot
@@ -87,7 +89,7 @@ inline auto can_place_candidate(
     if (n == 0) continue;
 
     const auto y_offset = double(i) / double(ygrid);
-    const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * xsize;
+    const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
     if (candidate <= prev_row.front()) {
       if (candidate > prev_row.front() - min_x_dist) return false;
@@ -109,12 +111,12 @@ inline auto can_place_candidate(
 //' @param T iterable type
 //' @param vec object to iterate over
 //' @noRd
-template<bool reverse, typename T>
-inline auto cbegin(const T& vec) {
+template<bool reverse, typename C>
+inline auto cbegin(const C& container) {
   if constexpr (reverse) {
-    return vec.crbegin();
+    return container.crbegin();
   } else {
-    return vec.cbegin();
+    return container.cbegin();
   }
 }
 
@@ -123,12 +125,21 @@ inline auto cbegin(const T& vec) {
 //' @param T iterable type
 //' @param vec object to iterate over
 //' @noRd
-template<bool reverse, typename T>
-inline auto cend(const T& vec) {
+template<bool reverse, typename C>
+inline auto cend(const C& container) {
   if constexpr (reverse) {
-    return vec.crend();
+    return container.crend();
   } else {
-    return vec.cend();
+    return container.cend();
+  }
+}
+
+template<bool reverse, typename C, typename V>
+inline void push(C& container, V&& value) {
+  if constexpr (reverse) {
+    container.push_front(std::forward<V>(value));
+  } else {
+    container.push_back(std::forward<V>(value));
   }
 }
 
@@ -150,10 +161,10 @@ inline auto place_row(
   const bool both,
   const double xsize,
   const std::size_t ygrid,
-  std::vector<double>*& remaining,
-  std::vector<double>*& next_remaining,
-  std::vector<std::vector<double>>& rows,
-  std::vector<std::vector<double>>& rows_bottom
+  std::deque<double>*& remaining,
+  std::deque<double>*& next_remaining,
+  std::vector<std::deque<double>>& rows,
+  std::vector<std::deque<double>>& rows_bottom
 ) -> bool {
   if (remaining->empty()) return false;
 
@@ -171,21 +182,16 @@ inline auto place_row(
   for (auto it = cbegin<reverse>(*remaining); it != cend<reverse>(*remaining); ++it) {
     const auto candidate = *it;
     if (can_place_candidate<reverse>(candidate, last_placed, rows, n_rows_back, ygrid, xsize)) {
-      row->push_back(candidate);
+      push<reverse>(*row, candidate);
       last_placed = candidate;
     } else if (both && can_place_candidate<reverse>(candidate, last_placed_bottom, rows_bottom, n_rows_back, ygrid, xsize)) {
-      row_bottom->push_back(candidate);
+      push<reverse>(*row_bottom, candidate);
       last_placed_bottom = candidate;
     } else {
-      next_remaining->push_back(candidate);
+      push<reverse>(*next_remaining, candidate);
     }
   }
 
-  if constexpr (reverse) {
-    std::reverse(row->begin(), row->end());
-    if (both) std::reverse(row_bottom->begin(), row_bottom->end());
-    std::reverse(next_remaining->begin(), next_remaining->end());
-  }
   std::swap(remaining, next_remaining);
 
   return true;
@@ -201,10 +207,10 @@ inline auto place_rows(
   const bool both,
   const double xsize,
   const std::size_t ygrid,
-  std::vector<double>*& remaining,
-  std::vector<double>*& next_remaining,
-  std::vector<std::vector<double>>& rows,
-  std::vector<std::vector<double>>& rows_bottom
+  std::deque<double>*& remaining,
+  std::deque<double>*& next_remaining,
+  std::vector<std::deque<double>>& rows,
+  std::vector<std::deque<double>>& rows_bottom
 ) -> bool {
   auto any_left = true;
   while (
@@ -225,7 +231,7 @@ inline auto place_rows(
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP grid_swarm_(
-  std::vector<double> x,
+  std::deque<double> x,
   const double xsize,
   const double ysize,
   const std::size_t ygrid,
@@ -236,12 +242,12 @@ SEXP grid_swarm_(
 
   // as we place dots into rows, we will put unplaced dots into next_remaining
   // and then swap with remaining at the end of each row placement
-  auto remaining_swap = std::vector<double>{};
+  auto remaining_swap = std::deque<double>{};
   auto remaining = &x;
   auto next_remaining = &remaining_swap;
 
-  auto rows = std::vector<std::vector<double>>{};
-  auto rows_bottom = std::vector<std::vector<double>>{};
+  auto rows = std::vector<std::deque<double>>{};
+  auto rows_bottom = std::vector<std::deque<double>>{};
 
   // first row is special: when both == true, it is a "middle" row that is
   // treated as the first row (for placement purposes) on both the top and bottom sides
@@ -265,7 +271,7 @@ SEXP grid_swarm_(
   auto out_y_arr = REAL(out_y_vec);
   auto i = 0_z;
   const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
-    const std::vector<std::vector<double>>& rows,
+    const std::vector<std::deque<double>>& rows,
     const std::size_t row_start,
     const double side
   ) {
