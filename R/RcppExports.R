@@ -11,14 +11,13 @@ NULL
 
 #' Can we place `candidate` at this position given the last placed dot and
 #' the previous rows of dots placed so far?
+#' @param reverse <scalar [logical]> are we placing dots in reverse order?
 #' @param candidate <scalar [numeric]> candidate x position
-#' @param last_placed <scalar [numeric]> last placed x position in this row
 #' @param rows <[list] of [numeric]> list of previous rows of placed dots
 #' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
 #' @param ygrid <scalar [integer]> max possible number of previous rows in the
-#' y grid that  could overlap with this candidate
+#' y grid that could overlap with this candidate
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
-#' @param reverse <scalar [logical]> are we placing dots in reverse order?
 #' @returns <scalar [logical]> can we place candidate here?
 #' @noRd
 NULL

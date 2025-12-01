@@ -53,20 +53,18 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 
 //' Can we place `candidate` at this position given the last placed dot and
 //' the previous rows of dots placed so far?
+//' @param reverse <scalar [logical]> are we placing dots in reverse order?
 //' @param candidate <scalar [numeric]> candidate x position
-//' @param last_placed <scalar [numeric]> last placed x position in this row
 //' @param rows <[list] of [numeric]> list of previous rows of placed dots
 //' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
 //' @param ygrid <scalar [integer]> max possible number of previous rows in the
-//' y grid that  could overlap with this candidate
+//' y grid that could overlap with this candidate
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @param reverse <scalar [logical]> are we placing dots in reverse order?
 //' @returns <scalar [logical]> can we place candidate here?
 //' @noRd
 template<bool reverse>
 inline auto can_place_candidate(
   const double candidate,
-  const double last_placed,
   std::vector<std::deque<double>>& rows,
   const std::size_t n_rows_back,
   const std::size_t ygrid,
@@ -74,29 +72,22 @@ inline auto can_place_candidate(
 ) -> bool {
   const auto eps = 8 * EPS * xsize;
 
-  if constexpr (reverse) {
-    if (candidate > last_placed - xsize + eps) return false;
-  } else {
-    if (candidate < last_placed + xsize - eps) return false;
-  }
-
-  // for the n_rows_back previous rows, check if candidate is overlapping an existing dot
+  // for the current row + n_rows_back previous rows, check if candidate is overlapping an existing dot
   const auto n_rows = rows.size();
-  for (auto i = 1_z; i <= n_rows_back; ++i) {
-    // rows[n_rows - i] is the current row being placed, so previous rows start at n_rows - i - 1
-    auto& prev_row = rows[n_rows - i - 1_z];
-    const auto n = prev_row.size();
+  for (auto i = 0_z; i <= n_rows_back; ++i) {
+    auto& row = rows[n_rows - i - 1_z];
+    const auto n = row.size();
     if (n == 0) continue;
 
     const auto y_offset = double(i) / double(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
-    if (candidate <= prev_row.front()) {
-      if (candidate > prev_row.front() - min_x_dist) return false;
-    } else if (candidate >= prev_row.back()) {
-      if (candidate < prev_row.back() + min_x_dist) return false;
+    if (candidate <= row.front()) {
+      if (candidate > row.front() - min_x_dist) return false;
+    } else if (candidate >= row.back()) {
+      if (candidate < row.back() + min_x_dist) return false;
     } else {
-      auto it = std::upper_bound(prev_row.begin(), prev_row.end(), candidate);
+      auto it = std::upper_bound(row.begin(), row.end(), candidate);
       const auto min_val_gt_candidate = *it;
       if (candidate > min_val_gt_candidate - min_x_dist) return false;
       const auto max_val_lte_candidate = *--it;
@@ -174,19 +165,14 @@ inline auto place_row(
   const auto row = &rows.emplace_back();
   const auto row_bottom = both ? &rows_bottom.emplace_back() : nullptr;
 
-  auto last_placed = reverse ? INF : -INF;
-  auto last_placed_bottom = last_placed;
-
   next_remaining->clear();
 
   for (auto it = cbegin<reverse>(*remaining); it != cend<reverse>(*remaining); ++it) {
     const auto candidate = *it;
-    if (can_place_candidate<reverse>(candidate, last_placed, rows, n_rows_back, ygrid, xsize)) {
+    if (can_place_candidate<reverse>(candidate, rows, n_rows_back, ygrid, xsize)) {
       push<reverse>(*row, candidate);
-      last_placed = candidate;
-    } else if (both && can_place_candidate<reverse>(candidate, last_placed_bottom, rows_bottom, n_rows_back, ygrid, xsize)) {
+    } else if (both && can_place_candidate<reverse>(candidate, rows_bottom, n_rows_back, ygrid, xsize)) {
       push<reverse>(*row_bottom, candidate);
-      last_placed_bottom = candidate;
     } else {
       push<reverse>(*next_remaining, candidate);
     }
