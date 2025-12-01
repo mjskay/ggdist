@@ -15,6 +15,12 @@ validate_positive_scalar = function(value) {
   }
 }
 
+validate_not_na = function(value) {
+  if (anyNA(value)) {
+    "must not contain NA."
+  }
+}
+
 validate_positive_scalar_integerish = function(value) {
   validate_positive_scalar(value) %||% if (!is.infinite(value) && as.integer(value) != value) {
     "must be an integer."

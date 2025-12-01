@@ -159,6 +159,7 @@ test_that("bin layouts work", {
   ref = data.frame(
     x = c(1, 1, 3, 5, 5),
     y = c(1, 3, 1, 1, 3),
+    group = 1L,
     bin = c(1L,  1L, 2L, 3L, 3L)
   )
   expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "bin")), ref)
@@ -166,6 +167,7 @@ test_that("bin layouts work", {
   ref = data.frame(
     x = c(1, 2, 3, 4.5, 5.1),
     y = c(0.75, 2.25, 0.75, 0.75, 2.25),
+    group = 1L,
     bin = c(1L,  1L, 2L, 3L, 3L)
   )
   expect_equal(as.data.frame(bin_dots(c(1:3, 4.5, 5.1), 0, binwidth = 1.5, layout = "weave")), ref)
@@ -179,7 +181,8 @@ test_that("swarm layout works", {
 
   ref = data.frame(
     x = 1:5,
-    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1)
+    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
+    group = 1L
   )
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
 })
@@ -187,25 +190,29 @@ test_that("swarm layout works", {
 test_that("grid_swarm layout works", {
   ref = data.frame(
     x = 1:7,
-    y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5)
+    y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5),
+    group = 1L
   )
   expect_equal(bin_dots(1:7, 0, binwidth = 3, layout = "swarm2"), ref)
 
   ref = data.frame(
     x = 1:7,
-    y = 0.5
+    y = 0.5,
+    group = 1L
   )
   expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "swarm2"), ref)
 
   ref = data.frame(
     x = 1:9,
-    y = rep_len(c(1, 3), 9)
+    y = rep_len(c(1, 3), 9),
+    group = 1L
   )
   expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = "swarm2"), ref)
 
   ref = data.frame(
     x = 1:9,
-    y = rep_len(c(1, 2.75), 9)
+    y = rep_len(c(1, 2.75), 9),
+    group = 1L
   )
   expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = binner_swarm2(grid = 8)), ref)
 })

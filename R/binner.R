@@ -35,6 +35,11 @@ binner = new_binner_class(
       class_numeric,
       default = double()
     ),
+    group = new_property(
+      class_any,
+      validator = validate_not_na,
+      default = integer()
+    ),
     maxheight = new_property(
       class_numeric,
       validator = validate_positive_scalar,
@@ -246,12 +251,52 @@ binner_swarm = new_binner_class(
 #' @noRd
 binner_swarm2 = new_binner_class(
   "binner_swarm2",
-  parent = binner_swarm,
+  parent = binner,
   properties = list(
+    x = new_property(
+      class_numeric,
+      setter = function(self, value) {
+        self@x = value
+        make_swarm2_xs(self)
+      },
+      default = numeric()
+    ),
+    group = new_property(
+      class_any,
+      validator = validate_not_na,
+      setter = function(self, value) {
+        self@group = vec_recycle(value, length(self@x))
+        make_swarm2_xs(self)
+      },
+      default = 1L
+    ),
+    xs = new_property(
+      class_list,
+      setter = NULL,
+      getter = \(self) self@xs
+    ),
     grid = new_property(
       class_numeric,
       validator = validate_positive_scalar_integerish,
       default = 4L
     )
-  )
+  ),
+  validator = \(self) {
+    if (is.null(self@xs)) "x and group must both be set."
+  }
 )
+
+#' Make splits in x used for plotting groups in order for grid_swarm layout
+#' @description
+#' Split `x` by `group` so that we don't have to recompute these splits when
+#' doing find_dotplot_binwidth. This layout differs from others in that it
+#' needs these splits in order to plot groups in the right order within
+#' each stratum.
+#' @noRd
+make_swarm2_xs = function(self) {
+  if (!is.null(self@x) && !is.null(self@group)) {
+    x_splits = vec_split(self@x, self@group)
+    attr(self, "xs") = x_splits$val[order(x_splits$key)]
+  }
+  self
+}

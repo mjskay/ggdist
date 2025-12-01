@@ -57,6 +57,7 @@
 find_dotplot_binwidth = function(
   x,
   maxheight,
+  group = 1L,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
@@ -76,13 +77,14 @@ find_dotplot_binwidth = function(
   binner = new_binner(
     layout,
     x,
+    group = group,
     maxheight = maxheight,
     heightratio = heightratio,
     stackratio = stackratio,
     side = side,
     span = span
   )
-  min_binning = arrange_bins(binner, x, nbins = min_nbins)
+  min_binning = arrange_bins(binner, nbins = min_nbins)
 
   if (isTRUE(min_binning$height <= maxheight)) {
     # if the minimum binning (i.e. the binning constructed from the smallest
@@ -96,9 +98,9 @@ find_dotplot_binwidth = function(
     # TODO: don't special case binner_bar here --- instead, have binners
     # implement a method to get max_binning
     max_binning = if (S7_inherits(binner, binner_bar)) {
-      arrange_bins(binner, x, nbins = length(x))
+      arrange_bins(binner, nbins = length(x))
     } else {
-      arrange_bins(binner, x, binwidth = resolution(x))
+      arrange_bins(binner, binwidth = resolution(x))
     }
 
     if (max_binning$nbins <= min_binning$nbins + 1) {
@@ -107,7 +109,7 @@ find_dotplot_binwidth = function(
     } else {
       # use binary search to find a reasonable number of bins
       repeat {
-        binning = arrange_bins(binner, x, nbins = (min_binning$nbins + max_binning$nbins) / 2)
+        binning = arrange_bins(binner, nbins = (min_binning$nbins + max_binning$nbins) / 2)
         if (isTRUE(binning$height <= maxheight)) {
           # binning is valid, search downwards
           if (binning$nbins - 1 <= min_binning$nbins) {
@@ -137,13 +139,13 @@ find_dotplot_binwidth = function(
     if (length(unique(candidate_binwidths)) != 1) {
       binwidth = optimize(
         function(binwidth) {
-          binning = arrange_bins(binner, x, binwidth = binwidth)
+          binning = arrange_bins(binner, binwidth = binwidth)
           (binning$height - maxheight)^2
         },
         candidate_binwidths,
         tol = sqrt(.Machine$double.eps)
       )$minimum
-      new_binning = arrange_bins(binner, x, binwidth = binwidth)
+      new_binning = arrange_bins(binner, binwidth = binwidth)
 
       # approximate test that binning is valid, used here to tolerate approximation with optimize()
       if (isTRUE(new_binning$height <= maxheight + .Machine$double.eps^0.25)) {

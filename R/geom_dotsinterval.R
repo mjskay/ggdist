@@ -19,6 +19,7 @@ dots_grob = function(data, x, y, xscale = 1,
   make_points_grob = make_points_grob
 ) {
   data$shape = translate_shape(data$shape)
+  data$order = data$order %||% 1L
   # drop the dist columns because they can be expensive and we don't need them
   # after this point
   keep_cols = !(names(data) %in% c("xdist", "ydist", "dist"))
@@ -103,6 +104,7 @@ makeContent.dots_grob = function(x) {
       maxheight = max(d[[ymax]] - d[[ymin]])
       find_dotplot_binwidth(
         d[[x]],
+        group = d$order,
         maxheight,
         heightratio,
         stackratio,
@@ -158,10 +160,17 @@ makeContent.dots_grob = function(x) {
   dot_grobs = lapply(datas, function(d) {
     # bin the dots
     dot_positions = bin_dots(
-      d$x, d$y,
-      binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
-      overlaps = overlaps, span = span,
-      layout = layout, side = d$side[[1]], orientation = orientation
+      d$x,
+      d$y,
+      group = d$order,
+      binwidth = binwidth,
+      heightratio = heightratio,
+      stackratio = stackratio,
+      overlaps = overlaps,
+      span = span,
+      layout = layout,
+      side = d$side[[1]],
+      orientation = orientation
     )
 
     # ensure a consistent spatial drawing order, so that which dot overlaps which

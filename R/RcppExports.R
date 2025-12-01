@@ -43,7 +43,6 @@ NULL
 #' @param ygrid <scalar [integer]> max possible number of previous rows in the
 #' y grid that  could overlap with this candidate
 #' @param remaining vector of dots to be placed
-#' @param next_remaining swap space to move next set of dots to be placed into
 #' @param rows <[list] of [numeric]> list of previous rows of placed dots
 #' @param rows_bottom <[list] of [numeric]> list of previous bottom rows of placed dots
 #' (when `both == true`)
@@ -68,7 +67,7 @@ wilkinson_bin_to_right_ <- function(x, width) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm_ <- function(x, xsize, ysize, ygrid, side) {
-    .Call(`_ggdist_grid_swarm_`, x, xsize, ysize, ygrid, side)
+grid_swarm_ <- function(xs, xsize, ysize, ygrid, side) {
+    .Call(`_ggdist_grid_swarm_`, xs, xsize, ysize, ygrid, side)
 }
 

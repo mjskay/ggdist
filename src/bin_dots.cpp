@@ -63,37 +63,40 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 //' @returns <scalar [logical]> can we place candidate here?
 //' @noRd
 template<bool reverse>
-inline auto can_place_candidate(
+inline auto place_candidate(
   const double candidate,
-  std::vector<std::deque<double>>& rows,
+  std::vector<std::multiset<double>>& rows,
   const std::size_t n_rows_back,
   const std::size_t ygrid,
   const double xsize
 ) -> bool {
   const auto eps = 8 * EPS * xsize;
 
+  auto& current_row = rows.back();
+  auto insert_loc = current_row.begin();
+
   // for the current row + n_rows_back previous rows, check if candidate is overlapping an existing dot
   const auto n_rows = rows.size();
   for (auto i = 0_z; i <= n_rows_back; ++i) {
     auto& row = rows[n_rows - i - 1_z];
-    const auto n = row.size();
-    if (n == 0) continue;
+    if (row.size() == 0) continue;
 
     const auto y_offset = double(i) / double(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
-    if (candidate <= row.front()) {
-      if (candidate > row.front() - min_x_dist) return false;
-    } else if (candidate >= row.back()) {
-      if (candidate < row.back() + min_x_dist) return false;
-    } else {
-      auto it = std::upper_bound(row.begin(), row.end(), candidate);
-      const auto min_val_gt_candidate = *it;
+    auto loc = row.upper_bound(candidate);
+    if (loc != row.end()) {
+      const auto min_val_gt_candidate = *loc;
       if (candidate > min_val_gt_candidate - min_x_dist) return false;
-      const auto max_val_lte_candidate = *--it;
+    }
+    if (loc != row.begin()) {
+      const auto max_val_lte_candidate = *--loc;
       if (candidate < max_val_lte_candidate + min_x_dist) return false;
     }
+    if (i == 0_z) insert_loc = loc;
   }
+
+  current_row.insert(insert_loc, candidate);
   return true;
 }
 
@@ -134,6 +137,16 @@ inline void push(C& container, V&& value) {
   }
 }
 
+template<typename C>
+constexpr auto all_empty(const C& container) -> bool {
+  for (const auto& value : container) {
+    if (!value.empty()) return false;
+  }
+  return true;
+}
+
+
+
 //' Place dots in a single row in the grid_swarm algorithm
 //' @param reverse are we placing dots in reverse order?
 //' @param both is this a mirrored layout (`side == "both"`?)
@@ -141,7 +154,6 @@ inline void push(C& container, V&& value) {
 //' @param ygrid <scalar [integer]> max possible number of previous rows in the
 //' y grid that  could overlap with this candidate
 //' @param remaining vector of dots to be placed
-//' @param next_remaining swap space to move next set of dots to be placed into
 //' @param rows <[list] of [numeric]> list of previous rows of placed dots
 //' @param rows_bottom <[list] of [numeric]> list of previous bottom rows of placed dots
 //' (when `both == true`)
@@ -152,33 +164,37 @@ inline auto place_row(
   const bool both,
   const double xsize,
   const std::size_t ygrid,
-  std::deque<double>*& remaining,
-  std::deque<double>*& next_remaining,
-  std::vector<std::deque<double>>& rows,
-  std::vector<std::deque<double>>& rows_bottom
+  std::vector<std::deque<double>>& remaining,
+  std::vector<std::multiset<double>>& rows,
+  std::vector<std::multiset<double>>& rows_bottom
 ) -> bool {
-  if (remaining->empty()) return false;
+  if (all_empty(remaining)) return false;
 
   // must calculate n_rows_back here before adding a new row
   const auto n_rows_back = std::min(ygrid, rows.size());
 
-  const auto row = &rows.emplace_back();
-  const auto row_bottom = both ? &rows_bottom.emplace_back() : nullptr;
+  rows.emplace_back();
+  if (both) rows_bottom.emplace_back();
 
-  next_remaining->clear();
+  std::deque<double> next_remaining;
 
-  for (auto it = cbegin<reverse>(*remaining); it != cend<reverse>(*remaining); ++it) {
-    const auto candidate = *it;
-    if (can_place_candidate<reverse>(candidate, rows, n_rows_back, ygrid, xsize)) {
-      push<reverse>(*row, candidate);
-    } else if (both && can_place_candidate<reverse>(candidate, rows_bottom, n_rows_back, ygrid, xsize)) {
-      push<reverse>(*row_bottom, candidate);
-    } else {
-      push<reverse>(*next_remaining, candidate);
+  for (auto i = 0_z; i < remaining.size(); ++i) {
+    next_remaining.clear();
+
+    for (auto it = cbegin<reverse>(remaining[i]); it != cend<reverse>(remaining[i]); ++it) {
+      const auto candidate = *it;
+
+      if (place_candidate<reverse>(candidate, rows, n_rows_back, ygrid, xsize)) {
+        continue;
+      } else if (both && place_candidate<reverse>(candidate, rows_bottom, n_rows_back, ygrid, xsize)) {
+        continue;
+      }
+
+      push<reverse>(next_remaining, candidate);
     }
-  }
 
-  std::swap(remaining, next_remaining);
+    std::swap(remaining[i], next_remaining);
+  }
 
   return true;
 }
@@ -193,17 +209,16 @@ inline auto place_rows(
   const bool both,
   const double xsize,
   const std::size_t ygrid,
-  std::deque<double>*& remaining,
-  std::deque<double>*& next_remaining,
-  std::vector<std::deque<double>>& rows,
-  std::vector<std::deque<double>>& rows_bottom
+  std::vector<std::deque<double>>& remaining,
+  std::vector<std::multiset<double>>& rows,
+  std::vector<std::multiset<double>>& rows_bottom
 ) -> bool {
   auto any_left = true;
   while (
     n-- > 0_z &&
-    (any_left = place_row<reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom)) &&
+    (any_left = place_row<reverse>(both, xsize, ygrid, remaining, rows, rows_bottom)) &&
     n-- > 0_z &&
-    (any_left = place_row<!reverse>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom))
+    (any_left = place_row<!reverse>(both, xsize, ygrid, remaining, rows, rows_bottom))
   );
   return any_left;
 }
@@ -217,37 +232,32 @@ inline auto place_rows(
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP grid_swarm_(
-  std::deque<double> x,
+  std::vector<std::deque<double>> xs,
   const double xsize,
   const double ysize,
   const std::size_t ygrid,
   const int side
 ) {
-  const auto n_out = x.size();
+  auto n_out = 0_z;
+  for (const auto& x : xs) n_out += x.size();
   const auto both = side == 0;
 
-  // as we place dots into rows, we will put unplaced dots into next_remaining
-  // and then swap with remaining at the end of each row placement
-  auto remaining_swap = std::deque<double>{};
-  auto remaining = &x;
-  auto next_remaining = &remaining_swap;
-
-  auto rows = std::vector<std::deque<double>>{};
-  auto rows_bottom = std::vector<std::deque<double>>{};
+  auto rows = std::vector<std::multiset<double>>{};
+  auto rows_bottom = std::vector<std::multiset<double>>{};
 
   // first row is special: when both == true, it is a "middle" row that is
   // treated as the first row (for placement purposes) on both the top and bottom sides
   // so we always treat it as both = false and just copy it to rows_bottom
-  place_row<false>(false, xsize, ygrid, remaining, next_remaining, rows, rows_bottom);
+  place_row<false>(false, xsize, ygrid, xs, rows, rows_bottom);
   if (both) rows_bottom.push_back(rows.back());
 
   // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
   while (
     // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
     // we already placed the first row above
-    place_rows<true>(ygrid - 1, both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom) &&
-    place_rows<true>(ygrid, both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom) &&
-    place_row<false>(both, xsize, ygrid, remaining, next_remaining, rows, rows_bottom)
+    place_rows<true>(ygrid - 1, both, xsize, ygrid, xs, rows, rows_bottom) &&
+    place_rows<true>(ygrid, both, xsize, ygrid, xs, rows, rows_bottom) &&
+    place_row<false>(both, xsize, ygrid, xs, rows, rows_bottom)
   );
 
   // construct output data frame
@@ -257,7 +267,7 @@ SEXP grid_swarm_(
   auto out_y_arr = REAL(out_y_vec);
   auto i = 0_z;
   const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
-    const std::vector<std::deque<double>>& rows,
+    const std::vector<std::multiset<double>>& rows,
     const std::size_t row_start,
     const double side
   ) {

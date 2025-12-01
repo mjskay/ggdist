@@ -65,7 +65,11 @@ NULL
 #'   coord_fixed()
 #'
 #' @export
-bin_dots = function(x, y, binwidth,
+bin_dots = function(
+  x,
+  y,
+  binwidth,
+  group = 1L,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
@@ -77,7 +81,7 @@ bin_dots = function(x, y, binwidth,
   side = match.arg(side)
   orientation = match.arg(orientation)
 
-  d = data_frame0(x = x, y = y)
+  d = data_frame0(x = x, y = y, group = group)
 
   # after this point `x` and `y` refer to column names in `d` according
   # to the orientation
@@ -89,12 +93,13 @@ bin_dots = function(x, y, binwidth,
   # data as well) we need to keep the original data order around so that
   # we can restore the original order at the end.
   d$order = seq_len(nrow(d))
-  d = d[order(d[[x]]), ]
+  d = d[order(d[[x]], d$group), ]
 
   # bin the dots
   binner = new_binner(
     layout,
     x = d[[x]],
+    group = d$group,
     heightratio = heightratio,
     stackratio = stackratio,
     side = side,
@@ -102,7 +107,7 @@ bin_dots = function(x, y, binwidth,
     overlaps = overlaps,
     span = span
   )
-  binning = arrange_bins(binner, d[[x]], binwidth = binwidth)
+  binning = arrange_bins(binner, binwidth = binwidth)
   d = place_dots(binner, d, binning)
 
   # restore the original data order in case it was destroyed
@@ -121,7 +126,6 @@ bin_dots = function(x, y, binwidth,
 #' binning, such as what the bins are, what the dot widths are, what the y spacing between
 #' dots should be, etc.
 #' @param binner <`binner`> the binning method
-#' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dot binning, with elements:
@@ -132,13 +136,13 @@ bin_dots = function(x, y, binwidth,
 #' Subclasses may also add additional elements. They *must* add at least the following elements:
 #' - `height`: <scalar [numeric]> height of the tallest bin in this binning
 #' @noRd
-arrange_bins = new_generic("arrange_bins", c("binner"), function(binner, x, nbins = NULL, binwidth = NULL) {
+arrange_bins = new_generic("arrange_bins", c("binner"), function(binner, nbins = NULL, binwidth = NULL, ...) {
   S7_dispatch()
 })
 
-method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL) {
+method(arrange_bins, binner) = function(binner, nbins = NULL, binwidth = NULL, ...) {
   # determine binwidth and number of bins
-  x_spread = diff(range(x))
+  x_spread = diff(range(binner@x))
   if (x_spread == 0) x_spread = 1
   if (is.null(binwidth)) {
     nbins = floor(nbins)
@@ -167,7 +171,6 @@ method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL
 
 #' Arrange a binning of dots for binned layouts
 #' @param binner <`binner_bin` | `binner_bar`> the binning method
-#' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dot binning, with additional elements:
@@ -176,9 +179,9 @@ method(arrange_bins, binner) = function(binner, x, nbins = NULL, binwidth = NULL
 #' - `bin_counts`: <[integer]> vector of length `nbins` giving the number of elements in each bin
 #' - `height`: <scalar [numeric]> height of the tallest bin in this binning
 #' @noRd
-method(arrange_bins, binner_bin | binner_bar) = function(binner, x, nbins = NULL, binwidth = NULL) {
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
-  binning = c(binning, binner@bin_method(x, binning$binwidth, span = binner@span))
+method(arrange_bins, binner_bin | binner_bar) = function(binner, nbins = NULL, binwidth = NULL, ...) {
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
+  binning = c(binning, binner@bin_method(binner@x, binning$binwidth, span = binner@span))
 
   # determine height of the tallest bin
   binning$bin_counts = tabulate(binning$bins)
@@ -197,19 +200,18 @@ method(arrange_bins, binner_bin | binner_bar) = function(binner, x, nbins = NULL
 
 #' Arrange a binning of dots for swarm layouts
 #' @param binner <`binner_swarm`> the binning method
-#' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dot binning, with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this binning
 #' @noRd
-method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth = NULL) {
+method(arrange_bins, binner_swarm) = function(binner, nbins = NULL, binwidth = NULL, ...) {
   stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
 
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
   binning$dots = beeswarm::swarmy(
-    x,
+    binner@x,
     0,
     xsize = binning$binwidth,
     ysize = binning$y_spacing,
@@ -226,17 +228,16 @@ method(arrange_bins, binner_swarm) = function(binner, x, nbins = NULL, binwidth 
 
 #' Arrange a binning of dots for swarm2 layouts
 #' @param binner <`binner_swarm2`> the binning method
-#' @param x <[numeric]> vector of dot positions
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dot binning, with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this binning
 #' @noRd
-method(arrange_bins, binner_swarm2) = function(binner, x, nbins = NULL, binwidth = NULL) {
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), x, nbins, binwidth)
+method(arrange_bins, binner_swarm2) = function(binner, nbins = NULL, binwidth = NULL, ...) {
+  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
   binning$dots = grid_swarm(
-    x,
+    binner@xs,
     0,
     xsize = binning$binwidth,
     ysize = binning$y_spacing,
@@ -422,7 +423,7 @@ get_row_start_offset = function(binner, binning, n_dots) {
 
 ## place_dots for swarm, swarm2 -------------------------------------------------
 
-method(place_dots, binner_swarm) = function(binner, d, binning) {
+method(place_dots, binner_swarm | binner_swarm2) = function(binner, d, binning) {
   define_orientation_variables(binner@orientation)
 
   d[[x]] = binning$dots$x
@@ -708,7 +709,7 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @description
 #' Lays out dots by sweeping one row at a time on a fractional grid, alternating the direction of
 #' sweeps on each row.
-#' @param x <[numeric]> sorted x values
+#' @param xs <[list] of [numeric]> groups of sorted x values
 #' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
@@ -716,8 +717,8 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm = function(x, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
-  df = grid_swarm_(x, xsize, ysize, ygrid, side)
+grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
+  df = grid_swarm_(xs, xsize, ysize, ygrid, side)
   df = df[order(df$x), ]
   df$y = df$y + y
   df
