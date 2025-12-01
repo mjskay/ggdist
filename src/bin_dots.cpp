@@ -80,34 +80,25 @@ inline auto can_place_candidate(
 
   // for the n_rows_back previous rows, check if candidate is overlapping an existing dot
   const auto n_rows = rows.size();
-  for (auto i = 1_z; i <= n_rows_back; i++) {
+  for (auto i = 1_z; i <= n_rows_back; ++i) {
     // rows[n_rows - i] is the current row being placed, so previous rows start at n_rows - i - 1
-    auto& prev_row_vec = rows[n_rows - i - 1_z];
-    const auto n = prev_row_vec.size();
+    auto& prev_row = rows[n_rows - i - 1_z];
+    const auto n = prev_row.size();
     if (n == 0) continue;
 
     const auto y_offset = double(i) / double(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * xsize;
 
-    auto prev_row_arr = prev_row_vec.data();
-    auto mflag = 0;  // -1 if < all, 0 if inside, +1 if >= all
-    const auto max_val_lte_candidate_idx = findInterval(
-      prev_row_arr,
-      n,
-      candidate,
-      /*rightmost_closed=*/FALSE,
-      /*all_inside=*/FALSE,
-      /*ilo=*/0,
-      &mflag
-    );
-
-    if (mflag >= 0) {
-      const auto max_val_lte_candidate = prev_row_arr[max_val_lte_candidate_idx - 1];
-      if (candidate < max_val_lte_candidate + min_x_dist) return false;
-    }
-    if (mflag <= 0) {
-      const auto min_val_gt_candidate = prev_row_arr[max_val_lte_candidate_idx];
+    if (candidate <= prev_row.front()) {
+      if (candidate > prev_row.front() - min_x_dist) return false;
+    } else if (candidate >= prev_row.back()) {
+      if (candidate < prev_row.back() + min_x_dist) return false;
+    } else {
+      auto it = std::upper_bound(prev_row.begin(), prev_row.end(), candidate);
+      const auto min_val_gt_candidate = *it;
       if (candidate > min_val_gt_candidate - min_x_dist) return false;
+      const auto max_val_lte_candidate = *--it;
+      if (candidate < max_val_lte_candidate + min_x_dist) return false;
     }
   }
   return true;
