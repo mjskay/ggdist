@@ -22,16 +22,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // grid_swarm_
-SEXP grid_swarm_(std::vector<std::deque<double>> xs, const double xsize, const double ysize, const std::size_t ygrid, const int side);
+SEXP grid_swarm_(std::vector<std::deque<double>> xs, const double xsize, const double ysize, const std::ptrdiff_t ygrid, const int side);
 RcppExport SEXP _ggdist_grid_swarm_(SEXP xsSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< std::vector<std::deque<double>> >::type xs(xsSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
-    Rcpp::traits::input_parameter< const std::size_t >::type ygrid(ygridSEXP);
+    Rcpp::traits::input_parameter< const std::ptrdiff_t >::type ygrid(ygridSEXP);
     Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(grid_swarm_(xs, xsize, ysize, ygrid, side));
+    return rcpp_result_gen;
+END_RCPP
+}
+// recenter_swarm_clusters_
+SEXP recenter_swarm_clusters_(Rcpp::NumericVector& x, Rcpp::NumericVector& y, const double binwidth);
+RcppExport SEXP _ggdist_recenter_swarm_clusters_(SEXP xSEXP, SEXP ySEXP, SEXP binwidthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double >::type binwidth(binwidthSEXP);
+    rcpp_result_gen = Rcpp::wrap(recenter_swarm_clusters_(x, y, binwidth));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -39,6 +51,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
     {"_ggdist_grid_swarm_", (DL_FUNC) &_ggdist_grid_swarm_, 5},
+    {"_ggdist_recenter_swarm_clusters_", (DL_FUNC) &_ggdist_recenter_swarm_clusters_, 3},
     {NULL, NULL, 0}
 };
 

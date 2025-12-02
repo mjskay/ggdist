@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <deque>
 #include <limits>
 #include <vector>
 
@@ -13,9 +14,15 @@ constexpr auto EPS = std::numeric_limits<double>::epsilon();
 
 // literals ---------------------------------------------------------------------------
 
+//' Size diff literal for C++ arrays / vectors
+//' @noRd
+constexpr std::ptrdiff_t operator""_z(unsigned long long n) {
+  return n;
+}
+
 //' Size literal for C++ arrays / vectors
 //' @noRd
-constexpr std::size_t operator""_z(unsigned long long n) {
+constexpr std::size_t operator""_uz(unsigned long long n) {
   return n;
 }
 
@@ -51,37 +58,38 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 
 // grid_swarm ------------------------------------------------------------
 
-//' Can we place `candidate` at this position given the last placed dot and
-//' the previous rows of dots placed so far?
-//' @param reverse <scalar [logical]> are we placing dots in reverse order?
-//' @param candidate <scalar [numeric]> candidate x position
-//' @param rows <[list] of [numeric]> list of previous rows of placed dots
-//' @param n_rows_back <scalar [integer]> actual number of previous rows to consider
-//' @param ygrid <scalar [integer]> max possible number of previous rows in the
-//' y grid that could overlap with this candidate
-//' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @returns <scalar [logical]> can we place candidate here?
+//' Attempt to place a candidate dot in a target row
+//' @param candidate candidate x position
+//' @param xsize horizontal spacing between dots
+//' @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
+//' below this row that could overlap with dots in this row)
+//' @param rows rows of already-placed dots
+//' @param target_row iterator pointing at row in `rows` to attempt to place `candidate` in
+//' @returns `true` if the candidate was placed successfully
 //' @noRd
-template<bool reverse>
 inline auto place_candidate(
   const double candidate,
+  const double xsize,
+  const std::ptrdiff_t ygrid,
   std::vector<std::multiset<double>>& rows,
-  const std::size_t n_rows_back,
-  const std::size_t ygrid,
-  const double xsize
+  const std::ptrdiff_t target_row_i
 ) -> bool {
   const auto eps = 8 * EPS * xsize;
 
-  auto& current_row = rows.back();
-  auto insert_loc = current_row.begin();
+  auto& target_row = rows[target_row_i];
+  auto insert_loc = target_row.begin();
 
-  // for the current row + n_rows_back previous rows, check if candidate is overlapping an existing dot
-  const auto n_rows = rows.size();
-  for (auto i = 0_z; i <= n_rows_back; ++i) {
-    auto& row = rows[n_rows - i - 1_z];
-    if (row.size() == 0) continue;
+  // check +/- (ygrid - 1) rows from target_row to see if the candidate is overlapping an existing dot
+  const auto first = std::max(0_z, target_row_i - (ygrid - 1_z));
+  const auto last = std::min(static_cast<ptrdiff_t>(rows.size()), target_row_i + ygrid);
+  // iterate in reverse because we will often have a quick exit by comparison to the
+  // most recently placed dot
+  for (auto i = last; i-- > first; ) {
+    auto& row = rows[i];
+    if (row.size() == 0_uz) continue;
 
-    const auto y_offset = double(i) / double(ygrid);
+    const auto rows_from_target = static_cast<double>(std::abs(i - target_row_i));
+    const auto y_offset = rows_from_target / static_cast<double>(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
     auto loc = row.upper_bound(candidate);
@@ -93,10 +101,13 @@ inline auto place_candidate(
       const auto max_val_lte_candidate = *--loc;
       if (candidate < max_val_lte_candidate + min_x_dist) return false;
     }
-    if (i == 0_z) insert_loc = loc;
+
+    // if this is the target row we save insert_loc so we can give a hint to
+    // speed up the call to target_row.insert() below
+    if (rows_from_target == 0) insert_loc = loc;
   }
 
-  current_row.insert(insert_loc, candidate);
+  target_row.insert(insert_loc, candidate);
   return true;
 }
 
@@ -116,8 +127,8 @@ inline auto cbegin(const C& container) {
 
 //' const end iterator for forward or reverse iteration
 //' @param reverse iterate in reverse?
-//' @param T iterable type
-//' @param vec object to iterate over
+//' @param C iterable type
+//' @param container object to iterate over
 //' @noRd
 template<bool reverse, typename C>
 inline auto cend(const C& container) {
@@ -128,78 +139,70 @@ inline auto cend(const C& container) {
   }
 }
 
-template<bool reverse, typename C, typename V>
+//' push onto front or back of a container
+//' @param front push onto front?
+//' @param C container type
+//' @param container object to push onto
+//' @noRd
+template<bool front, typename C, typename V>
 inline void push(C& container, V&& value) {
-  if constexpr (reverse) {
+  if constexpr (front) {
     container.push_front(std::forward<V>(value));
   } else {
     container.push_back(std::forward<V>(value));
   }
 }
 
-template<typename C>
-constexpr auto all_empty(const C& container) -> bool {
-  for (const auto& value : container) {
-    if (!value.empty()) return false;
-  }
-  return true;
-}
-
-
-
-//' Place dots in a single row in the grid_swarm algorithm
+//' Attempt to place dots in a specific row in the grid_swarm algorithm
 //' @param reverse are we placing dots in reverse order?
 //' @param both is this a mirrored layout (`side == "both"`?)
-//' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @param ygrid <scalar [integer]> max possible number of previous rows in the
-//' y grid that  could overlap with this candidate
-//' @param remaining vector of dots to be placed
-//' @param rows <[list] of [numeric]> list of previous rows of placed dots
-//' @param rows_bottom <[list] of [numeric]> list of previous bottom rows of placed dots
-//' (when `both == true`)
+//' @param candidates dots to be placed
+//' @param next_candidates swap space used for next `candidates`
+//' @param xsize horizontal spacing between dots
+//' @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
+//' below this row that could overlap with dots in this row)
+//' @param rows rows of already-placed dots
+//' @param rows_bottom bottom rows of already-placed dots (when `both == true`)
+//' @param row_i index of `rows` and `rows_bottom` to place candidates in.
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
 template<bool reverse>
 inline auto place_row(
   const bool both,
+  std::deque<double>& candidates,
+  std::deque<double>& next_candidates,
   const double xsize,
-  const std::size_t ygrid,
-  std::vector<std::deque<double>>& remaining,
+  const std::ptrdiff_t ygrid,
   std::vector<std::multiset<double>>& rows,
-  std::vector<std::multiset<double>>& rows_bottom
+  std::vector<std::multiset<double>>& rows_bottom,
+  std::ptrdiff_t& row_i
 ) -> bool {
-  if (all_empty(remaining)) return false;
+  if (candidates.empty()) return false;
 
-  // must calculate n_rows_back here before adding a new row
-  const auto n_rows_back = std::min(ygrid, rows.size());
-
-  rows.emplace_back();
-  if (both) rows_bottom.emplace_back();
-
-  std::deque<double> next_remaining;
-
-  for (auto i = 0_z; i < remaining.size(); ++i) {
-    next_remaining.clear();
-
-    for (auto it = cbegin<reverse>(remaining[i]); it != cend<reverse>(remaining[i]); ++it) {
-      const auto candidate = *it;
-
-      if (place_candidate<reverse>(candidate, rows, n_rows_back, ygrid, xsize)) {
-        continue;
-      } else if (both && place_candidate<reverse>(candidate, rows_bottom, n_rows_back, ygrid, xsize)) {
-        continue;
-      }
-
-      push<reverse>(next_remaining, candidate);
-    }
-
-    std::swap(remaining[i], next_remaining);
+  // ensure target row exists
+  if (row_i == static_cast<ptrdiff_t>(rows.size())) {
+    rows.emplace_back();
+    if (both) rows_bottom.emplace_back();
   }
 
+  // place candidates
+  next_candidates.clear();
+  for (auto it = cbegin<reverse>(candidates); it != cend<reverse>(candidates); ++it) {
+    const auto candidate = *it;
+    if (place_candidate(candidate, xsize, ygrid, rows, row_i)) {
+      continue;
+    } else if (both && place_candidate(candidate, xsize, ygrid, rows_bottom, row_i)) {
+      continue;
+    }
+    push<reverse>(next_candidates, candidate);
+  }
+  std::swap(candidates, next_candidates);
+
+  ++row_i;
   return true;
 }
 
-//' Place dots in `n` rows in the grid_swarm algorithm
+//' Place dots in `n` rows in the grid_swarm algorithm, alternating `reverse`
 //' See `place_row()`
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
@@ -207,18 +210,20 @@ template<bool reverse>
 inline auto place_rows(
   std::size_t n,
   const bool both,
+  std::deque<double>& candidates,
+  std::deque<double>& next_candidates,
   const double xsize,
-  const std::size_t ygrid,
-  std::vector<std::deque<double>>& remaining,
+  const std::ptrdiff_t ygrid,
   std::vector<std::multiset<double>>& rows,
-  std::vector<std::multiset<double>>& rows_bottom
+  std::vector<std::multiset<double>>& rows_bottom,
+  std::ptrdiff_t& row_i
 ) -> bool {
   auto any_left = true;
   while (
-    n-- > 0_z &&
-    (any_left = place_row<reverse>(both, xsize, ygrid, remaining, rows, rows_bottom)) &&
-    n-- > 0_z &&
-    (any_left = place_row<!reverse>(both, xsize, ygrid, remaining, rows, rows_bottom))
+    n-- > 0_uz &&
+    (any_left = place_row<reverse>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i)) &&
+    n-- > 0_uz &&
+    (any_left = place_row<!reverse>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i))
   );
   return any_left;
 }
@@ -235,37 +240,43 @@ SEXP grid_swarm_(
   std::vector<std::deque<double>> xs,
   const double xsize,
   const double ysize,
-  const std::size_t ygrid,
+  const std::ptrdiff_t ygrid,
   const int side
 ) {
-  auto n_out = 0_z;
+  auto n_out = 0_uz;
   for (const auto& x : xs) n_out += x.size();
   const auto both = side == 0;
 
-  auto rows = std::vector<std::multiset<double>>{};
-  auto rows_bottom = std::vector<std::multiset<double>>{};
+  // swap space used for unplaced candidates
+  auto next_candidates = std::deque<double>{};
 
-  // first row is special: when both == true, it is a "middle" row that is
-  // treated as the first row (for placement purposes) on both the top and bottom sides
-  // so we always treat it as both = false and just copy it to rows_bottom
-  place_row<false>(false, xsize, ygrid, xs, rows, rows_bottom);
-  if (both) rows_bottom.push_back(rows.back());
+  auto rows = std::vector<std::multiset<double>>{{}};
+  auto rows_bottom = std::vector<std::multiset<double>>{{}};
 
-  // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
-  while (
-    // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
-    // we already placed the first row above
-    place_rows<true>(ygrid - 1, both, xsize, ygrid, xs, rows, rows_bottom) &&
-    place_rows<true>(ygrid, both, xsize, ygrid, xs, rows, rows_bottom) &&
-    place_row<false>(both, xsize, ygrid, xs, rows, rows_bottom)
-  );
+  for (auto& candidates : xs) {
+    // first row is special: when both == true, it is a "middle" row that is
+    // treated as the first row (for placement purposes) on both the top and bottom sides
+    // so we always treat it as both = false and just copy it to rows_bottom
+    auto row_i = 0_z;
+    place_row<false>(false, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i);
+    if (both) rows_bottom[0] = rows[0];
+
+    // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
+    while (
+      // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
+      // we already placed the first row above
+      place_rows<true>(ygrid - 1, both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
+      place_rows<true>(ygrid, both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
+      place_row<false>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i)
+    );
+  }
 
   // construct output data frame
   auto out_x_vec = Rcpp::NumericVector(n_out);
   auto out_y_vec = Rcpp::NumericVector(n_out);
   auto out_x_arr = REAL(out_x_vec);
   auto out_y_arr = REAL(out_y_vec);
-  auto i = 0_z;
+  auto i = 0_uz;
   const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
     const std::vector<std::multiset<double>>& rows,
     const std::size_t row_start,
@@ -280,11 +291,41 @@ SEXP grid_swarm_(
       }
     }
   };
-  copy_rows_to_output(rows, 0_z, both ? 1.0 : double(side));
-  if (both) copy_rows_to_output(rows_bottom, 1_z, -1.0);
+  copy_rows_to_output(rows, 0_uz, both ? 1.0 : double(side));
+  if (both) copy_rows_to_output(rows_bottom, 1_uz, -1.0);
 
   return Rcpp::DataFrame::create(
     Rcpp::Named("x") = out_x_vec,
     Rcpp::Named("y") = out_y_vec
   );
+}
+
+//' Re-center contiguous clusters around their mean y position so that
+//' small clusters are visually centered (rather than e.g. a cluster of
+//' two points having one point on the origin line and one above it)
+//' @param x sorted numeric vector of dot positions
+//' @param y sorted numeric vector of dot heights, same length as x
+//' @returns modified `y`
+//' @noRd
+// [[Rcpp::export(rng = false)]]
+SEXP recenter_swarm_clusters_(
+  Rcpp::NumericVector& x,
+  Rcpp::NumericVector& y,
+  const double binwidth
+) {
+  auto bin_sum = 0.0;
+  auto bin_n = 0.0;
+  auto bin_start = 0_rz;
+  for (auto bin_end = 0_rz; bin_end < x.size(); ++bin_end) {
+    bin_sum += y[bin_end];
+    bin_n += 1.0;
+    if (bin_end == x.size() - 1_rz || x[bin_end + 1_rz] - x[bin_end] >= binwidth) {
+      auto mean = bin_sum / bin_n;
+      for (auto i = bin_start; i <= bin_end; ++i) y[i] -= mean;
+      bin_start = bin_end + 1_rz;
+      bin_sum = 0.0;
+      bin_n = 0.0;
+    }
+  }
+  return y;
 }

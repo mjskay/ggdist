@@ -262,11 +262,8 @@ recenter_swarm_clusters = function(binner, dots, binning) {
   # re-center contiguous clusters around their mean y position so that
   # small clusters are visually centered (rather than e.g. a cluster of
   # two points having one point on the origin line and one above it)
-  dots$bin = cumsum(c(1L, diff(dots$x) >= binning$binwidth))
-  ddply_(dots, "bin", function(bin_df) {
-    bin_df$y = bin_df$y - mean(bin_df$y)
-    bin_df
-  })
+  dots$y = recenter_swarm_clusters_(dots$x, dots$y, binning$binwidth)
+  dots
 }
 
 #' Get the height of a swarm binning
