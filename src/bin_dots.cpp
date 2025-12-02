@@ -10,7 +10,11 @@
 // constants --------------------------------------------------------------------------
 
 constexpr auto INF = std::numeric_limits<double>::infinity();
-constexpr auto EPS = std::numeric_limits<double>::epsilon();
+
+template<typename Numeric>
+constexpr auto EPS(Numeric x) -> Numeric {
+  return 8 * x * std::numeric_limits<Numeric>::epsilon();
+}
 
 // literals ---------------------------------------------------------------------------
 
@@ -37,6 +41,7 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
 // [[Rcpp::export(rng = false)]]
 Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const double width) {
   const auto n = x.size();
+  const auto eps = EPS(width);
 
   auto bins = Rcpp::IntegerVector(n);
   auto current_bin = 1_rz;
@@ -46,7 +51,7 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
   for (auto i = 1_rz; i < n; ++i) {
     // This is equivalent to x[i] - first_x >= width but it accounts for machine precision.
     // If we instead used `>=` directly some things that should be symmetric will not be
-    if (x[i] - first_x - width >= -EPS) {
+    if (x[i] - first_x - width >= -eps) {
       current_bin = current_bin + 1_rz;
       first_x = x[i];
     }
@@ -74,7 +79,7 @@ inline auto place_candidate(
   std::vector<std::multiset<double>>& rows,
   const std::ptrdiff_t target_row_i
 ) -> bool {
-  const auto eps = 8 * EPS * xsize;
+  const auto eps = EPS(xsize);
 
   auto& target_row = rows[target_row_i];
   auto insert_loc = target_row.begin();
