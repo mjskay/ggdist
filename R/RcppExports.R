@@ -88,7 +88,7 @@ grid_swarm_ <- function(xs, xsize, ysize, ygrid, side) {
 #' @param y sorted numeric vector of dot heights, same length as x
 #' @returns modified `y`
 #' @noRd
-recenter_swarm_clusters_ <- function(x, y, binwidth) {
-    .Call(`_ggdist_recenter_swarm_clusters_`, x, y, binwidth)
+recenter_swarm_clusters_ <- function(x_vec, y_vec, binwidth) {
+    .Call(`_ggdist_recenter_swarm_clusters_`, x_vec, y_vec, binwidth)
 }
 

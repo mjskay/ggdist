@@ -12,7 +12,7 @@
 constexpr auto INF = std::numeric_limits<double>::infinity();
 
 template<typename Numeric>
-constexpr auto EPS(Numeric x) -> Numeric {
+constexpr auto relative_eps(const Numeric x) -> Numeric {
   return 8 * x * std::numeric_limits<Numeric>::epsilon();
 }
 
@@ -41,7 +41,7 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
 // [[Rcpp::export(rng = false)]]
 Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const double width) {
   const auto n = x.size();
-  const auto eps = EPS(width);
+  const auto eps = relative_eps(width);
 
   auto bins = Rcpp::IntegerVector(n);
   auto current_bin = 1_rz;
@@ -79,7 +79,7 @@ inline auto place_candidate(
   std::vector<std::multiset<double>>& rows,
   const std::ptrdiff_t target_row_i
 ) -> bool {
-  const auto eps = EPS(xsize);
+  const auto eps = relative_eps(xsize);
 
   auto& target_row = rows[target_row_i];
   auto insert_loc = target_row.begin();
@@ -90,7 +90,7 @@ inline auto place_candidate(
   // iterate in reverse because we will often have a quick exit by comparison to the
   // most recently placed dot
   for (auto i = last; i-- > first; ) {
-    auto& row = rows[i];
+    const auto& row = rows[i];
     if (row.size() == 0_uz) continue;
 
     const auto rows_from_target = static_cast<double>(std::abs(i - target_row_i));
@@ -314,23 +314,23 @@ SEXP grid_swarm_(
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP recenter_swarm_clusters_(
-  Rcpp::NumericVector& x,
-  Rcpp::NumericVector& y,
+  Rcpp::NumericVector& x_vec,
+  Rcpp::NumericVector& y_vec,
   const double binwidth
 ) {
+  auto n = static_cast<std::size_t>(x_vec.size());
+  auto x = REAL(x_vec);
+  auto y = REAL(y_vec);
   auto bin_sum = 0.0;
-  auto bin_n = 0.0;
-  auto bin_start = 0_rz;
-  for (auto bin_end = 0_rz; bin_end < x.size(); ++bin_end) {
-    bin_sum += y[bin_end];
-    bin_n += 1.0;
-    if (bin_end == x.size() - 1_rz || x[bin_end + 1_rz] - x[bin_end] >= binwidth) {
-      auto mean = bin_sum / bin_n;
-      for (auto i = bin_start; i <= bin_end; ++i) y[i] -= mean;
-      bin_start = bin_end + 1_rz;
+  auto bin_start = 0_uz;
+  for (auto bin_end = 1_uz; bin_end <= n; ++bin_end) {
+    bin_sum += y[bin_end - 1_uz];
+    if (bin_end == n || x[bin_end] - x[bin_end - 1_uz] >= binwidth) {
+      auto mean = bin_sum / static_cast<double>(bin_end - bin_start);
+      for (auto i = bin_start; i < bin_end; ++i) y[i] -= mean;
+      bin_start = bin_end;
       bin_sum = 0.0;
-      bin_n = 0.0;
     }
   }
-  return y;
+  return y_vec;
 }
