@@ -85,9 +85,6 @@ find_dotplot_binwidth = function(
     side = side,
     span = span
   )
-  max_binning = arrange_bins(binner, nbins = min_nbins)
-  max_binwidth = max_binning$binwidth
-  min_binwidth = 0
 
   widths = numeric()
   heights = numeric()
@@ -98,6 +95,10 @@ find_dotplot_binwidth = function(
     heights <<- c(heights, b$height)
     b
   }
+  max_binning = arrange_bins_binner(nbins = min_nbins)
+  max_binwidth = max_binning$binwidth
+  min_binwidth = 0
+
   eps = .Machine$double.eps^0.25
   height_eps = maxheight * eps
   if (isTRUE(max_binning$height <= maxheight + height_eps)) {
@@ -111,8 +112,8 @@ find_dotplot_binwidth = function(
     print(binwidth_eps)
     zero = zero_or_less(
       function(x) arrange_bins_binner(binwidth = x)$height - maxheight,
-      0,
-      max_binning$binwidth,
+      xs = c(0, max_binning$binwidth),
+      ys = c(0, max_binning$height) - maxheight,
       binwidth_eps,
       height_eps
     )
@@ -165,7 +166,7 @@ find_dotplot_binwidth = function(
   # }
   out = structure(
     binwidth,
-    iterations = data.frame(i = seq_along(widths), widths, heights),
+    iterations = data.frame(i = seq_along(widths), widths, heights, chosen = widths == binwidth),
     binwidth_eps = binwidth_eps,
     height_eps = height_eps
   )
@@ -173,46 +174,23 @@ find_dotplot_binwidth = function(
 
 
 
-zero_or_less = function(f, x_1, x_2, eps_x, eps_y) {
-  kappa_1 = 0.2 / (x_2 - x_1)
-  kappa_2 = 2#1 + (1 + sqrt(5))/2  # 2
-  n_0 = 1
-  n_0.5 = ceiling(log2((x_2 - x_1)/(2 * eps_x)))
-  n_max = n_0.5 + n_0
-
-  y_1 = f(x_1)
-  y_2 = f(x_2)
+zero_or_less = function(f, xs, ys, eps_x, eps_y) {
+  x_1 = xs[[1]]
+  y_1 = ys[[1]]
+  x_2 = xs[[length(xs)]]
+  y_2 = ys[[length(ys)]]
   x_best = x_1
   y_best = y_1
   err_best = abs(y_best)
-  j = 0
-  repeat {
-    # new_binwidth = min_binning$binwidth + (max_binning$binwidth - min_binning$binwidth) / (sqrt(max_binning$height) - sqrt(min_binning$height)) * (sqrt(maxheight) - sqrt(min_binning$height))
-    # new_binwidth = min_binning$binwidth + (max_binning$binwidth - min_binning$binwidth) / (max_binning$height - min_binning$height) * (maxheight - min_binning$height)
-    # x_new = (max_binning$binwidth * (max_binning$height - maxheight) - min_binning$binwidth * (min_binning$height - maxheight)) / (max_binning$height - min_binning$height)
 
-    # bisection
-    x_0.5 = (x_1 + x_2) / 2
-
-    # iterpolation (regula falsi)
-    x_rf = (y_2 * x_1 - y_1 * x_2) / (y_2 - y_1)
-
-    # truncation
-    sigma = sign(x_0.5 - x_rf)
-    delta = kappa_1 * abs(x_2 - x_1) ^ kappa_2
-    x_t = if (delta <= abs(x_0.5 - x_rf)) x_rf + sigma * delta else x_0.5
-
-    # projection
-    r = eps_x * 2^(n_max - j) - (x_2 - x_1) / 2
-    x_new = if (abs(x_t - x_0.5) <= r) x_t else x_0.5 - sigma * r
-    # x_new = x_0.5
-    # rho = min(r, abs(x_t - x_0.5))
-    # x_new =
-
-    # x_new = (y_2 * x_1 - y_1 * x_2) / (y_2 - y_1)
-    # x_new = (x_1 + x_2) / 2
+  for (i in 1:100) {
+    x_new = spline_root(xs, ys, x_1, x_2)
+    if (x_new <= x_1 || x_new >= x_2) x_new = (x_1 + x_2) / 2
     y_new = f(x_new)
     err_new = abs(y_new)
+
+    xs = c(xs, x_new)
+    ys = c(ys, y_new)
 
     if (y_new <= eps_y && err_new < err_best) {
       # store the best <= eps_y so far
@@ -236,7 +214,6 @@ zero_or_less = function(f, x_1, x_2, eps_x, eps_y) {
       y_1 = y_new
     }
     stopifnot(y_1 < 0, 0 < y_2)
-    j = j + 1
   }
 
   list(
@@ -247,4 +224,9 @@ zero_or_less = function(f, x_1, x_2, eps_x, eps_y) {
     y_best = y_best,
     y_2 = y_2
   )
+}
+
+spline_root = function(xs, ys, x_1, x_2, ...) {
+  f = splinefun(xs, ys, ties = min, method = "monoH.FC")
+  uniroot(f, lower = x_1, upper = x_2, ...)$root
 }
