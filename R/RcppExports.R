@@ -13,6 +13,10 @@ NULL
 #' @noRd
 NULL
 
+#' Signed size of a container (from C++20)
+#' @noRd
+NULL
+
 #' Attempt to place a candidate dot in a target row
 #' @param candidate candidate x position
 #' @param xsize horizontal spacing between dots
@@ -24,7 +28,7 @@ NULL
 #' @noRd
 NULL
 
-#' const begin iterator for forward or reverse iteration
+#' const begin iterator for forward or reverse s
 #' @param reverse iterate in reverse?
 #' @param T iterable type
 #' @param vec object to iterate over

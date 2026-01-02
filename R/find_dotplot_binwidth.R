@@ -88,13 +88,9 @@ find_dotplot_binwidth = function(
 
   widths = numeric()
   heights = numeric()
+  methods = "start"
   arrange_bins_ = method(arrange_bins, object = binner)
-  arrange_bins_binner = function(...) {
-    b = arrange_bins_(binner, ...)
-    widths <<- c(widths, b$binwidth)
-    heights <<- c(heights, b$height)
-    b
-  }
+  arrange_bins_binner = function(...) arrange_bins_(binner, ...)
   max_binning = arrange_bins_binner(nbins = min_nbins)
   max_binwidth = max_binning$binwidth
   min_binwidth = 0
@@ -106,19 +102,50 @@ find_dotplot_binwidth = function(
     # number of bins --- thus, at the upper limit of the height we will allow)
     # is valid, then we don't need to search and can just use it.
     binwidth = max_binning$binwidth
+    height = max_binning$height
   } else {
-    # use binary search to find a reasonable number of bins
+    # make a first guess using a density estimator
+    max_density = max(density(x)$y)
+
+    # max_bin_count = density * n * binwidth - 1 + 1/stackratio
+    # maxheight = (density * n * binwidth - 1 + 1/stackratio) * binwidth * heightratio
+    # binwidth_1 = (sqrt(4 * max_density * maxheight * length(x) * stackratio^2 + heightratio * (stackratio - 1)^2) + sqrt(heightratio) * (stackratio - 1))/(2 * max_density * sqrt(heightratio) * length(x) * stackratio)
+
+    # 0 = density * length(x) * binwidth^2 - binwidth * (1 + 1 / stackratio) - maxheight / heightratio
+    # a = max_density * length(x)
+    # b = (1 + 1 / stackratio)
+    # c = maxheight / heightratio
+    # cat(a, b, c)
+    # binwidth_1 = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
+    # print(binwidth_1, maxheight / (length(x) * max_density * heightratio))
+    # binwidth_1 = maxheight / (length(x) * max_density * heightratio * (1 + 1 / stackratio))
+    binwidth_2 = (sqrt(4 * max_density * maxheight * length(x) * stackratio^2 + heightratio * (stackratio - 1)^2) + sqrt(heightratio) * (stackratio - 1))/(2 * max_density * sqrt(heightratio) * length(x) * stackratio)
+    binning_2 = arrange_bins_binner(binwidth = binwidth_2)
+
+    binwidth_1 = binwidth_2 / 2
+    binning_1 = arrange_bins_binner(binwidth = binwidth_1)
+
+    # search for a reasonable binwidth
     binwidth_eps = height_eps / heightratio / sqrt(length(x))
-    print(binwidth_eps)
+    # print(binwidth_eps)
     zero = zero_or_less(
       function(x) arrange_bins_binner(binwidth = x)$height - maxheight,
-      xs = c(0, max_binning$binwidth),
-      ys = c(0, max_binning$height) - maxheight,
+      xs = c(0,
+        # binning_1$binwidth,
+        # binning_2$binwidth,
+        max_binning$binwidth),
+      ys = c(0,
+        # binning_1$height,
+        # binning_2$height,
+        max_binning$height) - maxheight,
       binwidth_eps,
       height_eps
     )
+    widths = zero$xs
+    heights = zero$ys + maxheight
+    methods = zero$methods
     binwidth = zero$x_best
-    cat("Binary search iterations:", length(widths), "\n")
+    # cat("Search iterations:", length(widths), "\n")
 
     # attempt to refine binwidth using optimization.
     # after finding a reasonable candidate based on number of bins, we refine
@@ -126,33 +153,35 @@ find_dotplot_binwidth = function(
     # only as a second step because just using optimization on binwidth as a
     # first step tends to end up in a local minimum, sometimes very far from
     # maxheight.
-    if (abs(zero$y_best) > height_eps) {
-      candidate_binwidths = c(zero$x_1, zero$x_2, zero$x_best) #c(min_binning$binwidth, max_binning$binwidth, binning$binwidth)
-      if (length(unique(candidate_binwidths)) != 1) {
-        opt = optimize(
-          function(binwidth) {
-            binning = arrange_bins_binner(binwidth = binwidth)
-            abs(binning$height - maxheight)
-          },
-          candidate_binwidths,
-          tol = binwidth_eps
-        )
-        new_binning = arrange_bins_binner(binwidth = opt$minimum)
+    # if (abs(zero$y_best) > height_eps) {
+    #   candidate_binwidths = c(zero$x_1, zero$x_2, zero$x_best) #c(min_binning$binwidth, max_binning$binwidth, binning$binwidth)
+    #   if (length(unique(candidate_binwidths)) != 1) {
+    #     opt = optimize(
+    #       function(binwidth) {
+    #         binning = arrange_bins_binner(binwidth = binwidth)
+    #         abs(binning$height - maxheight)
+    #       },
+    #       candidate_binwidths,
+    #       tol = binwidth_eps
+    #     )
+    #     new_binning = arrange_bins_binner(binwidth = opt$minimum)
 
-        # approximate test that binning is valid, used here to tolerate approximation with optimize()
-        new_err = new_binning$height - maxheight
-        new_abs_err = abs(new_err)
-        if (isTRUE(new_err <= height_eps && new_abs_err < abs(zero$y_best))) {
-          binwidth = opt$minimum
-        }
-      }
-    }
+    #     # approximate test that binning is valid, used here to tolerate approximation with optimize()
+    #     new_err = new_binning$height - maxheight
+    #     new_abs_err = abs(new_err)
+    #     if (isTRUE(new_err <= height_eps && new_abs_err < abs(zero$y_best))) {
+    #       binwidth = opt$minimum
+    #     }
+    #   }
+    # }
     valid = heights <= maxheight + height_eps
-    binwidth = widths[valid][which.min(abs(heights[valid] - maxheight))]
+    i = which.min(abs(heights[valid] - maxheight))
+    binwidth = widths[valid][i]
+    height = heights[valid][i]
   }
 
   # check if the selected binning is valid....
-  cat("Total iterations:", length(widths), "\n")
+  # cat("Total iterations:", length(widths), "\n")
   # print(binning$binwidth)
   # print(binning$height - maxheight)
   # if (isTRUE(binning$height <= maxheight + height_eps)) {
@@ -166,15 +195,16 @@ find_dotplot_binwidth = function(
   # }
   out = structure(
     binwidth,
-    iterations = data.frame(i = seq_along(widths), widths, heights, chosen = widths == binwidth),
+    iterations = data.frame(i = seq_along(widths), widths, heights, methods, chosen = widths == binwidth),
     binwidth_eps = binwidth_eps,
+    height_err = abs(height - maxheight),
     height_eps = height_eps
   )
 }
 
 
 
-zero_or_less = function(f, xs, ys, eps_x, eps_y) {
+zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)) {
   x_1 = xs[[1]]
   y_1 = ys[[1]]
   x_2 = xs[[length(xs)]]
@@ -183,14 +213,23 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y) {
   y_best = y_1
   err_best = abs(y_best)
 
-  for (i in 1:100) {
-    x_new = spline_root(xs, ys, x_1, x_2)
-    if (x_new <= x_1 || x_new >= x_2) x_new = (x_1 + x_2) / 2
+  methods = rep("start", length(xs))
+  for (i in 1:30) {
+    f_approx = splinefun(xs, ys, ties = min, method = "monoH.FC")
+    x_new = uniroot(f_approx, lower = x_1, upper = x_2, tol = tol)$root
+    method_new = "spline"
+    if (x_new <= x_1 || x_new >= x_2) {
+      # when the root found by spline approximation lies outside the
+      # search interval, use bisection
+      x_new = (x_1 + x_2) / 2
+      method_new = "bisection"
+    }
     y_new = f(x_new)
     err_new = abs(y_new)
 
     xs = c(xs, x_new)
     ys = c(ys, y_new)
+    methods = c(methods, method_new)
 
     if (y_new <= eps_y && err_new < err_best) {
       # store the best <= eps_y so far
@@ -222,11 +261,9 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y) {
     x_2 = x_2,
     y_1 = y_1,
     y_best = y_best,
-    y_2 = y_2
+    y_2 = y_2,
+    xs = xs,
+    ys = ys,
+    methods = methods
   )
-}
-
-spline_root = function(xs, ys, x_1, x_2, ...) {
-  f = splinefun(xs, ys, ties = min, method = "monoH.FC")
-  uniroot(f, lower = x_1, upper = x_2, ...)$root
 }

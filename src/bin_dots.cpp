@@ -36,6 +36,17 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
   return n;
 }
 
+// helpers ---------------------------------------------------------------------------
+
+//' Signed size of a container (from C++20)
+//' @noRd
+template<class C>
+constexpr auto ssize(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
+    using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
+    return static_cast<signed_c_size_t>(c.size());
+}
+
+
 // wilkinson-esque methods ------------------------------------------------------------
 
 // [[Rcpp::export(rng = false)]]
@@ -72,24 +83,25 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 //' @param target_row iterator pointing at row in `rows` to attempt to place `candidate` in
 //' @returns `true` if the candidate was placed successfully
 //' @noRd
+template<typename Row>
 inline auto place_candidate(
   const double candidate,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<std::multiset<double>>& rows,
+  std::vector<Row>& rows,
   const std::ptrdiff_t target_row_i
 ) -> bool {
   const auto eps = relative_eps(xsize);
 
   auto& target_row = rows[target_row_i];
-  auto insert_loc = target_row.begin();
+  auto insert_loc = target_row.end();
 
   // check +/- (ygrid - 1) rows from target_row to see if the candidate is overlapping an existing dot
-  const auto first = std::max(0_z, target_row_i - (ygrid - 1_z));
-  const auto last = std::min(static_cast<ptrdiff_t>(rows.size()), target_row_i + ygrid);
+  const auto first_row_i = std::max(0_z, target_row_i - (ygrid - 1_z));
+  const auto last_row_i = std::min(ssize(rows), target_row_i + ygrid);
   // iterate in reverse because we will often have a quick exit by comparison to the
   // most recently placed dot
-  for (auto i = last; i-- > first; ) {
+  for (auto i = last_row_i; i-- > first_row_i; ) {
     const auto& row = rows[i];
     if (row.size() == 0_uz) continue;
 
@@ -103,7 +115,7 @@ inline auto place_candidate(
       if (candidate > min_val_gt_candidate - min_x_dist) return false;
     }
     if (loc != row.begin()) {
-      const auto max_val_lte_candidate = *--loc;
+      const auto max_val_lte_candidate = *std::prev(loc);
       if (candidate < max_val_lte_candidate + min_x_dist) return false;
     }
 
@@ -116,7 +128,7 @@ inline auto place_candidate(
   return true;
 }
 
-//' const begin iterator for forward or reverse iteration
+//' const begin iterator for forward or reverse s
 //' @param reverse iterate in reverse?
 //' @param T iterable type
 //' @param vec object to iterate over
@@ -171,15 +183,15 @@ inline void push(C& container, V&& value) {
 //' @param row_i index of `rows` and `rows_bottom` to place candidates in.
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
-template<bool reverse>
+template<bool reverse, typename Row>
 inline auto place_row(
   const bool both,
   std::deque<double>& candidates,
   std::deque<double>& next_candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<std::multiset<double>>& rows,
-  std::vector<std::multiset<double>>& rows_bottom,
+  std::vector<Row>& rows,
+  std::vector<Row>& rows_bottom,
   std::ptrdiff_t& row_i
 ) -> bool {
   if (candidates.empty()) return false;
@@ -211,7 +223,7 @@ inline auto place_row(
 //' See `place_row()`
 //' @returns `true` if `remaining` may still have dots to place and `false` otherwise
 //' @noRd
-template<bool reverse>
+template<bool reverse, typename Row>
 inline auto place_rows(
   std::size_t n,
   const bool both,
@@ -219,8 +231,8 @@ inline auto place_rows(
   std::deque<double>& next_candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<std::multiset<double>>& rows,
-  std::vector<std::multiset<double>>& rows_bottom,
+  std::vector<Row>& rows,
+  std::vector<Row>& rows_bottom,
   std::ptrdiff_t& row_i
 ) -> bool {
   auto any_left = true;
@@ -255,8 +267,9 @@ SEXP grid_swarm_(
   // swap space used for unplaced candidates
   auto next_candidates = std::deque<double>{};
 
-  auto rows = std::vector<std::multiset<double>>{{}};
-  auto rows_bottom = std::vector<std::multiset<double>>{{}};
+  using Row = std::multiset<double>;
+  auto rows = std::vector<Row>{{}};
+  auto rows_bottom = std::vector<Row>{{}};
 
   for (auto& candidates : xs) {
     // first row is special: when both == true, it is a "middle" row that is
@@ -283,7 +296,7 @@ SEXP grid_swarm_(
   auto out_y_arr = REAL(out_y_vec);
   auto i = 0_uz;
   const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
-    const std::vector<std::multiset<double>>& rows,
+    const std::vector<Row>& rows,
     const std::size_t row_start,
     const double side
   ) {
