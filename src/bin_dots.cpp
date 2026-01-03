@@ -4,7 +4,9 @@
 #include <algorithm>
 #include <cmath>
 #include <deque>
+#include <iterator>
 #include <limits>
+#include <set>
 #include <vector>
 
 // constants --------------------------------------------------------------------------
@@ -18,34 +20,49 @@ constexpr auto relative_eps(const Numeric x) -> Numeric {
 
 // literals ---------------------------------------------------------------------------
 
-//' Size diff literal for C++ arrays / vectors
-//' @noRd
+/// Size diff literal for C++ arrays / vectors
 constexpr std::ptrdiff_t operator""_z(unsigned long long n) {
   return n;
 }
 
-//' Size literal for C++ arrays / vectors
-//' @noRd
+/// Size literal for C++ arrays / vectors
 constexpr std::size_t operator""_uz(unsigned long long n) {
   return n;
 }
 
-//' Size literal for R vectors
-//' @noRd
+/// Size literal for R vectors
 constexpr R_xlen_t operator""_rz(unsigned long long n) {
   return n;
 }
 
 // helpers ---------------------------------------------------------------------------
 
-//' Signed size of a container (from C++20)
-//' @noRd
+/// Signed size of a container (from C++20)
 template<class C>
 constexpr auto ssize(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
     using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
     return static_cast<signed_c_size_t>(c.size());
 }
 
+/// Upper bound for a value in a container
+template<class C>
+inline auto upper_bound(C& container, const double value) {
+  return std::upper_bound(container.begin(), container.end(), value);
+}
+template<>
+inline auto upper_bound<std::multiset<double>>(std::multiset<double>& container, const double value) {
+  return container.upper_bound(value);
+}
+
+/// Lower bound for a value in a container
+template<class C>
+inline auto lower_bound(C& container, const double value) {
+  return std::lower_bound(container.begin(), container.end(), value);
+}
+template<>
+inline auto lower_bound<std::multiset<double>>(std::multiset<double>& container, const double value) {
+  return container.lower_bound(value);
+}
 
 // wilkinson-esque methods ------------------------------------------------------------
 
@@ -74,22 +91,53 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 
 // grid_swarm ------------------------------------------------------------
 
-//' Attempt to place a candidate dot in a target row
-//' @param candidate candidate x position
-//' @param xsize horizontal spacing between dots
-//' @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
-//' below this row that could overlap with dots in this row)
-//' @param rows rows of already-placed dots
-//' @param target_row iterator pointing at row in `rows` to attempt to place `candidate` in
-//' @returns `true` if the candidate was placed successfully
-//' @noRd
-template<typename Row>
+/// Add distance to a value, possibly in reverse direction
+/// @tparam reverse add in reverse direction?
+/// @param value base value
+/// @param distance distance to add
+/// @returns value plus (or minus) distance
+template<bool reverse>
+inline auto add_distance(const double value, const double distance) -> double {
+  if constexpr (reverse) {
+    return value - distance;
+  } else {
+    return value + distance;
+  }
+}
+
+/// Directional minimum of candidate positions
+/// @tparam reverse take maximum instead of minimum?
+/// @param a first candidate
+/// @param b second candidate
+/// @returns minimum (or maximum) of `a` and `b`
+template<bool reverse>
+inline auto min_candidate(const double a, const double b) -> double {
+  if constexpr (reverse) {
+    return std::max(a, b);
+  } else {
+    return std::min(a, b);
+  }
+}
+
+/// Attempt to place a candidate dot in a target row
+/// @tparam Row container type for rows of already-placed dots
+/// @param candidate candidate x position
+/// @param xsize horizontal spacing between dots
+/// @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
+/// below this row that could overlap with dots in this row)
+/// @param rows rows of already-placed dots
+/// @param target_row iterator pointing at row in `rows` to attempt to place `candidate` in
+/// @param min_next_candidate output parameter giving the minimum candidate x position
+/// that could be placed after attempting to place `candidate`
+/// @returns `true` if the candidate was placed successfully
+template<bool reverse, typename Row>
 inline auto place_candidate(
   const double candidate,
   const double xsize,
   const std::ptrdiff_t ygrid,
   std::vector<Row>& rows,
-  const std::ptrdiff_t target_row_i
+  const std::ptrdiff_t target_row_i,
+  double& min_next_candidate
 ) -> bool {
   const auto eps = relative_eps(xsize);
 
@@ -102,21 +150,29 @@ inline auto place_candidate(
   // iterate in reverse because we will often have a quick exit by comparison to the
   // most recently placed dot
   for (auto i = last_row_i; i-- > first_row_i; ) {
-    const auto& row = rows[i];
+    auto& row = rows[i];
     if (row.size() == 0_uz) continue;
 
     const auto rows_from_target = static_cast<double>(std::abs(i - target_row_i));
     const auto y_offset = rows_from_target / static_cast<double>(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
-    auto loc = row.upper_bound(candidate);
+    auto loc = upper_bound(row, candidate);
     if (loc != row.end()) {
       const auto min_val_gt_candidate = *loc;
-      if (candidate > min_val_gt_candidate - min_x_dist) return false;
+      if (candidate > min_val_gt_candidate - min_x_dist) {
+        // overlap => can't place candidate here
+        min_next_candidate = add_distance<reverse>(min_val_gt_candidate, min_x_dist);
+        return false;
+      }
     }
     if (loc != row.begin()) {
       const auto max_val_lte_candidate = *std::prev(loc);
-      if (candidate < max_val_lte_candidate + min_x_dist) return false;
+      if (candidate < max_val_lte_candidate + min_x_dist) {
+        // overlap => can't place candidate here
+        min_next_candidate = add_distance<reverse>(max_val_lte_candidate, min_x_dist);
+        return false;
+      }
     }
 
     // if this is the target row we save insert_loc so we can give a hint to
@@ -125,14 +181,14 @@ inline auto place_candidate(
   }
 
   target_row.insert(insert_loc, candidate);
+  min_next_candidate = add_distance<reverse>(candidate, xsize - eps);
   return true;
 }
 
-//' const begin iterator for forward or reverse s
-//' @param reverse iterate in reverse?
-//' @param T iterable type
-//' @param vec object to iterate over
-//' @noRd
+/// const begin iterator for forward or reverse s
+/// @tparam reverse iterate in reverse?
+/// @tparam C container type
+/// @param container object to iterate over
 template<bool reverse, typename C>
 inline auto cbegin(const C& container) {
   if constexpr (reverse) {
@@ -142,11 +198,10 @@ inline auto cbegin(const C& container) {
   }
 }
 
-//' const end iterator for forward or reverse iteration
-//' @param reverse iterate in reverse?
-//' @param C iterable type
-//' @param container object to iterate over
-//' @noRd
+/// const end iterator for forward or reverse iteration
+/// @tparam reverse iterate in reverse?
+/// @tparam C container type
+/// @param container object to iterate over
 template<bool reverse, typename C>
 inline auto cend(const C& container) {
   if constexpr (reverse) {
@@ -156,11 +211,10 @@ inline auto cend(const C& container) {
   }
 }
 
-//' push onto front or back of a container
-//' @param front push onto front?
-//' @param C container type
-//' @param container object to push onto
-//' @noRd
+/// push onto front or back of a container
+/// @tparam front push onto front?
+/// @tparam C container type
+/// @param container object to push onto
 template<bool front, typename C, typename V>
 inline void push(C& container, V&& value) {
   if constexpr (front) {
@@ -170,24 +224,57 @@ inline void push(C& container, V&& value) {
   }
 }
 
-//' Attempt to place dots in a specific row in the grid_swarm algorithm
-//' @param reverse are we placing dots in reverse order?
-//' @param both is this a mirrored layout (`side == "both"`?)
-//' @param candidates dots to be placed
-//' @param next_candidates swap space used for next `candidates`
-//' @param xsize horizontal spacing between dots
-//' @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
-//' below this row that could overlap with dots in this row)
-//' @param rows rows of already-placed dots
-//' @param rows_bottom bottom rows of already-placed dots (when `both == true`)
-//' @param row_i index of `rows` and `rows_bottom` to place candidates in.
-//' @returns `true` if `remaining` may still have dots to place and `false` otherwise
-//' @noRd
-template<bool reverse, typename Row>
+/// Erase an element from a container via a (possibly reversed) iterator
+/// @tparam reverse is the iterator reversed?
+/// @tparam C container type
+/// @tparam It iterator type
+/// @param container object to erase from
+/// @param it iterator pointing at element to erase
+template<bool reverse, typename C, typename It>
+inline auto erase(C& container, const It& it) -> It {
+  if constexpr (reverse) {
+    return std::reverse_iterator(container.erase(std::next(it).base()));
+  } else {
+    return container.erase(it);
+  }
+}
+
+/// Advance an iterator on a set of candidates to at least `min_next_candidate`
+/// @tparam reverse is the iterator reversed?
+/// @tparam Candidates container type
+/// @param candidates set of candidates
+/// @param it current iterator position
+/// @param min_next_candidate minimum candidate value to advance to
+template<bool reverse, typename Iterator, typename Candidates>
+inline auto advance_to_at_least(
+  const Candidates& candidates, const Iterator it, const double min_next_candidate
+) {
+  if constexpr (reverse) {
+    auto next_it = std::reverse_iterator(upper_bound(candidates, min_next_candidate));
+    return std::max(it, next_it);
+  } else {
+    auto next_it = lower_bound(candidates, min_next_candidate);
+    return std::max(it, next_it);
+  }
+}
+
+/// Attempt to place dots in a specific row in the grid_swarm algorithm
+/// @tparam reverse are we placing dots in reverse order?
+/// @tparam Row container type for rows of already-placed dots
+/// @param both is this a mirrored layout (`side == "both"`?)
+/// @param candidates dots to be placed
+/// @param next_candidates swap space used for next `candidates`
+/// @param xsize horizontal spacing between dots
+/// @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
+/// below this row that could overlap with dots in this row)
+/// @param rows rows of already-placed dots
+/// @param rows_bottom bottom rows of already-placed dots (when `both == true`)
+/// @param row_i index of `rows` and `rows_bottom` to place candidates in.
+/// @returns `true` if `remaining` may still have dots to place and `false` otherwise
+template<bool reverse, typename Candidates, typename Row>
 inline auto place_row(
   const bool both,
-  std::deque<double>& candidates,
-  std::deque<double>& next_candidates,
+  Candidates& candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
   std::vector<Row>& rows,
@@ -197,38 +284,46 @@ inline auto place_row(
   if (candidates.empty()) return false;
 
   // ensure target row exists
-  if (row_i == static_cast<ptrdiff_t>(rows.size())) {
+  if (row_i == ssize(rows)) {
     rows.emplace_back();
     if (both) rows_bottom.emplace_back();
   }
 
   // place candidates
-  next_candidates.clear();
-  for (auto it = cbegin<reverse>(candidates); it != cend<reverse>(candidates); ++it) {
-    const auto candidate = *it;
-    if (place_candidate(candidate, xsize, ygrid, rows, row_i)) {
-      continue;
-    } else if (both && place_candidate(candidate, xsize, ygrid, rows_bottom, row_i)) {
-      continue;
+  auto min_next_candidate = reverse ? INF : -INF;
+  auto min_next_candidate_top = min_next_candidate;
+  auto min_next_candidate_bottom = min_next_candidate;
+  for (auto it = cbegin<reverse>(candidates); it != cend<reverse>(candidates); ) {
+    auto candidate = *it;
+
+    if (place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top)) {
+      it = erase<reverse>(candidates, it);
+    } else if (both && place_candidate<reverse>(candidate, xsize, ygrid, rows_bottom, row_i, min_next_candidate_bottom)) {
+      it = erase<reverse>(candidates, it);
+    } else {
+      ++it;
     }
-    push<reverse>(next_candidates, candidate);
+
+    if (both) {
+      min_next_candidate = min_candidate<reverse>(min_next_candidate_top, min_next_candidate_bottom);
+    } else {
+      min_next_candidate = min_next_candidate_top;
+    }
+    it = advance_to_at_least<reverse>(candidates, it, min_next_candidate);
   }
-  std::swap(candidates, next_candidates);
 
   ++row_i;
   return true;
 }
 
-//' Place dots in `n` rows in the grid_swarm algorithm, alternating `reverse`
-//' See `place_row()`
-//' @returns `true` if `remaining` may still have dots to place and `false` otherwise
-//' @noRd
-template<bool reverse, typename Row>
+/// Place dots in `n` rows in the grid_swarm algorithm, alternating `reverse`
+/// @returns `true` if `remaining` may still have dots to place and `false` otherwise
+/// @see `place_row()`
+template<bool reverse, typename Candidates, typename Row>
 inline auto place_rows(
   std::size_t n,
   const bool both,
-  std::deque<double>& candidates,
-  std::deque<double>& next_candidates,
+  Candidates& candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
   std::vector<Row>& rows,
@@ -238,9 +333,9 @@ inline auto place_rows(
   auto any_left = true;
   while (
     n-- > 0_uz &&
-    (any_left = place_row<reverse>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i)) &&
+    (any_left = place_row<reverse>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i)) &&
     n-- > 0_uz &&
-    (any_left = place_row<!reverse>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i))
+    (any_left = place_row<!reverse>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i))
   );
   return any_left;
 }
@@ -264,9 +359,6 @@ SEXP grid_swarm_(
   for (const auto& x : xs) n_out += x.size();
   const auto both = side == 0;
 
-  // swap space used for unplaced candidates
-  auto next_candidates = std::deque<double>{};
-
   using Row = std::multiset<double>;
   auto rows = std::vector<Row>{{}};
   auto rows_bottom = std::vector<Row>{{}};
@@ -276,16 +368,16 @@ SEXP grid_swarm_(
     // treated as the first row (for placement purposes) on both the top and bottom sides
     // so we always treat it as both = false and just copy it to rows_bottom
     auto row_i = 0_z;
-    place_row<false>(false, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i);
+    place_row<false>(false, candidates, xsize, ygrid, rows, rows_bottom, row_i);
     if (both) rows_bottom[0] = rows[0];
 
     // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
     while (
       // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
       // we already placed the first row above
-      place_rows<true>(ygrid - 1, both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
-      place_rows<true>(ygrid, both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
-      place_row<false>(both, candidates, next_candidates, xsize, ygrid, rows, rows_bottom, row_i)
+      place_rows<true>(ygrid - 1, both, candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
+      place_rows<true>(ygrid, both, candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
+      place_row<false>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i)
     );
   }
 

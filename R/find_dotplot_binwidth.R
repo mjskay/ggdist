@@ -193,7 +193,7 @@ find_dotplot_binwidth = function(
   #   # width that works with the tallest bin
   #   binning$binwidth * maxheight / binning$height
   # }
-  out = structure(
+  structure(
     binwidth,
     iterations = data.frame(i = seq_along(widths), widths, heights, methods, chosen = widths == binwidth),
     binwidth_eps = binwidth_eps,
