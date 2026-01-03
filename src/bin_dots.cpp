@@ -35,7 +35,7 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
   return n;
 }
 
-// helpers ---------------------------------------------------------------------------
+// container helpers ---------------------------------------------------------------------------
 
 /// Signed size of a container (from C++20)
 template<class C>
@@ -89,7 +89,50 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
   return bins;
 }
 
-// grid_swarm ------------------------------------------------------------
+// reversible sequence helpers ------------------------------------------------------
+// These helpers allow us to write the core grid swarm placement methods in a way that
+// is agnostic to whether we are iterating forward or backward through the candidate dots.
+
+/// const begin iterator for forward or reverse iteration
+/// @tparam reverse iterate in reverse?
+/// @tparam C container type
+/// @param container object to iterate over
+template<bool reverse, typename C>
+inline auto cbegin(const C& container) {
+  if constexpr (reverse) {
+    return container.crbegin();
+  } else {
+    return container.cbegin();
+  }
+}
+
+/// const end iterator for forward or reverse iteration
+/// @tparam reverse iterate in reverse?
+/// @tparam C container type
+/// @param container object to iterate over
+template<bool reverse, typename C>
+inline auto cend(const C& container) {
+  if constexpr (reverse) {
+    return container.crend();
+  } else {
+    return container.cend();
+  }
+}
+
+/// Erase an element from a container via a (possibly reversed) iterator
+/// @tparam reverse is the iterator reversed?
+/// @tparam C container type
+/// @tparam It iterator type
+/// @param container object to erase from
+/// @param it iterator pointing at element to erase
+template<bool reverse, typename C, typename It>
+inline auto erase(C& container, const It& it) -> It {
+  if constexpr (reverse) {
+    return std::reverse_iterator(container.erase(std::next(it).base()));
+  } else {
+    return container.erase(it);
+  }
+}
 
 /// Add distance to a value, possibly in reverse direction
 /// @tparam reverse add in reverse direction?
@@ -118,6 +161,27 @@ inline auto min_candidate(const double a, const double b) -> double {
     return std::min(a, b);
   }
 }
+
+/// Advance an iterator on a set of candidates to at least `min_next_candidate`
+/// @tparam reverse is the iterator reversed?
+/// @tparam Candidates container type
+/// @param candidates set of candidates
+/// @param it current iterator position
+/// @param min_next_candidate minimum candidate value to advance to
+template<bool reverse, typename Iterator, typename Candidates>
+inline auto advance_to_at_least(
+  const Candidates& candidates, const Iterator it, const double min_next_candidate
+) {
+  if constexpr (reverse) {
+    auto next_it = std::reverse_iterator(upper_bound(candidates, min_next_candidate));
+    return std::max(it, next_it);
+  } else {
+    auto next_it = lower_bound(candidates, min_next_candidate);
+    return std::max(it, next_it);
+  }
+}
+
+// core grid swarm placement methods ------------------------------------------------------
 
 /// Attempt to place a candidate dot in a target row
 /// @tparam Row container type for rows of already-placed dots
@@ -185,79 +249,6 @@ inline auto place_candidate(
   return true;
 }
 
-/// const begin iterator for forward or reverse s
-/// @tparam reverse iterate in reverse?
-/// @tparam C container type
-/// @param container object to iterate over
-template<bool reverse, typename C>
-inline auto cbegin(const C& container) {
-  if constexpr (reverse) {
-    return container.crbegin();
-  } else {
-    return container.cbegin();
-  }
-}
-
-/// const end iterator for forward or reverse iteration
-/// @tparam reverse iterate in reverse?
-/// @tparam C container type
-/// @param container object to iterate over
-template<bool reverse, typename C>
-inline auto cend(const C& container) {
-  if constexpr (reverse) {
-    return container.crend();
-  } else {
-    return container.cend();
-  }
-}
-
-/// push onto front or back of a container
-/// @tparam front push onto front?
-/// @tparam C container type
-/// @param container object to push onto
-template<bool front, typename C, typename V>
-inline void push(C& container, V&& value) {
-  if constexpr (front) {
-    container.push_front(std::forward<V>(value));
-  } else {
-    container.push_back(std::forward<V>(value));
-  }
-}
-
-/// Erase an element from a container via a (possibly reversed) iterator
-/// @tparam reverse is the iterator reversed?
-/// @tparam C container type
-/// @tparam It iterator type
-/// @param container object to erase from
-/// @param it iterator pointing at element to erase
-template<bool reverse, typename C, typename It>
-inline auto erase(C& container, const It& it) -> It {
-  if constexpr (reverse) {
-    return std::reverse_iterator(container.erase(std::next(it).base()));
-  } else {
-    return container.erase(it);
-  }
-}
-
-/// Advance an iterator on a set of candidates to at least `min_next_candidate`
-/// @tparam reverse is the iterator reversed?
-/// @tparam Candidates container type
-/// @param candidates set of candidates
-/// @param it current iterator position
-/// @param min_next_candidate minimum candidate value to advance to
-template<bool reverse, typename Iterator, typename Candidates>
-inline auto advance_to_at_least(
-  const Candidates& candidates, const Iterator it, const double min_next_candidate
-) {
-  if constexpr (reverse) {
-    auto next_it = std::reverse_iterator(upper_bound(candidates, min_next_candidate));
-    return std::max(it, next_it);
-  } else {
-    auto next_it = lower_bound(candidates, min_next_candidate);
-    return std::max(it, next_it);
-  }
-}
-
 /// Attempt to place dots in a specific row in the grid_swarm algorithm
 /// @tparam reverse are we placing dots in reverse order?
 /// @tparam Row container type for rows of already-placed dots
@@ -296,14 +287,19 @@ inline auto place_row(
   for (auto it = cbegin<reverse>(candidates); it != cend<reverse>(candidates); ) {
     auto candidate = *it;
 
-    if (place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top)) {
-      it = erase<reverse>(candidates, it);
-    } else if (both && place_candidate<reverse>(candidate, xsize, ygrid, rows_bottom, row_i, min_next_candidate_bottom)) {
+    // attempt to place candidate, updating min_next_candidate_{top,bottom} so we can
+    // skip candidates that are definitely not placeable (this is very important for performance,
+    // especially when binwidth is large and many candidates are rejected)
+    if (
+      place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top) ||
+      (both && place_candidate<reverse>(candidate, xsize, ygrid, rows_bottom, row_i, min_next_candidate_bottom))
+    ) {
       it = erase<reverse>(candidates, it);
     } else {
       ++it;
     }
 
+    // skip candidates that are definitely not placeable
     if (both) {
       min_next_candidate = min_candidate<reverse>(min_next_candidate_top, min_next_candidate_bottom);
     } else {
@@ -409,6 +405,8 @@ SEXP grid_swarm_(
     Rcpp::Named("y") = out_y_vec
   );
 }
+
+// swarm cluster recentering ------------------------------------------------------------
 
 //' Re-center contiguous clusters around their mean y position so that
 //' small clusters are visually centered (rather than e.g. a cluster of
