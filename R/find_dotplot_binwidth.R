@@ -86,9 +86,6 @@ find_dotplot_binwidth = function(
     span = span
   )
 
-  widths = numeric()
-  heights = numeric()
-  methods = "start"
   arrange_bins_ = method(arrange_bins, object = binner)
   arrange_bins_binner = function(...) arrange_bins_(binner, ...)
   max_binning = arrange_bins_binner(nbins = min_nbins)
@@ -97,12 +94,17 @@ find_dotplot_binwidth = function(
 
   eps = .Machine$double.eps^0.25
   height_eps = maxheight * eps
+  binwidth_eps = height_eps / heightratio / sqrt(length(x))
   if (isTRUE(max_binning$height <= maxheight + height_eps)) {
     # if the max binning (i.e. the binning constructed from the smallest
     # number of bins --- thus, at the upper limit of the height we will allow)
     # is valid, then we don't need to search and can just use it.
     binwidth = max_binning$binwidth
     height = max_binning$height
+
+    widths = binwidth
+    heights = height
+    methods = "start"
   } else {
     # make a first guess using a density estimator
     max_density = max(density(x)$y)
@@ -126,7 +128,6 @@ find_dotplot_binwidth = function(
     binning_1 = arrange_bins_binner(binwidth = binwidth_1)
 
     # search for a reasonable binwidth
-    binwidth_eps = height_eps / heightratio / sqrt(length(x))
     # print(binwidth_eps)
     zero = zero_or_less(
       function(x) arrange_bins_binner(binwidth = x)$height - maxheight,

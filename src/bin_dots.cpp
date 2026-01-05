@@ -190,7 +190,7 @@ inline auto advance_to_at_least(
 /// @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
 /// below this row that could overlap with dots in this row)
 /// @param rows rows of already-placed dots
-/// @param target_row iterator pointing at row in `rows` to attempt to place `candidate` in
+/// @param target_row_i index of row in `rows` to attempt to place `candidate` in
 /// @param min_next_candidate output parameter giving the minimum candidate x position
 /// that could be placed after attempting to place `candidate`
 /// @returns `true` if the candidate was placed successfully
@@ -199,7 +199,7 @@ inline auto place_candidate(
   const double candidate,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<Row>& rows,
+  std::deque<Row>& rows,
   const std::ptrdiff_t target_row_i,
   double& min_next_candidate
 ) -> bool {
@@ -254,13 +254,13 @@ inline auto place_candidate(
 /// @tparam Row container type for rows of already-placed dots
 /// @param both is this a mirrored layout (`side == "both"`?)
 /// @param candidates dots to be placed
-/// @param next_candidates swap space used for next `candidates`
 /// @param xsize horizontal spacing between dots
 /// @param ygrid size of the y grid (corresponding to 1 + the number of adjacent rows above or
 /// below this row that could overlap with dots in this row)
 /// @param rows rows of already-placed dots
-/// @param rows_bottom bottom rows of already-placed dots (when `both == true`)
-/// @param row_i index of `rows` and `rows_bottom` to place candidates in.
+/// @param row_num row number to place dots in.
+/// - When `both == false`, this is the index of the row in `rows`
+/// - When `both == true`, this is the distance from the center row.
 /// @returns `true` if `remaining` may still have dots to place and `false` otherwise
 template<bool reverse, typename Candidates, typename Row>
 inline auto place_row(
@@ -268,19 +268,29 @@ inline auto place_row(
   Candidates& candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<Row>& rows,
-  std::vector<Row>& rows_bottom,
-  std::ptrdiff_t& row_i
+  std::deque<Row>& rows,
+  std::ptrdiff_t& row_num
 ) -> bool {
   if (candidates.empty()) return false;
 
-  // ensure target row exists
-  if (row_i == ssize(rows)) {
+  // determine row indices and ensure target row exists
+  auto row_i = row_num;
+  auto row_i_bottom = row_num;
+  if (both) {
+    auto row_origin = ssize(rows) / 2_z;
+    if (row_num == row_origin + 1_z) {
+      rows.emplace_back();
+      rows.emplace_front();
+      ++row_origin;
+    }
+    row_i = row_origin + row_num;
+    row_i_bottom = row_origin - row_num;
+  } else if (row_num == ssize(rows)) {
     rows.emplace_back();
-    if (both) rows_bottom.emplace_back();
   }
 
   // place candidates
+  const bool place_both = both && row_num > 0; // center row only placed once
   auto min_next_candidate = reverse ? INF : -INF;
   auto min_next_candidate_top = min_next_candidate;
   auto min_next_candidate_bottom = min_next_candidate;
@@ -292,7 +302,7 @@ inline auto place_row(
     // especially when binwidth is large and many candidates are rejected)
     if (
       place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top) ||
-      (both && place_candidate<reverse>(candidate, xsize, ygrid, rows_bottom, row_i, min_next_candidate_bottom))
+      (place_both && place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i_bottom, min_next_candidate_bottom))
     ) {
       it = erase<reverse>(candidates, it);
     } else {
@@ -300,7 +310,7 @@ inline auto place_row(
     }
 
     // skip candidates that are definitely not placeable
-    if (both) {
+    if (place_both) {
       min_next_candidate = min_candidate<reverse>(min_next_candidate_top, min_next_candidate_bottom);
     } else {
       min_next_candidate = min_next_candidate_top;
@@ -308,7 +318,7 @@ inline auto place_row(
     it = advance_to_at_least<reverse>(candidates, it, min_next_candidate);
   }
 
-  ++row_i;
+  ++row_num;
   return true;
 }
 
@@ -322,16 +332,15 @@ inline auto place_rows(
   Candidates& candidates,
   const double xsize,
   const std::ptrdiff_t ygrid,
-  std::vector<Row>& rows,
-  std::vector<Row>& rows_bottom,
-  std::ptrdiff_t& row_i
+  std::deque<Row>& rows,
+  std::ptrdiff_t& row_num
 ) -> bool {
   auto any_left = true;
   while (
     n-- > 0_uz &&
-    (any_left = place_row<reverse>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i)) &&
+    (any_left = place_row<reverse>(both, candidates, xsize, ygrid, rows, row_num)) &&
     n-- > 0_uz &&
-    (any_left = place_row<!reverse>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i))
+    (any_left = place_row<!reverse>(both, candidates, xsize, ygrid, rows, row_num))
   );
   return any_left;
 }
@@ -356,24 +365,14 @@ SEXP grid_swarm_(
   const auto both = side == 0;
 
   using Row = std::multiset<double>;
-  auto rows = std::vector<Row>{{}};
-  auto rows_bottom = std::vector<Row>{{}};
+  auto rows = std::deque<Row>{{}};
 
   for (auto& candidates : xs) {
-    // first row is special: when both == true, it is a "middle" row that is
-    // treated as the first row (for placement purposes) on both the top and bottom sides
-    // so we always treat it as both = false and just copy it to rows_bottom
-    auto row_i = 0_z;
-    place_row<false>(false, candidates, xsize, ygrid, rows, rows_bottom, row_i);
-    if (both) rows_bottom[0] = rows[0];
-
+    auto row_num = 0_z;
     // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
     while (
-      // start with <true>(ygrid - 1, ...) instead of <false>(ygrid, ...) because
-      // we already placed the first row above
-      place_rows<true>(ygrid - 1, both, candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
-      place_rows<true>(ygrid, both, candidates, xsize, ygrid, rows, rows_bottom, row_i) &&
-      place_row<false>(both, candidates, xsize, ygrid, rows, rows_bottom, row_i)
+      place_rows<false>(ygrid, both, candidates, xsize, ygrid, rows, row_num) &&
+      place_rows<true>(ygrid, both, candidates, xsize, ygrid, rows, row_num)
     );
   }
 
@@ -383,22 +382,24 @@ SEXP grid_swarm_(
   auto out_x_arr = REAL(out_x_vec);
   auto out_y_arr = REAL(out_y_vec);
   auto i = 0_uz;
-  const auto copy_rows_to_output = [&i, &out_x_arr, &out_y_arr, ygrid, ysize](
-    const std::vector<Row>& rows,
-    const std::size_t row_start,
+  const auto copy_rows_to_output = [&rows, &i, &out_x_arr, &out_y_arr, ygrid, ysize ](
+    const std::ptrdiff_t row_origin,
+    const std::ptrdiff_t row_start,
+    const std::ptrdiff_t row_end,
+    const std::ptrdiff_t direction,
     const double side
   ) {
-    for (auto row_i = row_start; row_i < rows.size(); ++row_i) {
+    for (auto row_i = row_start; row_i != row_end; row_i += direction) {
       const auto& row = rows[row_i];
       for (const auto x_val : row) {
         out_x_arr[i] = x_val;
-        out_y_arr[i] = double(row_i) / double(ygrid) * ysize * side;
+        out_y_arr[i] = double(row_i - row_origin) / double(ygrid) * ysize * side;
         ++i;
       }
     }
   };
-  copy_rows_to_output(rows, 0_uz, both ? 1.0 : double(side));
-  if (both) copy_rows_to_output(rows_bottom, 1_uz, -1.0);
+  copy_rows_to_output(both ? ssize(rows) / 2_z : 0_z, both ? ssize(rows) / 2_z : 0_z, ssize(rows), 1_z, both ? 1.0 : double(side));
+  if (both) copy_rows_to_output(ssize(rows) / 2_z, ssize(rows) / 2_z - 1_z, -1_z, -1_z, 1.0);
 
   return Rcpp::DataFrame::create(
     Rcpp::Named("x") = out_x_vec,
