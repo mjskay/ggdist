@@ -66,9 +66,13 @@ find_dotplot_binwidth = function(
 ) {
   side = match.arg(side)
 
-  x = sort(as.numeric(x), na.last = TRUE)
+  d = data_frame0(x = as.numeric(x), group = group)
+  d = d[order(d$x, d$group), ]
+  x = d$x
+  group = d$group
 
   # figure out a reasonable minimum number of bins based on histogram binning
+  # TODO: remove
   min_nbins = if (length(x) <= 1) {
     1
   } else {

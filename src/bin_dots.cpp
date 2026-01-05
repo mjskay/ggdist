@@ -381,25 +381,34 @@ SEXP grid_swarm_(
   auto out_y_vec = Rcpp::NumericVector(n_out);
   auto out_x_arr = REAL(out_x_vec);
   auto out_y_arr = REAL(out_y_vec);
-  auto i = 0_uz;
-  const auto copy_rows_to_output = [&rows, &i, &out_x_arr, &out_y_arr, ygrid, ysize ](
-    const std::ptrdiff_t row_origin,
-    const std::ptrdiff_t row_start,
-    const std::ptrdiff_t row_end,
-    const std::ptrdiff_t direction,
-    const double side
-  ) {
-    for (auto row_i = row_start; row_i != row_end; row_i += direction) {
-      const auto& row = rows[row_i];
+  if (both) {
+    const auto row_height = ysize / static_cast<double>(ygrid);
+    const auto row_origin = ssize(rows) / 2_z;
+    auto i = 0_z;
+    for (auto row_num = 1_z; row_num <= ssize(rows); ++row_num) {
+      // row_offset is 0, 1, -1, 2, -2, ...
+      const auto row_offset = (row_num / 2_z) * (1_z - (row_num % 2_z) * 2_z);
+      const auto& row = rows[row_origin + row_offset];
+      const auto y_val = static_cast<double>(row_offset) * row_height;
       for (const auto x_val : row) {
         out_x_arr[i] = x_val;
-        out_y_arr[i] = double(row_i - row_origin) / double(ygrid) * ysize * side;
+        out_y_arr[i] = y_val;
         ++i;
       }
     }
-  };
-  copy_rows_to_output(both ? ssize(rows) / 2_z : 0_z, both ? ssize(rows) / 2_z : 0_z, ssize(rows), 1_z, both ? 1.0 : double(side));
-  if (both) copy_rows_to_output(ssize(rows) / 2_z, ssize(rows) / 2_z - 1_z, -1_z, -1_z, 1.0);
+  } else {
+    const auto row_height = static_cast<double>(side) * ysize / static_cast<double>(ygrid);
+    auto i = 0_z;
+    for (auto row_i = 0_z; row_i < ssize(rows); ++row_i) {
+      const auto& row = rows[row_i];
+      const auto y_val = static_cast<double>(row_i) * row_height;
+      for (const auto x_val : row) {
+        out_x_arr[i] = x_val;
+        out_y_arr[i] = y_val;
+        ++i;
+      }
+    }
+  }
 
   return Rcpp::DataFrame::create(
     Rcpp::Named("x") = out_x_vec,
