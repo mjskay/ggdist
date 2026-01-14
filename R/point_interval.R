@@ -397,7 +397,7 @@ qi_ = function(x, lower_prob, upper_prob, na.rm) {
   }
 
   if (distributional::is_distribution(x)) {
-    do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), t))
+    do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob), kind = "marginal", na.rm = na.rm), t))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm, names = FALSE), ncol = 2)
   }
