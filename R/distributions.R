@@ -425,7 +425,7 @@ cdf.ggdist__weighted_sample = function(x, q, ..., na.rm = TRUE) {
 }
 
 #' @export
-quantile.ggdist__weighted_sample = function(x, p, ..., na.rm = TRUE, names = FALSE) {
+quantile.ggdist__weighted_sample = function(x, p, ..., na.rm = TRUE, names = FALSE, kind = "marginal") {
   weighted_quantile(x[["x"]], p, weights = x[["weights"]], ..., na.rm = na.rm, names = names)
 }
 

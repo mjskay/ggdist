@@ -397,8 +397,7 @@ qi_ = function(x, lower_prob, upper_prob, na.rm) {
   }
 
   if (distributional::is_distribution(x)) {
-    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
-    do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob)), t))
+    do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob), kind = "marginal", na.rm = na.rm), t))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm, names = FALSE), ncol = 2)
   }
