@@ -587,16 +587,28 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     if (is.null(params$slab_type)) {
       params$slab_type = self$default_slab_type
     } else {
+      how_to_fix = list(
+        pdf = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic
+          like {.arg thickness}. This is already the default in most cases.',
+        cdf = 'To replace {.code slab_type = "cdf"}, map {.code after_stat(cdf)} onto an aesthetic
+          like {.arg thickness}. This is the default in {.fun stat_cdfinterval}.',
+        ccdf = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic
+          like {.arg thickness}. This is the default in {.fun stat_ccdfinterval}.',
+        histogram = 'To replace {.code slab_type = "histogram"}, pass {.code density = "histogram"} to the stat,
+          which will change the {.var pdf} computed variable to use a histogram density estimator.
+          This is sufficient in most {.pkg ggdist} stats, where {.code after_stat(pdf)} is already
+          used in the default aesthetic mapping. When this is not the case  (e.g.
+          {.fun stat_cdfinterval} or {.fun stat_ccdfinterval}), you must also
+          map {.code after_stat(pdf)} onto an aesthetic, like {.arg thickness} or {.arg slab_alpha}.'
+      )
       cli_warn(c(
         'The {.arg slab_type} parameter for {.pkg ggdist} stats is deprecated.',
-        'i' = 'Instead of using {.arg slab_type}, use {.fun ggplot2::after_stat} to
-          map the desired computed variable, e.g. {.code pdf} or {.code cdf}, onto
-          an aesthetic, e.g. {.code aes(thickness = after_stat(pdf))}. Specifically:',
-        '>' = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic.',
-        '>' = 'To replace {.code slab_type = "cdf"}, map {.code after_stat(cdf)} onto an aesthetic.',
-        '>' = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic.',
-        '>' = 'To replace {.code slab_type = "histogram"}, map {.code after_stat(pdf)} onto an aesthetic and
-          pass {.code density = "histogram"} to the stat.',
+        'i' = 'Instead of using {.arg slab_type}, you must adjust the {.arg density} argument
+          (for {.code slab_type = "histogram"}) and/or change what computed variable
+          (e.g. {.code after_stat(pdf)} or {.code after_stat(cdf)}) is mapped onto the aesthetic
+          used to display the slab (such as {.arg thickness} in {.fun stat_slabinterval},
+          {.fun stat_slab}, etc; or {.arg slab_alpha} in {.fun stat_gradientinterval}).',
+        `>` = if (isTRUE(params$slab_type %in% names(how_to_fix))) how_to_fix[[params$slab_type]],
         'i' = 'For more information, see the {.emph Computed Variables} section of {.fun ggdist::stat_slabinterval}.'
       ))
     }
