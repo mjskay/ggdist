@@ -64,6 +64,34 @@ find_dotplot_binwidth = function(
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   span = waiver()
 ) {
+  out = .find_dotplot_binwidth(
+    x = x,
+    maxheight = maxheight,
+    group = group,
+    heightratio = heightratio,
+    stackratio = stackratio,
+    layout = layout,
+    side = side,
+    span = span
+  )
+  attributes(out) = NULL
+  out
+}
+
+#' `find_dotplot_binwidth()` with additional debug output
+#'
+#' Results can be plotted with `plot_fdb()` to see the shape of the binwidth-height function.
+#' @noRd
+.find_dotplot_binwidth = function(
+  x,
+  maxheight,
+  group = 1L,
+  heightratio = 1,
+  stackratio = 1,
+  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
+  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
+  span = waiver()
+) {
   side = match.arg(side)
 
   d = data_frame0(x = as.numeric(x), group = group)
@@ -93,7 +121,7 @@ find_dotplot_binwidth = function(
   arrange_bins_ = method(arrange_bins, object = binner)
   arrange_bins_binner = function(...) arrange_bins_(binner, ...)
 
-  max_binwidth = min(diff(range(x)), maxheight / stackratio / heightratio)
+  max_binwidth = max(diff(range(x)), maxheight / stackratio / heightratio)
   max_binning = arrange_bins_binner(binwidth = max_binwidth)
   min_binwidth = 0
 
@@ -166,8 +194,8 @@ find_dotplot_binwidth = function(
     is_min_gte = \(x, target) x == min_gte(x, target)
     max_lte = \(x, target) suppressWarnings(max(x[x <= target]))
     is_max_lte = \(x, target) x == max_lte(x, target)
-    n_1 = floor(binwidth_to_n(iter$x[is_min_gte(iter$y, maxheight)]))
-    n_2 = ceiling(binwidth_to_n(iter$x[is_max_lte(iter$y, maxheight)]))
+    n_1 = max(floor(binwidth_to_n(iter$x[is_min_gte(iter$y, maxheight)])), 1)
+    n_2 = min(ceiling(binwidth_to_n(iter$x[is_max_lte(iter$y, maxheight)])), length(x))
     while (n_2 - n_1 > 1) {
       # traditional binary search would be:
       # > n_mid = floor((n_1 + n_2) / 2)

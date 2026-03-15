@@ -27,26 +27,27 @@
 </defs>
 <g clip-path='url(#cpNDAuMTN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='40.13' y='22.78' width='674.39' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<circle cx='70.79' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='174.80' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='174.80' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='257.50' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='257.50' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='257.50' cy='316.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='336.94' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='336.94' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='336.94' cy='316.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='336.94' cy='234.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='417.71' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='417.71' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='417.71' cy='316.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='417.71' cy='234.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='497.16' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='497.16' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='497.16' cy='316.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='579.86' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='579.86' cy='398.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
-<circle cx='683.87' cy='480.37' r='40.72' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<line x1='40.13' y1='94.01' x2='714.52' y2='94.01' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<circle cx='70.79' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='168.26' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='168.26' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='251.89' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='251.89' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='251.89' cy='297.67' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='335.51' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='335.51' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='335.51' cy='297.67' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='335.51' cy='208.19' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='419.14' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='419.14' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='419.14' cy='297.67' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='419.14' cy='208.19' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='502.77' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='502.77' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='502.77' cy='297.67' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='586.39' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='586.39' cy='387.15' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
+<circle cx='683.87' cy='476.63' r='44.48' style='stroke-width: 1.06; stroke: #A6A6A6; fill: #A6A6A6;' />
 <line x1='81.79' y1='521.37' x2='672.87' y2='521.37' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <line x1='230.11' y1='521.37' x2='524.55' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <circle cx='377.33' cy='521.37' r='1.68' style='stroke-width: 1.06; fill: #000000;' />

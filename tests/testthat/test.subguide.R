@@ -175,14 +175,16 @@ test_that("dots subguide works with dodging", {
     scale_x_continuous(expand = expansion(add = 0.25))
 
   vdiffr::expect_doppelganger("dots subguide with dodging",
-    p + stat_dotsinterval(
-      subguide = subguide_count(label_side = "outside", title = "num", theme = theme_test()),
-      position = "dodgejust",
-      slab_color = NA,
-      height = 0.9,
-      scale = 0.8,
-      quantiles = 50
-    )
+    p +
+      stat_dotsinterval(
+        subguide = subguide_count(label_side = "outside", title = "num", theme = theme_test()),
+        position = "dodgejust",
+        slab_color = NA,
+        height = 0.9,
+        scale = 0.8,
+        quantiles = 50
+      ) +
+      geom_hline(yintercept = c(0.91, 1.36, 2.36), alpha = 0.25)
   )
 })
 
@@ -200,7 +202,8 @@ test_that("dots subguide works with side and justification", {
     p +
       stat_dotsinterval(aes(y = "1 bottom"), subguide = sg, side = "bottom", quantiles = 50, stackratio = 1.25) +
       stat_dotsinterval(aes(y = "2 both"), subguide = sg, side = "both", quantiles = 50, stackratio = 1.25) +
-      stat_dotsinterval(aes(y = "3 top"), subguide = sg, side = "top", quantiles = 50, stackratio = 1.25)
+      stat_dotsinterval(aes(y = "3 top"), subguide = sg, side = "top", quantiles = 50, stackratio = 1.25) +
+      geom_hline(yintercept = c(0.1, 1.55, 2.45, 3.9), alpha = 0.25)
   )
 
   p = df %>%

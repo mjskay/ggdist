@@ -24,19 +24,27 @@ test_that("vanilla dots geoms and stats work", {
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla geom_dots",
-    p + geom_dots(aes(x = dist, y = x))
+    p +
+      geom_dots(aes(x = dist, y = x)) +
+      geom_vline(xintercept = c(1, 1.9, 2, 2.9))
   )
 
   vdiffr::expect_doppelganger("vanilla geom_dotsh",
-    p + geom_dots(aes(y = dist, x = x))
+    p +
+      geom_dots(aes(y = dist, x = x)) +
+      geom_hline(yintercept = c(1, 1.9, 2, 2.9))
   )
 
   vdiffr::expect_doppelganger("stat_dotsh with a group with 1 dot",
-    p + stat_dots(aes(y = dist, x = x, color = x > 2))
+    p +
+      stat_dots(aes(y = dist, x = x, color = after_stat(x > 2))) +
+      geom_hline(yintercept = c(1, 1.9, 2, 2.9))
   )
 
   vdiffr::expect_doppelganger("stat_dotsh with a group with 2 dots",
-    p + stat_dots(aes(y = dist, x = x, color = x > 1))
+    p +
+      stat_dots(aes(y = dist, x = x, color = after_stat(x > 1))) +
+      geom_hline(yintercept = c(1, 1.9, 2, 2.9))
   )
 
   set.seed(1234)
@@ -54,7 +62,9 @@ test_that("vanilla dots geoms and stats work", {
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla geom_dotsinterval",
-    p + geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype))
+    p +
+      geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype)) +
+      geom_hline(yintercept = c(1.9, 2.9))
   )
 
   set.seed(1234)
@@ -67,13 +77,16 @@ test_that("vanilla dots geoms and stats work", {
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla stat_dotsinterval",
-    p + stat_dotsinterval(aes(x = dist, y = x), quantiles = 20)
+    p +
+      stat_dotsinterval(aes(x = dist, y = x), quantiles = 20) +
+      geom_vline(xintercept = c(1.9, 2.9))
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dotsintervalh",
-    p + stat_dotsinterval(aes(y = dist, x = x), quantiles = 20)
+    p +
+      stat_dotsinterval(aes(y = dist, x = x), quantiles = 20) +
+      geom_hline(yintercept = c(1.9, 2.9))
   )
-
 })
 
 
@@ -99,7 +112,9 @@ test_that("coordinate transformations work", {
     geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype))
 
   vdiffr::expect_doppelganger("coord_flip with dotsinterval",
-    p + coord_flip()
+    p +
+      coord_flip() +
+      geom_hline(yintercept = c(1.9, 2.9))
   )
 
   expect_error(
@@ -115,21 +130,25 @@ test_that("scale transformations work", {
 
 
   p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%
-    ggplot(aes(xdist = x, y = 0))
+    ggplot(aes(xdist = x, y = 0)) +
+    geom_hline(yintercept = 0.9)
 
   vdiffr::expect_doppelganger("transformed scale with dist_sample",
     p + stat_dist_dotsinterval() + scale_x_log10()
   )
 
   p = data.frame(x = qlnorm(ppoints(20))) %>%
-    ggplot(aes(x = x, y = 0))
+    ggplot(aes(x = x, y = 0)) +
+    geom_hline(yintercept = 0.9)
 
   vdiffr::expect_doppelganger("transformed scale with sample data on x",
     p + stat_dist_dotsinterval() + scale_x_log10()
   )
 
   p = data.frame(x = qlnorm(ppoints(100))) %>%
-    ggplot(aes(x = x, y = 0))
+    ggplot(aes(x = x, y = 0)) +
+    geom_hline(yintercept = 0.9)
+
 
   vdiffr::expect_doppelganger("transformed scale, sample data, quantiles",
     p + stat_dist_dotsinterval(quantiles = 20) + scale_x_log10()
@@ -152,15 +171,15 @@ test_that("stat_dist_dots[interval] works", {
     ggplot(aes(dist = dist, args = args))
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dots",
-    p + stat_dist_dots(aes(x = dist), n = 20, quantiles = 20)
-  )
-
-  vdiffr::expect_doppelganger("vanilla stat_dist_dotsinterval",
-    p + stat_dist_dotsinterval(aes(x = dist), n = 20, quantiles = 20)
+    p +
+      stat_dist_dots(aes(x = dist), n = 20, quantiles = 20) +
+      geom_vline(xintercept = c(1.9, 2.9))
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsintervalh",
-    p + stat_dist_dotsinterval(aes(y = dist), n = 20, quantiles = 20)
+    p +
+      stat_dist_dotsinterval(aes(y = dist), n = 20, quantiles = 20) +
+      geom_hline(yintercept = c(1.9, 2.9))
   )
 
 })
@@ -262,29 +281,25 @@ test_that("dotplot layouts work", {
     stringsAsFactors = FALSE
   )
 
+  p = df %>%
+    ggplot(aes(x = mpg)) +
+    facet_grid(~ side) +
+    geom_hline(yintercept = c(1, 0.5, -0.5, -1))
+
+
   vdiffr::expect_doppelganger("weave",
-    df %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(aes(side = side), layout = "weave") +
-      facet_grid(~ side)
+    p + geom_dots(aes(side = side), layout = "weave")
   )
 
   vdiffr::expect_doppelganger("hex",
-    df %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(aes(side = side), layout = "hex", stackratio = 0.92) +
-      facet_grid(~ side)
+    p + geom_dots(aes(side = side), layout = "hex", stackratio = 0.92)
   )
 
 
   skip_if_not_installed("beeswarm")
 
   vdiffr::expect_doppelganger("swarm",
-    df %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(aes(side = side), layout = "swarm", scale = 1) +
-      facet_grid(~ side) +
-      geom_hline(yintercept = c(1, 0.5, -0.5, -1))
+    p + geom_dots(aes(side = side), layout = "swarm", scale = 1)
   )
 
   vdiffr::expect_doppelganger("swarm vertical",
@@ -306,33 +321,26 @@ test_that("dot order is correct", {
     ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
     scale_fill_brewer(palette = "Set1") +
     scale_color_brewer(palette = "Paired") +
-    geom_hline(yintercept = 0.9)
+    geom_hline(yintercept = 0.9) +
+    geom_vline(xintercept = 0)
 
   vdiffr::expect_doppelganger("bin dot order",
-    p +
-      geom_dots(layout = "bin", linewidth = 5) +
-      geom_vline(xintercept = 0)
+    p + geom_dots(layout = "bin", linewidth = 5)
   )
 
   vdiffr::expect_doppelganger("bin dot order, kept",
-    p +
-      geom_dots(aes(order = g), layout = "bin", linewidth = 5) +
-      geom_vline(xintercept = 0)
+    p + geom_dots(aes(order = g), layout = "bin", linewidth = 5)
   )
 
   vdiffr::expect_doppelganger("weave dot order",
-    p +
-      geom_dots(layout = "weave", linewidth = 5) +
-      geom_vline(xintercept = 0)
+    p + geom_dots(layout = "weave", linewidth = 5)
   )
 
 
   skip_if_not_installed("beeswarm")
 
   vdiffr::expect_doppelganger("swarm dot order",
-    p +
-      geom_dots(layout = "swarm", linewidth = 5) +
-      geom_vline(xintercept = 0)
+    p + geom_dots(layout = "swarm", linewidth = 5)
   )
 
 })
@@ -380,7 +388,8 @@ test_that("geom_dots works with NA in non-data axis", {
 
   p = mtcars %>%
     ggplot(aes(x = mpg, y = factor(cyl))) +
-    scale_y_discrete(limits = c("4", "6"))
+    scale_y_discrete(limits = c("4", "6")) +
+    geom_hline(yintercept = c(1, 1.9, 2, 2.9))
 
   # without na.rm this should work but also throw a warning
   expect_warning(vdiffr::expect_doppelganger("NA on y axis",
@@ -709,7 +718,8 @@ test_that("side, justification, and scale can vary", {
         x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom")
       )) +
-      stat_dotsinterval(orientation = "horizontal")
+      stat_dotsinterval(orientation = "horizontal", scale = 2/3) +
+      geom_hline(yintercept = c(5 + 1/3, 6 + 2/3), alpha = 0.25)
   )
 
   vdiffr::expect_doppelganger("varying side and just",

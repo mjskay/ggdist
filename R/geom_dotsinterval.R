@@ -100,6 +100,12 @@ makeContent.dots_grob = function(x) {
 
   if (isTRUE(is.na(binwidth)) || overflow != "keep") {
     # find the best bin widths across all the dotplots we are going to draw
+    # TODO: taking the min over a set of candidate binwidths needs to moved to
+    # within the optimization step in find_dotplot_binwidth so that in the
+    # (rare but possible) case where a dot group A requires a slightly
+    # smaller binwidth than dot group B but that smaller binwidth leads to a
+    # larger height for dot group B due to a discontinuity in its
+    # binwidth -> height function.
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
       find_dotplot_binwidth(

@@ -184,7 +184,9 @@ test_that("mapping custom aesthetics works", {
     ggplot(aes(x = x, y = y, group = NA))
 
   vdiffr::expect_doppelganger("dots: slab_color plus slab_shape mapping",
-    p + geom_dots(aes(slab_color = x > 1.9, slab_shape = x > 1.9), orientation = "horizontal")
+    p +
+      geom_dots(aes(slab_color = x > 1.9, slab_shape = x > 1.9), orientation = "horizontal") +
+      geom_hline(yintercept = c(1, 1.9, 2, 2.9), alpha = 0.25)
   )
 
   expect_error(

@@ -75,6 +75,8 @@
 <circle cx='188.60' cy='293.87' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
 <circle cx='451.56' cy='247.33' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
 <circle cx='188.60' cy='293.87' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<line x1='425.27' y1='545.11' x2='425.27' y2='22.78' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='688.22' y1='545.11' x2='688.22' y2='22.78' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <rect x='30.83' y='22.78' width='683.69' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
