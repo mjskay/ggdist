@@ -2,7 +2,7 @@
 #
 # Author: mjskay
 ###############################################################################
-#' @include dot_layout.R
+#' @include dotplot_layout.R
 NULL
 
 
