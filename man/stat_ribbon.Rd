@@ -164,8 +164,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -283,7 +283,7 @@ tibble(
 \seealso{
 See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for the geom underlying this stat.
 
-Other lineribbon stats: 
-\code{\link{stat_lineribbon}()}
+Other lineribbon stats:
+\code{\link[=stat_lineribbon]{stat_lineribbon()}}
 }
 \concept{lineribbon stats}

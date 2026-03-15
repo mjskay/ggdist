@@ -117,7 +117,7 @@ data.frame(
 
 }
 \seealso{
-Other ggdist scales: 
+Other ggdist scales:
 \code{\link{scale_colour_ramp}},
 \code{\link{scale_thickness}},
 \code{\link{sub-geometry-scales}}

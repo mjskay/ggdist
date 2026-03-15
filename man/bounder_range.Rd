@@ -26,8 +26,8 @@ Estimate the bounds of a distribution using \code{range(x)}.
 \seealso{
 The \code{bounder} argument to \code{\link[=density_bounded]{density_bounded()}}.
 
-Other bounds estimators: 
-\code{\link{bounder_cdf}()},
-\code{\link{bounder_cooke}()}
+Other bounds estimators:
+\code{\link[=bounder_cdf]{bounder_cdf()}},
+\code{\link[=bounder_cooke]{bounder_cooke()}}
 }
 \concept{bounds estimators}

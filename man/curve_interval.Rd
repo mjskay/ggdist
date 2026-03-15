@@ -56,7 +56,7 @@ that contains draws to summarize.
 dimension values of the curve.
 }}
 
-\item{...}{<bare \link{language}> Bare column names or expressions that, when evaluated in the context of
+\item{...}{<\link[rlang:dyn-dots]{dynamic-dots}> Bare column names or expressions that, when evaluated in the context of
 \code{.data}, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.

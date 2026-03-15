@@ -95,8 +95,8 @@ ggplot(data.frame(x), aes(x)) +
 
 }
 \seealso{
-Other dotplot smooths: 
+Other dotplot smooths:
 \code{\link{smooth_density}},
-\code{\link{smooth_none}()}
+\code{\link[=smooth_none]{smooth_none()}}
 }
 \concept{dotplot smooths}

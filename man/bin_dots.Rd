@@ -2,12 +2,13 @@
 % Please edit documentation in R/bin_dots.R
 \name{bin_dots}
 \alias{bin_dots}
-\title{Bin data values using a dotplot algorithm}
+\title{Bin data values using a dotplot layout algorithm}
 \usage{
 bin_dots(
   x,
   y,
   binwidth,
+  group = 1L,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
@@ -132,7 +133,7 @@ A \code{data.frame} with three columns:
 }
 }
 \description{
-Bins the provided data values using one of several dotplot algorithms.
+Bins the provided data values using one of several dotplot layout algorithms.
 }
 \examples{
 
@@ -143,7 +144,7 @@ x = qnorm(ppoints(20))
 bin_df = bin_dots(x = x, y = 0, binwidth = 0.5, heightratio = 1)
 bin_df
 
-# we can manually plot the binning above, though this is only recommended
+# we can manually plot the dotplot, though this is only recommended
 # if you are using find_dotplot_binwidth() and bin_dots() to build your own
 # grob. For practical use it is much easier to use geom_dots(), which will
 # automatically select good bin widths for you (and which uses

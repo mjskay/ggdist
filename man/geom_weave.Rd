@@ -238,7 +238,7 @@ before base ggplot did, hence the discrepancy).}
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:Scale]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+geometry and then returns a \link[grid:grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
@@ -511,10 +511,10 @@ See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geometry this 
 
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
-Other dotsinterval geoms: 
-\code{\link{geom_blur_dots}()},
-\code{\link{geom_dots}()},
-\code{\link{geom_dotsinterval}()},
-\code{\link{geom_swarm}()}
+Other dotsinterval geoms:
+\code{\link[=geom_blur_dots]{geom_blur_dots()}},
+\code{\link[=geom_dots]{geom_dots()}},
+\code{\link[=geom_dotsinterval]{geom_dotsinterval()}},
+\code{\link[=geom_swarm]{geom_swarm()}}
 }
 \concept{dotsinterval geoms}

@@ -26,7 +26,7 @@ bandwidth_dpi(x, ...)
 \item{x}{<\link{numeric}> Vector containing a sample.}
 
 \item{...}{
-  Arguments passed on to \code{\link[stats:bandwidth]{stats::bw.SJ}}
+  Arguments passed on to \code{\link[stats:bw.SJ]{stats::bw.SJ}}
   \describe{
     \item{\code{nb}}{number of bins to use.}
     \item{\code{lower,upper}}{range over which to minimize.  The default is

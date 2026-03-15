@@ -1,10 +1,10 @@
-# Tests for binning methods
+# Tests for dotplot binning/layout methods
 #
 # Author: mjskay
 ###############################################################################
 
 automatic_bin = function(x, binwidth) {
-  binner_bin(x = x)@bin_method(x, binwidth)[c("bins", "bin_midpoints")]
+  layout_bin(x = x)@bin_method(x, binwidth)[c("bins", "bin_midpoints")]
 }
 
 test_that("binning works on symmetric distributions", {
@@ -214,21 +214,21 @@ test_that("grid_swarm layout works", {
     y = rep_len(c(1, 2.75), 9),
     group = 1L
   )
-  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = binner_swarm2(grid = 8)), ref)
+  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = layout_swarm2(grid = 8)), ref)
 
   ref = data.frame(
     x = c(1, 2, 2, 3),
     y = c(0.12625, 0.37875, -0.63125, 0.12625),
     group = 1L
   )
-  expect_equal(bin_dots(c(1,2,2,3), 0, binwidth = 1.01, side = "both", layout = binner_swarm2(grid = 4)), ref)
+  expect_equal(bin_dots(c(1,2,2,3), 0, binwidth = 1.01, side = "both", layout = layout_swarm2(grid = 4)), ref)
 
   ref = data.frame(
     x = c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3),
     y = c(0, 2, 1, -2, -1, 2, -2, 0, 1, -1, -1, 0, 2, 1, -2),
     group = c(1, 2, 1, 2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 2)
   )
-  expect_equal(bin_dots(ref$x, 0, group = ref$group, binwidth = 1, side = "both", layout = binner_swarm2(grid = 4)), ref)
+  expect_equal(bin_dots(ref$x, 0, group = ref$group, binwidth = 1, side = "both", layout = layout_swarm2(grid = 4)), ref)
 })
 
 test_that("small bins work", {

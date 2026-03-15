@@ -122,8 +122,8 @@ Zvinca, Daniel. "In the pursuit of diversity in data visualization. Jittering da
 \url{https://www.linkedin.com/pulse/pursuit-diversity-data-visualization-jittering-access-daniel-zvinca/}.
 }
 \seealso{
-Other dotplot smooths: 
-\code{\link{smooth_discrete}()},
-\code{\link{smooth_none}()}
+Other dotplot smooths:
+\code{\link[=smooth_discrete]{smooth_discrete()}},
+\code{\link[=smooth_none]{smooth_none()}}
 }
 \concept{dotplot smooths}

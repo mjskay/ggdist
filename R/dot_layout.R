@@ -1,4 +1,4 @@
-# dot binners for use with bin_dots
+# dotplot layouts for use with bin_dots
 #
 # Author: mjskay
 ###############################################################################
@@ -6,29 +6,28 @@
 NULL
 
 
-# binner -----------------------------------------------------------------
+# dotplot_layout -----------------------------------------------------------------
 
-new_binner_class = function(...) auto_partial(new_class(...), required = "x")
+new_dotplot_layout_class = function(...) auto_partial(new_class(...), required = "x")
 
-#' Base class for dot plot binners created with `bin_dots()`
+#' Base class for dotplot layouts created with `bin_dots()`
 #' @description
-#' Layout/binning method for dot plots created with `bin_dots()`.
+#' Base class for dotplot layout algorithms used by `bin_dots()`.
 #' @details
-#' A `binner` defines how dots are arranged in a dot plot created with
-#' `bin_dots()`. Different types of binners implement different layouts.
+#' A `dotplot_layout` defines how dots are arranged in a dotplot created with
+#' `bin_dots()`. Different layouts implement different dotplot layout algorithms.
 #' @param x <[numeric]> Positions of dots.
-#' @param maxheight <scalar [numeric]> maximum height of the dots layout.
-#' @param heightratio <scalar [numeric]> height ratio of the dots layout.
-#' @param stackratio <scalar [numeric]> stack ratio of the dots layout.
-#' @param side <[string][character]> side where the dots layout should be placed.
-#' @param orientation <[string][character]> orientation of the dots layout.
-#' @param overlaps <[string][character]> how to handle overlaps in the dots layout.
+#' @param maxheight <scalar [numeric]> maximum height of the dotplot layout.
+#' @param heightratio <scalar [numeric]> height ratio of the dotplot layout.
+#' @param stackratio <scalar [numeric]> stack ratio of the dotplot layout.
+#' @param side <[string][character]> side where the dotplot layout should be placed.
+#' @param orientation <[string][character]> orientation of the dotplot layout.
+#' @param overlaps <[string][character]> how to handle overlaps in the dotplot layout.
 #' @param span <scalar [numeric]> smoothing/spacing parameter used in some layouts.
-#' @return An object of class `binner`.
+#' @return <[dotplot_layout]> object.
 #' @import S7
-#' @noRd
-binner = new_binner_class(
-  "binner",
+dotplot_layout = new_dotplot_layout_class(
+  "dotplot_layout",
   abstract = TRUE,
   properties = list(
     x = new_property(
@@ -80,29 +79,29 @@ binner = new_binner_class(
   )
 )
 
-#' Create a new dot binner
-#' @param layout <[string][character]> name of layout as passed to `bin_dots()`.
-#' @param ... Additional arguments passed to the binner constructor.
-#' @return An object of the specified `binner` class.
+#' Create a new dotplot layout
+#' @param layout <[string][character]> name of the layout as passed to `bin_dots()`.
+#' @param ... Additional arguments passed to the dotplot layout constructor.
+#' @return An object of the specified `dotplot_layout` class.
 #' @noRd
-new_binner = function(layout, ...) {
-  match_function(layout, "binner_")(...)
+new_dotplot_layout = function(layout, ...) {
+  match_function(layout, "layout_")(...)
 }
 
 
 # bin-based layouts ----------------------------------------------------------------
 
-#' Bin layout
+#' Binned dotplot layout
 #' @description
-#' Wilkinson-esque binner for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @param bin_method <function> function that takes data and bin width as input and returns a list with components `bins` and `bin_midpoints`.
+#' Wilkinson-esque dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams dotplot_layout
+#' @param bin_method <function> function that takes data and bin width as input and returns
+#' a list with components `bins` and `bin_midpoints`.
 #' @param align_rows <logical> whether to align rows of dots when `side` is "both".
-#' @return An object of class `binner_bin`.
-#' @noRd
-binner_bin = new_binner_class(
-  "binner_bin",
-  parent = binner,
+#' @return <[dotplot_layout]> object of class `layout_bin`.
+layout_bin = new_dotplot_layout_class(
+  "layout_bin",
+  parent = dotplot_layout,
   properties = list(
     x = new_property(
       class_numeric,
@@ -127,20 +126,19 @@ binner_bin = new_binner_class(
     ),
     align_rows = new_property(
       class_logical,
-      getter = function(self) FALSE
+      default = FALSE
     )
   )
 )
 
-#' Weave binner
+#' Weave dotplot layout
 #' @description
-#' Weave `binner` for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @return An object of class `binner_weave`.
-#' @noRd
-binner_weave = new_binner_class(
-  "binner_weave",
-  parent = binner_bin,
+#' Weave dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams layout_bin
+#' @return <[dotplot_layout]> object of class `layout_weave`.
+layout_weave = new_dotplot_layout_class(
+  "layout_weave",
+  parent = layout_bin,
   properties = list(
     align_rows = new_property(
       class_logical,
@@ -149,15 +147,14 @@ binner_weave = new_binner_class(
   )
 )
 
-#' Hex binner
+#' Hexagonal dotplot layout
 #' @description
-#' Hex `binner` for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @return An object of class `binner_hex`.
-#' @noRd
-binner_hex = new_binner_class(
-  "binner_hex",
-  parent = binner_bin,
+#' Hexagonal dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams layout_bin
+#' @return <[dotplot_layout]> object of class `layout_hex`.
+layout_hex = new_dotplot_layout_class(
+  "layout_hex",
+  parent = layout_bin,
   properties = list(
     align_rows = new_property(
       class_logical,
@@ -167,7 +164,7 @@ binner_hex = new_binner_class(
 )
 
 
-# bar binner -------------------------------------------------------------
+# bar dotplot layout -------------------------------------------------------------
 
 #' Bin dots into bars
 #' @param x data (original positions of dots)
@@ -195,15 +192,14 @@ bar_bin = function(x, binwidth, span = 0.9) {
   )
 }
 
-#' Bar binner
+#' Bar (waffle) dotplot layout
 #' @description
-#' Bar `binner` for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @return An object of class `binner_bar`.
-#' @noRd
-binner_bar = new_binner_class(
-  "binner_bar",
-  parent = binner,
+#' Bar dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams dotplot_layout
+#' @return <[dotplot_layout]> object of class `layout_bar`.
+layout_bar = new_dotplot_layout_class(
+  "layout_bar",
+  parent = dotplot_layout,
   properties = list(
     bin_method = new_property(
       class_function,
@@ -230,28 +226,26 @@ binner_bar = new_binner_class(
 )
 
 
-# swarm binners ----------------------------------------------------------
+# swarm layout ----------------------------------------------------------
 
-#' Swarm binner
+#' Swarm dotplot layout
 #' @description
-#' Swarm `binner` for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @return An object of class `binner_swarm`.
-#' @noRd
-binner_swarm = new_binner_class(
-  "binner_swarm",
-  parent = binner
+#' Beeswarm dotplot layout use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams dotplot_layout
+#' @return <[dotplot_layout]> object of class `layout_swarm`.
+layout_swarm = new_dotplot_layout_class(
+  "layout_swarm",
+  parent = dotplot_layout
 )
 
-#' Swarm2 binner
+#' Stratified swarm dotplot layout
 #' @description
-#' Swarm2 `binner` for dot plots created with `bin_dots()`.
-#' @inheritParams binner
-#' @return An object of class `binner_swarm2`.
-#' @noRd
-binner_swarm2 = new_binner_class(
-  "binner_swarm2",
-  parent = binner,
+#' Stratified beeswarm dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' @inheritParams dotplot_layout
+#' @return <[dotplot_layout]> object of class `layout_swarm2`.
+layout_swarm2 = new_dotplot_layout_class(
+  "layout_swarm2",
+  parent = dotplot_layout,
   properties = list(
     x = new_property(
       class_numeric,
@@ -286,12 +280,12 @@ binner_swarm2 = new_binner_class(
   }
 )
 
-#' Make splits in x used for plotting groups in order for grid_swarm layout
+#' Split x into groups so that `layout_swarm2` can plot groups in order
 #' @description
 #' Split `x` by `group` so that we don't have to recompute these splits when
-#' doing find_dotplot_binwidth. This layout differs from others in that it
-#' needs these splits in order to plot groups in the right order within
-#' each stratum.
+#' doing `find_dotplot_binwidth()`. The stratified swarm layout differs from
+#' others in that it needs these splits in order to plot groups in the right
+#' order within each stratum.
 #' @noRd
 make_swarm2_xs = function(self) {
   if (!is.null(self@x) && !is.null(self@group)) {

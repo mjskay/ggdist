@@ -5,7 +5,6 @@
 %   R/geom_interval.R, R/geom_lineribbon.R, R/geom_pointinterval.R,
 %   R/geom_slab.R, R/geom_spike.R, R/geom_swarm.R, R/position_dodgejust.R,
 %   R/stat_spike.R
-\docType{data}
 \name{AbstractStatSlabinterval}
 \alias{AbstractStatSlabinterval}
 \alias{StatSlabinterval}
@@ -32,5 +31,4 @@ Base ggproto classes for ggdist
 \seealso{
 \code{\link[ggplot2:ggproto]{ggproto()}}
 }
-\keyword{datasets}
 \keyword{internal}

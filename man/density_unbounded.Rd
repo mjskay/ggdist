@@ -119,8 +119,8 @@ data.frame(x) \%>\%
   theme_ggdist()
 }
 \seealso{
-Other density estimators: 
-\code{\link{density_bounded}()},
-\code{\link{density_histogram}()}
+Other density estimators:
+\code{\link[=density_bounded]{density_bounded()}},
+\code{\link[=density_histogram]{density_histogram()}}
 }
 \concept{density estimators}

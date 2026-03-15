@@ -157,7 +157,7 @@ guide_colorbar2(...)
 }
 \arguments{
 \item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
-passes arguments to \code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}}. See those functions for more details.}
+passes arguments to \code{\link[ggplot2:scale_color_discrete]{scale_color_discrete()}}. See those functions for more details.}
 
 \item{aesthetics}{<\link{character}> Names of aesthetics to set scales for.}
 
@@ -168,7 +168,7 @@ after transformation.}
 
 \item{na.translate}{<scalar \link{logical}> In discrete scales, should we show missing values?}
 
-\item{na.value}{<\link[ggplot2:aes_linetype_size_shape]{linetype}> When \code{na.translate} is \code{TRUE}, what value should be shown?}
+\item{na.value}{<\link[ggplot2:linetype]{linetype}> When \code{na.translate} is \code{TRUE}, what value should be shown?}
 
 \item{limits}{One of:
 \itemize{
@@ -209,7 +209,7 @@ related geoms:
 \item{\verb{scale_slab_color_* }}{Slab outline color}
 \item{\verb{scale_slab_fill_* }}{Slab fill color}
 \item{\verb{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
-\code{scale_slab_alpha_continuous} differ from \code{\link[ggplot2:scale_alpha]{scale_alpha_continuous()}}
+\code{scale_slab_alpha_continuous} differ from \code{\link[ggplot2:scale_alpha_continuous]{scale_alpha_continuous()}}
 and are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
 densities of 0 get mapped to 0 in the output.}
 \item{\verb{scale_slab_linewidth_* }}{Slab outline line width}
@@ -218,8 +218,8 @@ densities of 0 get mapped to 0 in the output.}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.
-\code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}},
-\code{\link[ggplot2:scale_colour_continuous]{scale_color_continuous()}}, etc.
+\code{\link[ggplot2:scale_color_discrete]{scale_color_discrete()}},
+\code{\link[ggplot2:scale_color_continuous]{scale_color_continuous()}}, etc.
 
 Other scale functions can be used with the aesthetics/scales defined here by using the \code{aesthetics}
 argument to that scale function. For example, to use color brewer scales with the \code{point_color} aesthetic:
@@ -271,12 +271,12 @@ data.frame(distribution = "Normal(1,2)") \%>\%
 
 }
 \seealso{
-Other ggplot2 scales: \code{\link[ggplot2:scale_colour_discrete]{scale_color_discrete()}},
-\code{\link[ggplot2:scale_colour_continuous]{scale_color_continuous()}}, etc.
+Other ggplot2 scales: \code{\link[ggplot2:scale_color_discrete]{scale_color_discrete()}},
+\code{\link[ggplot2:scale_color_continuous]{scale_color_continuous()}}, etc.
 
-Other ggdist scales: 
+Other ggdist scales:
 \code{\link{scale_colour_ramp}},
-\code{\link{scale_side_mirrored}()},
+\code{\link[=scale_side_mirrored]{scale_side_mirrored()}},
 \code{\link{scale_thickness}}
 }
 \author{

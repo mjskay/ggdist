@@ -41,9 +41,9 @@ pcr
 ramp_colours("blue", pcr)
 }
 \seealso{
-Other colour ramp functions: 
-\code{\link{guide_rampbar}()},
-\code{\link{partial_colour_ramp}()},
+Other colour ramp functions:
+\code{\link[=guide_rampbar]{guide_rampbar()}},
+\code{\link[=partial_colour_ramp]{partial_colour_ramp()}},
 \code{\link{scale_colour_ramp}}
 }
 \author{

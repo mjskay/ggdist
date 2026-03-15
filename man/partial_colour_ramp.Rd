@@ -13,7 +13,7 @@ to ramp the colour. \code{0} corresponds to the colour \code{from}.}
 \item{from}{<\link{character}> Vector giving colours to ramp from.}
 }
 \value{
-A \link[vctrs:new_rcrd]{vctrs::rcrd} of class \code{"ggdist_partial_colour_ramp"} with fields
+A \link[vctrs:rcrd]{vctrs::rcrd} of class \code{"ggdist_partial_colour_ramp"} with fields
 \code{"amount"} and \code{"from"}.
 }
 \description{
@@ -24,7 +24,7 @@ can be filled in later using \code{ramp_colours()}, producing a colour.
 }
 \details{
 This datatype is used by \link{scale_colour_ramp} to create ramped colours in
-\pkg{ggdist} geoms. It is a \link[vctrs:new_rcrd]{vctrs::rcrd} datatype with two fields:
+\pkg{ggdist} geoms. It is a \link[vctrs:rcrd]{vctrs::rcrd} datatype with two fields:
 \code{"amount"}, the amount to ramp, and \code{"from"}, the colour to ramp from.
 
 Colour ramps can be applied (i.e. translated into colours) using
@@ -38,9 +38,9 @@ pcr
 ramp_colours("blue", pcr)
 }
 \seealso{
-Other colour ramp functions: 
-\code{\link{guide_rampbar}()},
-\code{\link{ramp_colours}()},
+Other colour ramp functions:
+\code{\link[=guide_rampbar]{guide_rampbar()}},
+\code{\link[=ramp_colours]{ramp_colours()}},
 \code{\link{scale_colour_ramp}}
 }
 \author{

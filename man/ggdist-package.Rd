@@ -40,6 +40,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Matthew Kay \email{mjskay@northwestern.edu}
 
+Authors:
+\itemize{
+  \item Matthew Kay \email{mjskay@northwestern.edu}
+}
+
 Other contributors:
 \itemize{
   \item Brenton M. Wiernik \email{brenton@wiernik.org} [contributor]

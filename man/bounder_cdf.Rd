@@ -66,8 +66,8 @@ well on bounded distributions when sample sizes are larger (in the thousands).
 \seealso{
 The \code{bounder} argument to \code{\link[=density_bounded]{density_bounded()}}.
 
-Other bounds estimators: 
-\code{\link{bounder_cooke}()},
-\code{\link{bounder_range}()}
+Other bounds estimators:
+\code{\link[=bounder_cooke]{bounder_cooke()}},
+\code{\link[=bounder_range]{bounder_range()}}
 }
 \concept{bounds estimators}

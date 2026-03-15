@@ -21,7 +21,7 @@ Supports \link[=auto_partial]{automatic partial function application} with
 \link[=waiver]{waived arguments}.
 }
 \seealso{
-Other sub-guides: 
-\code{\link{subguide_axis}()}
+Other sub-guides:
+\code{\link[=subguide_axis]{subguide_axis()}}
 }
 \concept{sub-guides}

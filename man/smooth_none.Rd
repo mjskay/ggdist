@@ -26,8 +26,8 @@ Supports \link[=auto_partial]{automatic partial function application} with
 This is the default value for the \code{smooth} argument of \code{geom_dotsinterval()}.
 }
 \seealso{
-Other dotplot smooths: 
+Other dotplot smooths:
 \code{\link{smooth_density}},
-\code{\link{smooth_discrete}()}
+\code{\link[=smooth_discrete]{smooth_discrete()}}
 }
 \concept{dotplot smooths}

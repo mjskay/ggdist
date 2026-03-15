@@ -41,7 +41,7 @@
 #' bin_df = bin_dots(x = x, y = 0, binwidth = binwidth, heightratio = 1)
 #' bin_df
 #'
-#' # we can manually plot the binning above, though this is only recommended
+#' # we can manually plot the dotplot above, though this is only recommended
 #' # if you are using find_dotplot_binwidth() and bin_dots() to build your own
 #' # grob. For practical use it is much easier to use geom_dots(), which will
 #' # automatically select good bin widths for you (and which uses
@@ -107,7 +107,7 @@ find_dotplot_binwidth = function(
   #   min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   # }
   # min_nbins = 1
-  binner = new_binner(
+  layout = new_dotplot_layout(
     layout,
     x,
     group = group,
@@ -118,21 +118,21 @@ find_dotplot_binwidth = function(
     span = span
   )
 
-  arrange_bins_ = method(arrange_bins, object = binner)
-  arrange_bins_binner = function(...) arrange_bins_(binner, ...)
+  `setup_dotplot<layout>` = method(setup_dotplot, object = layout)
+  setup_dotplot_ = function(...) `setup_dotplot<layout>`(layout, ...)
 
   max_binwidth = max(diff(range(x)), maxheight / stackratio / heightratio)
-  max_binning = arrange_bins_binner(binwidth = max_binwidth)
+  max_dotplot = setup_dotplot_(binwidth = max_binwidth)
   min_binwidth = 0
 
   eps = .Machine$double.eps^0.2
   height_eps = maxheight * eps
   binwidth_eps = height_eps / heightratio / sqrt(length(x))
-  if (isTRUE(max_binning$height <= maxheight + height_eps)) {
-    # if the max binning (i.e. the binning at the upper limit of the height we will allow)
+  if (isTRUE(max_dotplot$height <= maxheight + height_eps)) {
+    # if the max dotplot (i.e. the dotplot at the upper limit of the height we will allow)
     # is valid, then we don't need to search and can just use it.
-    binwidth = max_binning$binwidth
-    height = max_binning$height
+    binwidth = max_dotplot$binwidth
+    height = max_dotplot$height
 
     iter = data.frame(
       x = binwidth,
@@ -143,20 +143,20 @@ find_dotplot_binwidth = function(
     # set up initial guesses for the search
     iter = data.frame(
       x = c(0, max_binwidth),
-      y = c(0, max_binning$height),
+      y = c(0, max_dotplot$height),
       method = c("min", "max")
     )
     add_guess = function(binwidth, method) {
-      binning = arrange_bins_binner(binwidth = binwidth)
+      dotplot = setup_dotplot_(binwidth = binwidth)
       iter <<- rbind(
         iter,
         data.frame(
-          x = binning$binwidth,
-          y = binning$height,
+          x = dotplot$binwidth,
+          y = dotplot$height,
           method = method
         )
       )
-      binning$height
+      dotplot$height
     }
 
     # make a guess using a density estimator
@@ -179,7 +179,7 @@ find_dotplot_binwidth = function(
     if (binwidth_res < max_binwidth) add_guess(binwidth_res, "resolution")
 
     # make a guess assuming all data is in one bin
-    grid = if (prop_exists(binner, "grid")) binner@grid else 1
+    grid = if (prop_exists(layout, "grid")) layout@grid else 1
     n_to_binwidth = \(n_in_bin, .grid = grid) {
       (maxheight / heightratio) / (n_in_bin / .grid - 1 + 1/stackratio)
     }
@@ -228,16 +228,16 @@ find_dotplot_binwidth = function(
     # print(binwidth_1, maxheight / (length(x) * max_density * heightratio))
     # binwidth_1 = maxheight / (length(x) * max_density * heightratio * (1 + 1 / stackratio))
     # binwidth_2 = (sqrt(4 * max_density * maxheight * length(x) * stackratio^2 + heightratio * (stackratio - 1)^2) + sqrt(heightratio) * (stackratio - 1))/(2 * max_density * sqrt(heightratio) * length(x) * stackratio)
-    # binning_2 = arrange_bins_binner(binwidth = binwidth_2)
+    # dotplot_2 = setup_dotplot_(binwidth = binwidth_2)
 
     # binwidth_1 = binwidth_2 / 2
     # binwidth_1 = resolution(x, FALSE, FALSE)
-    # binning_1 = arrange_bins_binner(binwidth = binwidth_1)
+    # dotplot_1 = setup_dotplot_(binwidth = binwidth_1)
 
     # search for a reasonable binwidth
     # print(binwidth_eps)
     iter = max_f_lte_y(
-      function(x) arrange_bins_binner(binwidth = x)$height,
+      function(x) setup_dotplot_(binwidth = x)$height,
       max_y = maxheight,
       iter = iter,
       eps_x = binwidth_eps,
@@ -252,20 +252,20 @@ find_dotplot_binwidth = function(
     # first step tends to end up in a local minimum, sometimes very far from
     # maxheight.
     # if (abs(zero$y_best) > height_eps) {
-    #   candidate_binwidths = c(zero$x_1, zero$x_2, zero$x_best) #c(min_binning$binwidth, max_binning$binwidth, binning$binwidth)
+    #   candidate_binwidths = c(zero$x_1, zero$x_2, zero$x_best) #c(min_dotplot$binwidth, max_dotplot$binwidth, dotplot$binwidth)
     #   if (length(unique(candidate_binwidths)) != 1) {
     #     opt = optimize(
     #       function(binwidth) {
-    #         binning = arrange_bins_binner(binwidth = binwidth)
-    #         abs(binning$height - maxheight)
+    #         dotplot = setup_dotplot_(binwidth = binwidth)
+    #         abs(dotplot$height - maxheight)
     #       },
     #       candidate_binwidths,
     #       tol = binwidth_eps
     #     )
-    #     new_binning = arrange_bins_binner(binwidth = opt$minimum)
+    #     new_dotplot = setup_dotplot_(binwidth = opt$minimum)
 
-    #     # approximate test that binning is valid, used here to tolerate approximation with optimize()
-    #     new_err = new_binning$height - maxheight
+    #     # approximate test that dotplot is valid, used here to tolerate approximation with optimize()
+    #     new_err = new_dotplot$height - maxheight
     #     new_abs_err = abs(new_err)
     #     if (isTRUE(new_err <= height_eps && new_abs_err < abs(zero$y_best))) {
     #       binwidth = opt$minimum
@@ -278,22 +278,22 @@ find_dotplot_binwidth = function(
     height = iter$y[valid][i]
   }
 
-  # check if the selected binning is valid....
+  # check if the selected dotplot is valid....
   # cat("Total iterations:", length(widths), "\n")
-  # print(binning$binwidth)
-  # print(binning$height - maxheight)
-  # if (isTRUE(binning$height <= maxheight + height_eps)) {
-  #   binning$binwidth
+  # print(dotplot$binwidth)
+  # print(dotplot$height - maxheight)
+  # if (isTRUE(dotplot$height <= maxheight + height_eps)) {
+  #   dotplot$binwidth
   # } else {
   #   # ... if it isn't, this means we've ended up with some bin that's too
   #   # tall, probably because we have discrete data --- we'll just
   #   # conservatively shrink things down so they fit by backing out a bin
   #   # width that works with the tallest bin
-  #   binning$binwidth * maxheight / binning$height
+  #   dotplot$binwidth * maxheight / dotplot$height
   # }
   structure(
     binwidth,
-    binner = binner,
+    layout = layout,
     iterations = data.frame(i = seq_len(nrow(iter)), width = iter$x, height = iter$y, method = iter$method, chosen = iter$x == binwidth),
     binwidth_eps = binwidth_eps,
     height_err = abs(height - maxheight),
@@ -787,33 +787,33 @@ zero_or_less_ur = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.e
   )
 }
 
-n_to_binwidth = \(n_in_bin, binner, grid = if (prop_exists(binner, "grid")) binner@grid else 1) {
-  (binner@maxheight / binner@heightratio) / (n_in_bin / grid - 1 + 1/binner@stackratio)
+n_to_binwidth = \(n_in_bin, layout, grid = if (prop_exists(layout, "grid")) layout@grid else 1) {
+  (layout@maxheight / layout@heightratio) / (n_in_bin / grid - 1 + 1/layout@stackratio)
 }
-binwidth_to_n = \(binwidth, binner, grid = if (prop_exists(binner, "grid")) binner@grid else 1) {
-  (binner@maxheight / binner@heightratio / binwidth + 1 - 1/binner@stackratio) * grid
+binwidth_to_n = \(binwidth, layout, grid = if (prop_exists(layout, "grid")) layout@grid else 1) {
+  (layout@maxheight / layout@heightratio / binwidth + 1 - 1/layout@stackratio) * grid
 }
-pseudo_n_to_binwidth = \(pseudo_n, binner, eps) {
+pseudo_n_to_binwidth = \(pseudo_n, layout, eps) {
   n_in_bin = floor(pseudo_n + 0.5)
   rel_pos = 1 - 2 * ((pseudo_n + 0.5) %% 1)
-  n_to_binwidth(n_in_bin, binner) * (1 + rel_pos * eps)
+  n_to_binwidth(n_in_bin, layout) * (1 + rel_pos * eps)
 }
-binwidth_to_pseudo_n = \(binwidth, binner, eps) {
-  n_in_bin = round(binwidth_to_n(binwidth, binner))
-  ref_binwidth = n_to_binwidth(n_in_bin, binner)
+binwidth_to_pseudo_n = \(binwidth, layout, eps) {
+  n_in_bin = round(binwidth_to_n(binwidth, layout))
+  ref_binwidth = n_to_binwidth(n_in_bin, layout)
   rel_pos = pmin(1, pmax(-1, (binwidth - ref_binwidth) / (ref_binwidth * eps)))
   n_in_bin - rel_pos / 2
 }
-pseudo_binwidth_to_binwidth = \(pseudo_binwidth, binner, eps) {
-  pseudo_n_to_binwidth(binwidth_to_n(pseudo_binwidth, binner), binner, eps)
+pseudo_binwidth_to_binwidth = \(pseudo_binwidth, layout, eps) {
+  pseudo_n_to_binwidth(binwidth_to_n(pseudo_binwidth, layout), layout, eps)
 }
-binwidth_to_pseudo_binwidth = \(binwidth, binner, eps) {
-  n_to_binwidth(binwidth_to_pseudo_n(binwidth, binner, eps), binner)
+binwidth_to_pseudo_binwidth = \(binwidth, layout, eps) {
+  n_to_binwidth(binwidth_to_pseudo_n(binwidth, layout, eps), layout)
 }
 
 plot_fdb = function(fdb, zoom = .85, ...) {
   iters = attr(fdb, "iterations")
-  binner = attr(fdb, "binner")
+  layout = attr(fdb, "layout")
   height_eps = attr(fdb, "height_eps")
   p_range_around = \(x, i, p) {
     center = x[i][[1]]
@@ -825,26 +825,26 @@ plot_fdb = function(fdb, zoom = .85, ...) {
 
   high_res_curve = tibble(
     width = seq(xlim[1], xlim[2], length.out = 200),
-    height = sapply(width, \(x) arrange_bins(binner, binwidth = x)$height)
+    height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
   )
 
-  grid = if (prop_exists(binner, "grid")) binner@grid else 1
-  transform_n = scales::new_transform("binwidth", \(bw) binwidth_to_n(bw, binner), \(n) n_to_binwidth(n, binner))
-  transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, binner, height_eps), \(n) pseudo_n_to_binwidth(n, binner, height_eps))
-  transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, binner, height_eps), \(n) pseudo_binwidth_to_binwidth(n, binner, height_eps))
+  grid = if (prop_exists(layout, "grid")) layout@grid else 1
+  transform_n = scales::new_transform("binwidth", \(bw) binwidth_to_n(bw, layout), \(n) n_to_binwidth(n, layout))
+  transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, layout, height_eps), \(n) pseudo_n_to_binwidth(n, layout, height_eps))
+  transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, layout, height_eps), \(n) pseudo_binwidth_to_binwidth(n, layout, height_eps))
 
   exact_refs = data.frame(
-    height = binner@maxheight,
-    width = n_to_binwidth(seq(round(binwidth_to_n(max(setdiff(iters$height, Inf), na.rm = TRUE), binner)), round(binwidth_to_n(min(setdiff(iters$height, 0), na.rm = TRUE), binner))), binner)
+    height = layout@maxheight,
+    width = n_to_binwidth(seq(round(binwidth_to_n(max(setdiff(iters$height, Inf), na.rm = TRUE), layout)), round(binwidth_to_n(min(setdiff(iters$height, 0), na.rm = TRUE), layout))), layout)
   )
   exact_refs = exact_refs[xlim[1] <= exact_refs$width & exact_refs$width <= xlim[2], ]
 
   iters |>
     dplyr::filter(...) |>
     ggplot(aes(width, height)) +
-    annotate("ribbon", x = c(0.11, 0.12), ymin = binner@maxheight - attr(fdb, "height_eps"), ymax = binner@maxheight + attr(fdb, "height_eps"), alpha = 0.1) +
-    geom_hline(yintercept = c(binner@maxheight - height_eps, binner@maxheight + height_eps), alpha = 0.5) +
-    # geom_abline(slope = seq(1, max(iters$height/binner@heightratio/iters$width, na.rm = TRUE), by = 1/grid) + 1/binner@stackratio, color = "gray85") +
+    annotate("ribbon", x = c(0.11, 0.12), ymin = layout@maxheight - attr(fdb, "height_eps"), ymax = layout@maxheight + attr(fdb, "height_eps"), alpha = 0.1) +
+    geom_hline(yintercept = c(layout@maxheight - height_eps, layout@maxheight + height_eps), alpha = 0.5) +
+    # geom_abline(slope = seq(1, max(iters$height/layout@heightratio/iters$width, na.rm = TRUE), by = 1/grid) + 1/layout@stackratio, color = "gray85") +
     geom_line(
       color = "blue",
       alpha = 0.8,
@@ -863,8 +863,8 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     ) +
     geom_point(aes(color = method)) +
     geom_point(data = iters[iters$chosen, ], shape = 12, size = 3) +
-    geom_hline(yintercept = binner@maxheight, linetype = "dashed") +
-    geom_abline(intercept = binner@maxheight, slope = c(binner@heightratio, -binner@heightratio), linetype = "dotted") +
+    geom_hline(yintercept = layout@maxheight, linetype = "dashed") +
+    geom_abline(intercept = layout@maxheight, slope = c(layout@heightratio, -layout@heightratio), linetype = "dotted") +
     geom_point(shape = 1, size = 2, data = exact_refs) +
     coord_cartesian(xlim = xlim, ylim = ylim)
     # coord_transform(xlim = xlim, ylim = ylim, x = scales::transform_reciprocal())

@@ -207,7 +207,7 @@ provide constraints on the bin width, you can pass a length-2 vector to \code{bi
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:Scale]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+geometry and then returns a \link[grid:grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
@@ -338,8 +338,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -560,8 +560,8 @@ Wilkinson, L. (1999). Dot plots. \emph{The American Statistician}, 53(3), 276--2
 See \code{\link[=geom_blur_dots]{geom_blur_dots()}} for the geom underlying this stat.
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
-Other dotsinterval stats: 
-\code{\link{stat_dots}()},
-\code{\link{stat_dotsinterval}()}
+Other dotsinterval stats:
+\code{\link[=stat_dots]{stat_dots()}},
+\code{\link[=stat_dotsinterval]{stat_dotsinterval()}}
 }
 \concept{dotsinterval stats}

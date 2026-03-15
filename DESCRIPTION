@@ -78,7 +78,7 @@ Collate:
     'abstract_stat_slabinterval.R'
     'auto_partial.R'
     'validate.R'
-    'binner.R'
+    'dot_layout.R'
     'bin_dots.R'
     'bounder.R'
     'compat.R'

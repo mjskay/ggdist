@@ -115,9 +115,9 @@ tibble(d = dist_uniform(0, 1)) \%>\%
 
 }
 \seealso{
-Other colour ramp functions: 
-\code{\link{partial_colour_ramp}()},
-\code{\link{ramp_colours}()},
+Other colour ramp functions:
+\code{\link[=partial_colour_ramp]{partial_colour_ramp()}},
+\code{\link[=ramp_colours]{ramp_colours()}},
 \code{\link{scale_colour_ramp}}
 }
 \author{

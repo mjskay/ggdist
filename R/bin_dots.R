@@ -1,17 +1,17 @@
-# binning methods for use with dots geom
+# dotplot layout methods for use with dots geom
 #
 # Author: mjskay
 ###############################################################################
-#' @include binner.R
+#' @include dot_layout.R
 NULL
 
 
 # bin_dots -----------------------------------------------------------------
 
-#' Bin data values using a dotplot algorithm
+#' Bin data values using a dotplot layout algorithm
 #'
 #' @description
-#' Bins the provided data values using one of several dotplot algorithms.
+#' Bins the provided data values using one of several dotplot layout algorithms.
 #' @param x <[numeric]> *x* values.
 #' @param y <[numeric]> *y* values (same length as `x`).
 #' @param binwidth <scalar [numeric]> Bin width.
@@ -54,7 +54,7 @@ NULL
 #' bin_df = bin_dots(x = x, y = 0, binwidth = 0.5, heightratio = 1)
 #' bin_df
 #'
-#' # we can manually plot the binning above, though this is only recommended
+#' # we can manually plot the dotplot, though this is only recommended
 #' # if you are using find_dotplot_binwidth() and bin_dots() to build your own
 #' # grob. For practical use it is much easier to use geom_dots(), which will
 #' # automatically select good bin widths for you (and which uses
@@ -96,7 +96,7 @@ bin_dots = function(
   d = d[order(d[[x]], d$group), ]
 
   # bin the dots
-  binner = new_binner(
+  layout = new_dotplot_layout(
     layout,
     x = d[[x]],
     group = d$group,
@@ -107,8 +107,8 @@ bin_dots = function(
     overlaps = overlaps,
     span = span
   )
-  binning = arrange_bins(binner, binwidth = binwidth)
-  d = place_dots(binner, d, binning)
+  dotplot = setup_dotplot(layout, binwidth = binwidth)
+  d = place_dots(layout, d, dotplot)
 
   # restore the original data order in case it was destroyed
   d = d[order(d$order), ]
@@ -118,31 +118,39 @@ bin_dots = function(
 }
 
 
-# arrange_bins -----------------------------------------------------------
+# setup_dotplot -----------------------------------------------------------
 
-#' Arrange a binning of dots
+#' Initialize a dotplot layout
 #'
-#' Create a dot binning, which includes a set of bins of dots and other properties of the
-#' binning, such as what the bins are, what the dot widths are, what the y spacing between
-#' dots should be, etc.
-#' @param binner <`binner`> the binning method
+#' @description
+#' Calculate the parameters of a dotplot layout, such as the bin width, number of bins (if
+#' using a binned layout), what the y spacing between dots should be, and what the height of the
+#' tallest bin is. The resulting parameters can be used to with `place_dots()` to finalize the
+#' dotplot layout.
+#'
+#' This method is separate from `place_dots()` so that it can be used by numerical optimization methods
+#' in `find_dotplot_binwidth()` without needing to fully lay out a dotplot on each iteration. Therefore,
+#' it should ideally do only as much work as is needed to determine the maximum `height` of the dotplot
+#' and leave the remaining work required to lay out the dots to `place_dots()`.
+#' @param layout <[dotplot_layout]> the layout (encapsulating a dotplot layout algorithm and the data
+#' to be laid out).
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return <[list]> properties of this dot binning, with elements:
+#' @return <[list]> properties of a dotplot applied to the input data with the given layout:
 #' - `nbins`: <scalar [integer]> number of bins
 #' - `binwidth`: <scalar [numeric]> bin width
 #' - `y_spacing`: <scalar [numeric]> vertical distance between dot centers
 #' - `y_start`: <scalar [numeric]> starting y offset for the first dot in each bin
 #' Subclasses may also add additional elements. They *must* add at least the following elements:
-#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-arrange_bins = new_generic("arrange_bins", c("binner"), function(binner, nbins = NULL, binwidth = NULL, ...) {
+setup_dotplot = new_generic("setup_dotplot", c("layout"), function(layout, nbins = NULL, binwidth = NULL, ...) {
   S7_dispatch()
 })
 
-method(arrange_bins, binner) = function(binner, nbins = NULL, binwidth = NULL, ...) {
+method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth = NULL, ...) {
   # determine binwidth and number of bins
-  x_spread = diff(range(binner@x))
+  x_spread = diff(range(layout@x))
   if (x_spread == 0) x_spread = 1
   if (is.null(binwidth)) {
     nbins = floor(nbins)
@@ -152,10 +160,10 @@ method(arrange_bins, binner) = function(binner, nbins = NULL, binwidth = NULL, .
   }
 
   # determine y positioning parameters
-  y_spacing = binwidth * binner@heightratio
-  y_start = switch_side(binner@side, binner@orientation,
-    topright = y_spacing / binner@stackratio / 2,
-    bottomleft = - y_spacing / binner@stackratio / 2,
+  y_spacing = binwidth * layout@heightratio
+  y_start = switch_side(layout@side, layout@orientation,
+    topright = y_spacing / layout@stackratio / 2,
+    bottomleft = - y_spacing / layout@stackratio / 2,
     both = 0
   )
 
@@ -167,231 +175,229 @@ method(arrange_bins, binner) = function(binner, nbins = NULL, binwidth = NULL, .
   )
 }
 
-## arrange_bins for bin, hex, weave, bar ----------------------------------
+## setup_dotplot for bin, hex, weave, bar ----------------------------------
 
-#' Arrange a binning of dots for binned layouts
-#' @param binner <`binner_bin` | `binner_bar`> the binning method
+#' Initialize binned dotplot layouts
+#' @param layout <`layout_bin` | `layout_bar`> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return <[list]> properties of this dot binning, with additional elements:
+#' @return <[list]> properties of this dotplot (see `setup_dotplot()`), with additional elements:
 #' - `bins`: <[integer]> vector of same length as `x` giving the bin number (in {1 ... `nbins`}) for each element in `x`
 #' - `bin_midpoints`: <[numeric]> vector of length `nbins` giving the midpoint of each bin
 #' - `bin_counts`: <[integer]> vector of length `nbins` giving the number of elements in each bin
-#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(arrange_bins, binner_bin | binner_bar) = function(binner, nbins = NULL, binwidth = NULL, ...) {
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
-  binning = c(binning, binner@bin_method(binner@x, binning$binwidth, span = binner@span))
+method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, binwidth = NULL, ...) {
+  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
+  dotplot = c(dotplot, layout@bin_method(layout@x, dotplot$binwidth, span = layout@span))
 
   # determine height of the tallest bin
-  binning$bin_counts = tabulate(binning$bins)
+  dotplot$bin_counts = tabulate(dotplot$bins)
   # max bin count is the max "effective" number of elements in a bin, which
   # is the number of elements in the bin modified by the stackratio to account
   # for how dots align with tops and bottoms of stacks when stackratio != 1
-  max_bin_count = max(binning$bin_counts) - 1 + 1/binner@stackratio
-  binning$height = max_bin_count * binning$y_spacing
+  max_bin_count = max(dotplot$bin_counts) - 1 + 1/layout@stackratio
+  dotplot$height = max_bin_count * dotplot$y_spacing
 
-  # height = bin_count*y_spacing + y_spacing * (1/stackratio - 1)
-
-  binning
+  dotplot
 }
 
-## arrange_bins for swarm, swarm2 -----------------------------------------
+## setup_dotplot for swarm, swarm2 -----------------------------------------
 
-#' Arrange a binning of dots for swarm layouts
-#' @param binner <`binner_swarm`> the binning method
+#' Initialize swarm dotplot layout
+#' @param layout <`layout_swarm`> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return <[list]> properties of this dot binning, with additional elements:
+#' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
-#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(arrange_bins, binner_swarm) = function(binner, nbins = NULL, binwidth = NULL, ...) {
+method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
   stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
 
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
-  binning$dots = beeswarm::swarmy(
-    binner@x,
+  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
+  dotplot$dots = beeswarm::swarmy(
+    layout@x,
     0,
-    xsize = binning$binwidth,
-    ysize = binning$y_spacing,
+    xsize = dotplot$binwidth,
+    ysize = dotplot$y_spacing,
     log = "",
     cex = 1,
-    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0),
+    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0),
     compact = TRUE
   )
-  binning$dots = recenter_swarm_clusters(binner, binning$dots, binning)
-  binning$height = get_swarm_height(binner, binning$dots, binning)
+  dotplot$dots = recenter_swarm_clusters(layout, dotplot$dots, dotplot)
+  dotplot$height = get_swarm_height(layout, dotplot$dots, dotplot)
 
-  binning
+  dotplot
 }
 
-#' Arrange a binning of dots for swarm2 layouts
-#' @param binner <`binner_swarm2`> the binning method
+#' Initialize stratified swarm dotplot layout
+#' @param layout <`layout_swarm2`> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return <[list]> properties of this dot binning, with additional elements:
+#' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
-#' - `height`: <scalar [numeric]> height of the tallest bin in this binning
+#' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(arrange_bins, binner_swarm2) = function(binner, nbins = NULL, binwidth = NULL, ...) {
-  binning = arrange_bins(super(binner, get("binner", mode = "function")), nbins, binwidth)
-  binning$dots = grid_swarm(
-    binner@xs,
+method(setup_dotplot, layout_swarm2) = function(layout, nbins = NULL, binwidth = NULL, ...) {
+  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
+  dotplot$dots = grid_swarm(
+    layout@xs,
     0,
-    xsize = binning$binwidth,
-    ysize = binning$y_spacing,
-    ygrid = binner@grid,
-    side = switch_side(binner@side, binner@orientation, topright = 1, bottomleft = -1, both = 0)
+    xsize = dotplot$binwidth,
+    ysize = dotplot$y_spacing,
+    ygrid = layout@grid,
+    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0)
   )
-  binning$dots = recenter_swarm_clusters(binner, binning$dots, binning)
-  binning$height = get_swarm_height(binner, binning$dots, binning)
+  dotplot$dots = recenter_swarm_clusters(layout, dotplot$dots, dotplot)
+  dotplot$height = get_swarm_height(layout, dotplot$dots, dotplot)
 
-  binning
+  dotplot
 }
 
 #' Re-center swarm clusters for side = "both" in swarm layouts
-#' @param binner <`binner`> dot binning method
+#' @param layout <[dotplot_layout]> the dotplot layout
 #' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
 #' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @noRd
-recenter_swarm_clusters = function(binner, dots, binning) {
-  if (binner@side != "both") return(dots)
+recenter_swarm_clusters = function(layout, dots, dotplot) {
+  if (layout@side != "both") return(dots)
 
   # re-center contiguous clusters around their mean y position so that
   # small clusters are visually centered (rather than e.g. a cluster of
   # two points having one point on the origin line and one above it)
-  dots$y = recenter_swarm_clusters_(dots$x, dots$y, binning$binwidth)
+  dots$y = recenter_swarm_clusters_(dots$x, dots$y, dotplot$binwidth)
   dots
 }
 
-#' Get the height of a swarm binning
-#' @param binner <`binner`> dot binning method
+#' Get the height of a swarm dotplot layout
+#' @param layout <[dotplot_layout]> the dotplot layout
 #' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
 #' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
-#' @returns <scalar [numeric]> height of the swarm binning
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
+#' @returns <scalar [numeric]> height of the dotplot
 #' @noRd
-get_swarm_height = function(binner, dots, binning) {
-  height_minus_1_dot = max(abs(binning$dots$y)) * if (binner@side == "both") 2 else 1
-  dot_height = binning$y_spacing / binner@stackratio
+get_swarm_height = function(layout, dots, dotplot) {
+  height_minus_1_dot = max(abs(dotplot$dots$y)) * if (layout@side == "both") 2 else 1
+  dot_height = dotplot$y_spacing / layout@stackratio
   height_minus_1_dot + dot_height
 }
 
 
 # place_dots -------------------------------------------------------------
 
-#' Find the x and y position of dots given a binner and a binning
-#' @param binner <`binner`> dot binning method
+#' Find the x and y positions of dots in a dotplot
+#' @param layout <[dotplot_layout]> the dotplot layout algorithm
 #' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @returns <[data.frame]> modified version of `d` with updated `x` and `y` columns
 #' @noRd
-place_dots = new_generic("place_dots", c("binner"), function(binner, d, binning) {
+place_dots = new_generic("place_dots", c("layout"), function(layout, d, dotplot) {
   S7_dispatch()
 })
 
 ## place_dots for bin, hex, weave, bar ---------------------------------------
 
-method(place_dots, binner_bin | binner_bar) = function(binner, d, binning) {
-  d$bin = binning$bins
-  d = place_dots_x_binned(binner, d, binning)
-  d = place_dots_y_binned(binner, d, binning)
+method(place_dots, layout_bin | layout_bar) = function(layout, d, dotplot) {
+  d$bin = dotplot$bins
+  d = place_dots_x_binned(layout, d, dotplot)
+  d = place_dots_y_binned(layout, d, dotplot)
   d
 }
 
-method(place_dots, binner_hex) = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
+method(place_dots, layout_hex) = function(layout, d, dotplot) {
+  define_orientation_variables(layout@orientation)
 
-  d = place_dots(super(binner, binner_bin), d, binning)
+  d = place_dots(super(layout, layout_bin), d, dotplot)
   d = ddply_(d, "bin", function(bin_df) {
     n_dots = nrow(bin_df)
-    row_start_offset = get_row_start_offset(binner, binning, n_dots)
+    row_start_offset = get_row_start_offset(layout, dotplot, n_dots)
     # depending on whether this is an even or odd column, need to start the
     # x offset to the left or to the right
     x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
-    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * binning$binwidth
+    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * dotplot$binwidth
     bin_df
   })
 
   d
 }
 
-method(place_dots, binner_weave) = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
+method(place_dots, layout_weave) = function(layout, d, dotplot) {
+  define_orientation_variables(layout@orientation)
 
   # keep original x positions, but re-order within bins so that overlaps
   # across bins are less likely
-  d$bin = binning$bins
+  d$bin = dotplot$bins
   d = ddply_(d, "bin", function(bin_df) {
-    seq_fun = if (binner@side == "both") seq_interleaved_centered else seq_interleaved
+    seq_fun = if (layout@side == "both") seq_interleaved_centered else seq_interleaved
     bin_df = bin_df[seq_fun(nrow(bin_df)),]
     bin_df$row = seq_len(nrow(bin_df))
-    if (binner@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
+    if (layout@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
     bin_df
   })
 
-  if (binner@overlaps == "nudge") {
+  if (layout@overlaps == "nudge") {
     # nudge values within each row to ensure there are no overlaps
     d = ddply_(d, "row", function(row_df) {
-      row_df[[x]] = nudge_bins(row_df[[x]], binning$binwidth)
+      row_df[[x]] = nudge_bins(row_df[[x]], dotplot$binwidth)
       row_df
     })
   }
 
   d$row = NULL
 
-  d = place_dots_y_binned(binner, d, binning)
+  d = place_dots_y_binned(layout, d, dotplot)
 
   d
 }
 
 #' Find the x positions of dots in binned layouts
-#' @param binner <`binner`> dot binning method
+#' @param layout <[dotplot_layout]> dotplot layout
 #' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
 #' @noRd
-place_dots_x_binned = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
+place_dots_x_binned = function(layout, d, dotplot) {
+  define_orientation_variables(layout@orientation)
 
-  bin_midpoints = binning$bin_midpoints
-  if (binner@overlaps == "nudge") {
-    bin_midpoints = nudge_bins(bin_midpoints, binning$binwidth, binning$bin_counts)
+  bin_midpoints = dotplot$bin_midpoints
+  if (layout@overlaps == "nudge") {
+    bin_midpoints = nudge_bins(bin_midpoints, dotplot$binwidth, dotplot$bin_counts)
   }
-  d[[x]] = bin_midpoints[binning$bins]
+  d[[x]] = bin_midpoints[dotplot$bins]
   # maintain original data order within each bin when finding y positions
   d = d[order(d$bin, d$order), ]
   d
 }
 
 #' Find the y positions of dots in binned layouts
-#' @param binner <`binner`> dot binning method
+#' @param layout <[dotplot_layout]> dotplot layout
 #' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
 #' @noRd
-place_dots_y_binned = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
+place_dots_y_binned = function(layout, d, dotplot) {
+  define_orientation_variables(layout@orientation)
 
   d = ddply_(d, "bin", function(bin_df) {
     y_offset = seq(
       0,
-      binning$y_spacing * (nrow(bin_df) - 1),
+      dotplot$y_spacing * (nrow(bin_df) - 1),
       length.out = nrow(bin_df)
     )
-    row_start_offset = get_row_start_offset(binner, binning, nrow(bin_df))
-    switch_side(binner@side, binner@orientation,
+    row_start_offset = get_row_start_offset(layout, dotplot, nrow(bin_df))
+    switch_side(layout@side, layout@orientation,
       topright = {},
       bottomleft = {
         y_offset = -y_offset
       },
       both = {
-        y_offset = y_offset - binning$y_spacing * row_start_offset
+        y_offset = y_offset - dotplot$y_spacing * row_start_offset
       }
     )
-    bin_df[[y]] = bin_df[[y]] + binning$y_start + y_offset
+    bin_df[[y]] = bin_df[[y]] + dotplot$y_start + y_offset
 
     bin_df
   })
@@ -399,15 +405,15 @@ place_dots_y_binned = function(binner, d, binning) {
 }
 
 #' Get the number of rows the start of a dot column will be offset by
-#' @param binner <`binner`> dot binning method
-#' @param binning <[list]> dot binning properties as returned by `arrange_bins()`
+#' @param layout <[dotplot_layout]> dotplot layout
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @param n_dots <[integer]> number of dots in the column
 #' @returns <[integer]> number of rows the start of the column is offset by
 #' @noRd
-get_row_start_offset = function(binner, binning, n_dots) {
-  if (binner@side == "both") {
+get_row_start_offset = function(layout, dotplot, n_dots) {
+  if (layout@side == "both") {
     row_start_offset = (n_dots - 1) / 2
-    if (binner@align_rows) {
+    if (layout@align_rows) {
       # weave and hex require rows to be aligned exactly so that x offsets
       # can be applied within rows; bar because it looks weird otherwise
       row_start_offset = round(row_start_offset)
@@ -420,18 +426,18 @@ get_row_start_offset = function(binner, binning, n_dots) {
 
 ## place_dots for swarm, swarm2 -------------------------------------------------
 
-method(place_dots, binner_swarm | binner_swarm2) = function(binner, d, binning) {
-  define_orientation_variables(binner@orientation)
+method(place_dots, layout_swarm | layout_swarm2) = function(layout, d, dotplot) {
+  define_orientation_variables(layout@orientation)
 
-  d[[x]] = binning$dots$x
-  d[[y]] = d[[y]] + binning$y_start + binning$dots$y
+  d[[x]] = dotplot$dots$x
+  d[[y]] = d[[y]] + dotplot$y_start + dotplot$dots$y
   d
 }
 
 
 # modified wilkinson methods ----------------------------------------------
 
-#' a variant of the basic wilkinson binning method, a single left-to-right sweep
+#' a variant of the basic wilkinson binned layout method, a single left-to-right sweep
 #' @param x sorted numeric vector
 #' @param binwidth bin width
 #' @noRd
@@ -537,7 +543,7 @@ wilkinson_bin = function(x, binwidth, span = 0, right = TRUE, first_slack = Inf)
   wilkinson_smooth(x, b, binwidth, span = span)
 }
 
-#' A modified wilkinson-style binning that expands outward from the center of
+#' A modified wilkinson-style binned layout that expands outward from the center of
 #' the data. Works best on symmetric data.
 #'  x must be sorted
 #' @param x numeric vector
@@ -700,7 +706,7 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 }
 
 
-# grid swarm -------------------------------------------------------------
+# stratified swarm -------------------------------------------------------------
 
 #' Beeswarm layout using a fractional grid.
 #' @description
@@ -722,17 +728,19 @@ grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
 }
 
 
-# bin nudging for overlaps ------------------------------------------------
+# nudging for overlaps ------------------------------------------------
 
-#' given a binning produced by one of the binning methods, nudge
+#' Nudge bins/dots to avoid overlaps
+#'
+#' Given the midpoints of bins/dots produced by a layout, nudge
 #' bin midpoints to ensure they are at least `width` apart. Nudging is done
 #' by constrained optimization, minimizing the sum of squares of distances of
 #' new bin midpoints to old (weighted by number of items in each bin), subject
 #' to adjacent bins being at least `width` apart.
 #' @param bin_midpoints vector: midpoints of each bin
 #' @param binwidth scalar: width of bins
-#' @param count vector of length(bin_midpoints): number of items in each bin
-#' @returns vector of length(bin_midpoints) giving new bin midpoints
+#' @param count vector of `length(bin_midpoints)``: number of items in each bin
+#' @returns vector of `length(bin_midpoints)` giving new bin midpoints
 #' @noRd
 nudge_bins = function(bin_midpoints, binwidth, count = rep(1, length(bin_midpoints))) {
   n = length(bin_midpoints)

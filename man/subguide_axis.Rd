@@ -181,7 +181,7 @@ all geometries using the \code{thickness} aesthetic.
 \code{\link[=subscale_thickness]{subscale_thickness()}}, for setting a \code{thickness} sub-scale within
 a single \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
-Other sub-guides: 
-\code{\link{subguide_none}()}
+Other sub-guides:
+\code{\link[=subguide_none]{subguide_none()}}
 }
 \concept{sub-guides}

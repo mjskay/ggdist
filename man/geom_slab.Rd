@@ -134,7 +134,7 @@ if you are using a graphics device that support gradients.
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:Scale]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+geometry and then returns a \link[grid:grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
@@ -329,9 +329,9 @@ See \code{\link[=stat_slab]{stat_slab()}} for the stat version, intended for
 use on sample data or analytical distributions.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this shortcut is based on.
 
-Other slabinterval geoms: 
-\code{\link{geom_interval}()},
-\code{\link{geom_pointinterval}()},
-\code{\link{geom_spike}()}
+Other slabinterval geoms:
+\code{\link[=geom_interval]{geom_interval()}},
+\code{\link[=geom_pointinterval]{geom_pointinterval()}},
+\code{\link[=geom_spike]{geom_spike()}}
 }
 \concept{slabinterval geoms}

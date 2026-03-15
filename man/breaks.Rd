@@ -30,7 +30,7 @@ will be normalized to sum to 1.}
 \item{digits}{<scalar \link{numeric}> For \code{\link[=breaks_FD]{breaks_FD()}}, the number of significant digits to keep when
 rounding in the Freedman-Diaconis algorithm. For an explanation of this
 parameter, see the documentation of the corresponding parameter in
-\code{\link[grDevices:nclass]{grDevices::nclass.FD()}}.}
+\code{\link[grDevices:nclass.FD]{grDevices::nclass.FD()}}.}
 
 \item{max_n}{<scalar \link{numeric} | \link{function} | \link[=character]{string}>
 For \code{\link[=breaks_quantiles]{breaks_quantiles()}}, either a scalar numeric giving the

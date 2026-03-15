@@ -224,9 +224,9 @@ The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinter
 \code{\link[=subscale_thickness]{subscale_thickness()}}, for setting a \code{thickness} sub-scale within
 a single \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 
-Other ggdist scales: 
+Other ggdist scales:
 \code{\link{scale_colour_ramp}},
-\code{\link{scale_side_mirrored}()},
+\code{\link[=scale_side_mirrored]{scale_side_mirrored()}},
 \code{\link{sub-geometry-scales}}
 }
 \author{

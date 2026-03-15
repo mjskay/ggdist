@@ -132,15 +132,15 @@ tibble(d = dist_normal(0, 1)) \%>\%
 
 }
 \seealso{
-Other ggdist scales: 
-\code{\link{scale_side_mirrored}()},
+Other ggdist scales:
+\code{\link[=scale_side_mirrored]{scale_side_mirrored()}},
 \code{\link{scale_thickness}},
 \code{\link{sub-geometry-scales}}
 
-Other colour ramp functions: 
-\code{\link{guide_rampbar}()},
-\code{\link{partial_colour_ramp}()},
-\code{\link{ramp_colours}()}
+Other colour ramp functions:
+\code{\link[=guide_rampbar]{guide_rampbar()}},
+\code{\link[=partial_colour_ramp]{partial_colour_ramp()}},
+\code{\link[=ramp_colours]{ramp_colours()}}
 }
 \author{
 Matthew Kay

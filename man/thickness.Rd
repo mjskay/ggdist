@@ -18,7 +18,7 @@ May be \code{NA} to indicate that this bound is not known.}
 May be \code{NA} to indicate that this bound is not known.}
 }
 \value{
-A \link[vctrs:new_rcrd]{vctrs::rcrd} of class \code{"ggdist_thickness"} with fields
+A \link[vctrs:rcrd]{vctrs::rcrd} of class \code{"ggdist_thickness"} with fields
 \code{"x"}, \code{"lower"}, and \code{"upper"}.
 }
 \description{

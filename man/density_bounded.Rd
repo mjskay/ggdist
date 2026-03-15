@@ -161,8 +161,8 @@ Loh, W. Y. (1984). Estimating an endpoint of a distribution with resampling
 methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/1176346811}
 }
 \seealso{
-Other density estimators: 
-\code{\link{density_histogram}()},
-\code{\link{density_unbounded}()}
+Other density estimators:
+\code{\link[=density_histogram]{density_histogram()}},
+\code{\link[=density_unbounded]{density_unbounded()}}
 }
 \concept{density estimators}

@@ -88,7 +88,7 @@ The \code{thickness} aesthetic of \code{\link[=geom_slabinterval]{geom_slabinter
 \code{\link[=scale_thickness_shared]{scale_thickness_shared()}}, for setting a \code{thickness} scale across
 all geometries using the \code{thickness} aesthetic.
 
-Other sub-scales: 
-\code{\link{subscale_identity}()}
+Other sub-scales:
+\code{\link[=subscale_identity]{subscale_identity()}}
 }
 \concept{sub-scales}

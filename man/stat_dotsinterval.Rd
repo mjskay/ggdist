@@ -200,10 +200,10 @@ that will be translated into actual sizes for intervals drawn according to \code
 documentation for that argument.)}
 \item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when
 drawing interval and point sizes, as they tend to be too thick when using
-the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+the default settings of \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
-argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
+argument of the \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}} function), and
 \code{interval_size_range} indicates the desired output range of the size values (the min and max
 of the actual sizes used to draw intervals). Most of the time it is not recommended to change
 the value of this argument, as it may result in strange scaling of legends; this argument is
@@ -219,7 +219,7 @@ sizes specified with that aesthetic will not be adjusted using \code{fatten_poin
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:Scale]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+geometry and then returns a \link[grid:grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
@@ -367,8 +367,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -601,8 +601,8 @@ Wilkinson, L. (1999). Dot plots. \emph{The American Statistician}, 53(3), 276--2
 See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for the geom underlying this stat.
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
-Other dotsinterval stats: 
-\code{\link{stat_dots}()},
-\code{\link{stat_mcse_dots}()}
+Other dotsinterval stats:
+\code{\link[=stat_dots]{stat_dots()}},
+\code{\link[=stat_mcse_dots]{stat_mcse_dots()}}
 }
 \concept{dotsinterval stats}

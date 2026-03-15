@@ -28,7 +28,7 @@ globalVariables("prior")
 #' @param object <[character] | [data.frame]> One of:
 #'  - A character vector containing distribution specifications, like `c("normal(0,1)", "exp(1)")`
 #'  - A data frame with a column containing distribution specifications.
-#' @param dist_col <bare [language]> Column or column expression of `object` that resolves to a
+#' @param dist_col <[data-masking][rlang::args_data_masking]> Column or column expression of `object` that resolves to a
 #' character vector of distribution specifications (when `object` is a [data.frame()]).
 #' @param ...  Arguments passed to other implementations of `parse_dist()`.
 #' @param dist <[string][character]> The name of the output column to contain the distribution name.

@@ -63,7 +63,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' @param .data <[data.frame] | [grouped_df][dplyr::grouped_df]> Data frame (or grouped
 #' data frame as returned by [dplyr::group_by()]) that contains draws to summarize.
-#' @param ... <bare [language]> Column names or expressions that, when evaluated in the context of
+#' @param ... <[dynamic-dots][rlang::dyn-dots]> Column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.

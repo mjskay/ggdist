@@ -17,7 +17,7 @@ pretty_widths(
 \arguments{
 \item{n}{<\link{numeric}> in \eqn{[0, \infty)}: Number of intervals to generate.}
 
-\item{dist}{<\link[distributional:distributional-package]{distribution}>: Reference
+\item{dist}{<\link[distributional:distributional]{distribution}>: Reference
 distribution.}
 
 \item{max}{<\link{numeric}> in \eqn{(0, 1)}: Maximum interval width.}

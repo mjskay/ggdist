@@ -21,7 +21,7 @@ rescaling. It can be used with the \code{subscale} parameter of
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 }
 \seealso{
-Other sub-scales: 
-\code{\link{subscale_thickness}()}
+Other sub-scales:
+\code{\link[=subscale_thickness]{subscale_thickness()}}
 }
 \concept{sub-scales}

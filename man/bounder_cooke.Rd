@@ -44,8 +44,8 @@ methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/117
 \seealso{
 The \code{bounder} argument to \code{\link[=density_bounded]{density_bounded()}}.
 
-Other bounds estimators: 
-\code{\link{bounder_cdf}()},
-\code{\link{bounder_range}()}
+Other bounds estimators:
+\code{\link[=bounder_cdf]{bounder_cdf()}},
+\code{\link[=bounder_range]{bounder_range()}}
 }
 \concept{bounds estimators}

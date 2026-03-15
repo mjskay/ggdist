@@ -247,10 +247,10 @@ documentation for that argument.)}
 
 \item{interval_size_range}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when
 drawing interval and point sizes, as they tend to be too thick when using
-the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+the default settings of \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
-argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
+argument of the \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}} function), and
 \code{interval_size_range} indicates the desired output range of the size values (the min and max
 of the actual sizes used to draw intervals). Most of the time it is not recommended to change
 the value of this argument, as it may result in strange scaling of legends; this argument is
@@ -275,7 +275,7 @@ sizes specified with that aesthetic will not be adjusted using \code{fatten_poin
 \itemize{
 \item A function that takes a \code{scale} argument giving a \link[ggplot2:Scale]{ggplot2::Scale}
 object and an \code{orientation} argument giving the orientation of the
-geometry and then returns a \link[grid:grid.grob]{grid::grob} that will draw the axis
+geometry and then returns a \link[grid:grob]{grid::grob} that will draw the axis
 annotation, such as \code{\link[=subguide_axis]{subguide_axis()}} (to draw a traditional axis) or
 \code{\link[=subguide_none]{subguide_none()}} (to draw no annotation). See \code{\link[=subguide_axis]{subguide_axis()}}
 for a list of possibilities and examples.
@@ -586,11 +586,11 @@ See the \code{\link[=stat_slabinterval]{stat_slabinterval()}} family for other
 stats built on top of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 See \code{vignette("dotsinterval")} for a variety of examples of use.
 
-Other dotsinterval geoms: 
-\code{\link{geom_blur_dots}()},
-\code{\link{geom_dots}()},
-\code{\link{geom_swarm}()},
-\code{\link{geom_weave}()}
+Other dotsinterval geoms:
+\code{\link[=geom_blur_dots]{geom_blur_dots()}},
+\code{\link[=geom_dots]{geom_dots()}},
+\code{\link[=geom_swarm]{geom_swarm()}},
+\code{\link[=geom_weave]{geom_weave()}}
 }
 \author{
 Matthew Kay

@@ -60,10 +60,10 @@ that will be translated into actual sizes for intervals drawn according to \code
 documentation for that argument.)}
 \item{\code{interval_size_range}}{<length-2 \link{numeric}> This geom scales the raw size aesthetic values when
 drawing interval and point sizes, as they tend to be too thick when using
-the default settings of \code{\link[ggplot2:scale_size]{scale_size_continuous()}},
+the default settings of \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}},
 which give sizes with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the
 input domain of raw size values (typically this should be equal to the value of the \code{range}
-argument of the \code{\link[ggplot2:scale_size]{scale_size_continuous()}} function), and
+argument of the \code{\link[ggplot2:scale_size_continuous]{scale_size_continuous()}} function), and
 \code{interval_size_range} indicates the desired output range of the size values (the min and max
 of the actual sizes used to draw intervals). Most of the time it is not recommended to change
 the value of this argument, as it may result in strange scaling of legends; this argument is
@@ -170,8 +170,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:aes_eval]{after_stat()}}
-function or the \code{after_stat} argument of \code{\link[ggplot2:aes_eval]{stage()}}:
+use in aesthetic specifications (\code{\link[ggplot2:aes]{aes()}}) using the \code{\link[ggplot2:after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[ggplot2:stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -344,15 +344,15 @@ dist_df \%>\%
 See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for the geom underlying this stat.
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
 
-Other slabinterval stats: 
-\code{\link{stat_ccdfinterval}()},
-\code{\link{stat_cdfinterval}()},
-\code{\link{stat_eye}()},
-\code{\link{stat_gradientinterval}()},
-\code{\link{stat_halfeye}()},
-\code{\link{stat_histinterval}()},
-\code{\link{stat_interval}()},
-\code{\link{stat_slab}()},
-\code{\link{stat_spike}()}
+Other slabinterval stats:
+\code{\link[=stat_ccdfinterval]{stat_ccdfinterval()}},
+\code{\link[=stat_cdfinterval]{stat_cdfinterval()}},
+\code{\link[=stat_eye]{stat_eye()}},
+\code{\link[=stat_gradientinterval]{stat_gradientinterval()}},
+\code{\link[=stat_halfeye]{stat_halfeye()}},
+\code{\link[=stat_histinterval]{stat_histinterval()}},
+\code{\link[=stat_interval]{stat_interval()}},
+\code{\link[=stat_slab]{stat_slab()}},
+\code{\link[=stat_spike]{stat_spike()}}
 }
 \concept{slabinterval stats}

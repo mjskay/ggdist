@@ -27,7 +27,7 @@ globalVariables(".value")
 #'   - A [posterior::rvar] vector.
 #'   - A matrix; in which case the first dimension should be draws and the second
 #'     dimension values of the curve.
-#' @param ... <bare [language]> Bare column names or expressions that, when evaluated in the context of
+#' @param ... <[dynamic-dots][rlang::dyn-dots]> Bare column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.

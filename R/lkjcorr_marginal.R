@@ -140,7 +140,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' @param data <[data.frame]> A data frame containing a column with distribution names (`".dist"` by default)
 #' and a list column of distribution arguments (`".args"` by default), such as output by
 #' [parse_dist()].
-#' @param predicate <bare [language] | [NULL]> Expression for selecting the rows of `data` to modify.
+#' @param predicate <[data-masking][rlang::args_data_masking] | [NULL]> Expression for selecting the rows of `data` to modify.
 #' This is useful if `data` contains more than one row with an LKJ prior in it and you only want
 #' to modify some of the distributions; if this is the case, give row a predicate expression that
 #' evaluates to `TRUE` on the rows you want to modify.

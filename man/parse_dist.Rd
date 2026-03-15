@@ -98,7 +98,7 @@ starting with \code{r}, \code{p}, \code{q}, and \code{d} representing random num
 etc. for that distribution), using the \code{r_dist_name} function. For example, \code{"normal"} is translated
 into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.}
 
-\item{dist_col}{<bare \link{language}> Column or column expression of \code{object} that resolves to a
+\item{dist_col}{<\link[rlang:args_data_masking]{data-masking}> Column or column expression of \code{object} that resolves to a
 character vector of distribution specifications (when \code{object} is a \code{\link[=data.frame]{data.frame()}}).}
 
 \item{lb}{<\link[=character]{string}> The name of an input column (for \code{data.frame} and \code{brms::prior} objects)
