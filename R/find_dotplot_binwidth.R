@@ -106,9 +106,11 @@ find_dotplot_binwidth = function(
     binwidth = max_binning$binwidth
     height = max_binning$height
 
-    widths = binwidth
-    heights = height
-    methods = "start"
+    iter = data.frame(
+      x = binwidth,
+      y = height,
+      method = "max"
+    )
   } else {
     # set up initial guesses for the search
     iter = data.frame(
@@ -206,18 +208,13 @@ find_dotplot_binwidth = function(
 
     # search for a reasonable binwidth
     # print(binwidth_eps)
-    zero = zero_or_less(
-      function(x) arrange_bins_binner(binwidth = x)$height - maxheight,
-      xs = iter$x,
-      ys = iter$y - maxheight,
-      methods = iter$method,
+    iter = max_f_lte_y(
+      function(x) arrange_bins_binner(binwidth = x)$height,
+      max_y = maxheight,
+      iter = iter,
       eps_x = binwidth_eps,
       eps_y = height_eps
-    )
-    widths = zero$xs
-    heights = zero$ys + maxheight
-    methods = zero$methods
-    binwidth = zero$x_best
+    )$iter
     # cat("Search iterations:", length(widths), "\n")
 
     # attempt to refine binwidth using optimization.
@@ -247,10 +244,10 @@ find_dotplot_binwidth = function(
     #     }
     #   }
     # }
-    valid = heights <= maxheight + height_eps
-    i = which.min(abs(heights[valid] - maxheight))
-    binwidth = widths[valid][i]
-    height = heights[valid][i]
+    valid = iter$y <= maxheight + height_eps
+    i = which.min(abs(iter$y[valid] - maxheight))
+    binwidth = iter$x[valid][i]
+    height = iter$y[valid][i]
   }
 
   # check if the selected binning is valid....
@@ -269,7 +266,7 @@ find_dotplot_binwidth = function(
   structure(
     binwidth,
     binner = binner,
-    iterations = data.frame(i = seq_along(widths), widths, heights, methods, chosen = widths == binwidth),
+    iterations = data.frame(i = seq_len(nrow(iter)), width = iter$x, height = iter$y, method = iter$method, chosen = iter$x == binwidth),
     binwidth_eps = binwidth_eps,
     height_err = abs(height - maxheight),
     height_eps = height_eps
@@ -625,8 +622,12 @@ zero_or_less_loess = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$doubl
 }
 
 
-zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps), methods = rep("init", length(xs))) {
-  iter = data.frame(x = xs, y = ys, method = methods)
+max_f_lte_y = function(
+  f, max_y, eps_x, eps_y,
+  tol = sqrt(.Machine$double.eps),
+  iter = data.frame(x = numeric(), y = numeric(), method = character())
+) {
+  iter$y = iter$y - max_y
 
   y_best = max(iter$y[iter$y <= eps_y])
   best_i = which.max(iter$y == y_best)
@@ -634,8 +635,11 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)
   err_best = abs(y_best)
 
   for (i in 1:20) {
+    if (err_best <= eps_y) break
+
     stepped_linear_approx_at_0 = function(iter) {
-      df = stepped_linear_approx(iter$x, iter$y, eps_x)
+      df = stepped_linear_approx(iter$x, iter$y + max_y, eps_x)
+      df$y = df$y - max_y
       df$x_2 = c(df$x[-1], NA)
       df$y_2 = c(df$y[-1], NA)
       crosses_zero = (sign(df$y) != sign(df$y_2)) %in% TRUE
@@ -646,23 +650,23 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)
     }
     df = stepped_linear_approx_at_0(iter)
 
-    if (FALSE) {
-      df = bind_rows(df, lapply(split_monotonic(iter), \(df) {
+    # if (FALSE) {
+      df = dplyr::bind_rows(df, lapply(split_monotonic(iter), \(df) {
         df_lt0 = df[df$y < 0, ]
         df_gt0 = df[df$y > 0, ]
         f_inv_approx = approxfun(df$y, df$x) #, ties = min, method = "monoH.FC")
         bi = max(which(df$y < 0))
-        bind_rows(
+        dplyr::bind_rows(
           # if (i %% 3 == 0) data.frame(x_new = f_inv_approx(0), method = "linear"),
           # if (i %% 4 == 1) data.frame(x_new = splinefun(df$y, df$x, method = "monoH.FC")(0), method = "spline"),
           # if (i %% 4 == 1)
-            # transform(stepped_linear_approx_at_0(df), method = "stepped_mono"),
+            transform(stepped_linear_approx_at_0(df), method = "stepped_mono")
           # data.frame(x_new = (df$x[[bi]] + df$x[[bi + 1]]) / 2, method = "bisection"),
-          if (nrow(df_gt0) >= 2) data.frame(x_new = splinefun(df_gt0$y, df_gt0$x, method = "monoH.FC")(0), method = "spline_gt0"),
-          if (nrow(df_lt0) >= 2) data.frame(x_new = splinefun(df_lt0$y, df_lt0$x, method = "monoH.FC")(0), method = "spline_lt0")
+          # if (nrow(df_gt0) >= 2) data.frame(x_new = splinefun(df_gt0$y, df_gt0$x, method = "monoH.FC")(0), method = "spline_gt0"),
+          # if (nrow(df_lt0) >= 2) data.frame(x_new = splinefun(df_lt0$y, df_lt0$x, method = "monoH.FC")(0), method = "spline_lt0")
         )
       }))
-    }
+    # }
 
     df = df[!is.na(df$x_new) & sapply(df$x_new, \(x_new) all(abs(x_new - iter$x) > eps_x/2)), ]
     if (nrow(df) == 0) {
@@ -678,7 +682,7 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)
     for (j in seq_len(nrow(df))) {
       x_new = df$x_new[[j]]
       method_new = df$method[[j]]
-      y_new = f(x_new)
+      y_new = f(x_new) - max_y
       err_new = abs(y_new)
 
       iter = rbind(iter, data.frame(x = x_new, y = y_new, method = method_new))
@@ -692,7 +696,6 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)
 
       if (err_best <= eps_y) break
     }
-    if (err_best <= eps_y) break
     # err_bests = c(err_bests, err_best)
 
     # old_width = x_2 - x_1
@@ -715,12 +718,11 @@ zero_or_less = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.eps)
     # stopifnot(y_1 < 0, 0 < y_2)
   }
 
+  iter$y = iter$y + max_y
   list(
     x_best = x_best,
     y_best = y_best,
-    xs = iter$x,
-    ys = iter$y,
-    methods = iter$method
+    iter = iter
   )
 }
 
@@ -790,46 +792,55 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     range = quantile(x[x >= center], p) - quantile(x[x <= center], 1 - p)
     c(max(0, center - range/2), center + range/2)
   }
-  xlim = p_range_around(iters$widths, iters$chosen, zoom)
-  ylim = p_range_around(iters$heights, iters$chosen, zoom)
+  xlim = p_range_around(iters$width, iters$chosen, zoom)
+  ylim = p_range_around(iters$height, iters$chosen, zoom)
+
+  high_res_curve = tibble(
+    width = seq(xlim[1], xlim[2], length.out = 200),
+    height = sapply(width, \(x) arrange_bins(binner, binwidth = x)$height)
+  )
+
   grid = if (prop_exists(binner, "grid")) binner@grid else 1
   transform_n = scales::new_transform("binwidth", \(bw) binwidth_to_n(bw, binner), \(n) n_to_binwidth(n, binner))
   transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, binner, height_eps), \(n) pseudo_n_to_binwidth(n, binner, height_eps))
   transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, binner, height_eps), \(n) pseudo_binwidth_to_binwidth(n, binner, height_eps))
+
+  exact_refs = data.frame(
+    height = binner@maxheight,
+    width = n_to_binwidth(seq(round(binwidth_to_n(max(setdiff(iters$height, Inf), na.rm = TRUE), binner)), round(binwidth_to_n(min(setdiff(iters$height, 0), na.rm = TRUE), binner))), binner)
+  )
+  exact_refs = exact_refs[xlim[1] <= exact_refs$width & exact_refs$width <= xlim[2], ]
+
   iters |>
-    filter(...) |>
-    ggplot(aes(widths, heights)) +
+    dplyr::filter(...) |>
+    ggplot(aes(width, height)) +
     annotate("ribbon", x = c(0.11, 0.12), ymin = binner@maxheight - attr(fdb, "height_eps"), ymax = binner@maxheight + attr(fdb, "height_eps"), alpha = 0.1) +
     geom_hline(yintercept = c(binner@maxheight - height_eps, binner@maxheight + height_eps), alpha = 0.5) +
-    geom_abline(slope = seq(1, max(iters$heights/binner@heightratio/iters$widths, na.rm = TRUE), by = 1/grid) + 1/binner@stackratio, color = "gray85") +
-    stat_function(
-      fun = Vectorize(\(x) arrange_bins(binner, binwidth = x)$height),
+    # geom_abline(slope = seq(1, max(iters$height/binner@heightratio/iters$width, na.rm = TRUE), by = 1/grid) + 1/binner@stackratio, color = "gray85") +
+    geom_line(
       color = "blue",
       alpha = 0.8,
-      n = 100,
-      xlim = xlim
+      data = high_res_curve
     ) +
-    stat_function(
-      fun = Vectorize(\(x) arrange_bins(binner, binwidth = x)$height),
-      geom = "point",
+    geom_point(
       size = 0.5,
       color = "blue",
       alpha = 0.5,
-      n = 100,
-      xlim = xlim
+      data = high_res_curve
     ) +
     geom_line(
       aes(group = split),
-      data = split_monotonic(iters, "widths", "heights") |> bind_rows(.id = "split"),
+      data = split_monotonic(iters, "width", "height") |> dplyr::bind_rows(.id = "split"),
       color = "gray65"
     ) +
-    geom_point(aes(color = methods)) +
+    geom_point(aes(color = method)) +
     geom_point(data = iters[iters$chosen, ], shape = 12, size = 3) +
     geom_hline(yintercept = binner@maxheight, linetype = "dashed") +
     geom_abline(intercept = binner@maxheight, slope = c(binner@heightratio, -binner@heightratio), linetype = "dotted") +
-    # coord_cartesian(xlim = xlim, ylim = ylim)
+    geom_point(shape = 1, size = 2, data = exact_refs) +
+    coord_cartesian(xlim = xlim, ylim = ylim)
     # coord_transform(xlim = xlim, ylim = ylim, x = scales::transform_reciprocal())
-    coord_transform(xlim = xlim, ylim = ylim, x = transform_pseudo_n)
+    # coord_transform(xlim = xlim, ylim = ylim, x = transform_n)
 
 }
 
