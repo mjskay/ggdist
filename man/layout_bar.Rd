@@ -5,19 +5,17 @@
 \title{Bar (waffle) dotplot layout}
 \usage{
 layout_bar(
-  x = numeric(0),
-  group = integer(0),
+  dots = data.frame(x = numeric(), y = numeric(), group = integer(), order = integer()),
   maxheight = Inf,
   heightratio = 1,
   stackratio = 1,
-  side = "topright",
-  orientation = "horizontal",
+  side = "top",
   overlaps = character(0),
   span = 0.9
 )
 }
 \arguments{
-\item{x}{<\link{numeric}> Positions of dots.}
+\item{dots}{<\link{numeric}> Positions of dots.}
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
@@ -26,8 +24,6 @@ layout_bar(
 \item{stackratio}{<scalar \link{numeric}> stack ratio of the dotplot layout.}
 
 \item{side}{<\link[=character]{string}> side where the dotplot layout should be placed.}
-
-\item{orientation}{<\link[=character]{string}> orientation of the dotplot layout.}
 
 \item{overlaps}{<\link[=character]{string}> how to handle overlaps in the dotplot layout.}
 

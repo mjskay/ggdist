@@ -8,7 +8,7 @@ NULL
 
 # dotplot_layout -----------------------------------------------------------------
 
-new_dotplot_layout_class = function(...) auto_partial(new_class(...), required = "x")
+new_dotplot_layout_class = function(...) auto_partial(new_class(...), required = "dots")
 
 #' Base class for dotplot layouts created with `bin_dots()`
 #' @description
@@ -16,12 +16,18 @@ new_dotplot_layout_class = function(...) auto_partial(new_class(...), required =
 #' @details
 #' A `dotplot_layout` defines how dots are arranged in a dotplot created with
 #' `bin_dots()`. Different layouts implement different dotplot layout algorithms.
-#' @param x <[numeric]> Positions of dots.
+#'
+#' Layouts are always written assuming a horizontal orientation: `dots$x` contains
+#' data values and `dots$y` contains the height of each dot in a bin/swarm. Thus,
+#' the only valid values of `side` for this function are `"top"`, `"bottom"`, or `"both"`.
+#' Transformations from this canonical orientation to a vertical orientation are
+#' made (if needed) by `bin_dots()` depending on the `orientation` parameter passed
+#' to that function.
+#' @param dots <[numeric]> Positions of dots.
 #' @param maxheight <scalar [numeric]> maximum height of the dotplot layout.
 #' @param heightratio <scalar [numeric]> height ratio of the dotplot layout.
 #' @param stackratio <scalar [numeric]> stack ratio of the dotplot layout.
 #' @param side <[string][character]> side where the dotplot layout should be placed.
-#' @param orientation <[string][character]> orientation of the dotplot layout.
 #' @param overlaps <[string][character]> how to handle overlaps in the dotplot layout.
 #' @param span <scalar [numeric]> smoothing/spacing parameter used in some layouts.
 #' @return <[dotplot_layout]> object.
@@ -30,14 +36,20 @@ dotplot_layout = new_dotplot_layout_class(
   "dotplot_layout",
   abstract = TRUE,
   properties = list(
-    x = new_property(
-      class_numeric,
-      default = double()
-    ),
-    group = new_property(
-      class_any,
-      validator = validate_not_na,
-      default = integer()
+    dots = new_property(
+      class_data.frame,
+      validator = function(value) {
+        if (!is.numeric(value$x)) {
+          "must have numeric x column"
+        } else if (!is.numeric(value$y)) {
+          "must have numeric y column"
+        } else if (!is.numeric(value$group)) {
+          "must have numeric group column"
+        } else if (!is.numeric(value$order)) {
+          "must have numeric order column"
+        }
+      },
+      default = quote(data.frame(x = numeric(), y = numeric(), group = integer(), order = integer()))
     ),
     maxheight = new_property(
       class_numeric,
@@ -56,15 +68,8 @@ dotplot_layout = new_dotplot_layout_class(
     ),
     side = new_property(
       class_character,
-      validator = validate_in(
-        c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both")
-      ),
-      default = "topright"
-    ),
-    orientation = new_property(
-      class_character,
-      validator = validate_in(c("horizontal", "vertical", "y", "x")),
-      default = "horizontal"
+      validator = validate_in(c("top", "bottom", "both")),
+      default = "top"
     ),
     overlaps = new_property(
       class_character,
@@ -103,13 +108,13 @@ layout_bin = new_dotplot_layout_class(
   "layout_bin",
   parent = dotplot_layout,
   properties = list(
-    x = new_property(
-      class_numeric,
+    dots = new_property(
+      class_data.frame,
       setter = function(self, value) {
-        self@x = value
+        self@dots = value
         # examines data to determine an appropriate binning method based on its properties
         # doing this up front allows us to avoid doing it repeatedly when finding binwidth via optimization
-        diff_x = diff(value)
+        diff_x = diff(value$x)
         if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
           # x is symmetric, use centered binning
           self@bin_method = wilkinson_bin_from_center
@@ -118,7 +123,8 @@ layout_bin = new_dotplot_layout_class(
         }
         self
       },
-      default = double()
+      validator = dotplot_layout@properties$dots$validator,
+      default = dotplot_layout@properties$dots$default
     ),
     bin_method = new_property(
       class_function,
@@ -247,22 +253,14 @@ layout_swarm2 = new_dotplot_layout_class(
   "layout_swarm2",
   parent = dotplot_layout,
   properties = list(
-    x = new_property(
-      class_numeric,
+    dots = new_property(
+      class_data.frame,
       setter = function(self, value) {
-        self@x = value
+        self@dots = value
         make_swarm2_xs(self)
       },
-      default = numeric()
-    ),
-    group = new_property(
-      class_any,
-      validator = validate_not_na,
-      setter = function(self, value) {
-        self@group = vec_recycle(value, length(self@x))
-        make_swarm2_xs(self)
-      },
-      default = 1L
+      validator = dotplot_layout@properties$dots$validator,
+      default = dotplot_layout@properties$dots$default
     ),
     xs = new_property(
       class_list,
@@ -274,10 +272,7 @@ layout_swarm2 = new_dotplot_layout_class(
       validator = validate_positive_scalar_integerish,
       default = 4L
     )
-  ),
-  validator = \(self) {
-    if (is.null(self@xs)) "x and group must both be set."
-  }
+  )
 )
 
 #' Split x into groups so that `layout_swarm2` can plot groups in order
@@ -288,8 +283,8 @@ layout_swarm2 = new_dotplot_layout_class(
 #' order within each stratum.
 #' @noRd
 make_swarm2_xs = function(self) {
-  if (!is.null(self@x) && !is.null(self@group)) {
-    x_splits = vec_split(self@x, self@group)
+  if (!is.null(self@dots$x) && !is.null(self@dots$group)) {
+    x_splits = vec_split(self@dots$x, self@dots$group)
     attr(self, "xs") = x_splits$val[order(x_splits$key)]
   }
   self

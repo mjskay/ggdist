@@ -78,45 +78,52 @@ bin_dots = function(
   overlaps = "nudge",
   span = waiver()
 ) {
-  side = match.arg(side)
   orientation = match.arg(orientation)
+  flip = switch_orientation(orientation, horizontal = FALSE, vertical = TRUE)
+  side = switch_side(match.arg(side), orientation,
+    topright = "top",
+    bottomleft = "bottom",
+    both = "both"
+  )
 
-  d = data_frame0(x = x, y = y, group = group)
+  # from this point until we return, `dots$x` is always data and `dots$y` is
+  # always offset/height in bin
+  dots = setup_dots(x, y, group, flip)
 
-  # after this point `x` and `y` refer to column names in `d` according
-  # to the orientation
-  define_orientation_variables(orientation)
+  # bin the dots
+  layout = new_dotplot_layout(
+    layout,
+    dots = dots,
+    heightratio = heightratio,
+    stackratio = stackratio,
+    side = side,
+    overlaps = overlaps,
+    span = span
+  )
+  dotplot = setup_dotplot(layout, binwidth = binwidth)
+  dots = place_dots(layout, dotplot)
+
+  # restore the original data order in case it was destroyed
+  dots = dots[order(dots$order), ]
+  dots$order = NULL
+
+  flip_data(dots, flip)
+}
+
+#' Setup a data frame of dots for use with dotplot layout algorithms
+#' @noRd
+setup_dots = function(x, y, group = 1L, flip = FALSE) {
+  dots = data_frame0(x = x, y = y, group = rep_len(xtfrm(group), length(x)))
+  dots = flip_data(dots, flip)
 
   # Sort the x values, because they must be sorted for bin methods to maintain
   # the correct connection between input values and output bins.
   # Because of this (and other later grouping operations that may re-order the
   # data as well) we need to keep the original data order around so that
   # we can restore the original order at the end.
-  d$order = seq_len(nrow(d))
-  d = d[order(d[[x]], d$group), ]
-
-  # bin the dots
-  layout = new_dotplot_layout(
-    layout,
-    x = d[[x]],
-    group = d$group,
-    heightratio = heightratio,
-    stackratio = stackratio,
-    side = side,
-    orientation = orientation,
-    overlaps = overlaps,
-    span = span
-  )
-  dotplot = setup_dotplot(layout, binwidth = binwidth)
-  d = place_dots(layout, d, dotplot)
-
-  # restore the original data order in case it was destroyed
-  d = d[order(d$order), ]
-  d$order = NULL
-
-  d
+  dots$order = seq_len(nrow(dots))
+  dots[order(dots$x, dots$group), ]
 }
-
 
 # setup_dotplot -----------------------------------------------------------
 
@@ -150,7 +157,7 @@ setup_dotplot = new_generic("setup_dotplot", c("layout"), function(layout, nbins
 
 method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth = NULL, ...) {
   # determine binwidth and number of bins
-  x_spread = diff(range(layout@x))
+  x_spread = diff(range(layout@dots$x))
   if (x_spread == 0) x_spread = 1
   if (is.null(binwidth)) {
     nbins = floor(nbins)
@@ -161,9 +168,9 @@ method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth 
 
   # determine y positioning parameters
   y_spacing = binwidth * layout@heightratio
-  y_start = switch_side(layout@side, layout@orientation,
-    topright = y_spacing / layout@stackratio / 2,
-    bottomleft = - y_spacing / layout@stackratio / 2,
+  y_start = switch(layout@side,
+    top = y_spacing / layout@stackratio / 2,
+    bottom = - y_spacing / layout@stackratio / 2,
     both = 0
   )
 
@@ -189,7 +196,7 @@ method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth 
 #' @noRd
 method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, binwidth = NULL, ...) {
   dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
-  dotplot = c(dotplot, layout@bin_method(layout@x, dotplot$binwidth, span = layout@span))
+  dotplot = c(dotplot, layout@bin_method(layout@dots$x, dotplot$binwidth, span = layout@span))
 
   # determine height of the tallest bin
   dotplot$bin_counts = tabulate(dotplot$bins)
@@ -217,17 +224,17 @@ method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = 
 
   dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
   dotplot$dots = beeswarm::swarmy(
-    layout@x,
+    layout@dots$x,
     0,
     xsize = dotplot$binwidth,
     ysize = dotplot$y_spacing,
     log = "",
     cex = 1,
-    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0),
+    side = switch(layout@side, top = 1, bottom = -1, both = 0),
     compact = TRUE
   )
-  dotplot$dots = recenter_swarm_clusters(layout, dotplot$dots, dotplot)
-  dotplot$height = get_swarm_height(layout, dotplot$dots, dotplot)
+  dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
+  dotplot$height = get_swarm_height(layout, dotplot, dotplot$dots)
 
   dotplot
 }
@@ -248,21 +255,21 @@ method(setup_dotplot, layout_swarm2) = function(layout, nbins = NULL, binwidth =
     xsize = dotplot$binwidth,
     ysize = dotplot$y_spacing,
     ygrid = layout@grid,
-    side = switch_side(layout@side, layout@orientation, topright = 1, bottomleft = -1, both = 0)
+    side = switch(layout@side, top = 1, bottom = -1, both = 0)
   )
-  dotplot$dots = recenter_swarm_clusters(layout, dotplot$dots, dotplot)
-  dotplot$height = get_swarm_height(layout, dotplot$dots, dotplot)
+  dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
+  dotplot$height = get_swarm_height(layout, dotplot, dotplot$dots)
 
   dotplot
 }
 
 #' Re-center swarm clusters for side = "both" in swarm layouts
 #' @param layout <[dotplot_layout]> the dotplot layout
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
 #' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
-#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @noRd
-recenter_swarm_clusters = function(layout, dots, dotplot) {
+recenter_swarm_clusters = function(layout, dotplot, dots) {
   if (layout@side != "both") return(dots)
 
   # re-center contiguous clusters around their mean y position so that
@@ -274,12 +281,12 @@ recenter_swarm_clusters = function(layout, dots, dotplot) {
 
 #' Get the height of a swarm dotplot layout
 #' @param layout <[dotplot_layout]> the dotplot layout
+#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
 #' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
-#' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
 #' @returns <scalar [numeric]> height of the dotplot
 #' @noRd
-get_swarm_height = function(layout, dots, dotplot) {
+get_swarm_height = function(layout, dotplot, dots) {
   height_minus_1_dot = max(abs(dotplot$dots$y)) * if (layout@side == "both") 2 else 1
   dot_height = dotplot$y_spacing / layout@stackratio
   height_minus_1_dot + dot_height
@@ -290,47 +297,48 @@ get_swarm_height = function(layout, dots, dotplot) {
 
 #' Find the x and y positions of dots in a dotplot
 #' @param layout <[dotplot_layout]> the dotplot layout algorithm
-#' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
 #' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
-#' @returns <[data.frame]> modified version of `d` with updated `x` and `y` columns
+#' @param dots <[data.frame]> dot positions with `x` and `y` columns, where `x`
+#' is always the data values and `y` is the vertical position assigned by the swarm algorithm.
+#' @returns <[data.frame]> modified version of `dots` with updated `x` and `y` columns
 #' @noRd
-place_dots = new_generic("place_dots", c("layout"), function(layout, d, dotplot) {
+place_dots = new_generic("place_dots", c("layout"), function(layout, dotplot) {
   S7_dispatch()
 })
 
 ## place_dots for bin, hex, weave, bar ---------------------------------------
 
-method(place_dots, layout_bin | layout_bar) = function(layout, d, dotplot) {
-  d$bin = dotplot$bins
-  d = place_dots_x_binned(layout, d, dotplot)
-  d = place_dots_y_binned(layout, d, dotplot)
-  d
+method(place_dots, layout_bin | layout_bar) = function(layout, dotplot) {
+  dots = layout@dots
+  dots$bin = dotplot$bins
+  dots = place_dots_x_binned(layout, dotplot, dots)
+  dots = place_dots_y_binned(layout, dotplot, dots)
+  dots
 }
 
-method(place_dots, layout_hex) = function(layout, d, dotplot) {
-  define_orientation_variables(layout@orientation)
+method(place_dots, layout_hex) = function(layout, dotplot) {
+  dots = place_dots(super(layout, layout_bin), dotplot)
 
-  d = place_dots(super(layout, layout_bin), d, dotplot)
-  d = ddply_(d, "bin", function(bin_df) {
+  dots = ddply_(dots, "bin", function(bin_df) {
     n_dots = nrow(bin_df)
     row_start_offset = get_row_start_offset(layout, dotplot, n_dots)
     # depending on whether this is an even or odd column, need to start the
     # x offset to the left or to the right
     x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
-    bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * dotplot$binwidth
+    bin_df$x = bin_df$x + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * dotplot$binwidth
     bin_df
   })
 
-  d
+  dots
 }
 
-method(place_dots, layout_weave) = function(layout, d, dotplot) {
-  define_orientation_variables(layout@orientation)
+method(place_dots, layout_weave) = function(layout, dotplot) {
+  dots = layout@dots
+  dots$bin = dotplot$bins
 
   # keep original x positions, but re-order within bins so that overlaps
   # across bins are less likely
-  d$bin = dotplot$bins
-  d = ddply_(d, "bin", function(bin_df) {
+  dots = ddply_(dots, "bin", function(bin_df) {
     seq_fun = if (layout@side == "both") seq_interleaved_centered else seq_interleaved
     bin_df = bin_df[seq_fun(nrow(bin_df)),]
     bin_df$row = seq_len(nrow(bin_df))
@@ -340,68 +348,64 @@ method(place_dots, layout_weave) = function(layout, d, dotplot) {
 
   if (layout@overlaps == "nudge") {
     # nudge values within each row to ensure there are no overlaps
-    d = ddply_(d, "row", function(row_df) {
-      row_df[[x]] = nudge_bins(row_df[[x]], dotplot$binwidth)
+    dots = ddply_(dots, "row", function(row_df) {
+      row_df$x = nudge_bins(row_df$x, dotplot$binwidth)
       row_df
     })
   }
 
-  d$row = NULL
+  dots$row = NULL
 
-  d = place_dots_y_binned(layout, d, dotplot)
+  dots = place_dots_y_binned(layout, dotplot, dots)
 
-  d
+  dots
 }
 
 #' Find the x positions of dots in binned layouts
 #' @param layout <[dotplot_layout]> dotplot layout
-#' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
 #' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
-#' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
+#' @param dots <[data.frame]> dot positions with at least `x`, `y`, `bin`, and `order` columns
+#' @returns <[data.frame]> modified version of `dots` with updated `x` column
 #' @noRd
-place_dots_x_binned = function(layout, d, dotplot) {
-  define_orientation_variables(layout@orientation)
-
+place_dots_x_binned = function(layout, dotplot, dots) {
   bin_midpoints = dotplot$bin_midpoints
   if (layout@overlaps == "nudge") {
     bin_midpoints = nudge_bins(bin_midpoints, dotplot$binwidth, dotplot$bin_counts)
   }
-  d[[x]] = bin_midpoints[dotplot$bins]
+  dots$x = bin_midpoints[dotplot$bins]
   # maintain original data order within each bin when finding y positions
-  d = d[order(d$bin, d$order), ]
-  d
+  dots = dots[order(dots$bin, dots$order), ]
+  dots
 }
 
 #' Find the y positions of dots in binned layouts
 #' @param layout <[dotplot_layout]> dotplot layout
-#' @param d <[data.frame]> dot positions with at least `x`, `y`, and `bin` columns
 #' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
-#' @returns <[data.frame]> modified version of `d` with updated `x` or `y` column depending on orientation
+#' @param dots <[data.frame]> dot positions with at least `x`, `y`, `bin`, and `order` columns
+#' @returns <[data.frame]> modified version of `dots` with updated `y` column
 #' @noRd
-place_dots_y_binned = function(layout, d, dotplot) {
-  define_orientation_variables(layout@orientation)
-
-  d = ddply_(d, "bin", function(bin_df) {
+place_dots_y_binned = function(layout, dotplot, dots) {
+  dots = ddply_(dots, "bin", function(bin_df) {
     y_offset = seq(
       0,
       dotplot$y_spacing * (nrow(bin_df) - 1),
       length.out = nrow(bin_df)
     )
     row_start_offset = get_row_start_offset(layout, dotplot, nrow(bin_df))
-    switch_side(layout@side, layout@orientation,
-      topright = {},
-      bottomleft = {
+    switch(layout@side,
+      top = {},
+      bottom = {
         y_offset = -y_offset
       },
       both = {
         y_offset = y_offset - dotplot$y_spacing * row_start_offset
       }
     )
-    bin_df[[y]] = bin_df[[y]] + dotplot$y_start + y_offset
+    bin_df$y = bin_df$y + dotplot$y_start + y_offset
 
     bin_df
   })
-  d
+  dots
 }
 
 #' Get the number of rows the start of a dot column will be offset by
@@ -426,12 +430,11 @@ get_row_start_offset = function(layout, dotplot, n_dots) {
 
 ## place_dots for swarm, swarm2 -------------------------------------------------
 
-method(place_dots, layout_swarm | layout_swarm2) = function(layout, d, dotplot) {
-  define_orientation_variables(layout@orientation)
-
-  d[[x]] = dotplot$dots$x
-  d[[y]] = d[[y]] + dotplot$y_start + dotplot$dots$y
-  d
+method(place_dots, layout_swarm | layout_swarm2) = function(layout, dotplot) {
+  dots = layout@dots
+  dots$x = dotplot$dots$x
+  dots$y = dots$y + dotplot$y_start + dotplot$dots$y
+  dots
 }
 
 
@@ -721,10 +724,10 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
 grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
-  df = grid_swarm_(xs, xsize, ysize, ygrid, side)
-  df = df[order(df$x), ]
-  df$y = df$y + y
-  df
+  dots = grid_swarm_(xs, xsize, ysize, ygrid, side)
+  dots = dots[order(dots$x), ]
+  dots$y = dots$y + y
+  dots
 }
 
 

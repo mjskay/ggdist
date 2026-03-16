@@ -4,7 +4,8 @@
 ###############################################################################
 
 automatic_bin = function(x, binwidth) {
-  layout_bin(x = x)@bin_method(x, binwidth)[c("bins", "bin_midpoints")]
+  dots = data.frame(x = x, y = rep(0, length(x)), order = seq_along(x), group = rep(1L, length(x)))
+  layout_bin(dots = dots)@bin_method(x, binwidth)[c("bins", "bin_midpoints")]
 }
 
 test_that("binning works on symmetric distributions", {

@@ -92,25 +92,20 @@ find_dotplot_binwidth = function(
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   span = waiver()
 ) {
-  side = match.arg(side)
+  # orientation doesn't matter for finding binwidth, so we can arbitrarily assign it to be "horizontal"
+  side = switch_side(match.arg(side), orientation = "horizontal",
+    topright = "top",
+    bottomleft = "bottom",
+    both = "both"
+  )
 
-  d = data_frame0(x = as.numeric(x), group = group)
-  d = d[order(d$x, d$group), ]
-  x = d$x
-  group = d$group
+  dots = setup_dots(x = as.numeric(x), y = 0, group = group)
+  x = dots$x
+  group = dots$group
 
-  # figure out a reasonable minimum number of bins based on histogram binning
-  # TODO: remove
-  # min_nbins = if (length(x) <= 1) {
-  #   1
-  # } else {
-  #   min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
-  # }
-  # min_nbins = 1
   layout = new_dotplot_layout(
     layout,
-    x,
-    group = group,
+    dots,
     maxheight = maxheight,
     heightratio = heightratio,
     stackratio = stackratio,
@@ -118,6 +113,8 @@ find_dotplot_binwidth = function(
     span = span
   )
 
+  # find the implementation of setup_dotplot for this layout type so
+  # we don't have to incur method lookup cost during each optimization step
   `setup_dotplot<layout>` = method(setup_dotplot, object = layout)
   setup_dotplot_ = function(...) `setup_dotplot<layout>`(layout, ...)
 

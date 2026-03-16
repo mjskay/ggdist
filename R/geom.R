@@ -95,46 +95,58 @@ globalVariables(c(
   "y", "ymin", "ymax", "yend", "y.range",
   "x", "xmin", "xmax", "xend", "x.range"
 ))
+switch_orientation = function(orientation, horizontal, vertical) {
+  switch(orientation,
+    y = ,
+    horizontal = horizontal,
+
+    x = ,
+    vertical = vertical,
+
+    stop0("Unknown orientation: ", deparse0(orientation))
+  )
+}
 define_orientation_variables = function(orientation) {
   f = parent.frame()
 
-  if (orientation == "horizontal" || orientation == "y") {
-    f$height = "height"
-    f$width. = "width"
+  switch_orientation(orientation,
+    horizontal = {
+      f$height = "height"
+      f$width. = "width"
 
-    f$y = "y"
-    f$ymin = "ymin"
-    f$ymax = "ymax"
-    f$yend = "yend"
-    f$y.range = "y.range"
-    f$ydist = "ydist"
+      f$y = "y"
+      f$ymin = "ymin"
+      f$ymax = "ymax"
+      f$yend = "yend"
+      f$y.range = "y.range"
+      f$ydist = "ydist"
 
-    f$x = "x"
-    f$xmin = "xmin"
-    f$xmax = "xmax"
-    f$xend = "xend"
-    f$x.range = "x.range"
-    f$xdist = "xdist"
-  } else if (orientation == "vertical" || orientation == "x") {
-    f$height = "width"
-    f$width. = "height"
+      f$x = "x"
+      f$xmin = "xmin"
+      f$xmax = "xmax"
+      f$xend = "xend"
+      f$x.range = "x.range"
+      f$xdist = "xdist"
+    },
+    vertical = {
+      f$height = "width"
+      f$width. = "height"
 
-    f$y = "x"
-    f$ymin = "xmin"
-    f$ymax = "xmax"
-    f$yend = "xend"
-    f$y.range = "x.range"
-    f$ydist = "xdist"
+      f$y = "x"
+      f$ymin = "xmin"
+      f$ymax = "xmax"
+      f$yend = "xend"
+      f$y.range = "x.range"
+      f$ydist = "xdist"
 
-    f$x = "y"
-    f$xmin = "ymin"
-    f$xmax = "ymax"
-    f$xend = "yend"
-    f$x.range = "y.range"
-    f$xdist = "ydist"
-  } else {
-    stop0("Unknown orientation: ", deparse0(orientation))
-  }
+      f$x = "y"
+      f$xmin = "ymin"
+      f$xmax = "ymax"
+      f$xend = "yend"
+      f$x.range = "y.range"
+      f$xdist = "ydist"
+    }
+  )
 }
 
 

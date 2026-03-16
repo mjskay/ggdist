@@ -884,8 +884,7 @@ geom_slabinterval = make_geom(GeomSlabinterval)
 # side and justification calculations -------------------------------------
 
 switch_side = function(side, orientation, topright, bottomleft, both) {
-  switch(orientation,
-    y = ,
+  switch_orientation(orientation,
     horizontal = switch(side,
       top = ,
       topright = ,
@@ -901,7 +900,6 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
 
       stop0("Unknown side: ", deparse0(side))
     ),
-    x = ,
     vertical = switch(side,
       right = ,
       topright = ,
@@ -916,8 +914,7 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
       both = both,
 
       stop0("Unknown side: ", deparse0(side))
-    ),
-    stop0("Unknown orientation: ", deparse0(orientation))
+    )
   )
 }
 

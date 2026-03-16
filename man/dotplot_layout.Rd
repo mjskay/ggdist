@@ -5,19 +5,17 @@
 \title{Base class for dotplot layouts created with \code{bin_dots()}}
 \usage{
 dotplot_layout(
-  x = numeric(0),
-  group = integer(0),
+  dots = data.frame(x = numeric(), y = numeric(), group = integer(), order = integer()),
   maxheight = Inf,
   heightratio = 1,
   stackratio = 1,
-  side = "topright",
-  orientation = "horizontal",
+  side = "top",
   overlaps = "nudge",
   span = 0
 )
 }
 \arguments{
-\item{x}{<\link{numeric}> Positions of dots.}
+\item{dots}{<\link{numeric}> Positions of dots.}
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
@@ -26,8 +24,6 @@ dotplot_layout(
 \item{stackratio}{<scalar \link{numeric}> stack ratio of the dotplot layout.}
 
 \item{side}{<\link[=character]{string}> side where the dotplot layout should be placed.}
-
-\item{orientation}{<\link[=character]{string}> orientation of the dotplot layout.}
 
 \item{overlaps}{<\link[=character]{string}> how to handle overlaps in the dotplot layout.}
 
@@ -42,4 +38,11 @@ Base class for dotplot layout algorithms used by \code{bin_dots()}.
 \details{
 A \code{dotplot_layout} defines how dots are arranged in a dotplot created with
 \code{bin_dots()}. Different layouts implement different dotplot layout algorithms.
+
+Layouts are always written assuming a horizontal orientation: \code{dots$x} contains
+data values and \code{dots$y} contains the height of each dot in a bin/swarm. Thus,
+the only valid values of \code{side} for this function are \code{"top"}, \code{"bottom"}, or \code{"both"}.
+Transformations from this canonical orientation to a vertical orientation are
+made (if needed) by \code{bin_dots()} depending on the \code{orientation} parameter passed
+to that function.
 }
