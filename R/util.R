@@ -310,14 +310,11 @@ flatten_array = function(x) {
 #' seq_interleaved(5) = c(1, 5, 2, 4, 3)
 #' @noRd
 seq_interleaved = function(n) {
-  if (n <= 2) {
-    i = seq_len(n)
-  } else {
-    i = numeric(n)
-    i[c(TRUE,FALSE)] = seq_len(ceiling(n/2))
-    i[c(FALSE,TRUE)] = seq(n, ceiling(n/2) + 1)
-  }
+  if (n <= 2) return(seq_len(n))
 
+  i = numeric(n)
+  i[c(TRUE,FALSE)] = seq_len(ceiling(n/2))
+  i[c(FALSE,TRUE)] = seq(n, ceiling(n/2) + 1)
   i
 }
 
@@ -325,6 +322,23 @@ seq_interleaved = function(n) {
 #' @noRd
 seq_interleaved_rev = function(n) {
   n + 1 - seq_interleaved(n)
+}
+
+#' `seq_interleaved()` but on a vector of group ids
+#' Creates a sequence of interleaved sequences in the order of the group ids
+#' `seq_interleaved(n)` is equivalent to `seq_interleaved_grouped(rep(1, n))`
+#' `seq_interleaved_rev(n)` is equivalent to `seq_interleaved_grouped(rep(1, n), rev = TRUE)`
+#' @noRd
+seq_interleaved_grouped = function(group_ids, rev = FALSE) {
+  groups = vec_locate_sorted_groups(group_ids)
+  groups$n = lengths(groups$loc)
+  groups$start_on_n = xor(c(FALSE, head(cumsum(groups$n), -1) %% 2 == 1), rev)
+  groups |>
+    pmap_(function(key, loc, n, start_on_n) {
+      i = if (start_on_n) seq_interleaved_rev(n) else seq_interleaved(n)
+      loc[i]
+    }) |>
+    unlist(recursive = FALSE)
 }
 
 #' a variant of seq_interleaved that proceeds outwards from the middle,
@@ -348,4 +362,39 @@ seq_interleaved_centered = function(n) {
     tail = seq_interleaved_rev(half_n) * 2
     c(head, tail)
   }
+}
+
+seq_interleaved_centered = function(n) {
+  if (n <= 2) return(seq_len(n))
+
+  i = seq_len(n)
+  bottom_i = i[c(FALSE, TRUE)]
+  top_i = i[c(TRUE, FALSE)]
+  out = c(
+    bottom_i[rev(seq_interleaved_rev(length(bottom_i)))],
+    top_i[seq_interleaved(length(top_i))]
+  )
+  # we reverse alternating stacks with even n (n %% 4 == 0 and n %% 4 == 2),
+  # because in a weave layout with side = "both" bins with even n must have
+  # an extra dot on one side of the center line, and we want to avoid always
+  # putting the extra dot on the same side
+  if (n %% 4 == 2) rev(out) else out
+}
+
+#' `seq_interleaved_centered()` but on a vector of group ids
+#' Creates a sequence of interleaved sequences in the order of the group ids,
+#' from the middle out.
+#' `seq_interleaved_centered(n)` is equivalent to `seq_interleaved_centered_grouped(rep(1, n))`
+seq_interleaved_centered_grouped = function(group_ids) {
+  i = order(group_ids)
+  n = length(group_ids)
+  if (n <= 2) return(i)
+
+  bottom_i = i[c(FALSE, TRUE)]
+  top_i = i[c(TRUE, FALSE)]
+  out = c(
+    bottom_i[rev(seq_interleaved_grouped(group_ids[bottom_i], rev = TRUE))],
+    top_i[seq_interleaved_grouped(group_ids[top_i])]
+  )
+  if (n %% 4 == 2) rev(out) else out
 }

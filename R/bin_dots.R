@@ -115,6 +115,7 @@ bin_dots = function(
 setup_dots = function(x, y, group = 1L, flip = FALSE) {
   dots = data_frame0(x = x, y = y, group = rep_len(xtfrm(group), length(x)))
   dots = flip_data(dots, flip)
+  stopifnot("All y values must be equal" = dots$y == dots$y[1])
 
   # Sort the x values, because they must be sorted for bin methods to maintain
   # the correct connection between input values and output bins.
@@ -339,8 +340,8 @@ method(place_dots, layout_weave) = function(layout, dotplot) {
   # keep original x positions, but re-order within bins so that overlaps
   # across bins are less likely
   dots = ddply_(dots, "bin", function(bin_df) {
-    seq_fun = if (layout@side == "both") seq_interleaved_centered else seq_interleaved
-    bin_df = bin_df[seq_fun(nrow(bin_df)),]
+    seq_fun = if (layout@side == "both") seq_interleaved_centered_grouped else seq_interleaved_grouped
+    bin_df = bin_df[seq_fun(bin_df$group),]
     bin_df$row = seq_len(nrow(bin_df))
     if (layout@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
     bin_df
@@ -356,7 +357,16 @@ method(place_dots, layout_weave) = function(layout, dotplot) {
 
   dots$row = NULL
 
-  dots = place_dots_y_binned(layout, dotplot, dots)
+  if (layout@side == "both") {
+    dots$y_orig = dots$y
+    dots = place_dots_y_binned(layout, dotplot, dots)
+    dots = dots[order(dots$x), ]
+    dots = recenter_swarm_clusters(layout, dotplot, dots)
+    dots$y = dots$y + dots$y_orig
+    dots$y_orig = NULL
+  } else {
+    dots = place_dots_y_binned(layout, dotplot, dots)
+  }
 
   dots
 }

@@ -2,6 +2,9 @@
 
 Major changes:
 
+* The `order` aesthetic is now supported for all layouts in `geom_dots()`.
+  Notably, `layout = "swarm"` and `layout = "weave"` now support creating
+  stacked swarm plots using something like `geom_dots(aes(fill = var, order = var, group = NA), side = "both", layout = "weave")`.
 * The `geom_dots()` family gains a `span` parameter. This parameter controls
   smoothing/spacing in various dotplot layouts. In bin-based layouts (`"bin"`,
   `"weave"`, `"hex"`), it implements moving-average dotplot smoothing as
@@ -10,13 +13,18 @@ Major changes:
   `geom_dots(span = 1.25)`). In the `"bar"` layout it controls the width
   of the bars relative to the data resolution (try
   `geom_dots(layout = "bar", span = 0.5)`).
+* Dotplot layout algorithms are now exposed via `layout_XXX()` automatic
+  partially-applied functions (actually S7 classes). For example,
+  `geom_dots(layout = "weave")` is now equivalent to
+  `geom_dots(layout = layout_weave())`, similar to other extension points in
+  `{ggdist}`. This allows finer customization of layout algorithms (or even
+  custom layout algorithms).
 
 Minor changes:
 
-* `geom_dots(layout = "swarm")` now re-centers contiguous clusters of dots
-  around their mean y position. This makes the swarm more visually symmetrical,
-  and particularly makes small, isolated clusters less likely to appear lopsided
-  (inspired by a question from @jbengler at the ggextenders talk).
+* `geom_dots()` with `layout = "swarm"` or `"weave"` now re-centers contiguous
+  clusters of dots around their mean y position. This makes the swarm more visually symmetrical, and particularly makes small, isolated clusters less likely to appear
+  lopsided (inspired by a question from @jbengler at the ggextenders talk).
 * Automatic binwidth detection in dots geometries now accounts for `layout` and
   `side` parameters to improve binwidth selection for non-default layouts, most
   notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to
