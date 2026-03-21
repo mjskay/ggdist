@@ -39,28 +39,28 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
 
 /// Signed size of a container (from C++20)
 template<class C>
-constexpr auto ssize(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
+constexpr auto ssize_(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
     using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
     return static_cast<signed_c_size_t>(c.size());
 }
 
 /// Upper bound for a value in a container
 template<class C>
-inline auto upper_bound(C& container, const double value) {
+inline auto upper_bound_(C& container, const double value) {
   return std::upper_bound(container.begin(), container.end(), value);
 }
 template<>
-inline auto upper_bound<std::multiset<double>>(std::multiset<double>& container, const double value) {
+inline auto upper_bound_<std::multiset<double>>(std::multiset<double>& container, const double value) {
   return container.upper_bound(value);
 }
 
 /// Lower bound for a value in a container
 template<class C>
-inline auto lower_bound(C& container, const double value) {
+inline auto lower_bound_(C& container, const double value) {
   return std::lower_bound(container.begin(), container.end(), value);
 }
 template<>
-inline auto lower_bound<std::multiset<double>>(std::multiset<double>& container, const double value) {
+inline auto lower_bound_<std::multiset<double>>(std::multiset<double>& container, const double value) {
   return container.lower_bound(value);
 }
 
@@ -98,7 +98,7 @@ Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const 
 /// @tparam C container type
 /// @param container object to iterate over
 template<bool reverse, typename C>
-inline auto cbegin(const C& container) {
+inline auto cbegin_(const C& container) {
   if constexpr (reverse) {
     return container.crbegin();
   } else {
@@ -111,7 +111,7 @@ inline auto cbegin(const C& container) {
 /// @tparam C container type
 /// @param container object to iterate over
 template<bool reverse, typename C>
-inline auto cend(const C& container) {
+inline auto cend_(const C& container) {
   if constexpr (reverse) {
     return container.crend();
   } else {
@@ -126,7 +126,7 @@ inline auto cend(const C& container) {
 /// @param container object to erase from
 /// @param it iterator pointing at element to erase
 template<bool reverse, typename C, typename It>
-inline auto erase(C& container, const It& it) -> It {
+inline auto erase_(C& container, const It& it) -> It {
   if constexpr (reverse) {
     return std::reverse_iterator(container.erase(std::next(it).base()));
   } else {
@@ -173,10 +173,10 @@ inline auto advance_to_at_least(
   const Candidates& candidates, const Iterator it, const double min_next_candidate
 ) {
   if constexpr (reverse) {
-    auto next_it = std::reverse_iterator(upper_bound(candidates, min_next_candidate));
+    auto next_it = std::reverse_iterator(upper_bound_(candidates, min_next_candidate));
     return std::max(it, next_it);
   } else {
-    auto next_it = lower_bound(candidates, min_next_candidate);
+    auto next_it = lower_bound_(candidates, min_next_candidate);
     return std::max(it, next_it);
   }
 }
@@ -210,7 +210,7 @@ inline auto place_candidate(
 
   // check +/- (ygrid - 1) rows from target_row to see if the candidate is overlapping an existing dot
   const auto first_row_i = std::max(0_z, target_row_i - (ygrid - 1_z));
-  const auto last_row_i = std::min(ssize(rows), target_row_i + ygrid);
+  const auto last_row_i = std::min(ssize_(rows), target_row_i + ygrid);
   // iterate in reverse because we will often have a quick exit by comparison to the
   // most recently placed dot
   for (auto i = last_row_i; i-- > first_row_i; ) {
@@ -221,7 +221,7 @@ inline auto place_candidate(
     const auto y_offset = rows_from_target / static_cast<double>(ygrid);
     const auto min_x_dist = std::sqrt(1 - y_offset * y_offset) * (xsize - eps);
 
-    auto loc = upper_bound(row, candidate);
+    auto loc = upper_bound_(row, candidate);
     if (loc != row.end()) {
       const auto min_val_gt_candidate = *loc;
       if (candidate > min_val_gt_candidate - min_x_dist) {
@@ -277,7 +277,7 @@ inline auto place_row(
   auto row_i = row_num;
   auto row_i_bottom = row_num;
   if (both) {
-    auto row_origin = ssize(rows) / 2_z;
+    auto row_origin = ssize_(rows) / 2_z;
     if (row_num == row_origin + 1_z) {
       rows.emplace_back();
       rows.emplace_front();
@@ -285,7 +285,7 @@ inline auto place_row(
     }
     row_i = row_origin + row_num;
     row_i_bottom = row_origin - row_num;
-  } else if (row_num == ssize(rows)) {
+  } else if (row_num == ssize_(rows)) {
     rows.emplace_back();
   }
 
@@ -294,7 +294,7 @@ inline auto place_row(
   auto min_next_candidate = reverse ? INF : -INF;
   auto min_next_candidate_top = min_next_candidate;
   auto min_next_candidate_bottom = min_next_candidate;
-  for (auto it = cbegin<reverse>(candidates); it != cend<reverse>(candidates); ) {
+  for (auto it = cbegin_<reverse>(candidates); it != cend_<reverse>(candidates); ) {
     auto candidate = *it;
 
     // attempt to place candidate, updating min_next_candidate_{top,bottom} so we can
@@ -304,7 +304,7 @@ inline auto place_row(
       place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top) ||
       (place_both && place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i_bottom, min_next_candidate_bottom))
     ) {
-      it = erase<reverse>(candidates, it);
+      it = erase_<reverse>(candidates, it);
     } else {
       ++it;
     }
@@ -383,9 +383,9 @@ SEXP grid_swarm_(
   auto out_y_arr = REAL(out_y_vec);
   if (both) {
     const auto row_height = ysize / static_cast<double>(ygrid);
-    const auto row_origin = ssize(rows) / 2_z;
+    const auto row_origin = ssize_(rows) / 2_z;
     auto i = 0_z;
-    for (auto row_num = 1_z; row_num <= ssize(rows); ++row_num) {
+    for (auto row_num = 1_z; row_num <= ssize_(rows); ++row_num) {
       // row_offset is 0, 1, -1, 2, -2, ...
       const auto row_offset = (row_num / 2_z) * (1_z - (row_num % 2_z) * 2_z);
       const auto& row = rows[row_origin + row_offset];
@@ -399,7 +399,7 @@ SEXP grid_swarm_(
   } else {
     const auto row_height = static_cast<double>(side) * ysize / static_cast<double>(ygrid);
     auto i = 0_z;
-    for (auto row_i = 0_z; row_i < ssize(rows); ++row_i) {
+    for (auto row_i = 0_z; row_i < ssize_(rows); ++row_i) {
       const auto& row = rows[row_i];
       const auto y_val = static_cast<double>(row_i) * row_height;
       for (const auto x_val : row) {
