@@ -21,6 +21,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compact_swarm_
+SEXP compact_swarm_(std::vector<Rcpp::NumericVector> xs, const double xsize, const double ysize, const int side);
+RcppExport SEXP _ggdist_compact_swarm_(SEXP xsSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< std::vector<Rcpp::NumericVector> >::type xs(xsSEXP);
+    Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
+    Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
+    Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
+    rcpp_result_gen = Rcpp::wrap(compact_swarm_(xs, xsize, ysize, side));
+    return rcpp_result_gen;
+END_RCPP
+}
 // grid_swarm_
 SEXP grid_swarm_(std::vector<std::deque<double>> xs, const double xsize, const double ysize, const std::ptrdiff_t ygrid, const int side);
 RcppExport SEXP _ggdist_grid_swarm_(SEXP xsSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
@@ -50,6 +63,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggdist_wilkinson_bin_to_right_", (DL_FUNC) &_ggdist_wilkinson_bin_to_right_, 2},
+    {"_ggdist_compact_swarm_", (DL_FUNC) &_ggdist_compact_swarm_, 4},
     {"_ggdist_grid_swarm_", (DL_FUNC) &_ggdist_grid_swarm_, 5},
     {"_ggdist_recenter_swarm_clusters_", (DL_FUNC) &_ggdist_recenter_swarm_clusters_, 3},
     {NULL, NULL, 0}

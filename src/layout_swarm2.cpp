@@ -302,7 +302,9 @@ SEXP grid_swarm_(
     while (
       place_rows<false>(ygrid, both, candidates, xsize, ygrid, rows, row_num) &&
       place_rows<true>(ygrid, both, candidates, xsize, ygrid, rows, row_num)
-    );
+    ) {
+      Rcpp::checkUserInterrupt();
+    }
   }
 
   // construct output data frame

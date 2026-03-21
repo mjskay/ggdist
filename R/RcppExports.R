@@ -5,6 +5,17 @@ wilkinson_bin_to_right_ <- function(x, width) {
     .Call(`_ggdist_wilkinson_bin_to_right_`, x, width)
 }
 
+#' Compact swarm layout
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+compact_swarm_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_`, xs, xsize, ysize, side)
+}
+
 #' Fractional grid swarm layout
 #' @param x <[numeric]> sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
