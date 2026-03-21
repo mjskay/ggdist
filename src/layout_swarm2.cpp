@@ -1,3 +1,5 @@
+#include "util.hpp"
+
 #include <Rcpp.h>
 #include <Rinternals.h>
 
@@ -5,91 +7,13 @@
 #include <cmath>
 #include <deque>
 #include <iterator>
-#include <limits>
 #include <set>
 #include <vector>
 
-// constants --------------------------------------------------------------------------
-
-constexpr auto INF = std::numeric_limits<double>::infinity();
-
-template<typename Numeric>
-constexpr auto relative_eps(const Numeric x) -> Numeric {
-  return 8 * x * std::numeric_limits<Numeric>::epsilon();
-}
-
-// literals ---------------------------------------------------------------------------
-
-/// Size diff literal for C++ arrays / vectors
-constexpr std::ptrdiff_t operator""_z(unsigned long long n) {
-  return n;
-}
-
-/// Size literal for C++ arrays / vectors
-constexpr std::size_t operator""_uz(unsigned long long n) {
-  return n;
-}
-
-/// Size literal for R vectors
-constexpr R_xlen_t operator""_rz(unsigned long long n) {
-  return n;
-}
-
-// container helpers ---------------------------------------------------------------------------
-
-/// Signed size of a container (from C++20)
-template<class C>
-constexpr auto ssize_(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
-    using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
-    return static_cast<signed_c_size_t>(c.size());
-}
-
-/// Upper bound for a value in a container
-template<class C>
-inline auto upper_bound_(C& container, const double value) {
-  return std::upper_bound(container.begin(), container.end(), value);
-}
-template<>
-inline auto upper_bound_<std::multiset<double>>(std::multiset<double>& container, const double value) {
-  return container.upper_bound(value);
-}
-
-/// Lower bound for a value in a container
-template<class C>
-inline auto lower_bound_(C& container, const double value) {
-  return std::lower_bound(container.begin(), container.end(), value);
-}
-template<>
-inline auto lower_bound_<std::multiset<double>>(std::multiset<double>& container, const double value) {
-  return container.lower_bound(value);
-}
-
-// wilkinson-esque methods ------------------------------------------------------------
-
-// [[Rcpp::export(rng = false)]]
-Rcpp::IntegerVector wilkinson_bin_to_right_(const Rcpp::NumericVector& x, const double width) {
-  const auto n = x.size();
-  const auto eps = relative_eps(width);
-
-  auto bins = Rcpp::IntegerVector(n);
-  auto current_bin = 1_rz;
-  auto first_x = x[0];
-
-  bins[0] = 1;
-  for (auto i = 1_rz; i < n; ++i) {
-    // This is equivalent to x[i] - first_x >= width but it accounts for machine precision.
-    // If we instead used `>=` directly some things that should be symmetric will not be
-    if (x[i] - first_x - width >= -eps) {
-      current_bin = current_bin + 1_rz;
-      first_x = x[i];
-    }
-    bins[i] = current_bin;
-  }
-
-  return bins;
-}
+namespace {
 
 // reversible sequence helpers ------------------------------------------------------
+
 // These helpers allow us to write the core grid swarm placement methods in a way that
 // is agnostic to whether we are iterating forward or backward through the candidate dots.
 
@@ -345,6 +269,11 @@ inline auto place_rows(
   return any_left;
 }
 
+}  // namespace
+
+
+// stratified swarm layout --------------------------------------------------------------
+
 //' Fractional grid swarm layout
 //' @param x <[numeric]> sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
@@ -416,6 +345,7 @@ SEXP grid_swarm_(
   );
 }
 
+
 // swarm cluster recentering ------------------------------------------------------------
 
 //' Re-center contiguous clusters around their mean y position so that
@@ -431,14 +361,14 @@ SEXP recenter_swarm_clusters_(
   Rcpp::NumericVector& y_vec,
   const double binwidth
 ) {
-  auto n = static_cast<std::size_t>(x_vec.size());
+  auto n = ssize_(x_vec);
   auto x = REAL(x_vec);
   auto y = REAL(y_vec);
   auto bin_sum = 0.0;
-  auto bin_start = 0_uz;
-  for (auto bin_end = 1_uz; bin_end <= n; ++bin_end) {
-    bin_sum += y[bin_end - 1_uz];
-    if (bin_end == n || x[bin_end] - x[bin_end - 1_uz] >= binwidth) {
+  auto bin_start = 0_z;
+  for (auto bin_end = 1_z; bin_end <= n; ++bin_end) {
+    bin_sum += y[bin_end - 1_z];
+    if (bin_end == n || x[bin_end] - x[bin_end - 1_z] >= binwidth) {
       auto mean = bin_sum / static_cast<double>(bin_end - bin_start);
       for (auto i = bin_start; i < bin_end; ++i) y[i] -= mean;
       bin_start = bin_end;
