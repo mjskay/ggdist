@@ -33,6 +33,14 @@ constexpr R_xlen_t operator""_rz(unsigned long long n) {
   return n;
 }
 
+// math ---------------------------------------------------------------------------
+
+/// square a value
+template<typename V>
+constexpr auto sq(const V x) -> V {
+  return x * x;
+}
+
 // container helpers ---------------------------------------------------------------------------
 
 /// Signed size of a container (from C++20)
@@ -40,6 +48,14 @@ template<typename C>
 constexpr auto ssize_(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
     using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
     return static_cast<signed_c_size_t>(c.size());
+}
+
+/// Signed sum of sizes of a container of containers
+template<typename C>
+constexpr auto sum_sizes(const C& container) -> std::ptrdiff_t {
+  std::ptrdiff_t n = 0_z;
+  for (const auto& x : container) n += x.size();
+  return n;
 }
 
 // reversible sequence helpers ------------------------------------------------------
@@ -175,8 +191,6 @@ inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
 
   auto m2 = lo + fib[k - 1];
   auto f2 = f(*m2);
-
-  auto min = lo;
 
   while (k > 1 && m1 < m2) {
     if (f1 < f2) {

@@ -2,6 +2,7 @@
 
 Major changes:
 
+* Revamped `"swarm"` layout in `geom_dots()`.
 * The `order` aesthetic is now supported for all layouts in `geom_dots()`.
   Notably, `layout = "swarm"` and `layout = "weave"` now support creating
   stacked swarm plots using something like `geom_dots(aes(fill = var, order = var, group = NA), side = "both", layout = "weave")`.

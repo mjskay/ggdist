@@ -196,8 +196,7 @@ SEXP grid_swarm_(
   const std::ptrdiff_t ygrid,
   const int side
 ) {
-  auto n_out = 0_uz;
-  for (const auto& x : xs) n_out += x.size();
+  const auto n_out = sum_sizes(xs);
   const auto both = side == 0;
 
   using Row = std::multiset<double>;
