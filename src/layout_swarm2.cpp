@@ -125,7 +125,7 @@ inline auto place_row(
   auto min_next_candidate = reverse ? INF : -INF;
   auto min_next_candidate_top = min_next_candidate;
   auto min_next_candidate_bottom = min_next_candidate;
-  for (auto it = cbegin_<reverse>(candidates); it != cend_<reverse>(candidates); ) {
+  for (auto it = begin_<reverse>(candidates); it != end_<reverse>(candidates); ) {
     auto candidate = *it;
 
     // attempt to place candidate, updating min_next_candidate_{top,bottom} so we can
@@ -135,7 +135,7 @@ inline auto place_row(
       place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i, min_next_candidate_top) ||
       (place_both && place_candidate<reverse>(candidate, xsize, ygrid, rows, row_i_bottom, min_next_candidate_bottom))
     ) {
-      it = erase_<reverse>(candidates, it);
+      it = erase_(candidates, it);
     } else {
       ++it;
     }
