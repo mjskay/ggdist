@@ -12,8 +12,52 @@ wilkinson_bin_to_right_ <- function(x, width) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-compact_swarm_ <- function(xs, xsize, ysize, side) {
-    .Call(`_ggdist_compact_swarm_`, xs, xsize, ysize, side)
+compact_swarm_naive_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_naive_`, xs, xsize, ysize, side)
+}
+
+#' Compact swarm layout
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+compact_swarm_prog_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_prog_`, xs, xsize, ysize, side)
+}
+
+#' Compact swarm layout
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+compact_swarm_prog_old_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_prog_old_`, xs, xsize, ysize, side)
+}
+
+#' Alternative compact swarm layout
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+compact_swarm_2_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_2_`, xs, xsize, ysize, side)
+}
+
+#' Alternative compact swarm layout
+#' @param x <[numeric]> sorted x values
+#' @param xsize <scalar [numeric]> horizontal spacing between dots
+#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @returns <[data.frame]> data frame with columns x and y giving the new positions
+#' @noRd
+compact_swarm_grid_ <- function(xs, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_grid_`, xs, xsize, ysize, side)
 }
 
 #' Fractional grid swarm layout

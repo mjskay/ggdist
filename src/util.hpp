@@ -145,3 +145,90 @@ inline auto advance_to_at_least(
     static_assert(false, "`it` must be an iterator for `container`");
   }
 }
+
+// search ------------------------------------------------------
+
+/// Find minimum of unimodal f(*x) in half-open interval [lo, hi) using Fibonnaci search
+/// @param lo iterator to lower limit of interval
+/// @param hi iterator to upper limit of interval
+/// @param f function taking values from the container `lo` and `hi` point to
+/// @returns a pair containing:
+///  - An iterator pointing to the location of the minimum value of `f` in the interval
+///  - The corresponding minimum value of `f`
+template<typename It, typename F>
+inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
+  auto n = hi - lo;
+  if (n <= 1) return {lo, f(*lo)};
+
+  // build Fibonacci numbers until >= n
+  // can do this the "simple" way because it's O(log(n)) and
+  // that's the same order as the search anyway
+  std::vector<decltype(n)> fib = {1, 1};
+  while (fib.back() < n) {
+    fib.push_back(fib[fib.size() - 1] + fib[fib.size() - 2]);
+  }
+  int k = fib.size() - 1;
+
+  // initial probe points
+  auto m1 = lo + fib[k - 2];
+  auto f1 = f(*m1);
+
+  auto m2 = lo + fib[k - 1];
+  auto f2 = f(*m2);
+
+  auto min = lo;
+
+  while (k > 1 && m1 < m2) {
+    if (f1 < f2) {
+      // minimum is in [lo, m2):
+      //    [lo,     m1, m2, hi)
+      //     vv      vv  vv
+      // -> [lo, m1, m2, hi)
+      //         ^^
+      //         new
+      hi = m2;
+
+      // reuse m1 as m2
+      m2 = m1;
+      f2 = f1;
+
+      // compute new m1
+      --k;
+      m1 = lo + fib[k - 2];
+      f1 = f(*m1);
+    } else {
+      // minimum is in [m1, hi):
+      //    [lo, m1, m2,     hi)
+      //         vv  vv      vv
+      // ->     [lo, m1, m2, hi)
+      //                 ^^
+      //                 new
+      lo = m1;
+
+      // reuse m2 as m1
+      m1 = m2;
+      f1 = f2;
+
+      // compute new m2
+      --k;
+      // need min here because if the upper end is not exactly
+      // a Fibonacci number we can run over the bounds
+      m2 = std::min(lo + fib[k - 1], hi - 1);
+      f2 = f(*m2);
+    }
+  }
+
+  // final small scan (<= 3 elements)
+  auto best = lo;
+  auto f_best = f(*best);
+
+  for (auto it = lo + 1; it != hi; ++it) {
+      auto f_it = f(*it);
+      if (f_it < f_best) {
+          best = it;
+          f_best = f_it;
+      }
+  }
+
+  return {best, f_best};
+}
