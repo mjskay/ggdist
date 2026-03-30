@@ -204,7 +204,8 @@ compute_slab_sample = function(
   d = density(
     x, n = n, adjust = adjust, trim = trim,
     breaks = breaks, align = align, outline_bars = outline_bars,
-    weights = weights
+    weights = weights,
+    bounds = limits  # <-- Ce qu'on a rajouté
   )
   slab_df = data_frame0(
     .input = trans$inverse(d$x),
@@ -212,6 +213,7 @@ compute_slab_sample = function(
     cdf = d$cdf %||% weighted_ecdf(x, weights = weights)(d$x)
   )
 
+  #blabla
   # extend x values to the range of the plot. To do that we have to include
   # x values requested from the original `input` if they are outside the
   # range of the slab

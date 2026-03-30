@@ -6,6 +6,7 @@
 suppressWarnings(suppressPackageStartupMessages({
   library(dplyr)
   library(tidyr)
+  library(ggplot2)
 }))
 
 
@@ -413,6 +414,116 @@ test_that("logical conditions at bin edges on histograms work", {
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 })
 
+# tests for the `limits` argument in stat_slab / stat_slabinterval
+# Issue #259: limits argument was previously silently ignored for sample data
+###############################################################################
+
+# tests for the `limits` argument in stat_slab / stat_slabinterval
+# Issue #259: limits argument was previously silently ignored for sample data
+###############################################################################
+
+test_that("limits clips sample slab to both bounds", {
+  set.seed(1234)
+  df = data.frame(x = rgamma(500, shape = 2, rate = 1))  # support (0, +Inf)
+
+  # Ajout de trim = TRUE pour autoriser le calcul malgré les points hors bornes
+  p = ggplot(df, aes(x = x)) +
+    stat_slab(limits = c(0.5, 3), trim = TRUE)
+
+  slab_x = layer_data(p)$x
+
+  expect_true(
+    min(slab_x, na.rm = TRUE) >= 0.5,
+    label = "lower bound: no slab point should be below 0.5"
+  )
+  expect_true(
+    max(slab_x, na.rm = TRUE) <= 3,
+    label = "upper bound: no slab point should be above 3"
+  )
+})
+
+test_that("limits clips only lower bound when upper is NA", {
+  set.seed(1234)
+  df = data.frame(x = rnorm(500, mean = 5, sd = 1))
+
+  p = ggplot(df, aes(x = x)) +
+    stat_slab(limits = c(4, NA), trim = TRUE)
+
+  slab_x = layer_data(p)$x
+
+  expect_true(
+    min(slab_x, na.rm = TRUE) >= 4,
+    label = "lower bound respected when upper is NA"
+  )
+  # upper should be unconstrained
+  expect_true(
+    max(slab_x, na.rm = TRUE) > 4,
+    label = "upper end of slab is not clipped when limits[[2]] is NA"
+  )
+})
+
+test_that("limits clips only upper bound when lower is NA", {
+  set.seed(1234)
+  df = data.frame(x = rnorm(500, mean = 5, sd = 1))
+
+  p = ggplot(df, aes(x = x)) +
+    stat_slab(limits = c(NA, 6), trim = TRUE)
+
+  slab_x = layer_data(p)$x
+
+  expect_true(
+    max(slab_x, na.rm = TRUE) <= 6,
+    label = "upper bound respected when lower is NA"
+  )
+  # lower should be unconstrained
+  expect_true(
+    min(slab_x, na.rm = TRUE) < 6,
+    label = "lower end of slab is not clipped when limits[[1]] is NA"
+  )
+})
+
+test_that("limits = c(NA, NA) leaves slab unchanged", {
+  set.seed(1234)
+  df = data.frame(x = rnorm(200))
+
+  p_no_limits  = ggplot(df, aes(x = x)) + stat_slab()
+  p_na_limits  = ggplot(df, aes(x = x)) + stat_slab(limits = c(NA, NA))
+
+  expect_equal(
+    layer_data(p_no_limits)$x,
+    layer_data(p_na_limits)$x,
+    label = "explicit c(NA, NA) is identical to not specifying limits"
+  )
+})
+
+test_that("limits works on stat_halfeye with sample data", {
+  set.seed(42)
+  df = data.frame(x = rgamma(300, shape = 3, rate = 1))
+
+  p = ggplot(df, aes(x = x)) +
+    stat_halfeye(limits = c(0, 4), trim = TRUE)
+
+  slab_data = layer_data(p)
+  slab_x = slab_data$x[slab_data$datatype == "slab"]
+
+  expect_true(min(slab_x, na.rm = TRUE) >= 0)
+  expect_true(max(slab_x, na.rm = TRUE) <= 4)
+})
+
+test_that("limits works on stat_eye with sample data", {
+  set.seed(42)
+  df = data.frame(x = rgamma(300, shape = 3, rate = 1))
+
+  p = ggplot(df, aes(x = x)) +
+    stat_eye(limits = c(1, 5), trim = TRUE)
+
+  slab_data = layer_data(p)
+  slab_x = slab_data$x[slab_data$datatype == "slab"]
+
+  expect_true(min(slab_x, na.rm = TRUE) >= 1)
+  expect_true(max(slab_x, na.rm = TRUE) <= 5)
+})
+
 
 # weights -----------------------------------------------------------------
 
@@ -439,7 +550,6 @@ test_that("sample weights work", {
   ld_interval_mean = layer_data(p + stat_pointinterval(.width = .5, point_interval = mean_qi))
   expect_equal(ld_interval_mean$x, 2/3)
 })
-
 
 # deprecated params -------------------------------------------------------
 

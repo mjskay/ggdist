@@ -171,3 +171,4 @@ write_svg_with_gradient = function(plot, file, title = "") {
     plot + ggtitle(title) + theme_test(base_family = "Liberation Sans")
   )
 }
+
