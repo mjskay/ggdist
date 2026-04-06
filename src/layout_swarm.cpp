@@ -63,8 +63,8 @@ class compact_swarm {
   const std::ptrdiff_t n;
   Rcpp::NumericVector out_x_vec;
   Rcpp::NumericVector out_y_vec;
-  double* out_x_arr = REAL(out_x_vec);
-  double* out_y_arr = REAL(out_y_vec);
+  double* out_x_arr;
+  double* out_y_arr;
   std::ptrdiff_t i;
 
   /// "Frontier" of placed dots that new dots may collide with.
@@ -152,10 +152,10 @@ class compact_swarm {
   /// Finds the `x` value in the region `xs` with the lowest possible `y` position.
   /// @param x_1 lower limit of region to search
   /// @param x_2 upper limit of region to search
-  /// @returns <x_i, y> Iterator to the lowest `x` value in `values` and the `y` position
+  /// @returns <x_i, y> Iterator `x_i` to the lowest `x` value in `values` and the `y` position
   /// it would be placed at.
-  auto min_y_placement(ValueIt x_1, ValueIt x_2) -> std::pair<ValueIt, double> {
-    return unimodal_min(x_1, x_2, [this](double x) {
+  auto min_y_placement(const ValueIt x_1, const ValueIt x_2) -> std::pair<ValueIt, double> {
+    return unimodal_min(x_1, x_2, [this](const double x) {
       return min_y_placement(x);
     });
   }
@@ -163,7 +163,7 @@ class compact_swarm {
   /// Place a dot
   /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `min_y`
   /// accordingly.
-  /// @param x_i x position to place dot at
+  /// @param x x position to place dot at
   /// @param y y position to place dot at
   void place_dot(const double x, const double y) {
     // Rcpp::Rcout << "  PLACING \t[" << (x_i - values.begin()) << "] =\t" << *x_i << "\t" << y << std::endl;
@@ -181,10 +181,10 @@ class compact_swarm {
   /// Enqueue the region [x_1, x_2) for future search.
   /// @param x_1 lower limit of region
   /// @param x_2 upper limit of region
-  /// @param y current best guess of `y` position of lowest dot in the region (
-  /// does not have to be correct, but must be less than the ultimate position
-  /// of the lowest dot).
-  void queue_region(ValueIt x_1, ValueIt x_2, double y) {
+  /// @param y current best guess of `y` position of lowest dot in the region
+  /// (does not have to be correct, but must be less than or equal to what
+  /// ends up being the actual position of the lowest dot in this region).
+  void queue_region(const ValueIt x_1, const ValueIt x_2, const double y) {
     if (x_2 - x_1 <= 0) return;
     // Rcpp::Rcout << "  Queuing \t[" << (x_1 - values.begin()) << ",\t" << (x_2 - values.begin()) << ")\t" << y << std::endl;
     // Rcpp::Rcout << "          \t[" << *x_1 << "..." << std::endl;
@@ -194,16 +194,16 @@ class compact_swarm {
   /// Produces a guess for lower limit of `y` before enqueuing.
   /// @param x_1 lower limit of region
   /// @param x_2 upper limit of region
-  void queue_region(ValueIt x_1, ValueIt x_2) {
+  void queue_region(const ValueIt x_1, const ValueIt x_2) {
     if (x_2 - x_1 <= 0) return;
-    auto [_, y] = min_y_placement(x_1, x_2);
+    const auto [_, y] = min_y_placement(x_1, x_2);
     queue_region(x_1, x_2, y);
   }
 
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
-    for (auto& x : xs) {
+    for (const auto& x : xs) {
       values.clear();
       decltype(queue){}.swap(queue);  // queue.clear();
       min_y = 0.0;
@@ -221,7 +221,7 @@ class compact_swarm {
         auto x_2 = advance_to_at_least(values, x_1, *x_1 + 1.0);
         // we use 0.0 here because the next dot hasn't been placed yet and will
         // likely change the lowest position of this region, so spending the time
-        // guessing now isn't worth it as it will likely be wrong need to immediately
+        // guessing now isn't worth it as it will likely be wrong and need to immediately
         // be recalculated (which putting in 0.0 will cause to happen anyway).
         queue_region(x_1 + 1, x_2, 0.0);
 
@@ -230,19 +230,19 @@ class compact_swarm {
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
       while (!queue.empty()) {
-        auto [x_1, x_2, y] = queue.top();
+        const auto [x_1, x_2, y] = queue.top();
         queue.pop();
         // Rcpp::Rcout << "Checking  \t[" << (x_1 - values.begin()) << ",\t" << (x_2 - values.begin()) << ")" << std::endl;
         // Rcpp::Rcout << "          \t[" << *x_1 << "..." << std::endl;
 
-        auto [x_m, y_new] = min_y_placement(x_1, x_2);
+        const auto [x_m, y_new] = min_y_placement(x_1, x_2);
         if (y_new > y) {
           // region is no longer the lowest region, put it back in the queue at its new position
           // Rcpp::Rcout << "  Re-queuing: \t" << y << " -> \t" << y_new << std::endl;
           queue_region(x_1, x_2, y_new);
         } else {
-          // region is still where we thought it was => it is the lowest region
-          place_dot(*x_m, y);
+          // lowest dot in region is still where we thought it was => it is the lowest region
+          place_dot(*x_m, y_new);
 
           // enqueue [x_1, x_m) and (x_m, x_2) for future search
           queue_region(x_1, x_m);

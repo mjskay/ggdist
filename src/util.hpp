@@ -175,15 +175,16 @@ template<typename It, typename F>
 inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
   auto n = hi - lo;
   if (n <= 1) return {lo, f(*lo)};
+  if (*lo == *(hi - 1)) return {lo, f(*lo)};
 
   // build Fibonacci numbers until >= n
   // can do this the "simple" way because it's O(log(n)) and
   // that's the same order as the search anyway
-  std::vector<decltype(n)> fib = {1, 1};
+  auto fib = std::vector<decltype(n)>{1, 1};
   while (fib.back() < n) {
     fib.push_back(fib[fib.size() - 1] + fib[fib.size() - 2]);
   }
-  int k = fib.size() - 1;
+  auto k = fib.size() - 1;
 
   // initial probe points
   auto m1 = lo + fib[k - 2];
@@ -237,11 +238,11 @@ inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
   auto f_best = f(*best);
 
   for (auto it = lo + 1; it != hi; ++it) {
-      auto f_it = f(*it);
-      if (f_it < f_best) {
-          best = it;
-          f_best = f_it;
-      }
+    auto f_it = f(*it);
+    if (f_it < f_best) {
+      best = it;
+      f_best = f_it;
+    }
   }
 
   return {best, f_best};
