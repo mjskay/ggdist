@@ -1,0 +1,93 @@
+---
+title: "ggdist benchmarks"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+    math_method: mathjax
+vignette: >
+  %\VignetteIndexEntry{Lineribbon stats and geoms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, child="children/chunk_options.txt"}
+```
+
+## ggdist Benchmarks
+
+This article describes some benchmarks of ggdist algorithms.
+
+## Setup
+
+The following libraries are required to run this vignette:
+
+```{r setup, message = FALSE, warning = FALSE}
+library(rlang)
+library(distributional)
+library(ggdist)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+
+theme_set(theme_ggdist())
+```
+
+```{r hidden_options, include=FALSE}
+.old_options = options(width = 100)
+```
+
+## Dotplot layout benchmarks
+
+```{r}
+layouts = list(
+  bin = layout_bin(),
+  weave = layout_weave(),
+  beeswarm = layout_swarm(),
+  gridswarm_3 = layout_swarm2(grid = 3),
+  gridswarm_inf = layout_swarm2(grid = Inf)
+)
+
+dists = list(
+  normal = rnorm,
+  uniform = runif,
+  exponential = rexp,
+  constant = \(n) rep(1, n)
+)
+
+df = bench::press(
+  layout = names(layouts),
+  n = c(10, 100, 1000, 2000, 4000, 6000, 8000),
+  dist = names(dists),
+  {
+    x = dists[[dist]](n)
+    bench::mark(
+      find_dotplot_binwidth(x, 1, layout = layouts[[layout]]),
+      min_iterations = 20
+    )
+  }
+)
+```
+
+
+```{r}
+df |>
+  median_qi(time) |>
+  mutate(layout = forcats::fct_reorder(layout, -time)) |>
+  ggplot(aes(x = n, y = time)) +
+  geom_lineribbon(
+    aes(
+      color = layout,
+      fill = after_scale(alpha(color, 0.25)),
+      ymin = .lower,
+      ymax = .upper
+    )
+  ) +
+  geom_point() +
+  bench::scale_y_bench_time(base = NULL) +
+  # coord_cartesian(ylim = c(0, 1)) +
+  # scale_y_log10() +
+  facet_wrap(~ dist)
+```

@@ -34,3 +34,4 @@
 ^CRAN-SUBMISSION$
 ^compile_flags.txt$
 ^\.clang-format$
+^vignettes/articles$
