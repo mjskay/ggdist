@@ -164,36 +164,43 @@ inline auto advance_to_at_least(
 
 // search ------------------------------------------------------
 
-/// Find minimum of unimodal f(*x) in half-open interval [lo, hi) using Fibonnaci search
-/// @param lo iterator to lower limit of interval
-/// @param hi iterator to upper limit of interval
-/// @param f function taking values from the container `lo` and `hi` point to
+/// Find minimum of unimodal f(*x) for x in the sequence [lo, hi).
+/// Uses Fibonnaci search to avoid re-evaluating f() on already-checked values
+/// when possible.
+/// @param lo iterator to lower limit of interval on a container of sorted values.
+/// @param hi iterator to upper limit of interval on a container of sorted values.
+/// @param f function to be minimized, taking values from the container `lo` and `hi`
 /// @returns a pair containing:
 ///  - An iterator pointing to the location of the minimum value of `f` in the interval
 ///  - The corresponding minimum value of `f`
 template<typename It, typename F>
-inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
-  auto n = hi - lo;
-  if (n <= 1) return {lo, f(*lo)};
-  if (*lo == *(hi - 1)) return {lo, f(*lo)};
+inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<It, decltype(f(*lo))> {
+  const auto n = hi - lo;
+  if (n <= 1_z) return {lo, f(*lo)};
+  if (*lo == *(hi - 1_z)) return {lo, f(*lo)};
 
-  // build Fibonacci numbers until >= n
-  // can do this the "simple" way because it's O(log(n)) and
-  // that's the same order as the search anyway
-  auto fib = std::vector<decltype(n)>{1, 1};
-  while (fib.back() < n) {
-    fib.push_back(fib[fib.size() - 1] + fib[fib.size() - 2]);
+  // Find the smallest Fibonacci number <= n -> fib_k
+  // We cache the Fibonacci numbers to save recalculating on repeated calls
+  static auto fib = std::vector<decltype(hi - lo)>{1_z, 1_z};
+  decltype(fib.cend()) fib_k;
+  if (fib.back() < n) {
+    do {
+      fib.push_back(*(fib.cend() - 1_z) + *(fib.cend() - 2_z));
+    } while (fib.back() < n);
+    fib_k = fib.cend() - 1_z;
+  } else {
+    fib_k = std::lower_bound(fib.cbegin(), fib.cend(), n);
   }
-  auto k = fib.size() - 1;
 
   // initial probe points
-  auto m1 = lo + fib[k - 2];
+  auto m1 = lo + *(fib_k - 2_z) * (hi - lo) / *fib_k;
   auto f1 = f(*m1);
 
-  auto m2 = lo + fib[k - 1];
+  auto m2 = lo + *(fib_k - 1_z) * (hi - lo) / *fib_k;
   auto f2 = f(*m2);
 
-  while (k > 1 && m1 < m2) {
+  const auto fib_3 = fib.cbegin() + 2_z;
+  while (fib_k > fib_3 && m1 < m2) {
     if (f1 < f2) {
       // minimum is in [lo, m2):
       //    [lo,     m1, m2, hi)
@@ -208,9 +215,9 @@ inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
       f2 = f1;
 
       // compute new m1
-      --k;
-      m1 = lo + fib[k - 2];
-      f1 = f(*m1);
+      --fib_k;
+      m1 = std::min(m2, lo + *(fib_k - 2_z) * (hi - lo) / *fib_k);
+      if (m1 != m2) f1 = f(*m1);
     } else {
       // minimum is in [m1, hi):
       //    [lo, m1, m2,     hi)
@@ -225,24 +232,43 @@ inline auto unimodal_min(It lo, It hi, F f) -> std::pair<It, decltype(f(*lo))> {
       f1 = f2;
 
       // compute new m2
-      --k;
-      // need min here because if the upper end is not exactly
-      // a Fibonacci number we can run over the bounds
-      m2 = std::min(lo + fib[k - 1], hi - 1);
-      f2 = f(*m2);
+      --fib_k;
+      m2 = std::max(m1, lo + *(fib_k - 1_z) * (hi - lo) / *fib_k);
+      if (m1 != m2) f2 = f(*m2);
+    }
+
+    // compensate for collisions caused by integer division when
+    // n is not exactly a Fibonacci number
+    if (m1 == m2) {
+      if (hi - m2 > 1_z) {
+        ++m2;
+        f2 = f(*m2);
+      } else if (m1 - lo > 1_z) {
+        --m1;
+        f1 = f(*m1);
+      }
     }
   }
 
-  // final small scan (<= 3 elements)
+  // We should always converge to something like:
+  //             [   lo,    m1,    m2,    hi)
+  //     == lo + [    0,     1,     1,     2)
+  // or:
+  //             [   lo,    m1,    m2,    hi)
+  //     == lo + [    0,     1,     2,     3)
+  // This way we know that the minimum is in either lo, m1, or
+  // m2, and that f(*m1) and f(*m2) have already been evaluated
+  assert(m1 - lo <= 1_z && m2 - m1 <= 1_z && hi - m2 <= 1_z);
+
   auto best = lo;
   auto f_best = f(*best);
-
-  for (auto it = lo + 1; it != hi; ++it) {
-    auto f_it = f(*it);
-    if (f_it < f_best) {
-      best = it;
-      f_best = f_it;
-    }
+  if (f1 < f_best) {
+    best = m1;
+    f_best = f1;
+  }
+  if (f2 < f_best) {
+    best = m2;
+    f_best = f2;
   }
 
   return {best, f_best};
