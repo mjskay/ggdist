@@ -77,7 +77,7 @@ class compact_swarm {
 
   /// Values we are currently placing, normalized so that a distance
   /// of 1 is one dot diameter (`xsize`).
-  std::deque<double> values = {};
+  std::vector<double> values = {};
   using ValueIt = decltype(values)::const_iterator;
 
   /// Regions to search for values to place.
