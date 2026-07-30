@@ -7,6 +7,12 @@ Minor changes:
   and particularly makes small, isolated clusters less likely to appear lopsided
   (inspired by a question from @jbengler at the ggextenders talk).
 
+Documentation:
+
+* `vignette("slabinterval")` now says what the point and the intervals in a
+  half-eye plot are by default, how `.width` relates to the quantiles at the
+  ends of a quantile interval, and how the result differs from a boxplot (#257).
+
 Internal changes:
 
 * Ensure duplicate points in paths are removed before drawing (e.g. when slabs

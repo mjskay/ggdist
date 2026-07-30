@@ -353,6 +353,23 @@ df %>%
   ggtitle("stat_halfeye() (or stat_slabinterval())")
 ```
 
+#### What the point and the intervals are by default
+
+The point is the **median** and the two line widths are the **66% and 95% quantile intervals**. Those come from two arguments shared by the whole slabinterval family: `point_interval = median_qi` selects the point summary and the interval estimator, and `.width = c(.66, .95)` selects how much probability mass each interval covers. Passing them explicitly gives the same plot as the defaults:
+
+```{r halfeye_defaults, fig.width = tiny_height, fig.height = tiny_height}
+df %>%
+  ggplot(aes(y = group, x = value)) +
+  stat_halfeye(point_interval = median_qi, .width = c(.66, .95)) +
+  ggtitle("the defaults, written out")
+```
+
+Intervals are specified by the mass they contain rather than by the quantiles at their ends, because that definition also covers estimators whose intervals are not equi-tailed and may not even be contiguous, such as the highest-density interval `median_hdi()`. For quantile intervals you can convert between the two: an interval covering mass \(w\) is the equi-tailed interval running from quantile \((1 - w)/2\) to \((1 + w)/2\), so the 95% quantile interval ends at the 2.5th and 97.5th percentiles, and the 66% interval ends at the 17th and 83rd.
+
+This is not the same summary a boxplot draws. A boxplot's box is the interquartile range, which in these terms is the 50% quantile interval, and its whiskers extend to the most extreme observation within 1.5 IQR of the box, which is a rule about the observed data rather than a fixed amount of probability mass. So the box is narrower than the inner interval here, and the whiskers have no exact `.width` equivalent.
+
+Other point summaries and interval estimators are available, including `mean_qi()`, `mode_hdi()`, and `median_hdci()`; see `point_interval()` for the full set.
+
 We can use the `side` parameter to more finely control where the slab (in this case, the density) is drawn;
 `stat_eye()` is also a shortcut for `stat_slabinterval(side = "both")`, as it creates "eye" plots:
 
