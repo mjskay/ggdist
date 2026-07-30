@@ -28,6 +28,22 @@ test_that("density_bounded works", {
   expect_error(density_bounded(c(1, 2, NA)), "must not contain missing \\(NA\\) values")
 })
 
+test_that("density_bounded does not return NAs when a bound is an extremum of x", {
+  # when a bound is equal to the corresponding extremum of x, floating point error
+  # in the construction of the internal grid can leave it a few ulp short of that
+  # bound, putting the endpoint of the trimmed grid outside the interpolation
+  # range and yielding NA (#269)
+  x = c(0.5, 1, 1.5, 2)
+  bounds = c(0.1, 2)
+
+  d = density_bounded(x, bounds = bounds)
+  expect_false(anyNA(d$y))
+  expect_equal(max(d$x), max(x))
+
+  # the NA made downstream summaries fail
+  expect_no_error(hdi(x, density = density_bounded(bounds = bounds)))
+})
+
 test_that("density_unbounded works", {
   x = 1:10
 
