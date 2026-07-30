@@ -162,7 +162,12 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
     # to each point in the weighted sample (rounding up). This is the number of
     # replicates of that point we will use to represent that point to create
     # flat regions in the approximate inverse CDF.
-    n_rep = ceiling(weights * n)
+    # the tolerance keeps weights that are exact multiples of 1/n from being
+    # rounded up to the next integer: normalizing counts from a summarised
+    # sample can leave weights * n a few ulp above a whole number, which would
+    # add a spurious replicate and break the correspondence with quantile()
+    # that `n` is meant to provide
+    n_rep = pmax(1, ceiling(weights * n * (1 - sqrt(.Machine$double.eps))))
     x = rep.int(x, n_rep)
     f_x = rep.int(weights / n_rep, n_rep)
   }

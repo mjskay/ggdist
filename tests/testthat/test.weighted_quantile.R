@@ -27,6 +27,23 @@ test_that("weighted_quantile is equivalent to quantile on weighted samples", {
   }
 })
 
+test_that("weighted_quantile with n is robust to rounding in the normalized weights", {
+  # normalizing counts from a summarised sample can leave weights * n a few ulp
+  # above a whole number (here 7/25 * 25), which rounded up to a spurious
+  # replicate and broke the correspondence with quantile() (#267)
+  x = rep(1:3, times = c(10, 8, 7))
+  xw = 1:3
+  w = c(10, 8, 7)
+
+  p = ppoints(20, a = 1)
+  for (type in 1:9) {
+    expect_equal(
+      weighted_quantile(xw, p, weights = w, n = "sum", type = !!type),
+      quantile(x, p, type = !!type)
+    )
+  }
+})
+
 test_that("na.rm works", {
   expect_equal(
     weighted_quantile(c(1:4, NA), weights = c(4:2, NA, 1), ppoints(10), na.rm = TRUE),

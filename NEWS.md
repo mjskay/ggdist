@@ -18,6 +18,10 @@ Internal changes:
 
 Bug fixes:
 
+* `weighted_quantile()` with an effective sample size (`n`) is no longer thrown
+  off by floating point error in the normalized weights, which could add a
+  spurious replicate and break the correspondence with `quantile()` that `n` is
+  meant to provide (#267).
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
   determine order from the `order` aesthetic to be robust to infinities 
   (#255; thanks @damonbayer).
