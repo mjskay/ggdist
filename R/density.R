@@ -246,7 +246,11 @@ density_bounded = auto_partial(name = "density_bounded", function(
   range_x = range(x)
   if (isTRUE(trim) && (bounds[[1]] < range_x[[1]] || bounds[[2]] > range_x[[2]])) {
     x_trimmed = seq.int(range_x[[1]], range_x[[2]], length.out = n)
-    f = approx(d$x, f, x_trimmed)$y
+    # rule = 2 because when a bound is equal to the corresponding extremum of x,
+    # floating point error in the construction of d$x can leave it short of that
+    # bound by a few ulp, putting the endpoint of x_trimmed just outside the
+    # interpolation range and yielding NA (#269)
+    f = approx(d$x, f, x_trimmed, rule = 2)$y
     d$x = x_trimmed
   }
 

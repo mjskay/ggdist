@@ -18,6 +18,9 @@ Internal changes:
 
 Bug fixes:
 
+* `density_bounded()` no longer returns an `NA` density value when a bound is
+  equal to the corresponding extremum of `x`, which made downstream summaries
+  like `hdi()` and `mode_hdi()` fail (#269; reported by @ASKurz).
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
   determine order from the `order` aesthetic to be robust to infinities 
   (#255; thanks @damonbayer).
