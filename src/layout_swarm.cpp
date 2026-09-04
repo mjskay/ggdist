@@ -8,6 +8,7 @@
 #include <functional>
 #include <queue>
 #include <set>
+#include <tuple>
 #include <vector>
 
 // compact swarm helpers ------------------------------------------------------
@@ -55,11 +56,17 @@ struct x_is_less : std::less<dot> {
 /// region with the lowest unplaced dot, then recursively add the contiguous unplaced regions
 /// above and below each newly-placed dot back to the queue.
 class compact_swarm {
+  enum class Side {
+    TOP = 0_z,
+    BOTTOM = 1_z,
+    BOTH = 2_z
+  };
+
   // inputs and derived values
-  const std::vector<Rcpp::NumericVector>& xs;
+  const std::vector<Rcpp::NumericVector>& xs_list;
   const double xsize;
   const double ysize;
-  const int side;
+  const Side side;
   const std::ptrdiff_t n;
   Rcpp::NumericVector out_x_vec;
   Rcpp::NumericVector out_y_vec;
@@ -68,7 +75,8 @@ class compact_swarm {
   std::ptrdiff_t i;
 
   /// "Frontier" of placed dots that new dots may collide with.
-  std::set<dot, x_is_less> frontier = {};
+  std::set<dot, x_is_less> frontiers[2] = {{}, {}};
+  using Frontier = decltype(frontiers[0]);
 
   /// Minimum y value at which the next dot may be placed.
   /// This is updated as we place dots and used to remove values from
@@ -81,7 +89,7 @@ class compact_swarm {
   using ValueIt = decltype(values)::const_iterator;
 
   /// Regions to search for values to place.
-  /// <x_1, x_2, y> is a half-open interval [x_1, x_2) on `values`
+  /// <xi_1, xi_2, y> is a half-open interval [xi_1, xi_2) on `values`
   /// with the `y` position the lowest dot in the region is *likely*
   /// to be placed at (`y` is always less than the ultimate position
   /// of the lowest dot in the region, which may end up higher).
@@ -97,16 +105,16 @@ class compact_swarm {
 
  public:
   compact_swarm(
-    const std::vector<Rcpp::NumericVector>& xs,
+    const std::vector<Rcpp::NumericVector>& xs_list,
     const double xsize,
     const double ysize,
     const int side
   )
-    : xs{xs},
+    : xs_list{xs_list},
       xsize{xsize},
       ysize{ysize},
-      side{side},
-      n{sum_sizes(xs)},
+      side{side == 1 ? Side::TOP : side == -1 ? Side::BOTTOM : Side::BOTH},
+      n{sum_sizes(xs_list)},
       out_x_vec(n),
       out_y_vec(n),
       out_x_arr{REAL(out_x_vec)},
@@ -119,27 +127,30 @@ class compact_swarm {
   /// Checks along the `frontier` to determine the lowest point this dot can be
   /// placed at without intersecting already-placed dots.
   /// @param `x` value of dot to attempt to place.
+  /// @param `frontier` the frontier to check for collisions against.
   /// @returns the lowest `y` value `x` can be placed at without intersecting
   /// anything in the `frontier`, or `min_y` if `x` does not intersect anything
   /// in the `frontier`. Also updates the `frontier` to remove any values less
-  /// then the current `min_y` as it goes.
-  auto min_y_placement(const double x) -> double {
+  /// than the current `min_y` as it goes.
+  auto min_dot_y(const double x, Frontier& frontier) -> double {
     auto y = -INF;
 
     // compare this candidate to any existing dots within +/- 1 diameter, since
     // only these may overlap with it
     auto existing = frontier.lower_bound({x - 1, 0});
-    const auto last_existing = frontier.upper_bound({x + 1, INF});
-    while (existing != last_existing) {
+    // const auto last_existing = frontier[s].upper_bound({x + 1, INF});
+    while (existing != frontier.cend()) {
+      const auto x_distance = std::abs(x - existing->x);
+      if (x_distance > 1) break;
+
       if (existing->y < min_y - 1) {
         // `existing` is now out of range of any candidate dots, no
         // need to check it for overlaps again
-        // Rcpp::Rcout << "  Unfrontiering\t" << existing->x << "\t" << existing->y << std::endl;
         existing = frontier.erase(existing);
         continue;
       }
 
-      const auto new_y = std::sqrt(1 - sq(x - existing->x)) + existing->y;
+      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing->y;
       if (new_y > y) y = new_y;
 
       ++existing;
@@ -148,16 +159,25 @@ class compact_swarm {
     return y == -INF ? min_y : y;
   }
 
-  /// Find the minimum y placement of a value in the half-open interval [x_1, x_2).
+  /// Find the minimum y placement of a value in the half-open interval [xi_1, xi_2).
   /// Finds the `x` value in the region `xs` with the lowest possible `y` position.
-  /// @param x_1 lower limit of region to search
-  /// @param x_2 upper limit of region to search
-  /// @returns <x_i, y> Iterator `x_i` to the lowest `x` value in `values` and the `y` position
-  /// it would be placed at.
-  auto min_y_placement(const ValueIt x_1, const ValueIt x_2) -> std::pair<ValueIt, double> {
-    return unimodal_min(x_1, x_2, [this](const double x) {
-      return min_y_placement(x);
-    });
+  /// @param xi_1 lower limit of region to search
+  /// @param xi_2 upper limit of region to search
+  /// @returns <xi, y, s> Iterator `xi` to the lowest `x` value in `values` and the `y` position
+  /// it would be placed at on Side `s`.
+  auto min_region_y(const ValueIt xi_1, const ValueIt xi_2, const Side s) -> std::tuple<ValueIt, double, Side> {
+    if (s == Side::BOTH) {
+      const auto [xi_top, y_top, s_top] = min_region_y(xi_1, xi_2, Side::TOP);
+      const auto [xi_btm, y_btm, s_btm] = min_region_y(xi_1, xi_2, Side::BOTTOM);
+      if (y_btm < y_top) return {xi_btm, y_btm, Side::BOTTOM};
+      else return {xi_top, y_top, Side::TOP};
+    } else {
+      auto& frontier = frontiers[static_cast<std::ptrdiff_t>(s)];
+      const auto [xi, y] = unimodal_min(xi_1, xi_2, [this, &frontier](const double x) {
+        return min_dot_y(x, frontier);
+      });
+      return {xi, y, s};
+    }
   }
 
   /// Place a dot
@@ -165,45 +185,49 @@ class compact_swarm {
   /// accordingly.
   /// @param x x position to place dot at
   /// @param y y position to place dot at
-  void place_dot(const double x, const double y) {
-    // Rcpp::Rcout << "  PLACING \t[" << (x_i - values.begin()) << "] =\t" << *x_i << "\t" << y << std::endl;
+  /// @param s Side to place dot at
+  void place_dot(const double x, const double y, const Side s) {
     if (y > min_y) min_y = y;
 
     out_x_arr[i] = x * xsize;
-    out_y_arr[i] = y * ysize;
+    out_y_arr[i] = (s == Side::BOTTOM ? -y : y) * ysize;
     ++i;
 
     if (i % 1000 == 0) Rcpp::checkUserInterrupt();
 
-    frontier.emplace(x, y);
+    if (s == Side::BOTH) {
+      frontiers[0].emplace(x, y);
+      frontiers[1].emplace(x, y);
+    } else {
+      const auto si = static_cast<std::ptrdiff_t>(s);
+      frontiers[si].emplace(x, y);
+    }
   }
 
-  /// Enqueue the region [x_1, x_2) for future search.
-  /// @param x_1 lower limit of region
-  /// @param x_2 upper limit of region
+  /// Enqueue the region [xi_1, xi_2) for future search.
+  /// @param xi_1 lower limit of region
+  /// @param xi_2 upper limit of region
   /// @param y current best guess of `y` position of lowest dot in the region
   /// (does not have to be correct, but must be less than or equal to what
   /// ends up being the actual position of the lowest dot in this region).
-  void queue_region(const ValueIt x_1, const ValueIt x_2, const double y) {
-    if (x_2 - x_1 <= 0) return;
-    // Rcpp::Rcout << "  Queuing \t[" << (x_1 - values.begin()) << ",\t" << (x_2 - values.begin()) << ")\t" << y << std::endl;
-    // Rcpp::Rcout << "          \t[" << *x_1 << "..." << std::endl;
-    queue.emplace(x_1, x_2, y);
+  void queue_region(const ValueIt xi_1, const ValueIt xi_2, const double y) {
+    if (xi_2 - xi_1 <= 0) return;
+    queue.emplace(xi_1, xi_2, y);
   }
-  /// Enqueue the region [x_1, x_2) for future search.
+  /// Enqueue the region [xi_1, xi_2) for future search.
   /// Produces a guess for lower limit of `y` before enqueuing.
-  /// @param x_1 lower limit of region
-  /// @param x_2 upper limit of region
-  void queue_region(const ValueIt x_1, const ValueIt x_2) {
-    if (x_2 - x_1 <= 0) return;
-    const auto [_, y] = min_y_placement(x_1, x_2);
-    queue_region(x_1, x_2, y);
+  /// @param xi_1 lower limit of region
+  /// @param xi_2 upper limit of region
+  void queue_region(const ValueIt xi_1, const ValueIt xi_2) {
+    if (xi_2 - xi_1 <= 0) return;
+    const auto [_, y, s] = min_region_y(xi_1, xi_2, side);
+    queue_region(xi_1, xi_2, y);
   }
 
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
-    for (const auto& x : xs) {
+    for (const auto& xs : xs_list) {
       values.clear();
       decltype(queue){}.swap(queue);  // queue.clear();
       min_y = 0.0;
@@ -211,42 +235,39 @@ class compact_swarm {
       // we divide by xsize here so that all the distance calculations for checking
       // overlaps can be done in standardized units of 1 dot diameter, then we
       // multiply final positions by xsize and ysize before final output.
-      for (const auto x_i : x) values.emplace_back(x_i / xsize);
+      for (const auto x : xs) values.emplace_back(x / xsize);
 
       // place a base row of dots and set up a priority queue containing sub-regions
       // to search for the lowest dot in
-      for (auto x_1 = values.cbegin(); x_1 != values.cend(); ) {
-        place_dot(*x_1, 0.0);
+      for (auto xi_1 = values.cbegin(); xi_1 != values.cend(); ) {
+        place_dot(*xi_1, 0.0, side);
 
-        auto x_2 = advance_to_at_least(values, x_1, *x_1 + 1.0);
+        auto xi_2 = advance_to_at_least(values, xi_1, *xi_1 + 1.0);
         // we use 0.0 here because the next dot hasn't been placed yet and will
         // likely change the lowest position of this region, so spending the time
         // guessing now isn't worth it as it will likely be wrong and need to immediately
         // be recalculated (which putting in 0.0 will cause to happen anyway).
-        queue_region(x_1 + 1, x_2, 0.0);
+        queue_region(xi_1 + 1, xi_2, 0.0);
 
-        x_1 = x_2;
+        xi_1 = xi_2;
       }
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
       while (!queue.empty()) {
-        const auto [x_1, x_2, y] = queue.top();
+        const auto [xi_1, xi_2, y_old] = queue.top();
         queue.pop();
-        // Rcpp::Rcout << "Checking  \t[" << (x_1 - values.begin()) << ",\t" << (x_2 - values.begin()) << ")" << std::endl;
-        // Rcpp::Rcout << "          \t[" << *x_1 << "..." << std::endl;
 
-        const auto [x_m, y_new] = min_y_placement(x_1, x_2);
-        if (y_new > y) {
+        const auto [xi_new, y_new, s] = min_region_y(xi_1, xi_2, side);
+        if (y_new > y_old) {
           // region is no longer the lowest region, put it back in the queue at its new position
-          // Rcpp::Rcout << "  Re-queuing: \t" << y << " -> \t" << y_new << std::endl;
-          queue_region(x_1, x_2, y_new);
+          queue_region(xi_1, xi_2, y_new);
         } else {
           // lowest dot in region is still where we thought it was => it is the lowest region
-          place_dot(*x_m, y_new);
+          place_dot(*xi_new, y_new, s);
 
-          // enqueue [x_1, x_m) and (x_m, x_2) for future search
-          queue_region(x_1, x_m);
-          queue_region(x_m + 1, x_2);
+          // enqueue [xi_1, x_m) and (x_m, xi_2) for future search
+          queue_region(xi_1, xi_new);
+          queue_region(xi_new + 1, xi_2);
         }
       }
     }
@@ -259,7 +280,7 @@ class compact_swarm {
 };
 
 //' Compact swarm layout
-//' @param x <[numeric]> sorted x values
+//' @param xs <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
 //' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below

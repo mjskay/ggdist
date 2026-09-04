@@ -6,7 +6,7 @@ wilkinson_bin_to_right_ <- function(x, width) {
 }
 
 #' Compact swarm layout
-#' @param x <[numeric]> sorted x values
+#' @param xs <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below

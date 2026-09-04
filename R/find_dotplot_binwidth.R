@@ -821,7 +821,7 @@ plot_fdb = function(fdb, zoom = .85, ...) {
   ylim = p_range_around(iters$height, iters$chosen, zoom)
 
   high_res_curve = tibble(
-    width = seq(xlim[1], xlim[2], length.out = 200),
+    width = seq(xlim[1], xlim[2], length.out = 50),
     height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
   )
 
@@ -830,11 +830,11 @@ plot_fdb = function(fdb, zoom = .85, ...) {
   transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, layout, height_eps), \(n) pseudo_n_to_binwidth(n, layout, height_eps))
   transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, layout, height_eps), \(n) pseudo_binwidth_to_binwidth(n, layout, height_eps))
 
-  exact_refs = data.frame(
-    height = layout@maxheight,
-    width = n_to_binwidth(seq(round(binwidth_to_n(max(setdiff(iters$height, Inf), na.rm = TRUE), layout)), round(binwidth_to_n(min(setdiff(iters$height, 0), na.rm = TRUE), layout))), layout)
-  )
-  exact_refs = exact_refs[xlim[1] <= exact_refs$width & exact_refs$width <= xlim[2], ]
+  # exact_refs = data.frame(
+  #   height = layout@maxheight,
+  #   width = n_to_binwidth(seq(round(binwidth_to_n(max(setdiff(iters$height, Inf), na.rm = TRUE), layout)), round(binwidth_to_n(min(setdiff(iters$height, 0), na.rm = TRUE), layout))), layout)
+  # )
+  # exact_refs = exact_refs[xlim[1] <= exact_refs$width & exact_refs$width <= xlim[2], ]
 
   iters |>
     dplyr::filter(...) |>
@@ -862,7 +862,7 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     geom_point(data = iters[iters$chosen, ], shape = 12, size = 3) +
     geom_hline(yintercept = layout@maxheight, linetype = "dashed") +
     geom_abline(intercept = layout@maxheight, slope = c(layout@heightratio, -layout@heightratio), linetype = "dotted") +
-    geom_point(shape = 1, size = 2, data = exact_refs) +
+    # geom_point(shape = 1, size = 2, data = exact_refs) +
     coord_cartesian(xlim = xlim, ylim = ylim)
     # coord_transform(xlim = xlim, ylim = ylim, x = scales::transform_reciprocal())
     # coord_transform(xlim = xlim, ylim = ylim, x = transform_n)
