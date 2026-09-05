@@ -19,10 +19,8 @@ namespace {
 struct dot {
   double x;
   double y;
-  double top1;
-  double top2;
 
-  constexpr dot(const double x, const double y) : x{x}, y{y}, top1{x - 0.5}, top2{x + 0.5} {};
+  constexpr dot(const double x, const double y) : x{x}, y{y} {};
 };
 
 constexpr auto operator==(const dot e1, const dot e2) -> bool {
@@ -71,13 +69,23 @@ class compact_swarm {
   std::ptrdiff_t i;
 
   /// "Frontier" of placed dots that new dots may collide with.
-  using Frontier = std::multimap<double, dot>;
+  /// The frontier consists of columns of dots partitioned by
+  /// contiguous regions of x values and ordered by y value
+  /// within each column.
+  using Frontier = std::vector<std::vector<dot>>;
   Frontier frontiers[2] = {{}, {}};
 
   /// Minimum y value at which the next dot may be placed.
   /// This is updated as we place dots and used to remove values from
   /// the frontier that we won't need to check against again.
   double min_y = 0.0;
+
+  /// Minimum x value (normalized to binwidth == 1)
+  double min_value = INF;
+  /// Maximum x value (normalized to binwidth == 1)
+  double max_value = -INF;
+  /// Multiplier to go from normalized x value to frontier column index
+  double value_to_frontier = 1.0;
 
   /// Values we are currently placing, normalized so that a distance
   /// of 1 is one dot diameter (`xsize`).
@@ -119,6 +127,11 @@ class compact_swarm {
   {};
 
  private:
+  /// Get the index of the column in the frontier associated with this x position
+  constexpr auto frontier_col(const double x) -> std::ptrdiff_t {
+    return static_cast<std::ptrdiff_t>((x - min_value) * value_to_frontier) + 1_z;
+  }
+
   /// Find the minimum y placement of value `x`
   /// Checks along the `frontier` to determine the lowest point this dot can be
   /// placed at without intersecting already-placed dots.
@@ -129,31 +142,37 @@ class compact_swarm {
   /// in the `frontier`. Also updates the `frontier` to remove any values less
   /// than the current `min_y` as it goes.
   auto min_dot_y(const double x, Frontier& frontier) -> double {
-    auto y = -INF;
+    auto y = min_y;
 
-    // compare this candidate to any existing dots within +/- 1 diameter, since
-    // only these may overlap with it
-    auto existing = frontier.lower_bound(x - 1);
-    // const auto last_existing = frontier[s].upper_bound({x + 1, INF});
-    while (existing != frontier.end()) {
-      const auto& [_, existing_dot] = *existing;
-      const auto x_distance = std::abs(x - existing_dot.x);
-      if (x_distance > 1) break;
+    // the frontier contains columns of width at least 1, so we only need
+    // to examine the columns just before and just after this dot
+    const auto middle_col_i = frontier_col(x);
+    auto cols = std::vector{
+      std::pair{frontier[middle_col_i - 1].rbegin(), frontier[middle_col_i - 1].rend()},
+      std::pair{frontier[middle_col_i].rbegin(), frontier[middle_col_i].rend()},
+      std::pair{frontier[middle_col_i + 1].rbegin(), frontier[middle_col_i + 1].rend()}
+    };
+    while (!cols.empty()) {
+      for (auto col = cols.begin(); col != cols.end();) {
+        auto& [existing_dot, col_end] = *col;
 
-      // if (existing->y < min_y - 1) {
-      //   // `existing` is now out of range of any candidate dots, no
-      //   // need to check it for overlaps again
-      //   existing = frontier.erase(existing);
-      //   continue;
-      // }
+        if (existing_dot == col_end || existing_dot->y < y - 1.0) {
+          col = cols.erase(col);
+          continue;
+        }
 
-      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing_dot.y;
-      if (new_y > y) y = new_y;
+        const auto x_distance = std::abs(x - existing_dot->x);
+        if (x_distance <= 1.0) {
+          const auto new_y = std::sqrt(1 - sq(x_distance)) + existing_dot->y;
+          if (new_y > y) y = new_y;
+        }
 
-      ++existing;
+        ++existing_dot;
+        ++col;
+      }
     }
 
-    return y == -INF ? min_y : y;
+    return y;
   }
 
   /// Find the minimum y placement of a value in the half-open interval [xi_1, xi_2).
@@ -184,42 +203,7 @@ class compact_swarm {
   /// @param x x position dot was placed at
   /// @param y y position dot was placed at
   void update_frontier(Frontier& frontier, const double x, const double y) {
-    auto new_dot_i = frontier.emplace(x, dot{x, y});
-    const auto& [_, new_dot] = *new_dot_i;
-
-    for (auto existing = std::next(new_dot_i); existing != frontier.end();) {
-      auto& [_, existing_dot] = *existing;
-      if (existing_dot.x >= new_dot.x + 1) break;
-
-      if (existing_dot.top1 < new_dot.top2) {
-        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << existing_dot.top2 << "]" << std::endl;
-        Rcpp::Rcout << " \t\\/\t,\t\t" << std::endl;
-        Rcpp::Rcout << "[\t" << new_dot.top2 << ",\t" << existing_dot.top2 << "]" << std::endl;
-        existing_dot.top1 = new_dot.top2;
-        if (existing_dot.top1 >= existing_dot.top2) {
-          existing = frontier.erase(existing);
-          continue;
-        }
-      }
-      ++existing;
-    }
-
-    for (auto existing = std::reverse_iterator(new_dot_i); existing != frontier.rend();) {
-      auto& [_, existing_dot] = *existing;
-      if (existing_dot.x <= new_dot.x - 1) break;
-
-      if (existing_dot.top2 > new_dot.top1) {
-        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << existing_dot.top2 << "]" << std::endl;
-        Rcpp::Rcout << " \t\t,\t\\/\t" << std::endl;
-        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << new_dot.top1 << "]" << std::endl;
-        existing_dot.top2 = new_dot.top1;
-        if (existing_dot.top1 >= existing_dot.top2) {
-          existing = erase_(frontier, existing);
-          continue;
-        }
-      }
-      ++existing;
-    }
+    frontier[frontier_col(x)].emplace_back(x, y);
   }
 
   /// Place a dot
@@ -272,8 +256,21 @@ class compact_swarm {
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
     for (const auto& xs : xs_list) {
+      for (const auto x : xs) {
+        if (x < min_value) min_value = x;
+        if (x > max_value) max_value = x;
+      }
+    }
+    min_value /= xsize;
+    max_value /= xsize;
+    const auto value_range = std::max(max_value - min_value, 1.0);
+    const auto frontier_range = std::max(std::min(value_range, static_cast<double>(n)), 1.0);
+    value_to_frontier = frontier_range / value_range;
+    const auto frontier_size = static_cast<std::ptrdiff_t>(frontier_range) + 3_z;
+    for (auto& frontier : frontiers) frontier.resize(frontier_size);
+
+    for (const auto& xs : xs_list) {
       values.clear();
-      decltype(queue){}.swap(queue);  // queue.clear();
       min_y = 0.0;
 
       // we divide by xsize here so that all the distance calculations for checking
