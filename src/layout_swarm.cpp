@@ -26,10 +26,6 @@ constexpr auto operator==(const dot e1, const dot e2) -> bool {
   return e1.x == e2.x && e1.y == e2.y;
 }
 
-constexpr auto squared_dist(const dot e1, const dot e2) -> double {
-  return sq(e1.x - e2.x) + sq(e1.y - e2.y);
-}
-
 }  // namespace
 
 
@@ -126,7 +122,21 @@ class compact_swarm {
       out_x_arr{REAL(out_x_vec)},
       out_y_arr{REAL(out_y_vec)},
       i{0_z}
-  {};
+  {
+    for (const auto& xs : xs_list) {
+      for (const auto x : xs) {
+        if (x < min_value) min_value = x;
+        if (x > max_value) max_value = x;
+      }
+    }
+    min_value /= xsize;
+    max_value /= xsize;
+    const auto value_range = std::max(max_value - min_value, 1.0);
+    const auto frontier_range = std::max(std::min(value_range, static_cast<double>(n)), 1.0);
+    value_to_frontier = frontier_range / value_range;
+    const auto frontier_size = static_cast<std::ptrdiff_t>(frontier_range) + 3_z;
+    frontier.resize(frontier_size);
+  };
 
  private:
   /// Get the index of the column in the frontier associated with this x position
@@ -270,20 +280,6 @@ class compact_swarm {
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
-    for (const auto& xs : xs_list) {
-      for (const auto x : xs) {
-        if (x < min_value) min_value = x;
-        if (x > max_value) max_value = x;
-      }
-    }
-    min_value /= xsize;
-    max_value /= xsize;
-    const auto value_range = std::max(max_value - min_value, 1.0);
-    const auto frontier_range = std::max(std::min(value_range, static_cast<double>(n)), 1.0);
-    value_to_frontier = frontier_range / value_range;
-    const auto frontier_size = static_cast<std::ptrdiff_t>(frontier_range) + 3_z;
-    frontier.resize(frontier_size);
-
     auto first_group = true;
     for (const auto& xs : xs_list) {
       values.clear();
