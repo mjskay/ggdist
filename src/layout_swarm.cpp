@@ -38,8 +38,7 @@ constexpr auto squared_dist(const dot e1, const dot e2) -> double {
 
 /// Divide-and-conquer approach to compact swarm layout
 ///
-/// Does compact swarm layout by building a `frontier` of placed dots along the
-/// top edge of the swarm and recursively searching contiguous regions of unplaced
+/// Does compact swarm layout by recursively searching contiguous regions of unplaced
 /// dots for the lowest next dot.
 ///
 /// When we place a dot, we add the contiguous region of unplaced dots just above and just below
@@ -49,6 +48,10 @@ constexpr auto squared_dist(const dot e1, const dot e2) -> double {
 /// region without checking all dots in a region. We use the priority queue to find the unplaced
 /// region with the lowest unplaced dot, then recursively add the contiguous unplaced regions
 /// above and below each newly-placed dot back to the queue.
+///
+/// Positions of placed dots are stored in a `frontier` divided into columns of dots that
+/// have a minimum width of the dot `xsize` and which are sorted by dot y position. This
+/// allows us to quickly find the highest/lowest placed dots to test a new dot against.
 class compact_swarm {
   enum class Side {
     TOP = 0_z,
@@ -269,6 +272,7 @@ class compact_swarm {
     const auto frontier_size = static_cast<std::ptrdiff_t>(frontier_range) + 3_z;
     for (auto& frontier : frontiers) frontier.resize(frontier_size);
 
+    auto first_group = true;
     for (const auto& xs : xs_list) {
       values.clear();
       min_y = 0.0;
@@ -278,19 +282,55 @@ class compact_swarm {
       // multiply final positions by xsize and ysize before final output.
       for (const auto x : xs) values.emplace_back(x / xsize);
 
-      // place a base row of dots and set up a priority queue containing sub-regions
-      // to search for the lowest dot in
-      for (auto xi_1 = values.cbegin(); xi_1 != values.cend(); ) {
-        place_dot(*xi_1, 0.0, side);
+      if (first_group) {
+        // place a base row of dots and set up a priority queue containing sub-regions
+        // to search for the lowest dot in
+        for (auto xi_1 = values.cbegin(); xi_1 != values.cend(); ) {
+          place_dot(*xi_1, 0.0, side);
 
-        auto xi_2 = advance_to_at_least(values, xi_1, *xi_1 + 1.0);
-        // we use 0.0 here because the next dot hasn't been placed yet and will
-        // likely change the lowest position of this region, so spending the time
-        // guessing now isn't worth it as it will likely be wrong and need to immediately
-        // be recalculated (which putting in 0.0 will cause to happen anyway).
-        queue_region(xi_1 + 1, xi_2, 0.0);
+          auto xi_2 = advance_to_at_least(values, xi_1, *xi_1 + 1.0);
+          // we use 0.0 here because the next dot on the bottom row hasn't been placed yet
+          // and will likely change the lowest position of this region, so spending the time
+          // finding the lowest point now isn't worth it as it will likely be wrong and need
+          // to immediately be recalculated (which putting in 0.0 will cause to happen anyway).
+          queue_region(xi_1 + 1, xi_2, 0.0);
 
-        xi_1 = xi_2;
+          xi_1 = xi_2;
+        }
+        first_group = false;
+      } else {
+        // After the first group, we must rebuild a new priority queue of regions before
+        // laying out each subsequent group. Since there are already dots laid down,
+        // we use the highest points along the frontier from previously-placed groups
+        // to define the boundaries of the regions.
+
+        // First, find those points...
+        auto frontier_xs = std::vector<double>{};
+        // FIXME: merge frontiers so that they are one deque to prevent spurious
+        // overlaps at the center when side = "both"
+        for (auto ci = 0_uz; ci < frontiers[0].size(); ++ci) {
+          auto has_top = !frontiers[0][ci].empty();
+          auto has_btm = !frontiers[1][ci].empty();
+          if (has_top && has_btm) {
+            auto& x1 = frontier_xs.emplace_back(frontiers[0][ci].back().x);
+            auto& x2 = frontier_xs.emplace_back(frontiers[1][ci].back().x);
+            if (x2 < x1) std::swap(x1, x2);
+          } else if (has_top) {
+            frontier_xs.emplace_back(frontiers[0][ci].back().x);
+          } else if (has_btm) {
+            frontier_xs.emplace_back(frontiers[1][ci].back().x);
+          }
+        }
+
+        // ... then enqueue the regions between them
+        auto xi_1 = values.cbegin();
+        for (const auto frontier_x : frontier_xs) {
+          if (xi_1 == values.cend()) break;
+          auto xi_2 = advance_to_at_least(values, xi_1, frontier_x);
+          queue_region(xi_1, xi_2);
+          xi_1 = xi_2;
+        }
+        queue_region(xi_1, values.cend());
       }
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
