@@ -6,8 +6,8 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <queue>
-#include <set>
 #include <tuple>
 #include <vector>
 
@@ -19,8 +19,10 @@ namespace {
 struct dot {
   double x;
   double y;
+  double top1;
+  double top2;
 
-  constexpr dot(const double x, const double y) : x(x), y(y) {};
+  constexpr dot(const double x, const double y) : x{x}, y{y}, top1{x - 0.5}, top2{x + 0.5} {};
 };
 
 constexpr auto operator==(const dot e1, const dot e2) -> bool {
@@ -30,12 +32,6 @@ constexpr auto operator==(const dot e1, const dot e2) -> bool {
 constexpr auto squared_dist(const dot e1, const dot e2) -> double {
   return sq(e1.x - e2.x) + sq(e1.y - e2.y);
 }
-
-struct x_is_less : std::less<dot> {
-  constexpr bool operator()(const dot& e1, const dot& e2) const {
-    return e1.x < e2.x || (e1.x == e2.x && e1.y < e2.y);
-  }
-};
 
 }  // namespace
 
@@ -75,8 +71,8 @@ class compact_swarm {
   std::ptrdiff_t i;
 
   /// "Frontier" of placed dots that new dots may collide with.
-  std::set<dot, x_is_less> frontiers[2] = {{}, {}};
-  using Frontier = decltype(frontiers[0]);
+  using Frontier = std::multimap<double, dot>;
+  Frontier frontiers[2] = {{}, {}};
 
   /// Minimum y value at which the next dot may be placed.
   /// This is updated as we place dots and used to remove values from
@@ -137,20 +133,21 @@ class compact_swarm {
 
     // compare this candidate to any existing dots within +/- 1 diameter, since
     // only these may overlap with it
-    auto existing = frontier.lower_bound({x - 1, 0});
+    auto existing = frontier.lower_bound(x - 1);
     // const auto last_existing = frontier[s].upper_bound({x + 1, INF});
-    while (existing != frontier.cend()) {
-      const auto x_distance = std::abs(x - existing->x);
+    while (existing != frontier.end()) {
+      const auto& [_, existing_dot] = *existing;
+      const auto x_distance = std::abs(x - existing_dot.x);
       if (x_distance > 1) break;
 
-      if (existing->y < min_y - 1) {
-        // `existing` is now out of range of any candidate dots, no
-        // need to check it for overlaps again
-        existing = frontier.erase(existing);
-        continue;
-      }
+      // if (existing->y < min_y - 1) {
+      //   // `existing` is now out of range of any candidate dots, no
+      //   // need to check it for overlaps again
+      //   existing = frontier.erase(existing);
+      //   continue;
+      // }
 
-      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing->y;
+      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing_dot.y;
       if (new_y > y) y = new_y;
 
       ++existing;
@@ -180,6 +177,51 @@ class compact_swarm {
     }
   }
 
+
+  /// Update the frontier with the given dot
+  /// Adds the dot to the frontier and removes any old dots we won't need to check again.
+  /// @param frontier top or bottom frontier to update
+  /// @param x x position dot was placed at
+  /// @param y y position dot was placed at
+  void update_frontier(Frontier& frontier, const double x, const double y) {
+    auto new_dot_i = frontier.emplace(x, dot{x, y});
+    const auto& [_, new_dot] = *new_dot_i;
+
+    for (auto existing = std::next(new_dot_i); existing != frontier.end();) {
+      auto& [_, existing_dot] = *existing;
+      if (existing_dot.x >= new_dot.x + 1) break;
+
+      if (existing_dot.top1 < new_dot.top2) {
+        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << existing_dot.top2 << "]" << std::endl;
+        Rcpp::Rcout << " \t\\/\t,\t\t" << std::endl;
+        Rcpp::Rcout << "[\t" << new_dot.top2 << ",\t" << existing_dot.top2 << "]" << std::endl;
+        existing_dot.top1 = new_dot.top2;
+        if (existing_dot.top1 >= existing_dot.top2) {
+          existing = frontier.erase(existing);
+          continue;
+        }
+      }
+      ++existing;
+    }
+
+    for (auto existing = std::reverse_iterator(new_dot_i); existing != frontier.rend();) {
+      auto& [_, existing_dot] = *existing;
+      if (existing_dot.x <= new_dot.x - 1) break;
+
+      if (existing_dot.top2 > new_dot.top1) {
+        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << existing_dot.top2 << "]" << std::endl;
+        Rcpp::Rcout << " \t\t,\t\\/\t" << std::endl;
+        Rcpp::Rcout << "[\t" << existing_dot.top1 << ",\t" << new_dot.top1 << "]" << std::endl;
+        existing_dot.top2 = new_dot.top1;
+        if (existing_dot.top1 >= existing_dot.top2) {
+          existing = erase_(frontier, existing);
+          continue;
+        }
+      }
+      ++existing;
+    }
+  }
+
   /// Place a dot
   /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `min_y`
   /// accordingly.
@@ -196,11 +238,13 @@ class compact_swarm {
     if (i % 1000 == 0) Rcpp::checkUserInterrupt();
 
     if (s == Side::BOTH) {
-      frontiers[0].emplace(x, y);
-      frontiers[1].emplace(x, y);
+      update_frontier(frontiers[0], x, y);
+      update_frontier(frontiers[1], x, y);
+      // frontiers[0].emplace(x, y);
+      // frontiers[1].emplace(x, y);
     } else {
       const auto si = static_cast<std::ptrdiff_t>(s);
-      frontiers[si].emplace(x, y);
+      update_frontier(frontiers[si], x, y);
     }
   }
 
