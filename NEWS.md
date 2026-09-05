@@ -2,7 +2,12 @@
 
 Major changes:
 
-* Revamped `"swarm"` layout in `geom_dots()`.
+* Rewrote the layout algorithm for the `"swarm"` layout in `geom_dots()`.
+  The new layout is much faster, particularly for large plots. The
+  algorithm also supports a new `grid` parameter that adjusts the
+  resolution of the grid used for layout. A classic "compact swarm"
+  layout can be achieved with `grid = Inf`, and more regularly-spaced
+  layouts with lower values, typically in the range of `1` to `8`.
 * The `order` aesthetic is now supported for all layouts in `geom_dots()`.
   Notably, `layout = "swarm"` and `layout = "weave"` now support creating
   stacked swarm plots using something like `geom_dots(aes(fill = var, order = var, group = NA), side = "both", layout = "weave")`.
