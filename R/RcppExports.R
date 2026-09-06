@@ -17,9 +17,11 @@ compact_swarm_ <- function(xs, xsize, ysize, side) {
 }
 
 #' Fractional grid swarm layout
-#' @param x <[numeric]> sorted x values
+#' @param xs <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param ygrid <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
+#' rows above or below this row that could overlap with dots in this row).
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
