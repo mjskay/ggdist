@@ -186,6 +186,13 @@ test_that("swarm layout works", {
     group = 1L
   )
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
+
+  ref = data.frame(
+    x = 1:7,
+    y = 0.5,
+    group = 1L
+  )
+  expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "swarm"), ref)
 })
 
 test_that("grid_swarm layout works", {

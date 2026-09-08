@@ -10,25 +10,6 @@
 #include <tuple>
 #include <vector>
 
-// compact swarm helpers ------------------------------------------------------
-
-namespace {
-
-/// A single dot in the layout
-struct Dot {
-  double x;
-  double y;
-
-  constexpr Dot(const double x, const double y) : x{x}, y{y} {};
-};
-
-constexpr auto operator==(const Dot e1, const Dot e2) -> bool {
-  return e1.x == e2.x && e1.y == e2.y;
-}
-
-}  // namespace
-
-
 // compact swarm layout --------------------------------------------------------------
 
 /// Divide-and-conquer approach to compact swarm layout
@@ -41,7 +22,7 @@ constexpr auto operator==(const Dot e1, const Dot e2) -> bool {
 /// queue, prioritized by our current best guess at the minimum position of the next dot in that
 /// region. Since unplaced regions are between two adjacent already-placed dots, the height of the
 /// lowest dot in a region as a function of x value is generally well-behaved enough to use
-/// Fibonacci search to efficiently search for the lowest dot in a region without checking all dots
+/// Fibonacci search to efficiently find the lowest dot in a region without checking all dots
 /// in a region. We use the priority queue to find the unplaced region with the lowest unplaced dot,
 /// then recursively add the contiguous unplaced regions above and below each newly-placed dot back
 /// to the queue.
@@ -51,6 +32,14 @@ constexpr auto operator==(const Dot e1, const Dot e2) -> bool {
 /// quickly find the highest/lowest already-placed dots to check for collisions when determining the
 /// height a dot would be placed at.
 class CompactSwarm {
+  /// A single dot in the layout
+  struct Dot {
+    double x;
+    double y;
+
+    constexpr Dot(const double x, const double y) : x{x}, y{y} {};
+  };
+
   enum class Side {
     TOP = 0_z,
     BOTTOM = 1_z,
@@ -63,11 +52,15 @@ class CompactSwarm {
   const double ysize;
   const Side side;
   const std::ptrdiff_t n;
+
+  // outputs
   Rcpp::NumericVector out_x_vec;
   Rcpp::NumericVector out_y_vec;
   double* out_x_arr;
   double* out_y_arr;
-  std::ptrdiff_t i;
+
+  /// Index of the next-to-be-placed value in out_x_vec / out_y_vec
+  std::ptrdiff_t i = 0_z;
 
   /// "Frontier" of placed dots that new dots may collide with.
   /// The frontier partitions the x axis into columns of width at least equal to `xsize` and stores
@@ -123,8 +116,7 @@ class CompactSwarm {
       out_x_vec(n),
       out_y_vec(n),
       out_x_arr{REAL(out_x_vec)},
-      out_y_arr{REAL(out_y_vec)},
-      i{0_z}
+      out_y_arr{REAL(out_y_vec)}
   {
     for (const auto& xs : xs_list) {
       for (const auto x : xs) {
@@ -137,7 +129,7 @@ class CompactSwarm {
     const auto x_range = std::max(max_x - min_x, 1.0);
     const auto col_range = std::max(std::min(x_range, static_cast<double>(n)), 1.0);
     x_to_col = col_range / x_range;
-    // frontier_size is col_range + 3 to account for:
+    // frontier size is col_range + 3 to account for:
     // - (x - x_min) * x_to_col is in [0, col_range] for all x in [x_min, x_max], so
     //   we need at least col_range + 1 columns to cover all x values
     // - need a spare column before x_min (+ 1) and after x_max (+ 1) so we can just

@@ -17,16 +17,39 @@
 /// Alternative to compact swarm layout that places dots in alternating left/right sweeps along
 /// grid lines, greedily placing the next-closest placeable dot (in x position) to the most
 /// recently-placed dot in the same row.
+///
+/// The distance between grid lines (`row_height`) is `ysize/ygrid`, where `ygrid` is a positive
+/// integer. During placement, already-placed values in each row are stored in a multiset
+/// to allow efficient searching for collisions within a row.
 class GridSwarm {
  private:
-  // inputs and derived values
+  // inputs
   const std::vector<Rcpp::NumericVector>& xs_list;
   const double xsize;
   const double ysize;
   const std::ptrdiff_t ygrid;
   const int side;
+
+  /// Are we placing on both sides?
+  /// Equivalent to `side == 0`
   const bool both;
+
+  /// Total number of dots
   const std::ptrdiff_t n;
+
+  // outputs
+  Rcpp::NumericVector out_x_vec;
+  Rcpp::NumericVector out_y_vec;
+  double* out_x_arr;
+  double* out_y_arr;
+
+  /// Index of the next-to-be-placed value in out_x_vec / out_y_vec
+  std::ptrdiff_t i;
+
+  /// Row height
+  /// Height of a single fractional row (ysize / ygrid) times the direction of plotting.
+  /// Positive if `side == 1` or `0` ("top" or "both"), negative if `side == -1` ("bottom").
+  const double row_height;
 
   /// Candidate (unplaced) dots we are currently placing
   std::deque<double> candidates = {};
@@ -62,15 +85,21 @@ class GridSwarm {
       ygrid{ygrid},
       side{side},
       both{side == 0},
-      n{sum_sizes(xs_list)}
+      n{sum_sizes(xs_list)},
+      out_x_vec(n),
+      out_y_vec(n),
+      out_x_arr{REAL(out_x_vec)},
+      out_y_arr{REAL(out_y_vec)},
+      i{0_z},
+      row_height{(both ? 1.0 : static_cast<double>(side)) * ysize / static_cast<double>(ygrid)}
     {};
 
  private:
   /// Attempt to place a dot in a target row
   /// @param x dot x position
   /// @param target_row_i index of row in `rows` to attempt to place `x` in
-  /// @param min_next_x output parameter giving the minimum candidate x position
-  /// that could be placed after attempting to place `x`
+  /// @param min_next_x output parameter giving the next closest x position
+  /// that a dot could be placed at in this row after `x` is placed
   /// @returns `true` if the candidate dot was placed successfully
   template<bool reverse>
   auto place_dot(
@@ -78,23 +107,21 @@ class GridSwarm {
     const std::ptrdiff_t target_row_i,
     double& min_next_x
   ) -> bool {
-    const auto eps = relative_eps(xsize);
-
     auto& target_row = rows[target_row_i];
     auto insert_loc = target_row.end();
 
     // check +/- (ygrid - 1) rows from target_row to see if the candidate is overlapping an existing dot
     const auto first_row_i = std::max(0_z, target_row_i - (ygrid - 1_z));
     const auto last_row_i = std::min(ssize_(rows), target_row_i + ygrid);
-    // iterate in reverse because we will often have a quick exit by comparison to the
-    // most recently placed dot
+    // iterate in reverse because higher-up placed dots should be closer to this one (which
+    // may lead to a quick exit)
     for (auto i = last_row_i; i-- > first_row_i; ) {
       auto& row = rows[i];
-      if (row.size() == 0_uz) continue;
+      if (row.empty()) continue;
 
       const auto rows_from_target = static_cast<double>(std::abs(i - target_row_i));
       const auto y_offset = rows_from_target / static_cast<double>(ygrid);
-      const auto x_distance = std::sqrt(1 - sq(y_offset)) * (xsize - eps);
+      const auto x_distance = std::sqrt(1 - sq(y_offset));
 
       auto x_loc_in_row = row.upper_bound(x);
       if (x_loc_in_row != row.end()) {
@@ -116,11 +143,16 @@ class GridSwarm {
 
       // if this is the target row we save insert_loc so we can give a hint to
       // speed up the call to target_row.insert() below
-      if (rows_from_target == 0) insert_loc = x_loc_in_row;
+      if (rows_from_target == 0.0) insert_loc = x_loc_in_row;
     }
 
+    // Place dot
+    out_x_arr[i] = x * xsize;
+    out_y_arr[i] = static_cast<double>(target_row_i - row_origin) * row_height;
+    ++i;
     target_row.insert(insert_loc, x);
-    min_next_x = x + negate_if<reverse>(xsize - eps);
+    min_next_x = x + negate_if<reverse>(1.0);
+
     return true;
   }
 
@@ -194,10 +226,10 @@ class GridSwarm {
       current_row = 0_z;
       candidates.clear();
 
-      // TODO: divide by xsize here so that all the distance calculations for checking
+      // we divide by xsize here so that all the distance calculations for checking
       // overlaps can be done in standardized units of 1 dot diameter, then we
       // multiply final positions by xsize and ysize before final output.
-      for (const auto x : xs) candidates.emplace_back(x);
+      for (const auto x : xs) candidates.emplace_back(x / xsize);
 
       // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
       while (
@@ -205,40 +237,6 @@ class GridSwarm {
         place_rows<true>(ygrid)
       ) {
         Rcpp::checkUserInterrupt();
-      }
-    }
-
-    // construct output data frame
-    auto out_x_vec = Rcpp::NumericVector(n);
-    auto out_y_vec = Rcpp::NumericVector(n);
-    auto out_x_arr = REAL(out_x_vec);
-    auto out_y_arr = REAL(out_y_vec);
-    if (both) {
-      const auto row_height = ysize / static_cast<double>(ygrid);
-      const auto row_origin = ssize_(rows) / 2_z;
-      auto i = 0_z;
-      for (auto row_num = 1_z; row_num <= ssize_(rows); ++row_num) {
-        // row_offset is 0, 1, -1, 2, -2, ...
-        const auto row_offset = (row_num / 2_z) * (1_z - (row_num % 2_z) * 2_z);
-        const auto& row = rows[row_origin + row_offset];
-        const auto y_val = static_cast<double>(row_offset) * row_height;
-        for (const auto x_val : row) {
-          out_x_arr[i] = x_val;
-          out_y_arr[i] = y_val;
-          ++i;
-        }
-      }
-    } else {
-      const auto row_height = static_cast<double>(side) * ysize / static_cast<double>(ygrid);
-      auto i = 0_z;
-      for (auto row_i = 0_z; row_i < ssize_(rows); ++row_i) {
-        const auto& row = rows[row_i];
-        const auto y_val = static_cast<double>(row_i) * row_height;
-        for (const auto x_val : row) {
-          out_x_arr[i] = x_val;
-          out_y_arr[i] = y_val;
-          ++i;
-        }
       }
     }
 
