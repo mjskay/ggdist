@@ -81,24 +81,24 @@ class CompactSwarm {
   double min_y = 0.0;
 
   /// Minimum x value (normalized to binwidth == 1)
-  double min_value = INF;
+  double min_x = INF;
   /// Maximum x value (normalized to binwidth == 1)
-  double max_value = -INF;
+  double max_x = -INF;
   /// Multiplier to go from normalized x value to frontier column index
   /// This is typically 1.0 except in cases where that would cause there
   /// to be more columns than data points.
-  double value_to_frontier = 1.0;
+  double x_to_col = 1.0;
 
-  /// Values we are currently placing, normalized so that a distance
+  /// Candidate values we are currently placing, normalized so that a distance
   /// of 1 is one dot diameter (`xsize`).
-  std::vector<double> values = {};
-  using ValueIt = decltype(values)::const_iterator;
+  std::vector<double> candidates = {};
+  using CandidateIt = decltype(candidates)::const_iterator;
 
   /// Regions to search for values to place.
   /// <xi_1, xi_2, y> is a half-open interval [xi_1, xi_2) on `values` with the `y` position the
   /// lowest dot in the region is *likely* to be placed at (`y` must always be less than or equal to
   /// the ultimate position of the lowest dot in the region, which may end up higher).
-  using Region = std::tuple<ValueIt, ValueIt, double>;
+  using Region = std::tuple<CandidateIt, CandidateIt, double>;
   struct region_is_greater : std::greater<Region> {
     constexpr bool operator()(const Region& e1, const Region& e2) const {
       return std::get<2>(e1) > std::get<2>(e2);
@@ -128,17 +128,22 @@ class CompactSwarm {
   {
     for (const auto& xs : xs_list) {
       for (const auto x : xs) {
-        if (x < min_value) min_value = x;
-        if (x > max_value) max_value = x;
+        if (x < min_x) min_x = x;
+        if (x > max_x) max_x = x;
       }
     }
-    min_value /= xsize;
-    max_value /= xsize;
-    const auto value_range = std::max(max_value - min_value, 1.0);
-    const auto frontier_range = std::max(std::min(value_range, static_cast<double>(n)), 1.0);
-    value_to_frontier = frontier_range / value_range;
-    const auto frontier_size = static_cast<std::ptrdiff_t>(frontier_range) + 3_z;
-    frontier.resize(frontier_size);
+    min_x /= xsize;
+    max_x /= xsize;
+    const auto x_range = std::max(max_x - min_x, 1.0);
+    const auto col_range = std::max(std::min(x_range, static_cast<double>(n)), 1.0);
+    x_to_col = col_range / x_range;
+    // frontier_size is col_range + 3 to account for:
+    // - (x - x_min) * x_to_col is in [0, col_range] for all x in [x_min, x_max], so
+    //   we need at least col_range + 1 columns to cover all x values
+    // - need a spare column before x_min (+ 1) and after x_max (+ 1) so we can just
+    //   add 1 to all col indices then we will be able to always check +/- 1 col
+    //   without special casing the boundaries
+    frontier.resize(static_cast<std::ptrdiff_t>(col_range) + 3_z);
   };
 
  private:
@@ -146,7 +151,7 @@ class CompactSwarm {
   /// @param x normalized x position.
   /// @returns index of `frontier` corresponding to the column containing `x`.
   constexpr auto frontier_col(const double x) -> std::ptrdiff_t {
-    return static_cast<std::ptrdiff_t>((x - min_value) * value_to_frontier) + 1_z;
+    return static_cast<std::ptrdiff_t>((x - min_x) * x_to_col) + 1_z;
   }
 
   /// Find the lowest y placement of value `x`.
@@ -210,7 +215,7 @@ class CompactSwarm {
   /// @returns <xi, y> Iterator `xi` to the lowest `x` value in `values` and the `y` position
   /// it would be placed on (negated if `bottom == true`).
   template<bool bottom>
-  auto min_region_y(const ValueIt xi_1, const ValueIt xi_2) -> std::tuple<ValueIt, double> {
+  auto min_region_y(const CandidateIt xi_1, const CandidateIt xi_2) -> std::tuple<CandidateIt, double> {
     return unimodal_min(xi_1, xi_2, [this](const double x) {
       return min_dot_y<bottom>(x);
     });
@@ -224,7 +229,7 @@ class CompactSwarm {
   /// from the lowest side is returned.
   /// @returns <xi, y, s> Iterator `xi` to the lowest `x` value in `values` and the `y` position
   /// it would be placed at on Side `s` (negated if `s == Side::BOTTOM`).
-  auto min_region_y(const ValueIt xi_1, const ValueIt xi_2, const Side s) -> std::tuple<ValueIt, double, Side> {
+  auto min_region_y(const CandidateIt xi_1, const CandidateIt xi_2, const Side s) -> std::tuple<CandidateIt, double, Side> {
     switch (s) {
       case Side::BOTH: {
         const auto [xi_top, y_top] = min_region_y<false>(xi_1, xi_2);
@@ -260,8 +265,11 @@ class CompactSwarm {
     if (i % 1000 == 0) Rcpp::checkUserInterrupt();
 
     auto& col = frontier[frontier_col(x)];
-    if (s == Side::BOTTOM) col.emplace_front(x, y);
-    else col.emplace_back(x, y);
+    if (s == Side::BOTTOM) {
+      col.emplace_front(x, y);
+    } else {
+      col.emplace_back(x, y);
+    }
   }
 
   /// Enqueue the region [xi_1, xi_2) for future search.
@@ -270,7 +278,7 @@ class CompactSwarm {
   /// @param y current best guess of `y` position of lowest dot in the region
   /// (does not have to be correct, but must be less than or equal to what
   /// ends up being the actual position of the lowest dot in this region).
-  void queue_region(const ValueIt xi_1, const ValueIt xi_2, const double y) {
+  void queue_region(const CandidateIt xi_1, const CandidateIt xi_2, const double y) {
     if (xi_2 - xi_1 <= 0) return;
     queue.emplace(xi_1, xi_2, y);
   }
@@ -279,7 +287,7 @@ class CompactSwarm {
   /// Produces a guess for lower limit of `y` before enqueuing.
   /// @param xi_1 lower limit of region
   /// @param xi_2 upper limit of region
-  void queue_region(const ValueIt xi_1, const ValueIt xi_2) {
+  void queue_region(const CandidateIt xi_1, const CandidateIt xi_2) {
     if (xi_2 - xi_1 <= 0) return;
     const auto [_, y, s] = min_region_y(xi_1, xi_2, side);
     queue.emplace(xi_1, xi_2, y);
@@ -290,22 +298,22 @@ class CompactSwarm {
   auto place_dots() -> SEXP {
     auto first_group = true;
     for (const auto& xs : xs_list) {
-      values.clear();
+      candidates.clear();
       min_y = 0.0;
 
       // we divide by xsize here so that all the distance calculations for checking
       // overlaps can be done in standardized units of 1 dot diameter, then we
       // multiply final positions by xsize and ysize before final output.
-      for (const auto x : xs) values.emplace_back(x / xsize);
+      for (const auto x : xs) candidates.emplace_back(x / xsize);
 
       // Build initial queue of regions to search
       if (first_group) {
         // For the first group we can quickly place a row of non-overlapping dots at the
         // base of the plot and enqueue the regions between each of those dots
-        for (auto xi_1 = values.cbegin(); xi_1 != values.cend(); ) {
+        for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend(); ) {
           place_dot(*xi_1, 0.0, side);
 
-          auto xi_2 = advance_to_at_least(values, xi_1, *xi_1 + 1.0);
+          auto xi_2 = advance_to_at_least(candidates, xi_1, *xi_1 + 1.0);
           // we use 0.0 here because the next dot on the bottom row hasn't been placed yet
           // and will likely change the lowest position of this region, so spending the time
           // finding the lowest point now isn't worth it as it will likely be wrong and need
@@ -335,14 +343,14 @@ class CompactSwarm {
         }
 
         // ... then enqueue the regions between them
-        auto xi_1 = values.cbegin();
+        auto xi_1 = candidates.cbegin();
         for (const auto frontier_x : frontier_xs) {
-          if (xi_1 == values.cend()) break;
-          auto xi_2 = advance_to_at_least(values, xi_1, frontier_x);
+          if (xi_1 == candidates.cend()) break;
+          auto xi_2 = advance_to_at_least(candidates, xi_1, frontier_x);
           queue_region(xi_1, xi_2);
           xi_1 = xi_2;
         }
-        queue_region(xi_1, values.cend());
+        queue_region(xi_1, candidates.cend());
       }
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
@@ -373,7 +381,7 @@ class CompactSwarm {
 };
 
 //' Compact swarm layout
-//' @param xs <list of [numeric]> list of vectors of sorted x values
+//' @param xs_list <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
 //' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
@@ -381,7 +389,10 @@ class CompactSwarm {
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP compact_swarm_(
-  std::vector<Rcpp::NumericVector> xs, const double xsize, const double ysize, const int side
+  const std::vector<Rcpp::NumericVector>& xs_list,
+  const double xsize,
+  const double ysize,
+  const int side
 ) {
-  return CompactSwarm{xs, xsize, ysize, side}.place_dots();
+  return CompactSwarm{xs_list, xsize, ysize, side}.place_dots();
 }

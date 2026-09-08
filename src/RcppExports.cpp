@@ -22,38 +22,38 @@ BEGIN_RCPP
 END_RCPP
 }
 // compact_swarm_
-SEXP compact_swarm_(std::vector<Rcpp::NumericVector> xs, const double xsize, const double ysize, const int side);
-RcppExport SEXP _ggdist_compact_swarm_(SEXP xsSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
+SEXP compact_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const int side);
+RcppExport SEXP _ggdist_compact_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< std::vector<Rcpp::NumericVector> >::type xs(xsSEXP);
+    Rcpp::traits::input_parameter< const std::vector<Rcpp::NumericVector>& >::type xs_list(xs_listSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
     Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(compact_swarm_(xs, xsize, ysize, side));
+    rcpp_result_gen = Rcpp::wrap(compact_swarm_(xs_list, xsize, ysize, side));
     return rcpp_result_gen;
 END_RCPP
 }
 // grid_swarm_
-SEXP grid_swarm_(std::vector<std::deque<double>> xs, const double xsize, const double ysize, const std::ptrdiff_t ygrid, const int side);
-RcppExport SEXP _ggdist_grid_swarm_(SEXP xsSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
+SEXP grid_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const std::ptrdiff_t ygrid, const int side);
+RcppExport SEXP _ggdist_grid_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP ygridSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< std::vector<std::deque<double>> >::type xs(xsSEXP);
+    Rcpp::traits::input_parameter< const std::vector<Rcpp::NumericVector>& >::type xs_list(xs_listSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
     Rcpp::traits::input_parameter< const std::ptrdiff_t >::type ygrid(ygridSEXP);
     Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(grid_swarm_(xs, xsize, ysize, ygrid, side));
+    rcpp_result_gen = Rcpp::wrap(grid_swarm_(xs_list, xsize, ysize, ygrid, side));
     return rcpp_result_gen;
 END_RCPP
 }
 // recenter_swarm_clusters_
-SEXP recenter_swarm_clusters_(Rcpp::NumericVector& x_vec, Rcpp::NumericVector& y_vec, const double binwidth);
+SEXP recenter_swarm_clusters_(const Rcpp::NumericVector& x_vec, Rcpp::NumericVector& y_vec, const double binwidth);
 RcppExport SEXP _ggdist_recenter_swarm_clusters_(SEXP x_vecSEXP, SEXP y_vecSEXP, SEXP binwidthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type x_vec(x_vecSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x_vec(x_vecSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type y_vec(y_vecSEXP);
     Rcpp::traits::input_parameter< const double >::type binwidth(binwidthSEXP);
     rcpp_result_gen = Rcpp::wrap(recenter_swarm_clusters_(x_vec, y_vec, binwidth));

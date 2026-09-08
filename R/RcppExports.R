@@ -6,18 +6,18 @@ wilkinson_bin_to_right_ <- function(x, width) {
 }
 
 #' Compact swarm layout
-#' @param xs <list of [numeric]> list of vectors of sorted x values
+#' @param xs_list <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-compact_swarm_ <- function(xs, xsize, ysize, side) {
-    .Call(`_ggdist_compact_swarm_`, xs, xsize, ysize, side)
+compact_swarm_ <- function(xs_list, xsize, ysize, side) {
+    .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, side)
 }
 
 #' Fractional grid swarm layout
-#' @param xs <list of [numeric]> list of vectors of sorted x values
+#' @param xs_list <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
 #' @param ygrid <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
@@ -25,8 +25,8 @@ compact_swarm_ <- function(xs, xsize, ysize, side) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm_ <- function(xs, xsize, ysize, ygrid, side) {
-    .Call(`_ggdist_grid_swarm_`, xs, xsize, ysize, ygrid, side)
+grid_swarm_ <- function(xs_list, xsize, ysize, ygrid, side) {
+    .Call(`_ggdist_grid_swarm_`, xs_list, xsize, ysize, ygrid, side)
 }
 
 #' Re-center contiguous clusters around their mean y position so that

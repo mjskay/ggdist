@@ -20,40 +20,49 @@
 class GridSwarm {
  private:
   // inputs and derived values
-  using Candidates = std::deque<double>;
-  std::vector<Candidates>& xs;
+  const std::vector<Rcpp::NumericVector>& xs_list;
   const double xsize;
   const double ysize;
   const std::ptrdiff_t ygrid;
   const int side;
-  const std::ptrdiff_t n;
   const bool both;
+  const std::ptrdiff_t n;
 
+  /// Candidate (unplaced) dots we are currently placing
+  std::deque<double> candidates = {};
+
+  /// A single row of placed dots
   using Row = std::multiset<double>;
-  /// Rows of placed dots
+  /// Rows of dots
   /// Contains the x position of each placed dot in each row.
   std::deque<Row> rows = {{}};
 
   /// Current row.
   /// - When `both == false`, this is the index of the current row in `rows`.
-  /// - When `both == true`, this is the distance from the center row.
+  /// - When `both == true`, this is the distance from the origin (center) row.
   std::ptrdiff_t current_row = 0_z;
+
+  /// Row origin
+  /// Index of the origin row in `rows`
+  /// - When `both == false`, this is 0.
+  /// - When `both == true`, this is floor(rows.size() / 2).
+  std::ptrdiff_t row_origin = 0_z;
 
  public:
   GridSwarm(
-    std::vector<Candidates>& xs,
+    const std::vector<Rcpp::NumericVector>& xs_list,
     const double xsize,
     const double ysize,
     const std::ptrdiff_t ygrid,
     const int side
   )
-    : xs{xs},
+    : xs_list{xs_list},
       xsize{xsize},
       ysize{ysize},
       ygrid{ygrid},
       side{side},
-      n{sum_sizes(xs)},
-      both{side == 0}
+      both{side == 0},
+      n{sum_sizes(xs_list)}
     {};
 
  private:
@@ -117,42 +126,29 @@ class GridSwarm {
 
   /// Attempt to place dots in a specific row in the grid_swarm algorithm
   /// @tparam reverse are we placing dots in reverse order?
-  /// @param candidates dots to be placed
   /// @returns `true` if `candidates` may still have dots to place and `false` otherwise
   template<bool reverse>
-  auto place_row(Candidates& candidates) -> bool {
+  auto place_row() -> bool {
     if (candidates.empty()) return false;
 
-    // determine row indices and ensure target row exists
-    auto row_i = current_row;
-    auto row_i_bottom = current_row;
-    if (both) {
-      auto row_origin = ssize_(rows) / 2_z;
-      if (current_row == row_origin + 1_z) {
-        rows.emplace_back();
-        rows.emplace_front();
-        ++row_origin;
-      }
-      row_i = row_origin + current_row;
-      row_i_bottom = row_origin - current_row;
-    } else if (current_row == ssize_(rows)) {
-      rows.emplace_back();
-    }
+    // determine row indices
+    auto row_i_top = row_origin + current_row;
+    auto row_i_btm = row_origin - current_row;
 
     // place candidates
     const bool place_both = both && current_row > 0; // center row only placed once
     auto min_next_x = reverse ? INF : -INF;
     auto min_next_x_top = min_next_x;
-    auto min_next_x_bottom = min_next_x;
+    auto min_next_x_btm = min_next_x;
     for (auto xi = begin_<reverse>(candidates); xi != end_<reverse>(candidates); ) {
       const auto x = *xi;
 
-      // attempt to place candidate dot, updating min_next_x_{top,bottom} so we can
+      // attempt to place candidate dot, updating min_next_x_{top,btm} so we can
       // skip candidates that are definitely not placeable (this is very important for performance,
       // especially when binwidth is large and many candidates are rejected)
       if (
-        place_dot<reverse>(x, row_i, min_next_x_top) ||
-        (place_both && place_dot<reverse>(x, row_i_bottom, min_next_x_bottom))
+        place_dot<reverse>(x, row_i_top, min_next_x_top) ||
+        (place_both && place_dot<reverse>(x, row_i_btm, min_next_x_btm))
       ) {
         xi = erase_(candidates, xi);
       } else {
@@ -160,42 +156,53 @@ class GridSwarm {
       }
 
       // skip candidates that are definitely not placeable
-      if (place_both) {
-        min_next_x = min_<reverse>(min_next_x_top, min_next_x_bottom);
-      } else {
-        min_next_x = min_next_x_top;
-      }
+      min_next_x = place_both ? min_<reverse>(min_next_x_top, min_next_x_btm) : min_next_x_top;
       xi = advance_to_at_least(candidates, xi, min_next_x);
     }
 
+    // advance to next row (and ensure it exists)
+    if (row_i_top + 1_z == ssize_(rows)) {
+      rows.emplace_back();
+      if (both) {
+        rows.emplace_front();
+        ++row_origin;
+      }
+    }
     ++current_row;
-    return true;
+
+    return !candidates.empty();
   }
 
-  /// Place dots in `n` rows in the grid_swarm algorithm, alternating directions.
-  /// @returns `true` if `remaining` may still have dots to place and `false` otherwise
+  /// Place dots in `n_rows` rows in the grid_swarm algorithm, alternating directions.
+  /// @param n_rows Number of rows to place.
   /// @see `place_row()`
   template<bool reverse>
-  auto place_rows(std::size_t n_rows, Candidates& candidates) -> bool {
-    auto any_left = true;
+  auto place_rows(std::size_t n_rows) -> bool {
     while (
       n_rows-- > 0_uz &&
-      (any_left = place_row<reverse>(candidates)) &&
+      place_row<reverse>() &&
       n_rows-- > 0_uz &&
-      (any_left = place_row<!reverse>(candidates))
+      place_row<!reverse>()
     );
-    return any_left;
+    return !candidates.empty();
   }
 
  public:
   /// Run the grid swarm algorithm.
   auto place_dots() -> SEXP {
-    for (auto& candidates : xs) {
-      // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
+    for (const auto& xs : xs_list) {
       current_row = 0_z;
+      candidates.clear();
+
+      // TODO: divide by xsize here so that all the distance calculations for checking
+      // overlaps can be done in standardized units of 1 dot diameter, then we
+      // multiply final positions by xsize and ysize before final output.
+      for (const auto x : xs) candidates.emplace_back(x);
+
+      // place dots in rows, alternating direction (but also ensuring every ygrid-th row alternates)
       while (
-        place_rows<false>(ygrid, candidates) &&
-        place_rows<true>(ygrid, candidates)
+        place_rows<false>(ygrid) &&
+        place_rows<true>(ygrid)
       ) {
         Rcpp::checkUserInterrupt();
       }
@@ -243,7 +250,7 @@ class GridSwarm {
 };
 
 //' Fractional grid swarm layout
-//' @param xs <list of [numeric]> list of vectors of sorted x values
+//' @param xs_list <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
 //' @param ygrid <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
@@ -253,13 +260,13 @@ class GridSwarm {
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP grid_swarm_(
-  std::vector<std::deque<double>> xs,
+  const std::vector<Rcpp::NumericVector>& xs_list,
   const double xsize,
   const double ysize,
   const std::ptrdiff_t ygrid,
   const int side
 ) {
-  return GridSwarm{xs, xsize, ysize, ygrid, side}.place_dots();
+  return GridSwarm{xs_list, xsize, ysize, ygrid, side}.place_dots();
 }
 
 
@@ -274,12 +281,12 @@ SEXP grid_swarm_(
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP recenter_swarm_clusters_(
-  Rcpp::NumericVector& x_vec,
+  const Rcpp::NumericVector& x_vec,
   Rcpp::NumericVector& y_vec,
   const double binwidth
 ) {
-  auto n = ssize_(x_vec);
-  auto x = REAL(x_vec);
+  const auto n = ssize_(x_vec);
+  const auto x = REAL(x_vec);
   auto y = REAL(y_vec);
   auto bin_sum = 0.0;
   auto bin_start = 0_z;
