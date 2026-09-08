@@ -137,7 +137,8 @@ test_that("two-group stat_lineribbons work", {
       # testing range = c(0,1) here because it ensures both groups ramp all the
       # way to the same color ("gray85"), which will cause problems if the ribbons
       # are not properly grouped by the original (un-ramped) color as well.
-      scale_fill_ramp_discrete(from = "gray85", range = c(0, 1))
+      scale_fill_ramp_discrete(from = "gray85", range = c(0, 1)) +
+      guides(fill_ramp = guide_legend(order = 1), color = guide_legend(order = 2))
   )
 
 })
@@ -278,7 +279,8 @@ test_that("stat_lineribbon draw order works", {
     sd = rep(c(1, 2), each = 10),
     g = rep(c("a","b"), each = 10)
   ) %>%
-    ggplot(aes(x = x, ydist = dist_normal(y, sd), fill = g, fill_ramp = after_stat(level)))
+    ggplot(aes(x = x, ydist = dist_normal(y, sd), fill = g, fill_ramp = after_stat(level))) +
+    guides(fill_ramp = guide_legend(order = 1), fill = guide_legend(order = 2))
 
   # interleaving levels...
   vdiffr::expect_doppelganger("default draw order interleaves levels",

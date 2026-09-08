@@ -319,8 +319,8 @@ test_that("dot order is correct", {
     stringsAsFactors = FALSE
   ) %>%
     ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
-    scale_fill_brewer(palette = "Set1") +
-    scale_color_brewer(palette = "Paired") +
+    scale_fill_brewer(palette = "Set1", guide = guide_legend(order = 1)) +
+    scale_color_brewer(palette = "Paired", guide = guide_legend(order = 2)) +
     geom_hline(yintercept = 0.9) +
     geom_vline(xintercept = 0)
 

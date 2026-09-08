@@ -89,7 +89,8 @@ test_that("color_ramp works with stat_interval", {
   vdiffr::expect_doppelganger("color_ramp with interval and subgroups",
     dist_df %>%
       ggplot(aes(x = group, dist = dist_normal(mean, sd), color = subgroup)) +
-      stat_dist_interval(aes(color_ramp = after_stat(level)), position = "dodge")
+      stat_dist_interval(aes(color_ramp = after_stat(level)), position = "dodge") +
+      guides(color_ramp = guide_legend(order = 1), color = guide_legend(order = 2))
   )
 })
 
@@ -151,7 +152,8 @@ test_that("fill_ramp works on lineribbons", {
   vdiffr::expect_doppelganger("fill_ramp with lineribbon",
     df_2groups %>%
       ggplot(aes(x = x, y = y, fill = g)) +
-      stat_lineribbon(aes(fill_ramp = after_stat(level)))
+      stat_lineribbon(aes(fill_ramp = after_stat(level))) +
+      guides(fill_ramp = guide_legend(order = 1), fill = guide_legend(order = 2))
   )
 })
 
