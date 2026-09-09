@@ -4,6 +4,7 @@
 #include <Rinternals.h>
 
 #include <algorithm>
+#include <iterator>
 #include <limits>
 #include <type_traits>
 
@@ -97,6 +98,14 @@ constexpr auto end_(C& container) {
   }
 }
 
+/// Is `It` a reverse iterator?
+template<typename It, typename = std::void_t<>>
+struct is_reverse_iterator : std::false_type {};
+template<typename It>
+struct is_reverse_iterator<It, std::void_t<std::is_base_of<decltype(std::reverse_iterator(std::declval<It>().base())), It>>> : std::true_type {};
+template<typename It>
+constexpr bool is_reverse_iterator_v = is_reverse_iterator<It>::value;
+
 /// Erase an element from a container via a (possibly reversed) iterator
 /// @tparam reverse is the iterator reversed?
 /// @tparam C container type
@@ -105,10 +114,35 @@ constexpr auto end_(C& container) {
 /// @param it iterator pointing at element to erase
 template<typename C, typename It>
 constexpr auto erase_(C& container, const It& it) -> It {
-  if constexpr (std::is_base_of_v<typename C::reverse_iterator, It> || std::is_base_of_v<typename C::const_reverse_iterator, It>) {
+  if constexpr (is_reverse_iterator_v<It>) {
     return std::reverse_iterator(container.erase(std::next(it).base()));
   } else {
     return container.erase(it);
+  }
+}
+
+/// Get the next (or previous) iterator
+/// @tparam reverse is the iterator reversed?
+/// @tparam It iterator type
+/// @param it Iterator. Cannot be an end iterator (must point to a value).
+template<bool reverse, typename It>
+constexpr auto next_(const It& it) {
+  if constexpr (reverse) {
+    return std::reverse_iterator(it);
+  } else {
+    return std::next(it);
+  }
+}
+
+/// Get the forward iterator version of an iterator
+/// @tparam It iterator type
+/// @param it Iterator. Cannot be an end iterator (must point to a value).
+template<typename It>
+constexpr auto as_forward_it(const It& it) {
+  if constexpr (is_reverse_iterator_v<It>) {
+    return std::prev(it.base());
+  } else {
+    return it;
   }
 }
 

@@ -6,8 +6,10 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <queue>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 // compact swarm layout --------------------------------------------------------------
@@ -32,12 +34,26 @@
 /// quickly find the highest/lowest already-placed dots to check for collisions when determining the
 /// height a dot would be placed at.
 class CompactSwarm {
+  /// Candidate values we are currently placing, normalized so that a distance
+  /// of 1 is one dot diameter (`xsize`).
+  std::vector<double> candidates = {};
+  using CandidateIt = decltype(candidates)::const_iterator;
+
   /// A single dot in the layout
+  /// Dots may be placed, in which case they represent a single dot, or unplaced,
+  /// in which case they represent a contiguous region of one or more consecutive dots
+  /// in the input that may be placed here.
   struct Dot {
+    CandidateIt xi_1;
+    CandidateIt xi_2;
     double x;
     double y;
-
-    constexpr Dot(const double x, const double y) : x{x}, y{y} {};
+    bool placed = false;
+    bool no_higher_after[2] = {false, false};
+    Dot(const CandidateIt xi_1, const CandidateIt xi_2, const double x, const double y)
+      : xi_1(xi_1), xi_2(xi_2), x(x), y(y) {};
+    Dot(const CandidateIt xi_1, const CandidateIt xi_2)
+      : Dot(xi_1, xi_2, *xi_1, 0.0) {};
   };
 
   enum class Side {
@@ -62,12 +78,6 @@ class CompactSwarm {
   /// Index of the next-to-be-placed value in out_x_vec / out_y_vec
   std::ptrdiff_t i = 0_z;
 
-  /// "Frontier" of placed dots that new dots may collide with.
-  /// The frontier partitions the x axis into columns of width at least equal to `xsize` and stores
-  /// dots ordered by y value within each column.
-  using Frontier = std::vector<std::deque<Dot>>;
-  Frontier frontier = {};
-
   /// Minimum y value at which the next dot may be placed.
   /// This is updated as we place dots and used to remove values from the frontier that we won't
   /// need to check against again.
@@ -82,24 +92,19 @@ class CompactSwarm {
   /// to be more columns than data points.
   double x_to_col = 1.0;
 
-  /// Candidate values we are currently placing, normalized so that a distance
-  /// of 1 is one dot diameter (`xsize`).
-  std::vector<double> candidates = {};
-  using CandidateIt = decltype(candidates)::const_iterator;
+  /// "Frontier" of placed dots and unplaced regions.
+  using Frontier = std::list<Dot>;
+  Frontier frontier = {};
 
-  /// Regions to search for values to place.
-  /// <xi_1, xi_2, y> is a half-open interval [xi_1, xi_2) on `values` with the `y` position the
-  /// lowest dot in the region is *likely* to be placed at (`y` must always be less than or equal to
-  /// the ultimate position of the lowest dot in the region, which may end up higher).
-  using Region = std::tuple<CandidateIt, CandidateIt, double>;
-  struct region_is_greater : std::greater<Region> {
-    constexpr bool operator()(const Region& e1, const Region& e2) const {
-      return std::get<2>(e1) > std::get<2>(e2);
+  using DotIt = decltype(frontier.begin());
+  struct region_is_greater : std::greater<DotIt> {
+    bool operator()(const DotIt e1, const DotIt e2) const {
+      return e1->y > e2->y;
     }
   };
 
   /// Priority queue of regions to search for the next dot to place.
-  std::priority_queue<Region, std::vector<Region>, region_is_greater> queue = {};
+  std::priority_queue<DotIt, std::vector<DotIt>, region_is_greater> queue = {};
 
  public:
   CompactSwarm(
@@ -117,124 +122,141 @@ class CompactSwarm {
       out_y_vec(n),
       out_x_arr{REAL(out_x_vec)},
       out_y_arr{REAL(out_y_vec)}
-  {
-    for (const auto& xs : xs_list) {
-      for (const auto x : xs) {
-        if (x < min_x) min_x = x;
-        if (x > max_x) max_x = x;
-      }
-    }
-    min_x /= xsize;
-    max_x /= xsize;
-    const auto x_range = std::max(max_x - min_x, 1.0);
-    const auto col_range = std::max(std::min(x_range, static_cast<double>(n)), 1.0);
-    x_to_col = col_range / x_range;
-    // frontier size is col_range + 3 to account for:
-    // - (x - x_min) * x_to_col is in [0, col_range] for all x in [x_min, x_max], so
-    //   we need at least col_range + 1 columns to cover all x values
-    // - need a spare column before x_min (+ 1) and after x_max (+ 1) so we can just
-    //   add 1 to all col indices then we will be able to always check +/- 1 col
-    //   without special casing the boundaries
-    frontier.resize(static_cast<std::ptrdiff_t>(col_range) + 3_z);
-  };
+  {};
 
  private:
-  /// Get the index of the column in the frontier associated with this x position.
-  /// @param x normalized x position.
-  /// @returns index of `frontier` corresponding to the column containing `x`.
-  constexpr auto frontier_col(const double x) -> std::ptrdiff_t {
-    return static_cast<std::ptrdiff_t>((x - min_x) * x_to_col) + 1_z;
+  /// Search the frontier for the placed dot that would collide with x at the highest point.
+  /// Checks against placed dots in the open interval (r, end_<reverse>(frontier)).
+  /// @param r one before the first dot to check
+  /// @param x x position of the dot to check
+  /// @returns <cd, y> iterator to the highest colliding dot `cd` and the y position where that dot
+  /// would collide with a dot at `x`.
+  template<bool reverse>
+  auto highest_colliding_dot(const DotIt r, const double x) -> std::tuple<DotIt, double> {
+    auto colliding_dot = frontier.end();
+    auto y = min_y;
+
+    for (auto existing_dot = next_<reverse>(r); existing_dot != end_<reverse>(frontier); ++existing_dot) {
+      if (!existing_dot->placed) continue;
+
+      const auto x_distance = std::abs(x - existing_dot->x);
+      if (x_distance > 1.0) break; // all further dots must be out of range
+
+      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing_dot->y;
+      if (new_y < y) continue;
+
+      colliding_dot = as_forward_it(existing_dot);
+      y = new_y;
+      if (existing_dot->no_higher_after[reverse]) break; // all further dots are lower
+    }
+
+    return {colliding_dot, y};
   }
 
-  /// Find the lowest y placement of value `x`.
+  /// Erase all placed dots in a region of the frontier
+  /// Erases all placed dots in the half-open interval [begin, end) of the frontier.
+  /// @param begin first dot to erase (if it is placed)
+  /// @param end one past the last dot to erase
+  void erase_placed_dots(const DotIt begin, const DotIt end) {
+    for (auto existing_dot = begin; existing_dot != end; ) {
+      if (existing_dot->placed) {
+        existing_dot = erase_(frontier, existing_dot);
+      } else {
+        ++existing_dot;
+      }
+    }
+  }
+
+  /// Are there no unplaced dots within 1 unit of x in the given range?
+  template<typename FrontierIt>
+  auto no_unplaced_in_range(const double x, const FrontierIt begin, const FrontierIt end) -> bool {
+    for (auto existing_dot = begin; existing_dot != end; ++existing_dot) {
+      if (
+        std::abs(*existing_dot->xi_1 - begin->x) > 1.0 &&
+        std::abs(*(existing_dot->xi_2 - 1) - begin->x) > 1.0
+      ) {
+        break;
+      }
+      if (!existing_dot->placed) return false;
+    }
+    return true;
+  }
+
+  /// Erase noncolliding dots in a region of the frontier
+  /// Noncolliding dots are those in the interior of the frontier that, after
+  /// dot `d` is placed, will no longer collide with any subsequent dots (so we
+  /// never have to check them again)
+  /// @param placed A newly-placed dot.
+  void erase_noncolliding_dots(const DotIt d) {
+    // erase the noncolliding dots to the right of r
+    auto [cd_r, y_r] = highest_colliding_dot<false>(d, d->x);
+    if (cd_r != frontier.end()) {
+      erase_placed_dots(std::next(d), cd_r);
+    }
+    // erase the noncolliding dots to the left of r
+    auto [cd_l, y_l] = highest_colliding_dot<true>(d, d->x);
+    if (cd_l != frontier.end()) {
+      erase_placed_dots(std::next(cd_l), d);
+    }
+  }
+
+  /// Find the lowest y placement of a dot.
   /// Checks along the `frontier` to determine the lowest point this dot can be placed at without
   /// intersecting already-placed dots.
   /// @tparam bottom search from the bottom?
   /// If `true`, searches from the bottom side up and returns `-y` so that the result is always
   /// positive (this is because we use the lowest value to pick where to place the dot, so the value
   /// is always a positive value relative to the side we are placing it on).
-  /// @param `x` normalized value of dot to attempt to place.
+  /// @param d unplaced dot to attempt to place.
+  /// @param x normalized x value of dot to attempt to place.
   /// @returns the lowest `y` value `x` can be placed at without intersecting anything in the
   /// `frontier`, or `min_y` if `x` does not intersect anything in the `frontier`.
   template<bool bottom>
-  auto min_dot_y(const double x) -> double {
-    auto y = min_y;
-
-    // the frontier contains columns of width at least 1, so we only need
-    // to examine the columns just before and just after this dot
-    const auto col_i = frontier_col(x);
-    auto cols = std::vector{
-      std::pair{begin_<!bottom>(frontier[col_i - 1]), end_<!bottom>(frontier[col_i - 1])},
-      std::pair{begin_<!bottom>(frontier[col_i]), end_<!bottom>(frontier[col_i])},
-      std::pair{begin_<!bottom>(frontier[col_i + 1]), end_<!bottom>(frontier[col_i + 1])}
-    };
-    // search in parallel down the three columns centered on this dot for the
-    // spot this dot will be placed.
-    while (!cols.empty()) {
-      for (auto col = cols.begin(); col != cols.end();) {
-        auto& [existing_dot, col_end] = *col;
-
-        if (existing_dot == col_end || negate_if<bottom>(existing_dot->y) < y - 1.0) {
-          // the existing dot is already lower than any dot that could change the
-          // new dot's position, so all remaining dots in this column (which must be
-          // lower than existing_dot) can be skipped
-          col = cols.erase(col);
-          continue;
-        }
-
-        const auto x_distance = std::abs(x - existing_dot->x);
-        if (x_distance <= 1.0) {
-          const auto new_y = std::sqrt(1 - sq(x_distance)) + negate_if<bottom>(existing_dot->y);
-          if (new_y > y) y = new_y;
-        }
-
-        ++existing_dot;
-        ++col;
-      }
-    }
-
-    return y;
+  auto min_dot_y(const DotIt d, const double x) -> double {
+    auto [cd_r, y_r] = highest_colliding_dot<false>(d, x);
+    auto [cd_l, y_l] = highest_colliding_dot<true>(d, x);
+    return std::max(y_r, y_l);
   }
 
-  /// Find the minimum y placement of a value in the half-open interval [xi_1, xi_2).
-  /// Finds the `x` value in the given region with the lowest possible `y` position.
+  /// Find the minimum y placement of a dot in an unplaced region on one side of the chart.
+  /// Finds the `x` value of the dot in the region [r->xi_1, r->xi_2) with the lowest possible `y`
+  /// position placing on the top or bottom side of the chart.
   /// @tparam bottom search from the bottom?
   /// If `true`, searches from the bottom side up and returns `-y` so that the result is always
   /// positive (this is because we use the lowest value to pick where to place the dot, so the value
   /// is always a positive value relative to the side we are placing it on).
-  /// @param xi_1 lower limit of region to search
-  /// @param xi_2 upper limit of region to search
-  /// @returns <xi, y> Iterator `xi` to the lowest `x` value in `values` and the `y` position
+  /// @param r unplaced region defining the dot(s) to attempt to place.
+  /// @returns <xi, y> Iterator `xi` to the lowest `x` value in `r` and the `y` position
   /// it would be placed on (negated if `bottom == true`).
   template<bool bottom>
-  auto min_region_y(const CandidateIt xi_1, const CandidateIt xi_2) -> std::tuple<CandidateIt, double> {
-    return unimodal_min(xi_1, xi_2, [this](const double x) {
-      return min_dot_y<bottom>(x);
+  auto min_region_y(const DotIt r) -> std::tuple<CandidateIt, double> {
+    return unimodal_min(r->xi_1, r->xi_2, [this, r](const double x) {
+      return min_dot_y<bottom>(r, x);
     });
   }
 
-  /// Find the minimum y placement of a value in the half-open interval [xi_1, xi_2).
-  /// Finds the `x` value in the given region with the lowest possible `y` position.
-  /// @param xi_1 lower limit of region to search
-  /// @param xi_2 upper limit of region to search
+  /// Find the minimum y placement of a dot in an unplaced region.
+  /// Finds the `x` value of the dot in the region [r->xi_1, r->xi_2) with the lowest possible `y`
+  /// position.
+  /// @param r unplaced region defining the dot(s) to attempt to place.
   /// @param s side to search on. If `Side::BOTH`, both sides are searched and the value
   /// from the lowest side is returned.
   /// @returns <xi, y, s> Iterator `xi` to the lowest `x` value in `values` and the `y` position
   /// it would be placed at on Side `s` (negated if `s == Side::BOTTOM`).
-  auto min_region_y(const CandidateIt xi_1, const CandidateIt xi_2, const Side s) -> std::tuple<CandidateIt, double, Side> {
+  auto min_region_y(const DotIt r, const Side s) -> std::tuple<CandidateIt, double, Side> {
     switch (s) {
       case Side::BOTH: {
-        const auto [xi_top, y_top] = min_region_y<false>(xi_1, xi_2);
-        const auto [xi_btm, y_btm] = min_region_y<true>(xi_1, xi_2);
+        const auto [xi_top, y_top] = min_region_y<false>(r);
+        const auto [xi_btm, y_btm] = min_region_y<true>(r);
         if (y_btm < y_top) return {xi_btm, y_btm, Side::BOTTOM};
         else return {xi_top, y_top, Side::TOP};
       }
       case Side::TOP: {
-        const auto [xi, y] = min_region_y<false>(xi_1, xi_2);
+        const auto [xi, y] = min_region_y<false>(r);
         return {xi, y, s};
       }
       default: { // Side::BOTTOM
-        const auto [xi, y] = min_region_y<true>(xi_1, xi_2);
+        const auto [xi, y] = min_region_y<true>(r);
         return {xi, y, s};
       }
     }
@@ -243,46 +265,48 @@ class CompactSwarm {
   /// Place a dot
   /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `min_y`
   /// accordingly.
+  /// @param d unplaced dot.
   /// @param x normalized x position to place dot at
-  /// @param y y position to place dot at (negated if `s == Side::BOTTOM`).
+  /// @param y normalized y position to place dot at (negated if `s == Side::BOTTOM`).
   /// @param s Side to place dot on
-  void place_dot(const double x, double y, const Side s) {
-    if (y > min_y) min_y = y;
-    if (s == Side::BOTTOM) y *= -1.0;
+  void place_dot(const DotIt d, const Side s) {
+    // update the frontier
+    erase_noncolliding_dots(d);
+    d->placed = true;
+    d->no_higher_after[false] = no_unplaced_in_range(d->x, std::next(d), frontier.end());
+    d->no_higher_after[true] = no_unplaced_in_range(d->x, std::reverse_iterator(d), frontier.rend());
+    if (d->y > min_y) min_y = d->y;
 
-    out_x_arr[i] = x * xsize;
-    out_y_arr[i] = y * ysize;
+    // output the non-normalized x and y positions
+    out_x_arr[i] = d->x * xsize;
+    out_y_arr[i] = d->y * ysize * (s == Side::BOTTOM ? -1.0 : 1.0);
     ++i;
 
     if (i % 1000 == 0) Rcpp::checkUserInterrupt();
-
-    auto& col = frontier[frontier_col(x)];
-    if (s == Side::BOTTOM) {
-      col.emplace_front(x, y);
-    } else {
-      col.emplace_back(x, y);
-    }
   }
 
-  /// Enqueue the region [xi_1, xi_2) for future search.
+  /// Create and enqueue the region [xi_1, xi_2) for future search.
+  /// Does not calculate an initial guess at best placement: just enters 0.0 as the "best guess".
+  /// This will cause the lowest dot in this region to be recalculated later.
+  /// @param before iterator to the position in the frontier to insert the new region before
   /// @param xi_1 lower limit of region
   /// @param xi_2 upper limit of region
-  /// @param y current best guess of `y` position of lowest dot in the region
-  /// (does not have to be correct, but must be less than or equal to what
-  /// ends up being the actual position of the lowest dot in this region).
-  void queue_region(const CandidateIt xi_1, const CandidateIt xi_2, const double y) {
+  void queue_region_without_guess(const DotIt before, const CandidateIt xi_1, const CandidateIt xi_2) {
     if (xi_2 - xi_1 <= 0) return;
-    queue.emplace(xi_1, xi_2, y);
+    queue.push(frontier.emplace(before, xi_1, xi_2));
   }
 
-  /// Enqueue the region [xi_1, xi_2) for future search.
+  /// Create and enqueue the region [xi_1, xi_2) for future search.
   /// Produces a guess for lower limit of `y` before enqueuing.
   /// @param xi_1 lower limit of region
   /// @param xi_2 upper limit of region
-  void queue_region(const CandidateIt xi_1, const CandidateIt xi_2) {
+  void queue_region(const DotIt before, const CandidateIt xi_1, const CandidateIt xi_2) {
     if (xi_2 - xi_1 <= 0) return;
-    const auto [_, y, s] = min_region_y(xi_1, xi_2, side);
-    queue.emplace(xi_1, xi_2, y);
+    auto r = frontier.emplace(before, xi_1, xi_2);
+    const auto [xi, y, s] = min_region_y(r, side);
+    r->x = *xi;
+    r->y = y;
+    queue.push(r);
   }
 
  public:
@@ -302,15 +326,16 @@ class CompactSwarm {
       if (first_group) {
         // For the first group we can quickly place a row of non-overlapping dots at the
         // base of the plot and enqueue the regions between each of those dots
-        for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend(); ) {
-          place_dot(*xi_1, 0.0, side);
+        for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend();) {
+          auto d = frontier.emplace(frontier.end(), xi_1, xi_1 + 1);
+          place_dot(d, side);
 
           auto xi_2 = advance_to_at_least(candidates, xi_1, *xi_1 + 1.0);
-          // we use 0.0 here because the next dot on the bottom row hasn't been placed yet
-          // and will likely change the lowest position of this region, so spending the time
-          // finding the lowest point now isn't worth it as it will likely be wrong and need
-          // to immediately be recalculated (which putting in 0.0 will cause to happen anyway).
-          queue_region(xi_1 + 1, xi_2, 0.0);
+          // we queue without guessing here because the next dot on the bottom row hasn't been
+          // placed yet and will likely change the lowest position of this region, so spending the
+          // time finding the lowest point now isn't worth it as it will likely be wrong and need to
+          // immediately be recalculated (which putting in 0.0 will cause to happen anyway).
+          queue_region_without_guess(frontier.end(), xi_1 + 1, xi_2);
 
           xi_1 = xi_2;
         }
@@ -321,46 +346,36 @@ class CompactSwarm {
         // we use the highest points along the frontier from previously-placed groups
         // to define the boundaries of the regions.
 
-        // First, find the highest points along the frontier...
-        auto frontier_xs = std::vector<double>{};
-        for (const auto& col : frontier) {
-          if (col.empty()) continue;
-
-          auto x1 = col.back().x;
-          auto x2 = col.front().x;
-          if (x2 < x1) std::swap(x1, x2);
-          frontier_xs.emplace_back(x1);
-          if (x2 == x1) continue;
-          frontier_xs.emplace_back(x2);
-        }
-
-        // ... then enqueue the regions between them
+        // Enqueue the regions between the highest points on the frontier
         auto xi_1 = candidates.cbegin();
-        for (const auto frontier_x : frontier_xs) {
+        for (auto r = frontier.begin(); r != frontier.end(); ++r) {
+          assert(r->placed);
           if (xi_1 == candidates.cend()) break;
-          auto xi_2 = advance_to_at_least(candidates, xi_1, frontier_x);
-          queue_region(xi_1, xi_2);
+          auto xi_2 = advance_to_at_least(candidates, xi_1, r->x);
+          queue_region(r, xi_1, xi_2);
           xi_1 = xi_2;
         }
-        queue_region(xi_1, candidates.cend());
+        queue_region(frontier.end(), xi_1, candidates.cend());
       }
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
       while (!queue.empty()) {
-        const auto [xi_1, xi_2, y_old] = queue.top();
+        auto r = queue.top();
         queue.pop();
 
-        const auto [xi_new, y_new, s_new] = min_region_y(xi_1, xi_2, side);
-        if (y_new > y_old) {
+        const auto [xi_new, y_new, s_new] = min_region_y(r, side);
+        if (y_new > r->y) {
           // region may no longer be the lowest region, put it back in the queue at its new position
-          queue_region(xi_1, xi_2, y_new);
+          r->x = *xi_new;
+          r->y = y_new;
+          queue.push(r);
         } else {
           // lowest dot in region is still where we thought it was => it is the lowest region
-          place_dot(*xi_new, y_new, s_new);
+          place_dot(r, s_new);
 
           // enqueue [xi_1, x_m) and (x_m, xi_2) for future search
-          queue_region(xi_1, xi_new);
-          queue_region(xi_new + 1, xi_2);
+          queue_region(r, r->xi_1, xi_new);
+          queue_region(std::next(r), xi_new + 1, r->xi_2);
         }
       }
     }
