@@ -113,7 +113,7 @@ constexpr bool is_reverse_iterator_v = is_reverse_iterator<It>::value;
 /// @param container object to erase from
 /// @param it iterator pointing at element to erase
 template<typename C, typename It>
-constexpr auto erase_(C& container, const It& it) -> It {
+constexpr auto erase_(C& container, const It it) -> It {
   if constexpr (is_reverse_iterator_v<It>) {
     return std::reverse_iterator(container.erase(std::next(it).base()));
   } else {
@@ -126,7 +126,7 @@ constexpr auto erase_(C& container, const It& it) -> It {
 /// @tparam It iterator type
 /// @param it Iterator. Cannot be an end iterator (must point to a value).
 template<bool reverse, typename It>
-constexpr auto next_(const It& it) {
+constexpr auto next_(const It it) {
   if constexpr (reverse) {
     return std::reverse_iterator(it);
   } else {
@@ -134,11 +134,23 @@ constexpr auto next_(const It& it) {
   }
 }
 
+/// conditionally reverse an iterator
+/// @tparam It iterator type
+/// @param it Iterator. Cannot be an end iterator (must point to a value).
+template<bool reverse, typename It>
+constexpr auto reverse_if(const It it) {
+  if constexpr (reverse) {
+    return std::reverse_iterator(it);
+  } else {
+    return it;
+  }
+}
+
 /// Get the forward iterator version of an iterator
 /// @tparam It iterator type
 /// @param it Iterator. Cannot be an end iterator (must point to a value).
 template<typename It>
-constexpr auto as_forward_it(const It& it) {
+constexpr auto as_forward_it(const It it) {
   if constexpr (is_reverse_iterator_v<It>) {
     return std::prev(it.base());
   } else {
