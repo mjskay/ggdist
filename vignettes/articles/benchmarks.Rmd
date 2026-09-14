@@ -57,14 +57,17 @@ dists = list(
   constant = \(n) rep(1, n)
 )
 
+set.seed(12345)
 df = bench::press(
   layout = names(layouts),
-  n = c(10, 100, 1000, 2500, 5000),
+  n = c(100, 1000, 2500, 5000),
   dist = names(dists),
+  grouped = c(TRUE, FALSE),
   {
     x = dists[[dist]](n)
+    group = if (grouped) rep(1:5, length.out = n) else 1L
     bench::mark(
-      find_dotplot_binwidth(x, 1, layout = layouts[[layout]]),
+      find_dotplot_binwidth(x, 1, layout = layouts[[layout]], group = group),
       min_iterations = 20
     )
   }
@@ -82,12 +85,14 @@ df |>
       color = layout,
       fill = after_scale(alpha(color, 0.25)),
       ymin = .lower,
-      ymax = .upper
+      ymax = .upper,
+      linetype = grouped
     )
   ) +
   geom_point() +
   bench::scale_y_bench_time(base = NULL) +
-  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(ylim = c(0, .6)) +
   # scale_y_log10() +
-  facet_wrap(~ dist)
+  facet_wrap(~ dist) +
+  theme(panel.grid.major.y = element_line(color = "gray75"))
 ```

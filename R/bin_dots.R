@@ -733,9 +733,9 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1) {
+grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1, group_penalty = 0.5) {
   if (ygrid == Inf) {
-    dots = compact_swarm_(xs, xsize, ysize, side)
+    dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = group_penalty)
   } else {
     dots = grid_swarm_(xs, xsize, ysize, ygrid, side)
   }

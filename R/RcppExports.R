@@ -12,8 +12,8 @@ wilkinson_bin_to_right_ <- function(x, width) {
 #' @param signed_side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-compact_swarm_ <- function(xs_list, xsize, ysize, signed_side) {
-    .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, signed_side)
+compact_swarm_ <- function(xs_list, xsize, ysize, signed_side, group_penalty) {
+    .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, signed_side, group_penalty)
 }
 
 #' Fractional grid swarm layout

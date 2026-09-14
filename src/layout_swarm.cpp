@@ -7,30 +7,11 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
-#include <iterator>
 #include <queue>
 #include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
-
-
-namespace {
-
-enum Direction {
-  NEXT = false,
-  PREV = true
-};
-enum Side {
-  TOP = false,
-  BTM = true
-};
-constexpr Side operator!(const Side s) {
-  return static_cast<Side>(!static_cast<bool>(s));
-};
-
-}  // namespace
-
 
 // compact swarm layout --------------------------------------------------------------
 
@@ -85,6 +66,8 @@ class CompactSwarm {
     double y;
     /// Group-specific penalty applied to `y` when queueing it for placement.
     double penalty;
+
+    /// A region of unplaced dots in the plot.
     Unplaced(
       const CompactSwarm& outer,
       const GroupIt groupi,
@@ -100,19 +83,16 @@ class CompactSwarm {
         x_1{x_1},
         x_2{x_2},
         y{y},
-        penalty{(groupi - outer.groups.cbegin()) * group_penalty} {};
-  };
+        penalty{(groupi - outer.groups.cbegin()) * outer.group_penalty} {};
 
-  /// Comparator that orders unplaced regions by their lowest `y` value (accounting for group penalties).
-  struct unplaced_is_higher : std::greater<Unplaced> {
-    bool operator()(const Unplaced& e1, const Unplaced& e2) const {
-      return e1.y + e1.penalty > e2.y + e2.penalty;
+    /// Order unplaced regions by their `y` value (accounting for group penalties).
+    friend auto operator>(const Unplaced& u1, const Unplaced& u2) -> bool {
+      return u1.y + u1.penalty > u2.y + u2.penalty;
     }
   };
 
   /// A placed dot.
   /// A dot that has been placed in a particular y location on one side of the plot.
-  /// Dots are ordered by x value then by y value.
   struct Dot {
     /// Normalized x position
     double x;
@@ -122,12 +102,19 @@ class CompactSwarm {
     constexpr Dot(const double x, const double y)
       : x{x}, y{y} {};
 
+    /// Order dots by their x value then by y value.
     friend constexpr auto operator<(const Dot& d1, const Dot& d2) -> bool {
       return std::tie(d1.x, d1.y) < std::tie(d2.x, d2.y);
     }
   };
 
-  /// Frontier of placed dots.
+  /// One side of the plot.
+  enum Side {
+    TOP = false,
+    BTM = true
+  };
+
+  /// Frontier of placed dots on one side of the plot.
   using Frontier = std::set<Dot>;
   /// Iterator pointing to a single Dot in a Frontier.
   using DotIt = Frontier::iterator;
@@ -138,7 +125,8 @@ class CompactSwarm {
     const std::vector<Rcpp::NumericVector>& xs_list,
     const double xsize,
     const double ysize,
-    const int signed_side
+    const int signed_side,
+    const double group_penalty
   )
     : xs_list{xs_list},
       xsize{xsize},
@@ -150,7 +138,7 @@ class CompactSwarm {
       out_y_vec(n),
       out_x_arr{REAL(out_x_vec)},
       out_y_arr{REAL(out_y_vec)},
-      max_penalty{(xs_list.size() - 1) * group_penalty}
+      group_penalty{group_penalty}
   {
     groups.reserve(xs_list.size());
     for (const auto& xs : xs_list) {
@@ -202,9 +190,7 @@ class CompactSwarm {
   /// Placement penalty (as a proportion of a single row) of a dot from a group being placed one
   /// row too early in the stacking order. A value of 0 means no penalty, and a value of 1 ensures
   /// groups are stacked in order but often produces white gaps. 0.5 tends to be reasonable.
-  static constexpr double group_penalty = 0.5;
-  /// Maximum group penalty = group_penalty * (groups.size() - 1)
-  const double max_penalty;
+  const double group_penalty = 0.5;
 
   /// "Frontier" of placed dots
   /// Contains placed dots in increasing x order. Used to find the lowest placed point for dots.
@@ -212,74 +198,13 @@ class CompactSwarm {
   /// them again.
   Frontier frontier[2] = {};
 
-  /// Minimum y value at which the next dot may be placed.
-  /// This is updated as we place dots and used to remove values from the frontier that we won't
-  /// need to check against again.
+  /// Minimum y value at which the next dot in any group may be placed.
+  /// We update this minimum as we place dots and use it to remove values from the frontier that we
+  /// won't need to check against again.
   double min_y = 0.0;
 
   /// Priority queue of regions to search for the lowest dot to place next.
-  std::priority_queue<Unplaced, std::vector<Unplaced>, unplaced_is_higher> next_unplaced = {};
-
-  /// Search the frontier above (or below) `di` for the dot that would collide with x at the highest
-  /// point. Checks against placed dots in the interval [di, frontier.end())
-  /// @tparam search in reverse? If true, searches [frontier.begin(), di) starting from std::prev(di)
-  /// backwards
-  /// @param di starting point of search.
-  /// @param x x position of the dot to check
-  /// @returns <cd, y> iterator to the highest colliding dot `cd` and the y position where that dot
-  /// would collide with a dot at `x`.
-  template<Direction reverse, bool delete_min_y>
-  auto highest_colliding_dot(const DotIt di, const double x, const Side s) -> std::tuple<DotIt, double> {
-    auto colliding_dot = frontier[s].end();
-    auto y = min_y;
-
-    for (auto existing_dot = reverse_if<reverse>(di); existing_dot != end_<reverse>(frontier[s]); ) {
-      const auto x_distance = std::abs(x - existing_dot->x);
-      if (x_distance > 1.0) break; // all further dots must be out of range
-
-      if constexpr (delete_min_y) {
-        if (existing_dot->y < min_y - 1.0) {
-          // this existing dot will never be within range of any future dots
-          existing_dot = erase_(frontier[s], existing_dot);
-          continue;
-        }
-      }
-
-      const auto new_y = std::sqrt(1 - sq(x_distance)) + existing_dot->y;
-      if (new_y >= y) {
-        colliding_dot = as_forward_it(existing_dot);
-        y = new_y;
-      }
-
-      ++existing_dot;
-    }
-
-    return {colliding_dot, y};
-  }
-
-  /// Erase dots
-  /// Erase dots in the open interval (begin, end)
-  void erase_dots(DotIt begin, const DotIt end, const Side s) {
-    // TODO: remove?
-    if (++begin == end) return;
-    frontier[s].erase(begin, end);
-  }
-
-  /// Erase noncolliding dots in a region of the frontier
-  /// Noncolliding dots are those in the interior of the frontier that, after
-  /// dot `di` is placed, will no longer collide with any subsequent dots (so we
-  /// never have to check them again)
-  /// @param di A newly-placed dot.
-  /// @param s side the dot was placed on.
-  void erase_noncolliding_dots(const DotIt di, const Side s) {
-    return;
-    // TODO: remove?
-    // erase the noncolliding dots to the right of r
-    auto [cd_r, y_r] = highest_colliding_dot<NEXT, false>(std::next(di), di->x, s);
-    if (cd_r != frontier[s].end()) erase_dots(di, cd_r, s);
-    auto [cd_l, y_l] = highest_colliding_dot<PREV, false>(di, di->x, s);
-    if (cd_l != frontier[s].end()) erase_dots(cd_l, di, s);
-  }
+  std::priority_queue<Unplaced, std::vector<Unplaced>, std::greater<Unplaced>> next_unplaced = {};
 
   /// Find the minimum y placement of a dot on one side of the chart.
   /// Checks along the `frontier` to determine the lowest point a dot with the given `x` value can
@@ -290,11 +215,23 @@ class CompactSwarm {
   /// without intersecting anything in the `frontier`. Normalized `y` positions are always
   /// increasing positively away from the axis (i.e. they are negated if `s == BTM`).
   auto min_dot_y(const double x, const Side s) -> double {
-    const auto di = frontier[s].lower_bound({x, 0});
-    // must search PREV before NEXT because di could be deleted while searching NEXT
-    const auto [cd_l, y_l] = highest_colliding_dot<PREV, true>(di, x, s);
-    const auto [cd_r, y_r] = highest_colliding_dot<NEXT, true>(di, x, s);
-    return std::max(y_r, y_l);
+    auto y = 0.0;
+
+    for (auto existing_dot = frontier[s].lower_bound({x - 1, 0}); existing_dot != frontier[s].end(); ) {
+      const auto x_distance = std::abs(x - existing_dot->x);
+      if (x_distance > 1.0) break; // all further dots must be out of range
+
+      if (existing_dot->y < min_y - 1.0) {
+        // this existing dot will never collide with any future dots, we can remove it to make
+        // future checks more efficient.
+        existing_dot = frontier[s].erase(existing_dot);
+      } else {
+        y = std::max(y, std::sqrt(1 - sq(x_distance)) + existing_dot->y);
+        ++existing_dot;
+      }
+    }
+
+    return y;
   }
 
   /// Find the minimum y placement of a dot in an unplaced region on one side of the chart.
@@ -364,30 +301,19 @@ class CompactSwarm {
     }
   }
 
-  /// Update the frontier to account for a new dot.
-  /// Add a dot to appropriate parts of the frontier so that future dots
-  /// are tested against it.
-  /// @param x normalized x position to place dot at
-  /// @param y normalized y position to place dot at
-  /// @param s Side to place dot on
-  void update_frontier(const double x, const double y, const Side s) {
-    const auto [di, _] = frontier[s].emplace(x, y);
-    erase_noncolliding_dots(di, s);
-  }
-
   /// Place a dot
   /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `min_y`
   /// accordingly.
   /// @param x normalized x position to place dot at
   /// @param y normalized y position to place dot at
   /// @param s Side to place dot on
-  void place_dot(const double x, const double y, const Side s, const double penalty) {
+  void place_dot(const double x, const double y, const Side s, const GroupIt groupi) {
     // update the frontier
-    update_frontier(x, y, s);
+    frontier[s].emplace(x, y);
     // when placing on both sides, the opposite frontier shares all points within 1 unit
     // of the axis since these can collide with dots on the other side.
-    if (both && y < 1) update_frontier(x, -y, !s);
-    min_y = std::max(min_y, y - (max_penalty - penalty));
+    if (both && y < 1) frontier[!s].emplace(x, -y);
+    min_y = std::max(min_y, y - (groups.cend() - groupi));
 
     // output the non-normalized x and y positions
     out_x_arr[i] = x * xsize;
@@ -406,9 +332,9 @@ class CompactSwarm {
     auto x_1 = -INF;
     const auto group0 = groups.cbegin();
     for (auto xi_1 = group0->cbegin(); xi_1 != group0->cend();) {
-      place_dot(*xi_1, 0.0, side, 0.0);
+      place_dot(*xi_1, 0.0, side, group0);
 
-      const auto xi_2 = advance_to_at_least(*group0, xi_1, *xi_1 + 1.0);
+      const auto xi_2 = std::lower_bound(xi_1, group0->cend(), *xi_1 + 1.0);
       const auto x_2 = xi_2 == group0->cend() ? INF : *xi_2;
       // We queue without guessing here because the next dot on the bottom row hasn't been placed
       // yet and will likely change the lowest position of this region, so spending the time finding
@@ -432,16 +358,17 @@ class CompactSwarm {
         next_unplaced.push(u);
       } else {
         // lowest dot in the unplaced region is still where we thought it was => it is the lowest region
-        place_dot(*xi_new, y_new, s_new, u.penalty);
+        place_dot(*xi_new, y_new, s_new, u.groupi);
 
         // Queue regions [u.x_1, *xi_new) and [*xi_new, u.x_2) for future search.
         // Note that we must specify the new regions in two ways:
         // - [*xi_1, *xi_new) and [*(xi_new + 1), *xi_2), which are the subsets of `u` in `u.groupi`
         //   that may still contain unplaced dots after `*xi_new` is placed.
         // - [u.x_1, *xi_new) and [*xi_new, u.x_2), which are two contiguous regions whose union is
-        //   `u`. We need to keep track of the full, contiguous unplaced regions so that if there
-        //   are dots from other groups to be placed in these regions we can correctly calculate the
-        //   boundaries of the regions for those groups.
+        //   `u` and which each contain one of the two regions above. We need to keep track of the
+        //   full, contiguous unplaced regions so that if there are dots from other groups to be
+        //   placed in these regions we can correctly calculate the boundaries of the regions for
+        //   those groups.
         queue_region(u.groupi,     u.xi_1, xi_new,   u.x_1, *xi_new);
         queue_region(u.groupi, xi_new + 1, u.xi_2, *xi_new,   u.x_2);
       }
@@ -466,7 +393,8 @@ SEXP compact_swarm_(
   const std::vector<Rcpp::NumericVector>& xs_list,
   const double xsize,
   const double ysize,
-  const int signed_side
+  const int signed_side,
+  const double group_penalty
 ) {
-  return CompactSwarm{xs_list, xsize, ysize, signed_side}.place_dots();
+  return CompactSwarm{xs_list, xsize, ysize, signed_side, group_penalty}.place_dots();
 }

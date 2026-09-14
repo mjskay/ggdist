@@ -19,7 +19,7 @@
 /// recently-placed dot in the same row.
 ///
 /// The distance between grid lines (`row_height`) is `ysize/ygrid`, where `ygrid` is a positive
-/// integer. During placement, already-placed values in each row are stored in a multiset
+/// integer. During placement, already-placed values in each row are stored in a set
 /// to allow efficient searching for collisions within a row.
 class GridSwarm {
  private:
@@ -55,7 +55,7 @@ class GridSwarm {
   std::deque<double> candidates = {};
 
   /// A single row of placed dots
-  using Row = std::multiset<double>;
+  using Row = std::set<double>;
   /// Rows of dots
   /// Contains the x position of each placed dot in each row.
   std::deque<Row> rows = {{}};
