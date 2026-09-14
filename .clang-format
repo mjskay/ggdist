@@ -6,15 +6,28 @@ Language: Cpp
 ContinuationIndentWidth: 2
 UseTab: Never
 ConstructorInitializerIndentWidth: 2
+BreakAfterOpenBracketBracedList: true
+BreakAfterOpenBracketFunction: true
+BreakAfterOpenBracketIf: true
+BreakAfterOpenBracketLoop: true
+BreakAfterOpenBracketSwitch: true
+BreakBeforeBraces: Attach
+BreakBeforeCloseBracketBracedList: true
+BreakBeforeCloseBracketFunction: true
+BreakBeforeCloseBracketIf: true
+BreakBeforeCloseBracketLoop: true
+BreakBeforeCloseBracketSwitch: true
+BreakBeforeTemplateCloser: true
 # BracketAlignmentStyle: BlockIndent
-AlignAfterOpenBracket: BlockIndent
+AlignAfterOpenBracket: true
 AlignConsecutiveShortCaseStatements:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
   AlignCaseColons: false
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortBlocksOnASingleLine: "Empty"
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
 DerivePointerAlignment: false
 PointerAlignment: Left
 RequiresClausePosition: OwnLineWithBrace
@@ -28,10 +41,8 @@ SpaceAfterTemplateKeyword: false
 SeparateDefinitionBlocks: Leave
 WrapNamespaceBodyWithEmptyLines: Always
 NamespaceIndentation: Inner
-AllowShortFunctionsOnASingleLine: Empty
 BinPackArguments: false
 BinPackParameters: OnePerLine
-# BreakBeforeTemplateCloser: true
 # RequiresExpressionIndentation: OuterScope
 IncludeCategories:
   - Regex:           '<R[[:alnum:]._]+>'

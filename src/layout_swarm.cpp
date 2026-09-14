@@ -40,6 +40,8 @@
 /// to regions in the queue based on how far up in the stacking order the lowest group in an
 /// unplaced region is.
 class CompactSwarm {
+  // TYPES ---------------------------------------------------------------------------------------
+
   /// A group of normalized x values to place
   using Group = std::vector<double>;
   /// Vector of groups
@@ -119,6 +121,8 @@ class CompactSwarm {
   /// Iterator pointing to a single Dot in a Frontier.
   using DotIt = Frontier::iterator;
 
+  // CONSTRUCTORS ---------------------------------------------------------------------------------
+
  public:
   /// Initialize the compact swarm algorithm.
   CompactSwarm(
@@ -152,6 +156,8 @@ class CompactSwarm {
       }
     }
   };
+
+  // FIELDS ---------------------------------------------------------------------------------
 
  private:
   // inputs and derived values
@@ -206,6 +212,8 @@ class CompactSwarm {
   /// Priority queue of regions to search for the lowest dot to place next.
   std::priority_queue<Unplaced, std::vector<Unplaced>, std::greater<Unplaced>> next_unplaced = {};
 
+  // PRIVATE METHODS -----------------------------------------------------------------------------
+
   /// Find the minimum y placement of a dot on one side of the chart.
   /// Checks along the `frontier` to determine the lowest point a dot with the given `x` value can
   /// be placed at without intersecting already-placed dots.
@@ -217,9 +225,11 @@ class CompactSwarm {
   auto min_dot_y(const double x, const Side s) -> double {
     auto y = 0.0;
 
-    for (auto existing_dot = frontier[s].lower_bound({x - 1, 0}); existing_dot != frontier[s].end(); ) {
+    for (
+      auto existing_dot = frontier[s].lower_bound({x - 1, 0}); existing_dot != frontier[s].end();
+    ) {
       const auto x_distance = std::abs(x - existing_dot->x);
-      if (x_distance > 1.0) break; // all further dots must be out of range
+      if (x_distance > 1.0) break;  // all further dots must be out of range
 
       if (existing_dot->y < min_y - 1.0) {
         // this existing dot will never collide with any future dots, we can remove it to make
@@ -244,9 +254,7 @@ class CompactSwarm {
   /// it would be placed at on Side `s`. `y` positions are always increasing positively away from
   /// the axis (i.e. they are negated if `s == BTM`).
   auto min_region_y(const XIt xi_1, const XIt xi_2, const Side s) -> std::tuple<XIt, double> {
-    return unimodal_min(xi_1, xi_2, [this, s](const double x) {
-      return min_dot_y(x, s);
-    });
+    return unimodal_min(xi_1, xi_2, [this, s](const double x) { return min_dot_y(x, s); });
   }
 
   /// Find the minimum y placement of a dot in an unplaced region.
@@ -323,6 +331,8 @@ class CompactSwarm {
     if (i % 1000 == 0) Rcpp::checkUserInterrupt();
   }
 
+  // PUBLIC METHODS -----------------------------------------------------------------------------
+
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
@@ -353,11 +363,13 @@ class CompactSwarm {
 
       const auto [xi_new, y_new, s_new] = min_region_y(u.xi_1, u.xi_2);
       if (y_new > u.y) {
-        // unplaced region may no longer be the lowest region, put it back in the queue at its new position
+        // unplaced region may no longer be the lowest region, put it back in the queue at its new
+        // position
         u.y = y_new;
         next_unplaced.push(u);
       } else {
-        // lowest dot in the unplaced region is still where we thought it was => it is the lowest region
+        // lowest dot in the unplaced region is still where we thought it was => it is the lowest
+        // region
         place_dot(*xi_new, y_new, s_new, u.groupi);
 
         // Queue regions [u.x_1, *xi_new) and [*xi_new, u.x_2) for future search.
@@ -385,7 +397,10 @@ class CompactSwarm {
 //' @param xs_list <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
-//' @param signed_side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+//' @param signed_side <scalar [integer]> which side to place dots on?
+//'  -  `0` = both
+//'  -  `1` = above
+//'  - `-1` = below
 //' @returns <[data.frame]> data frame with columns x and y giving the new positions
 //' @noRd
 // [[Rcpp::export(rng = false)]]
