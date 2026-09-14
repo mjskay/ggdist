@@ -59,7 +59,81 @@ constexpr Side operator!(const Side s) {
 /// to regions in the queue based on how far up in the stacking order the lowest group in an
 /// unplaced region is.
 class CompactSwarm {
+  /// A group of normalized x values to place
+  using Group = std::vector<double>;
+  /// Vector of groups
+  using Groups = std::vector<Group>;
+  /// Iterator pointing to a Group
+  using GroupIt = Groups::const_iterator;
+  /// Iterator pointing to a normalized x value
+  using XIt = Group::const_iterator;
+
+  /// An unplaced region containing one or more dots.
+  /// Represents all unplaced dots in the half-open interval [x_1, x_2).
+  struct Unplaced {
+    /// Lowest group still containing unplaced dots in this region.
+    GroupIt groupi;
+    /// First dot in groupi in this region
+    XIt xi_1;
+    /// First dot in groupi after this region
+    XIt xi_2;
+    /// Lower limit of this region
+    double x_1;
+    /// Upper limit of this region
+    double x_2;
+    /// Current guess at the y value the lowest dot in this region would be placed at.
+    double y;
+    /// Group-specific penalty applied to `y` when queueing it for placement.
+    double penalty;
+    Unplaced(
+      const CompactSwarm& outer,
+      const GroupIt groupi,
+      const XIt xi_1,
+      const XIt xi_2,
+      const double x_1,
+      const double x_2,
+      const double y
+    )
+      : groupi{groupi},
+        xi_1{xi_1},
+        xi_2{xi_2},
+        x_1{x_1},
+        x_2{x_2},
+        y{y},
+        penalty{(groupi - outer.groups.cbegin()) * group_penalty} {};
+  };
+
+  /// Comparator that orders unplaced regions by their lowest `y` value (accounting for group penalties).
+  struct unplaced_is_higher : std::greater<Unplaced> {
+    bool operator()(const Unplaced& e1, const Unplaced& e2) const {
+      return e1.y + e1.penalty > e2.y + e2.penalty;
+    }
+  };
+
+  /// A placed dot.
+  /// A dot that has been placed in a particular y location on one side of the plot.
+  /// Dots are ordered by x value then by y value.
+  struct Dot {
+    /// Normalized x position
+    double x;
+    /// Normalized y position
+    double y;
+
+    constexpr Dot(const double x, const double y)
+      : x{x}, y{y} {};
+
+    friend constexpr auto operator<(const Dot& d1, const Dot& d2) -> bool {
+      return std::tie(d1.x, d1.y) < std::tie(d2.x, d2.y);
+    }
+  };
+
+  /// Frontier of placed dots.
+  using Frontier = std::set<Dot>;
+  /// Iterator pointing to a single Dot in a Frontier.
+  using DotIt = Frontier::iterator;
+
  public:
+  /// Initialize the compact swarm algorithm.
   CompactSwarm(
     const std::vector<Rcpp::NumericVector>& xs_list,
     const double xsize,
@@ -93,18 +167,27 @@ class CompactSwarm {
 
  private:
   // inputs and derived values
+  /// List of unnormalized x values for in each group.
   const std::vector<Rcpp::NumericVector>& xs_list;
-  decltype(xs_list.begin()) xs;
+  /// Size of dots in the x dimension.
   const double xsize;
+  /// Size of dots in the y dimension.
   const double ysize;
+  /// Are we placing dots on both sides?
   const bool both;
+  /// Side we are placing on (always `TOP` if `both` is `false`).
   const Side side;
+  /// Total number of dots (sum of sizes of groups in xs_list).
   const std::ptrdiff_t n;
 
   // outputs
+  /// Unnormalized x values.
   Rcpp::NumericVector out_x_vec;
+  /// Unnormalized y values.
   Rcpp::NumericVector out_y_vec;
+  /// C array backing `out_x_vec`
   double* out_x_arr;
+  /// C array backing `out_y_vec`
   double* out_y_arr;
 
   /// Index of the next-to-be-placed value in out_x_vec / out_y_vec
@@ -113,63 +196,15 @@ class CompactSwarm {
   /// Groups of normalized x values we are currently placing.
   /// Groups are ordered from first placed to last. The x values in each group are normalized so
   /// that a distance of 1 is one dot diameter (`xsize`) and sorted in increasing order.
-  std::vector<std::vector<double>> groups = {};
-  using GroupIt = decltype(groups.cbegin());
-  using XIt = decltype(groups.cbegin()->cbegin());
+  Groups groups = {};
 
-  /// Group penalty
+  /// Group placement penalty
   /// Placement penalty (as a proportion of a single row) of a dot from a group being placed one
   /// row too early in the stacking order. A value of 0 means no penalty, and a value of 1 ensures
   /// groups are stacked in order but often produces white gaps. 0.5 tends to be reasonable.
   static constexpr double group_penalty = 0.5;
-  /// Maximum penalty = group_penalty * (numbers of groups - 1)
+  /// Maximum group penalty = group_penalty * (groups.size() - 1)
   const double max_penalty;
-
-  /// An unplaced region containing one or more dots.
-  /// A contiguous region of one or more consecutive dots in the input that may be placed
-  /// in the half-open interval [x_1, x_2)
-  struct Unplaced {
-    GroupIt groupi;
-    XIt xi_1;
-    XIt xi_2;
-    double x_1;
-    double x_2;
-    double y;
-    double penalty;
-    Unplaced(
-      const CompactSwarm& outer,
-      const GroupIt groupi,
-      const XIt xi_1,
-      const XIt xi_2,
-      const double x_1,
-      const double x_2,
-      const double y
-    )
-      : groupi{groupi},
-        xi_1{xi_1},
-        xi_2{xi_2},
-        x_1{x_1},
-        x_2{x_2},
-        y{y},
-        penalty{(groupi - outer.groups.cbegin()) * group_penalty} {};
-  };
-
-  /// A placed dot.
-  /// A dot that has been placed in a particular location.
-  struct Dot {
-    double x;
-    double y;
-    Dot(const double x, const double y)
-      : x{x}, y{y} {};
-  };
-
-  struct dot_is_less : std::less<Dot> {
-    bool operator()(const Dot& e1, const Dot& e2) const {
-      return e1.x < e2.x || (e1.x == e2.x && e1.y < e2.y);
-    }
-  };
-  using Frontier = std::set<Dot, dot_is_less>;
-  using DotIt = Frontier::iterator;
 
   /// "Frontier" of placed dots
   /// Contains placed dots in increasing x order. Used to find the lowest placed point for dots.
@@ -182,15 +217,10 @@ class CompactSwarm {
   /// need to check against again.
   double min_y = 0.0;
 
-  struct unplaced_is_higher : std::greater<Unplaced> {
-    bool operator()(const Unplaced& e1, const Unplaced& e2) const {
-      return e1.y + e1.penalty > e2.y + e2.penalty;
-    }
-  };
   /// Priority queue of regions to search for the lowest dot to place next.
   std::priority_queue<Unplaced, std::vector<Unplaced>, unplaced_is_higher> next_unplaced = {};
 
-  /// Search the frontier above (or below) di for the dot that would collide with x at the highest
+  /// Search the frontier above (or below) `di` for the dot that would collide with x at the highest
   /// point. Checks against placed dots in the interval [di, frontier.end())
   /// @tparam search in reverse? If true, searches [frontier.begin(), di) starting from std::prev(di)
   /// backwards
@@ -242,7 +272,7 @@ class CompactSwarm {
   /// @param di A newly-placed dot.
   /// @param s side the dot was placed on.
   void erase_noncolliding_dots(const DotIt di, const Side s) {
-    // return;
+    return;
     // TODO: remove?
     // erase the noncolliding dots to the right of r
     auto [cd_r, y_r] = highest_colliding_dot<NEXT, false>(std::next(di), di->x, s);
@@ -404,13 +434,16 @@ class CompactSwarm {
         // lowest dot in the unplaced region is still where we thought it was => it is the lowest region
         place_dot(*xi_new, y_new, s_new, u.penalty);
 
-        // Queue regions [x_1, *xi_new) and [*xi_new, x_2) for future search.
-        // Note that we are careful to keep [x_1, *xi_new) U [*xi_new, x_2) contiguous even though
-        // [*xi_1, *xi_new) U [*(xi_new + 1), xi_2) (which is a subset of the former two regions) is
-        // not: we need the full unplaced regions to be contiguous so that if there are other groups
-        // being placed the boundaries of the regions are correctly calculated for those groups.
-        queue_region(u.groupi, u.xi_1, xi_new, u.x_1, *xi_new);
-        queue_region(u.groupi, xi_new + 1, u.xi_2, *xi_new, u.x_2);
+        // Queue regions [u.x_1, *xi_new) and [*xi_new, u.x_2) for future search.
+        // Note that we must specify the new regions in two ways:
+        // - [*xi_1, *xi_new) and [*(xi_new + 1), *xi_2), which are the subsets of `u` in `u.groupi`
+        //   that may still contain unplaced dots after `*xi_new` is placed.
+        // - [u.x_1, *xi_new) and [*xi_new, u.x_2), which are two contiguous regions whose union is
+        //   `u`. We need to keep track of the full, contiguous unplaced regions so that if there
+        //   are dots from other groups to be placed in these regions we can correctly calculate the
+        //   boundaries of the regions for those groups.
+        queue_region(u.groupi,     u.xi_1, xi_new,   u.x_1, *xi_new);
+        queue_region(u.groupi, xi_new + 1, u.xi_2, *xi_new,   u.x_2);
       }
     }
 
