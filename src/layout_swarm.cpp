@@ -26,7 +26,7 @@ enum Side {
   BTM = true
 };
 constexpr Side operator!(const Side s) {
-  return !s;
+  return static_cast<Side>(!static_cast<bool>(s));
 };
 
 }  // namespace
@@ -34,10 +34,10 @@ constexpr Side operator!(const Side s) {
 
 // compact swarm layout --------------------------------------------------------------
 
-/// Divide-and-conquer approach to compact swarm layout
+/// Stackable compact swarm layout
 ///
-/// Does compact swarm layout by recursively searching contiguous regions of unplaced
-/// dots for the lowest next dot.
+/// Does compact swarm layout by recursively searching contiguous regions of unplaced dots for the
+/// lowest next dot.
 ///
 /// When we place a dot, we add the contiguous region of unplaced dots just above and just below
 /// that dot (between the just placed dot and its adjacent-in-x already-placed dots) to a priority
@@ -49,10 +49,15 @@ constexpr Side operator!(const Side s) {
 /// then recursively add the contiguous unplaced regions above and below each newly-placed dot back
 /// to the queue.
 ///
-/// Positions of placed dots are stored in a `frontier` divided into columns of dots that have a
-/// minimum width of the dot `xsize` and which are sorted by dot y position. This allows us to
-/// quickly find the highest/lowest already-placed dots to check for collisions when determining the
+/// Positions of placed dots are stored in a `frontier` sorted by x position. As dots are placed, we
+/// can trivially track the minimum y position that any subsequent dot could take (since we place
+/// dots in increasing y order) and prune dots from the frontier that can no longer collide with
+/// the minimum y position. This allows us to quickly check for collisions when determining the
 /// height a dot would be placed at.
+///
+/// Dots can be grouped, and groups of dots are stacked. Stacking is achieved by applying a penalty
+/// to regions in the queue based on how far up in the stacking order the lowest group in an
+/// unplaced region is.
 class CompactSwarm {
  public:
   CompactSwarm(
@@ -70,8 +75,21 @@ class CompactSwarm {
       out_x_vec(n),
       out_y_vec(n),
       out_x_arr{REAL(out_x_vec)},
-      out_y_arr{REAL(out_y_vec)}
-  {};
+      out_y_arr{REAL(out_y_vec)},
+      max_penalty{(xs_list.size() - 1) * group_penalty}
+  {
+    candidates_list.reserve(xs_list.size());
+    for (const auto& xs : xs_list) {
+      auto& candidates = candidates_list.emplace_back();
+      candidates.reserve(xs.size());
+      for (const auto x : xs) {
+        // we divide by xsize here so that all the distance calculations for checking
+        // overlaps can be done in standardized units of 1 dot diameter, then we
+        // multiply final positions by xsize and ysize before final output.
+        candidates.emplace_back(x / xsize);
+      }
+    }
+  };
 
  private:
   // inputs and derived values
@@ -94,20 +112,45 @@ class CompactSwarm {
 
   /// Candidate x values we are currently placing, normalized so that a distance
   /// of 1 is one dot diameter (`xsize`).
-  std::vector<double> candidates = {};
-  using CandidateIt = decltype(candidates)::const_iterator;
+  std::vector<std::vector<double>> candidates_list = {};
+  using Candidates = decltype(candidates_list.cbegin());
+  using CandidateIt = decltype(candidates_list.cbegin()->cbegin());
+
+  /// Group penalty
+  /// Placement penalty (as a proportion of a single row) of a dot from a group being placed one
+  /// row too early in the stacking order. A value of 0 means no penalty, and a value of 1 ensures
+  /// groups are stacked in order but often produces white gaps. 0.5 tends to be reasonable.
+  static constexpr double group_penalty = 0.5;
+  /// Maximum penalty = group_penalty * (numbers of groups - 1)
+  const double max_penalty;
 
   /// An unplaced region containing one or more dots.
   /// A contiguous region of one or more consecutive dots in the input that may be placed
-  /// in the half-open interval [xi_1, xi_2)
+  /// in the half-open interval [x_1, x_2)
   struct Unplaced {
+    Candidates candidates;
     CandidateIt xi_1;
     CandidateIt xi_2;
+    double x_1;
+    double x_2;
     double y;
-    Unplaced(const CandidateIt xi_1, const CandidateIt xi_2, const double y)
-      : xi_1(xi_1), xi_2(xi_2), y(y) {};
-    Unplaced(const CandidateIt xi_1, const CandidateIt xi_2)
-      : Unplaced(xi_1, xi_2, 0.0) {};
+    double penalty;
+    Unplaced(
+      const CompactSwarm& outer,
+      const Candidates candidates,
+      const CandidateIt xi_1,
+      const CandidateIt xi_2,
+      const double x_1,
+      const double x_2,
+      const double y
+    )
+      : candidates{candidates},
+        xi_1{xi_1},
+        xi_2{xi_2},
+        x_1{x_1},
+        x_2{x_2},
+        y{y},
+        penalty{(candidates - outer.candidates_list.cbegin()) * group_penalty} {};
   };
 
   /// A placed dot.
@@ -116,7 +159,7 @@ class CompactSwarm {
     double x;
     double y;
     Dot(const double x, const double y)
-      : x(x), y(y) {};
+      : x{x}, y{y} {};
   };
 
   struct dot_is_less : std::less<Dot> {
@@ -132,13 +175,6 @@ class CompactSwarm {
   /// Automatically pruned to remove dots we no longer need to check within the current group.
   Frontier frontier[2] = {};
 
-  /// Full set of placed dots
-  /// Contains all placed dots in increasing x order. Unlike `frontier`, `all_placed` is not
-  /// pruned, so it is not used for finding lowest placed points. It is only populated if the
-  /// input `xs_list` contains more than one group, and is only used to reset the frontier
-  /// for new groups.
-  Frontier all_placed[2] = {};
-
   /// Minimum y value at which the next dot may be placed.
   /// This is updated as we place dots and used to remove values from the frontier that we won't
   /// need to check against again.
@@ -146,7 +182,7 @@ class CompactSwarm {
 
   struct unplaced_is_higher : std::greater<Unplaced> {
     bool operator()(const Unplaced& e1, const Unplaced& e2) const {
-      return e1.y > e2.y;
+      return e1.y + e1.penalty > e2.y + e2.penalty;
     }
   };
   /// Priority queue of regions to search for the lowest dot to place next.
@@ -204,6 +240,7 @@ class CompactSwarm {
   /// @param di A newly-placed dot.
   /// @param s side the dot was placed on.
   void erase_noncolliding_dots(const DotIt di, const Side s) {
+    // return;
     // TODO: remove?
     // erase the noncolliding dots to the right of r
     auto [cd_r, y_r] = highest_colliding_dot<NEXT, false>(std::next(di), di->x, s);
@@ -274,7 +311,6 @@ class CompactSwarm {
   /// @param s Side to place dot on
   void update_frontier(const double x, const double y, const Side s) {
     auto [di, _] = frontier[s].emplace(x, y);
-    if (std::next(xs) != xs_list.end()) all_placed[s].emplace(x, y);
     erase_noncolliding_dots(di, s);
   }
 
@@ -284,13 +320,14 @@ class CompactSwarm {
   /// @param x normalized x position to place dot at
   /// @param y normalized y position to place dot at
   /// @param s Side to place dot on
-  void place_dot(const double x, const double y, const Side s) {
+  void place_dot(const double x, const double y, const Side s, const double penalty) {
     // update the frontier
     update_frontier(x, y, s);
     // when placing on both sides, the opposite frontier shares all points within 1 unit
     // of the axis since these can collide with dots on the other side.
     if (both && y < 1) update_frontier(x, -y, !s);
-    if (y > min_y) min_y = y;
+    // min_y = std::max(min_y, y - (candidates_list.size() - 1 - penalty));
+    min_y = std::max(min_y, y - (max_penalty - penalty));
 
     // output the non-normalized x and y positions
     out_x_arr[i] = x * xsize;
@@ -301,70 +338,77 @@ class CompactSwarm {
   }
 
   /// Create and enqueue the region [xi_1, xi_2) for future search.
-  /// Does not calculate an initial guess at best placement: just enters 0.0 as the "best guess".
-  /// This will cause the lowest dot in this region to be recalculated later.
-  /// @param xi_1 lower limit of region
-  /// @param xi_2 upper limit of region
-  void queue_region_without_guess(const CandidateIt xi_1, const CandidateIt xi_2) {
-    if (xi_2 - xi_1 <= 0) return;
-    queue.emplace(xi_1, xi_2, 0.0);
-  }
+  /// @tparam guess If `true` (the default), produces a guess for lower limit of `y` before
+  /// enqueuing. If `false`, does not calculate an initial guess at best placement: just enters 0.0
+  /// as the "best guess", which will cause the lowest dot in this region to be recalculated later.
+  /// @param candidates candidate x values in the current group
+  /// @param xi_1 lower limit of region in `*candidates`
+  /// @param xi_2 upper limit of region in `*candidates1
+  /// @param x_1 lower limit x value, which may be <= `*xi_1` when the lower limit does not exactly
+  /// coincide with a value in `*candidates`.
+  /// @param x_2 upper limit x value, which may be >= `*xi_2` when the upper limit does not exactly
+  /// coincide with a value in `*candidates`.
+  template<bool guess = true>
+  void queue_region(Candidates candidates, CandidateIt xi_1, CandidateIt xi_2, const double x_1, const double x_2) {
+    while (xi_2 <= xi_1 && ++candidates != candidates_list.cend()) {
+      xi_1 = std::lower_bound(candidates->cbegin(), candidates->cend(), x_1);
+      xi_2 = std::lower_bound(xi_1, candidates->cend(), x_2);
+    }
+    if (xi_2 <= xi_1) return;
 
-  /// Create and enqueue the region [xi_1, xi_2) for future search.
-  /// Produces a guess for lower limit of `y` before enqueuing.
-  /// @param xi_1 lower limit of region
-  /// @param xi_2 upper limit of region
-  void queue_region(const CandidateIt xi_1, const CandidateIt xi_2) {
-    if (xi_2 - xi_1 <= 0) return;
-    auto [xi, y, s] = min_region_y(xi_1, xi_2);
-    queue.emplace(xi_1, xi_2, y);
+    if constexpr (guess) {
+      const auto [xi, y, s] = min_region_y(xi_1, xi_2);
+      queue.emplace(*this, candidates, xi_1, xi_2, x_1, x_2, y);
+    } else {
+      queue.emplace(*this, candidates, xi_1, xi_2, x_1, x_2, 0.0);
+    }
   }
 
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
-    for (xs = xs_list.begin(); xs != xs_list.end(); ++xs) {
-      candidates.clear();
+    // for (auto candidates = candidates_list.cbegin(); candidates != candidates_list.cend();
+    // ++candidates) {
+    auto candidates = candidates_list.cbegin();
       min_y = 0.0;
 
-      // we divide by xsize here so that all the distance calculations for checking
-      // overlaps can be done in standardized units of 1 dot diameter, then we
-      // multiply final positions by xsize and ysize before final output.
-      for (const auto x : *xs) candidates.emplace_back(x / xsize);
-
       // Build initial queue of regions to search
-      if (xs == xs_list.begin()) {
+      // if (xs == xs_list.begin()) {
         // For the first group we can quickly place a row of non-overlapping dots at the
         // base of the plot and enqueue the regions between each of those dots
-        for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend();) {
-          place_dot(*xi_1, 0.0, side);
+        auto x_1 = -INF;
+        for (auto xi_1 = candidates->cbegin(); xi_1 != candidates->cend();) {
+          place_dot(*xi_1, 0.0, side, 0.0);
 
-          auto xi_2 = advance_to_at_least(candidates, xi_1, *xi_1 + 1.0);
+          auto xi_2 = advance_to_at_least(*candidates, xi_1, *xi_1 + 1.0);
+          auto x_2 = xi_2 == candidates->cend() ? INF : *xi_2;
           // we queue without guessing here because the next dot on the bottom row hasn't been
           // placed yet and will likely change the lowest position of this region, so spending the
           // time finding the lowest point now isn't worth it as it will likely be wrong and need to
           // immediately be recalculated.
-          queue_region_without_guess(xi_1 + 1, xi_2);
+          queue_region<false>(candidates, xi_1 + 1, xi_2, x_1, x_2);
 
           xi_1 = xi_2;
+          x_1 = x_2;
         }
-      } else {
-        // After the first group, we must rebuild a new priority queue of regions before
-        // laying out each subsequent group. Since there are already dots laid down,
-        // we use the highest points along the frontier from previously-placed groups
-        // to define the boundaries of the regions.
+      // queue_region<false>(candidates, candidates->cbegin(), candidates->cend(), -INF, INF);
+      // } else {
+      //   // After the first group, we must rebuild a new priority queue of regions before
+      //   // laying out each subsequent group. Since there are already dots laid down,
+      //   // we use the highest points along the frontier from previously-placed groups
+      //   // to define the boundaries of the regions.
 
-        // TODO: can build frontier by testing all points against just +/- one nearest point to get
-        // a min y, then rebuild the frontier using only placed points >= min_y - 1
-        frontier[TOP] = all_placed[TOP];
-        frontier[BTM] = all_placed[BTM];
+      //   // TODO: can build frontier by testing all points against just +/- one nearest point to get
+      //   // a min y, then rebuild the frontier using only placed points >= min_y - 1
+      //   frontier[TOP] = all_placed[TOP];
+      //   frontier[BTM] = all_placed[BTM];
 
-        for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend();) {
-          auto xi_2 = advance_to_at_least(candidates, xi_1, *xi_1 + 1.0);
-          queue_region(xi_1, xi_2);
-          xi_1 = xi_2;
-        }
-      }
+      //   for (auto xi_1 = candidates.cbegin(); xi_1 != candidates.cend();) {
+      //     auto xi_2 = advance_to_at_least(candidates, xi_1, *xi_1 + 1.0);
+      //     queue_region(xi_1, xi_2);
+      //     xi_1 = xi_2;
+      //   }
+      // }
 
       // repeatedly look for the region containing the lowest dot to insert and insert it
       while (!queue.empty()) {
@@ -378,15 +422,17 @@ class CompactSwarm {
           queue.push(u);
         } else {
           // lowest dot in the unplaced region is still where we thought it was => it is the lowest region
-          place_dot(*xi_new, y_new, s_new);
+          place_dot(*xi_new, y_new, s_new, u.penalty);
 
           // queue regions [xi_1, x_m) and (x_m, xi_2) for future search
-          queue_region(u.xi_1, xi_new);
-          queue_region(xi_new + 1, u.xi_2);
+          queue_region(u.candidates, u.xi_1, xi_new, u.x_1, *xi_new);
+          queue_region(u.candidates, xi_new + 1, u.xi_2, *xi_new, u.x_2);
         }
       }
-    }
+    // }
 
+      // Rcpp::Rcout << i << "\t" << n;
+      // assert(i == n);
     return Rcpp::DataFrame::create(
       Rcpp::Named("x") = out_x_vec,
       Rcpp::Named("y") = out_y_vec

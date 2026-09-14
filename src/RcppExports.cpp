@@ -22,15 +22,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // compact_swarm_
-SEXP compact_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const int side);
-RcppExport SEXP _ggdist_compact_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP sideSEXP) {
+SEXP compact_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const int signed_side);
+RcppExport SEXP _ggdist_compact_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP signed_sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const std::vector<Rcpp::NumericVector>& >::type xs_list(xs_listSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
-    Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(compact_swarm_(xs_list, xsize, ysize, side));
+    Rcpp::traits::input_parameter< const int >::type signed_side(signed_sideSEXP);
+    rcpp_result_gen = Rcpp::wrap(compact_swarm_(xs_list, xsize, ysize, signed_side));
     return rcpp_result_gen;
 END_RCPP
 }

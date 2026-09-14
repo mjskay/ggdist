@@ -195,13 +195,13 @@ template<typename C, typename It, typename V = typename C::value_type, typename 
 inline auto advance_to_at_least(
   C& container, It it, V&& min_value, Comp&& comp = {}
 ) -> It {
-  if constexpr (std::is_base_of_v<typename C::reverse_iterator, It>) {
-    return std::reverse_iterator(std::upper_bound(container.begin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
-  } else if constexpr (std::is_base_of_v<typename C::const_reverse_iterator, It>) {
+  if constexpr (std::is_base_of_v<decltype(container.crbegin()), It>) {
     return std::reverse_iterator(std::upper_bound(container.cbegin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
-  } else if constexpr (std::is_base_of_v<typename C::iterator, It>) {
+  } else if constexpr (std::is_base_of_v<decltype(container.rbegin()), It>) {
+    return std::reverse_iterator(std::upper_bound(container.begin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
+  } else if constexpr (std::is_base_of_v<decltype(container.begin()), It>) {
     return std::lower_bound(it, container.end(), std::forward<V>(min_value), std::forward<Comp>(comp));
-  } else if constexpr (std::is_base_of_v<typename C::const_iterator, It>) {
+  } else if constexpr (std::is_base_of_v<decltype(container.cbegin()), It>) {
     return std::lower_bound(it, container.cend(), std::forward<V>(min_value), std::forward<Comp>(comp));
   } else {
     static_assert(false, "`it` must be an iterator for `container`");

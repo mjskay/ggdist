@@ -9,11 +9,11 @@ wilkinson_bin_to_right_ <- function(x, width) {
 #' @param xs_list <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
-#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @param signed_side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-compact_swarm_ <- function(xs_list, xsize, ysize, side) {
-    .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, side)
+compact_swarm_ <- function(xs_list, xsize, ysize, signed_side) {
+    .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, signed_side)
 }
 
 #' Fractional grid swarm layout
