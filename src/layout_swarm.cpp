@@ -41,7 +41,6 @@
 /// unplaced region is.
 class CompactSwarm {
   // TYPES ---------------------------------------------------------------------------------------
-
   /// A group of normalized x values to place
   using Group = std::vector<double>;
   /// Vector of groups
@@ -111,7 +110,7 @@ class CompactSwarm {
   };
 
   /// One side of the plot.
-  enum Side {
+  enum Side : bool {
     TOP = false,
     BTM = true
   };
@@ -122,7 +121,6 @@ class CompactSwarm {
   using DotIt = Frontier::iterator;
 
   // CONSTRUCTORS ---------------------------------------------------------------------------------
-
  public:
   /// Initialize the compact swarm algorithm.
   CompactSwarm(
@@ -158,7 +156,6 @@ class CompactSwarm {
   };
 
   // FIELDS ---------------------------------------------------------------------------------
-
  private:
   // inputs and derived values
   /// List of unnormalized x values for in each group.
@@ -213,7 +210,7 @@ class CompactSwarm {
   std::priority_queue<Unplaced, std::vector<Unplaced>, std::greater<Unplaced>> next_unplaced = {};
 
   // PRIVATE METHODS -----------------------------------------------------------------------------
-
+ private:
   /// Find the minimum y placement of a dot on one side of the chart.
   /// Checks along the `frontier` to determine the lowest point a dot with the given `x` value can
   /// be placed at without intersecting already-placed dots.
@@ -332,7 +329,6 @@ class CompactSwarm {
   }
 
   // PUBLIC METHODS -----------------------------------------------------------------------------
-
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {

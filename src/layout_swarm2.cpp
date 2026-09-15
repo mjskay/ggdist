@@ -24,15 +24,20 @@
 class GridSwarm {
   // TYPES ---------------------------------------------------------------------------------------
   /// Direction of iteration when placing dots in a row.
-  enum Direction {
+  enum Direction : bool {
     FWD = false,
     REV = true
   };
   constexpr friend Direction operator!(const Direction direction) {
     return static_cast<Direction>(!static_cast<bool>(direction));
   };
+
   /// A single row of placed dots
   using Row = std::set<double>;
+  /// Rows of placed dots
+  using Rows = std::deque<Row>;
+  /// Iterator to a single row
+  using RowIt = Rows::iterator;
 
   // CONSTRUCTORS --------------------------------------------------------------------------------
  public:
@@ -103,60 +108,59 @@ class GridSwarm {
 
   /// Rows of dots
   /// Contains the normalized x position of each placed dot in each row.
-  std::deque<Row> rows = {{}};
+  Rows rows = {{}};
 
-  /// Current row.
-  /// - When `both == false`, this is the index of the current row in `rows`.
-  /// - When `both == true`, this is the distance from the origin (center) row.
-  std::ptrdiff_t current_row = 0_z;
+  /// Current row number.
+  /// Distance from `origin_row_i` to the current row.
+  /// - When `both == false`, this is also the index of the current row in `rows`.
+  /// - When `both == true`, there are two current rows: `origin_row_i + current_row_num` and
+  ///   `origin_row_i - current_row_num`.
+  std::ptrdiff_t row_num = 0_z;
 
-  /// Row origin
-  /// Index of the origin row in `rows`
-  /// - When `both == false`, this is 0.
-  /// - When `both == true`, this is floor(rows.size() / 2).
-  std::ptrdiff_t row_origin = 0_z;
+  /// Origin row.
+  /// Iterator to the origin row in `rows` (i.e. the row at the axis).
+  /// - When `both == false`, this is the base row of the plot (`rows.begin()`).
+  /// - When `both == true`, the is the middle row (`rows.begin() + floor(rows.size() / 2)`).
+  RowIt origin_row_i = rows.begin();
 
   // PRIVATE METHODS -----------------------------------------------------------------------------
  private:
   /// Attempt to place a dot in a target row
-  /// @param x normalized x position of dot
-  /// @param target_row_i index of row in `rows` to attempt to place `x` in
+  /// @tparam reverse are we placing dots in reverse (from end to beginning)?
+  /// @param x normalized x position of dot to attempt to place
+  /// @param row_i iterator to row in `rows` to attempt to place `x` in
   /// @param min_next_x output parameter giving the next closest x position
   /// that a dot could be placed at in this row after `x` is placed
   /// @returns `true` if the dot was placed successfully
   template<Direction reverse>
   auto place_dot(
     const double x,
-    const std::ptrdiff_t target_row_i,
+    const RowIt row_i,
     double& min_next_x
   ) -> bool {
-    auto& target_row = rows[target_row_i];
-    auto insert_loc = target_row.end();
+    auto x_insert_loc = row_i->end();
 
-    // check +/- (strata - 1) rows from target_row to see if the dot is overlapping an existing dot
-    const auto first_row_i = std::max(0_z, target_row_i - (strata - 1_z));
-    const auto last_row_i = std::min(ssize_(rows), target_row_i + strata);
-    // iterate in reverse because higher-up placed dots should be closer to this one (which
-    // may lead to a quick exit)
-    for (auto i = last_row_i; i-- > first_row_i;) {
-      auto& row = rows[i];
-      if (row.empty()) continue;
+    // check +/- (strata - 1) rows from the target row to see if the dot overlaps an existing dot
+    const auto first_row_i = row_i - std::min(strata - 1_z, row_i - rows.begin());
+    const auto last_row_i = row_i + std::min(strata, rows.end() - row_i);
+    for (auto test_row_i = first_row_i; test_row_i != last_row_i; ++test_row_i) {
+      if (test_row_i->empty()) continue;
 
-      const auto rows_from_target = static_cast<double>(std::abs(i - target_row_i));
+      const auto rows_from_target = static_cast<double>(std::abs(test_row_i - row_i));
       const auto y_offset = rows_from_target / static_cast<double>(strata);
       const auto x_distance = std::sqrt(1 - sq(y_offset));
 
-      auto x_loc_in_row = row.upper_bound(x);
-      if (x_loc_in_row != row.end()) {
-        const auto existing_dot_gt_x = *x_loc_in_row;
+      auto x_loc_in_test_row = test_row_i->upper_bound(x);
+      if (x_loc_in_test_row != test_row_i->end()) {
+        const auto existing_dot_gt_x = *x_loc_in_test_row;
         if (x > existing_dot_gt_x - x_distance) {
           // overlap => can't place dot here
           min_next_x = existing_dot_gt_x + negate_if<reverse>(x_distance);
           return false;
         }
       }
-      if (x_loc_in_row != row.begin()) {
-        const auto existing_dot_lte_x = *std::prev(x_loc_in_row);
+      if (x_loc_in_test_row != test_row_i->begin()) {
+        const auto existing_dot_lte_x = *std::prev(x_loc_in_test_row);
         if (x < existing_dot_lte_x + x_distance) {
           // overlap => can't place dot here
           min_next_x = existing_dot_lte_x + negate_if<reverse>(x_distance);
@@ -164,34 +168,29 @@ class GridSwarm {
         }
       }
 
-      // if this is the target row we save insert_loc so we can give a hint to
-      // speed up the call to target_row.insert() below
-      if (rows_from_target == 0.0) insert_loc = x_loc_in_row;
+      // if the test row is the target row we save x_insert_loc so we can give a hint to
+      // speed up the call to row_i->insert() below
+      if (rows_from_target == 0.0) x_insert_loc = x_loc_in_test_row;
     }
 
     // Place dot
     out_x_arr[i] = x * xsize;
-    out_y_arr[i] = static_cast<double>(target_row_i - row_origin) * row_height;
+    out_y_arr[i] = static_cast<double>(row_i - origin_row_i) * row_height;
     ++i;
-    target_row.insert(insert_loc, x);
+    row_i->insert(x_insert_loc, x);
     min_next_x = x + negate_if<reverse>(1.0);
 
     return true;
   }
 
-  /// Attempt to place dots in a specific row in the grid_swarm algorithm
-  /// @tparam reverse are we placing dots in reverse order?
-  /// @returns `true` if `unplaced` may still have dots to place and `false` otherwise
+  /// Attempt to place dots in the current row in the grid_swarm algorithm
+  /// @tparam reverse are we placing dots in reverse (from end to beginning)?
+  /// @returns `true` if `unplaced` still has dots to place and `false` otherwise.
   template<Direction reverse>
   auto place_row() -> bool {
     if (unplaced.empty()) return false;
 
-    // determine row indices
-    auto row_i_top = row_origin + current_row;
-    auto row_i_btm = row_origin - current_row;
-
-    // place dots
-    const bool place_both = both && current_row > 0;  // center row only placed once
+    const bool place_both = both && row_num > 0;  // center (origin) row only placed once
     auto min_next_x = reverse ? INF : -INF;
     auto min_next_x_top = min_next_x;
     auto min_next_x_btm = min_next_x;
@@ -202,8 +201,8 @@ class GridSwarm {
       // definitely not placeable (this is very important for performance, especially when binwidth
       // is large and many candidate dots are rejected)
       if (
-        place_dot<reverse>(x, row_i_top, min_next_x_top) ||
-        (place_both && place_dot<reverse>(x, row_i_btm, min_next_x_btm))
+        place_dot<reverse>(x, origin_row_i + row_num, min_next_x_top) ||
+        (place_both && place_dot<reverse>(x, origin_row_i - row_num, min_next_x_btm))
       ) {
         xi = erase_(unplaced, xi);
       } else {
@@ -216,14 +215,15 @@ class GridSwarm {
     }
 
     // advance to next row (and ensure it exists)
-    if (row_i_top + 1_z == ssize_(rows)) {
+    ++row_num;
+    if (origin_row_i + row_num == rows.end()) {
       rows.emplace_back();
+      origin_row_i = rows.begin();
       if (both) {
         rows.emplace_front();
-        ++row_origin;
+        origin_row_i = rows.begin() + rows.size() / 2;
       }
     }
-    ++current_row;
 
     return !unplaced.empty();
   }
@@ -232,11 +232,11 @@ class GridSwarm {
   /// @param n_rows Number of rows to place.
   /// @see `place_row()`
   template<Direction reverse>
-  auto place_rows(std::size_t n_rows) -> bool {
+  auto place_rows(std::ptrdiff_t n_rows) -> bool {
     while (
-      n_rows-- > 0_uz &&
+      n_rows-- > 0_z &&
       place_row<reverse>() &&
-      n_rows-- > 0_uz &&
+      n_rows-- > 0_z &&
       place_row<!reverse>()
     );
     return !unplaced.empty();
@@ -247,7 +247,7 @@ class GridSwarm {
   /// Run the grid swarm algorithm.
   auto place_dots() -> SEXP {
     for (const auto& xs : xs_list) {
-      current_row = 0_z;
+      row_num = 0_z;
 
       // we divide by xsize here so that all the distance calculations for checking
       // overlaps can be done in standardized units of 1 dot diameter, then we
