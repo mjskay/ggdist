@@ -189,11 +189,17 @@ class CompactSwarm {
   /// that a distance of 1 is one dot diameter (`xsize`) and sorted in increasing order.
   Groups groups = {};
 
-  /// Group placement penalty
-  /// Placement penalty (as a proportion of a single row) of a dot from a group being placed one
-  /// row too early in the stacking order. A value of 0 means no penalty, and a value of 1 ensures
-  /// groups are stacked in order but often produces white gaps. 0.5 tends to be reasonable.
-  const double group_penalty = 0.5;
+  /// Group placement penalty.
+  /// Placement penalty (as a proportion of dot height, `ysize`) for a dot from group `i` being
+  /// placed before a dot from group `i - 1`. A value of `1` means the y height of dots in group `i`
+  /// will have a penalty of `group_penalty` rows more than group `i - 1` when added to the queue.
+  /// Maximum value is `1` (which means a dot in group `i` cannot be placed at height `y` until all
+  /// dots in group `i - 1` up to height `y + 1` have been placed).
+  ///
+  /// A value of 0 means no penalty, and a value of 1 ensures groups are stacked in order but often
+  /// produces white gaps. A reasonable value is usually around `0.5`, which allows dots in group
+  /// `i` to be placed even if some dots from group `i - 1` will overlap the area directly above it.
+  const double group_penalty = 1.0;
 
   /// "Frontier" of placed dots
   /// Contains placed dots in increasing x order. Used to find the lowest placed point for dots.
@@ -223,10 +229,11 @@ class CompactSwarm {
     auto y = 0.0;
 
     for (
-      auto existing_dot = frontier[s].lower_bound({x - 1, 0}); existing_dot != frontier[s].end();
+      auto existing_dot = frontier[s].upper_bound({x - 1.0, 0.0});
+      existing_dot != frontier[s].end();
     ) {
       const auto x_distance = std::abs(x - existing_dot->x);
-      if (x_distance > 1.0) break;  // all further dots must be out of range
+      if (x_distance >= 1.0) break;  // all further dots must be out of range
 
       if (existing_dot->y < min_y - 1.0) {
         // this existing dot will never collide with any future dots, we can remove it to make
