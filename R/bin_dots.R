@@ -72,7 +72,7 @@ bin_dots = function(
   group = 1L,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
   overlaps = "nudge",
@@ -210,18 +210,18 @@ method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, 
   dotplot
 }
 
-## setup_dotplot for swarm, swarm2 -----------------------------------------
+## setup_dotplot for swarm -----------------------------------------
 
 #' Initialize swarm dotplot layout
-#' @param layout <`layout_swarm`> the dotplot layout
+#' @param layout <`layout_oldswarm`> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
-  stop_if_not_installed("beeswarm", '{.help ggdist::geom_dots}(layout = "swarm")')
+method(setup_dotplot, layout_oldswarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
+  stop_if_not_installed("beeswarm", '{.fn ggdist::layout_oldswarm}')
 
   dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
   dotplot$dots = beeswarm::swarmy(
@@ -241,21 +241,21 @@ method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = 
 }
 
 #' Initialize stratified swarm dotplot layout
-#' @param layout <`layout_swarm2`> the dotplot layout
+#' @param layout <`layout_swarm`> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(setup_dotplot, layout_swarm2) = function(layout, nbins = NULL, binwidth = NULL, ...) {
+method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
   dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
   dotplot$dots = grid_swarm(
     layout@xs,
     0,
     xsize = dotplot$binwidth,
     ysize = dotplot$y_spacing,
-    ygrid = layout@grid,
+    strata = layout@strata,
     side = switch(layout@side, top = 1, bottom = -1, both = 0)
   )
   dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
@@ -438,9 +438,9 @@ get_row_start_offset = function(layout, dotplot, n_dots) {
   }
 }
 
-## place_dots for swarm, swarm2 -------------------------------------------------
+## place_dots for swarm -------------------------------------------------
 
-method(place_dots, layout_swarm | layout_swarm2) = function(layout, dotplot) {
+method(place_dots, layout_oldswarm | layout_swarm) = function(layout, dotplot) {
   dots = layout@dots
   dots$x = dotplot$dots$x
   dots$y = dots$y + dotplot$y_start + dotplot$dots$y
@@ -721,7 +721,7 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 
 # stratified swarm -------------------------------------------------------------
 
-#' Beeswarm layout using a fractional grid.
+#' Stratified swarm layout using a fractional grid.
 #' @description
 #' Lays out dots by sweeping one row at a time on a fractional grid, alternating the direction of
 #' sweeps on each row.
@@ -729,15 +729,16 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
-#' @param ygrid <scalar [integer]> \eqn{\ge 1} resolution of the fractional grid used to place dots.
+#' @param strata <scalar [integer]> \eqn{\ge 1} number of fractional rows in the grid used to place dots.
+#' May be `Inf`, in which case a non-stratified compact swarm layout is used.
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm = function(xs, y, xsize, ysize = xsize, ygrid = 3, side = 1, group_penalty = 0.5) {
-  if (ygrid == Inf) {
+grid_swarm = function(xs, y, xsize, ysize = xsize, strata = 3, side = 1, group_penalty = 0.5) {
+  if (strata == Inf) {
     dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = group_penalty)
   } else {
-    dots = grid_swarm_(xs, xsize, ysize, ygrid, side)
+    dots = grid_swarm_(xs, xsize, ysize, strata, side)
   }
   dots = dots[order(dots$x), ]
   dots$y = dots$y + y

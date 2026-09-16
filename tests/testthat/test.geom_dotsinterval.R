@@ -295,9 +295,6 @@ test_that("dotplot layouts work", {
     p + geom_dots(aes(side = side), layout = "hex", stackratio = 0.92)
   )
 
-
-  skip_if_not_installed("beeswarm")
-
   vdiffr::expect_doppelganger("swarm",
     p + geom_dots(aes(side = side), layout = "swarm", scale = 1)
   )
@@ -307,6 +304,12 @@ test_that("dotplot layouts work", {
       ggplot(aes(y = mpg)) +
       geom_dots(layout = "swarm") +
       geom_vline(xintercept = 0.9)
+  )
+
+  skip_if_not_installed("beeswarm")
+
+  vdiffr::expect_doppelganger("oldswarm",
+    p + geom_dots(aes(side = side), layout = "oldswarm", scale = 1)
   )
 })
 
@@ -333,14 +336,15 @@ test_that("dot order is correct", {
   )
 
   vdiffr::expect_doppelganger("weave dot order",
-    p + geom_dots(layout = "weave", linewidth = 5)
+    p + geom_dots(aes(order = g), layout = "weave", linewidth = 5)
   )
 
+  vdiffr::expect_doppelganger("grid swarm dot order",
+    p + geom_dots(aes(order = g), layout = layout_swarm(strata = 3), linewidth = 5)
+  )
 
-  skip_if_not_installed("beeswarm")
-
-  vdiffr::expect_doppelganger("swarm dot order",
-    p + geom_dots(layout = "swarm", linewidth = 5)
+  vdiffr::expect_doppelganger("compact swarm dot order",
+    p + geom_dots(aes(order = g), layout = layout_swarm(strata = Inf), linewidth = 5)
   )
 
 })

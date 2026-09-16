@@ -60,7 +60,7 @@ find_dotplot_binwidth = function(
   group = 1L,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   span = waiver()
 ) {
@@ -88,7 +88,7 @@ find_dotplot_binwidth = function(
   group = 1L,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   span = waiver()
 ) {
@@ -176,12 +176,12 @@ find_dotplot_binwidth = function(
     if (binwidth_res < max_binwidth) add_guess(binwidth_res, "resolution")
 
     # make a guess assuming all data is in one bin
-    grid = if (prop_exists(layout, "grid")) layout@grid else 1
-    n_to_binwidth = \(n_in_bin, .grid = grid) {
-      (maxheight / heightratio) / (n_in_bin / .grid - 1 + 1/stackratio)
+    strata = if (prop_exists(layout, "strata")) layout@strata else 1
+    n_to_binwidth = \(n_in_bin, .strata = strata) {
+      (maxheight / heightratio) / (n_in_bin / .strata - 1 + 1/stackratio)
     }
-    binwidth_to_n = \(binwidth, .grid = grid) {
-      (maxheight / heightratio / binwidth + 1 - 1/stackratio) * .grid
+    binwidth_to_n = \(binwidth, .strata = strata) {
+      (maxheight / heightratio / binwidth + 1 - 1/stackratio) * .strata
     }
     binwidth_max_n = n_to_binwidth(length(x), 1)
     if (binwidth_max_n < max_binwidth) add_guess(binwidth_max_n, "max_n")
@@ -784,11 +784,11 @@ zero_or_less_ur = function(f, xs, ys, eps_x, eps_y, tol = sqrt(.Machine$double.e
   )
 }
 
-n_to_binwidth = \(n_in_bin, layout, grid = if (prop_exists(layout, "grid")) layout@grid else 1) {
-  (layout@maxheight / layout@heightratio) / (n_in_bin / grid - 1 + 1/layout@stackratio)
+n_to_binwidth = \(n_in_bin, layout, strata = if (prop_exists(layout, "strata")) layout@strata else 1) {
+  (layout@maxheight / layout@heightratio) / (n_in_bin / strata - 1 + 1/layout@stackratio)
 }
-binwidth_to_n = \(binwidth, layout, grid = if (prop_exists(layout, "grid")) layout@grid else 1) {
-  (layout@maxheight / layout@heightratio / binwidth + 1 - 1/layout@stackratio) * grid
+binwidth_to_n = \(binwidth, layout, strata = if (prop_exists(layout, "strata")) layout@strata else 1) {
+  (layout@maxheight / layout@heightratio / binwidth + 1 - 1/layout@stackratio) * strata
 }
 pseudo_n_to_binwidth = \(pseudo_n, layout, eps) {
   n_in_bin = floor(pseudo_n + 0.5)
@@ -825,7 +825,7 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
   )
 
-  grid = if (prop_exists(layout, "grid")) layout@grid else 1
+  strata = if (prop_exists(layout, "strata")) layout@strata else 1
   transform_n = scales::new_transform("binwidth", \(bw) binwidth_to_n(bw, layout), \(n) n_to_binwidth(n, layout))
   transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, layout, height_eps), \(n) pseudo_n_to_binwidth(n, layout, height_eps))
   transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, layout, height_eps), \(n) pseudo_binwidth_to_binwidth(n, layout, height_eps))
@@ -841,7 +841,7 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     ggplot(aes(width, height)) +
     annotate("ribbon", x = c(0.11, 0.12), ymin = layout@maxheight - attr(fdb, "height_eps"), ymax = layout@maxheight + attr(fdb, "height_eps"), alpha = 0.1) +
     geom_hline(yintercept = c(layout@maxheight - height_eps, layout@maxheight + height_eps), alpha = 0.5) +
-    # geom_abline(slope = seq(1, max(iters$height/layout@heightratio/iters$width, na.rm = TRUE), by = 1/grid) + 1/layout@stackratio, color = "gray85") +
+    # geom_abline(slope = seq(1, max(iters$height/layout@heightratio/iters$width, na.rm = TRUE), by = 1/strata) + 1/layout@stackratio, color = "gray85") +
     geom_line(
       color = "blue",
       alpha = 0.8,

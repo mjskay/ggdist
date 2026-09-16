@@ -233,7 +233,7 @@ class CompactSwarm {
       existing_dot != frontier[s].end();
     ) {
       const auto x_distance = std::abs(x - existing_dot->x);
-      if (x_distance >= 1.0) break;  // all further dots must be out of range
+      if (x_distance > 1.0) break;  // all further dots must be out of range
 
       if (existing_dot->y < min_y - 1.0) {
         // this existing dot will never collide with any future dots, we can remove it to make

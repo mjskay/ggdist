@@ -121,43 +121,6 @@ constexpr auto erase_(C& container, const It it) -> It {
   }
 }
 
-/// Get the next (or previous) iterator
-/// @tparam reverse is the iterator reversed?
-/// @tparam It iterator type
-/// @param it Iterator. Cannot be an end iterator (must point to a value).
-template<bool reverse, typename It>
-constexpr auto next_(const It it) {
-  if constexpr (reverse) {
-    return std::reverse_iterator(it);
-  } else {
-    return std::next(it);
-  }
-}
-
-/// conditionally reverse an iterator
-/// @tparam It iterator type
-/// @param it Iterator. Cannot be an end iterator (must point to a value).
-template<bool reverse, typename It>
-constexpr auto reverse_if(const It it) {
-  if constexpr (reverse) {
-    return std::reverse_iterator(it);
-  } else {
-    return it;
-  }
-}
-
-/// Get the forward iterator version of an iterator
-/// @tparam It iterator type
-/// @param it Iterator. Cannot be an end iterator (must point to a value).
-template<typename It>
-constexpr auto as_forward_it(const It it) {
-  if constexpr (is_reverse_iterator_v<It>) {
-    return std::prev(it.base());
-  } else {
-    return it;
-  }
-}
-
 /// Optionally negate a value
 /// @tparam negate negate the value?
 /// @param value value to negate (if `reverse` is `true`)

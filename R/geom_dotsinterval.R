@@ -566,7 +566,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       '),
     layout = glue_doc('
       <[string][character]> The layout method used for the dots. One of: \\itemize{
-        \\item `"bin"` (default): places dots on the off-axis at the midpoint of
+        \\item [`"bin"`][layout_bin] (default): places dots on the off-axis at the midpoint of
           their bins as in the classic Wilkinson (1999) dotplot. This maintains the
           alignment of rows and columns in the dotplot. This layout is slightly
           different from the Wilkinson algorithm: (1) it nudges bin positions
@@ -575,24 +575,24 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           applied via passing `span = 1.25`); (3) it uses a backwards sweep to
           reduce right-edge binning effects; (4) if the input data are symmetrical,
           it bins out from the center to return a symmetrical layout.
-        \\item `"weave"`: uses the same basic binning approach of `"bin"`, but
+        \\item [`"weave"`][layout_weave]: uses the same basic binning approach of `"bin"`, but
           places dots in the off-axis at their actual positions (unless
           `overlaps = "nudge"`, in which case overlaps within rows are nudged out
           of the way). This maintains the alignment of rows but does not align dots
           within columns.
-        \\item `"hex"`: uses the same basic binning approach of `"bin"`, but
+        \\item [`"hex"`][layout_hex]: uses the same basic binning approach of `"bin"`, but
           alternates placing dots at \\eqn{\\pm} `binwidth/4` in the
           off-axis from the bin center, giving a hexagonal layout. For
           an equilateral hexagonal packing, set `dotsize = k` and
           `stackratio = sqrt(3/4) / k` for some `k` (e.g. `0.9`).
-        \\item `"swarm"`: uses a version of the `"compactswarm"` layout from
-          [beeswarm][beeswarm::beeswarm()], with minor modifications to improve visual
-          symmetry when `side = "both"`. Ensures dot are positioned exacty at their
-          underlying data values. Does not maintain alignment of rows or
-          columns, but can be more compact, especially for sample data (as opposed
-          to quantile dotplots of theoretical distributions, which may look better
-          with `"bin"`, `"weave"`, or `"hex"`).
-        \\item `"bar"`: for discrete distributions, lays out duplicate values in
+        \\item [`"swarm"`][layout_swarm]: uses a stackable, stratified beeswarm layout inspired by
+          the `"compactswarm"` layout from [beeswarm][beeswarm::beeswarm()], rewritten to be faster,
+          to allow stacking groups, and to improve visual symmetry when `side = "both"`. Ensures dot
+          are positioned exacty at their underlying data values. Does not maintain alignment of rows
+          or columns (unless `strata = 1`, which will maintain row alignment), but can be more
+          compact, especially for sample data (as opposed to quantile dotplots of theoretical
+          distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
+        \\item [`"bar"`][layout_bar]: for discrete distributions, lays out duplicate values in
           rectangular bars.
       }'),
     overlaps = glue_doc('

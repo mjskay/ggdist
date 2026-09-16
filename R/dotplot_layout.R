@@ -234,30 +234,31 @@ layout_bar = new_dotplot_layout_class(
 
 # swarm layout ----------------------------------------------------------
 
-#' Swarm dotplot layout
+#' Deprecated implementation of swarm dotplot layout
 #' @description
-#' Beeswarm dotplot layout use with `bin_dots()`, `geom_dots()`, etc.
+#' Beeswarm dotplot layout that uses the `"compactswarm"` algorithm from the \pkg{beeswarm} package.
+#' Superceded by [layout_swarm()].
+#' @inheritParams dotplot_layout
+#' @return <[dotplot_layout]> object of class `layout_oldswarm`.
+layout_oldswarm = new_dotplot_layout_class(
+  "layout_oldswarm",
+  parent = dotplot_layout
+)
+
+#' Stackable, stratified beeswarm dotplot layout
+#' @description
+#' Stackable, stratified beeswarm dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
 #' @inheritParams dotplot_layout
 #' @return <[dotplot_layout]> object of class `layout_swarm`.
 layout_swarm = new_dotplot_layout_class(
   "layout_swarm",
-  parent = dotplot_layout
-)
-
-#' Stratified swarm dotplot layout
-#' @description
-#' Stratified beeswarm dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
-#' @inheritParams dotplot_layout
-#' @return <[dotplot_layout]> object of class `layout_swarm2`.
-layout_swarm2 = new_dotplot_layout_class(
-  "layout_swarm2",
   parent = dotplot_layout,
   properties = list(
     dots = new_property(
       class_data.frame,
       setter = function(self, value) {
         self@dots = value
-        make_swarm2_xs(self)
+        group_swarm_xs(self)
       },
       validator = dotplot_layout@properties$dots$validator,
       default = dotplot_layout@properties$dots$default
@@ -267,7 +268,7 @@ layout_swarm2 = new_dotplot_layout_class(
       setter = NULL,
       getter = \(self) self@xs
     ),
-    grid = new_property(
+    strata = new_property(
       class_numeric,
       validator = validate_positive_scalar_integerish,
       default = 4L
@@ -275,14 +276,14 @@ layout_swarm2 = new_dotplot_layout_class(
   )
 )
 
-#' Split x into groups so that `layout_swarm2` can plot groups in order
+#' Split x into groups so that `layout_swarm` can plot groups in order
 #' @description
 #' Split `x` by `group` so that we don't have to recompute these splits when
 #' doing `find_dotplot_binwidth()`. The stratified swarm layout differs from
 #' others in that it needs these splits in order to plot groups in the right
 #' order within each stratum.
 #' @noRd
-make_swarm2_xs = function(self) {
+group_swarm_xs = function(self) {
   if (!is.null(self@dots$x) && !is.null(self@dots$group)) {
     x_splits = vec_split(self@dots$x, self@dots$group)
     attr(self, "xs") = x_splits$val[order(x_splits$key)]

@@ -178,14 +178,12 @@ test_that("bin layouts work", {
 
 
 test_that("swarm layout works", {
-  skip_if_not_installed("beeswarm")
-
   ref = data.frame(
     x = 1:5,
     y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
     group = 1L
   )
-  expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
+  expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = layout_swarm(strata = Inf)), ref)
 
   ref = data.frame(
     x = 1:7,
@@ -195,48 +193,67 @@ test_that("swarm layout works", {
   expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "swarm"), ref)
 })
 
-test_that("grid_swarm layout works", {
+
+test_that("old beeswarm layout works", {
+  skip_if_not_installed("beeswarm")
+
   ref = data.frame(
-    x = 1:7,
-    y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5),
+    x = 1:5,
+    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
     group = 1L
   )
-  expect_equal(bin_dots(1:7, 0, binwidth = 3, layout = "swarm2"), ref)
+  expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "oldswarm"), ref)
 
   ref = data.frame(
     x = 1:7,
     y = 0.5,
     group = 1L
   )
-  expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "swarm2"), ref)
+  expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "oldswarm"), ref)
+})
+
+test_that("grid_swarm layout works", {
+  ref = data.frame(
+    x = 1:7,
+    y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5),
+    group = 1L
+  )
+  expect_equal(bin_dots(1:7, 0, binwidth = 3, layout = layout_swarm(strata = 4)), ref)
+
+  ref = data.frame(
+    x = 1:7,
+    y = 0.5,
+    group = 1L
+  )
+  expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = layout_swarm(strata = 4)), ref)
 
   ref = data.frame(
     x = 1:9,
     y = rep_len(c(1, 3), 9),
     group = 1L
   )
-  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = "swarm2"), ref)
+  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = layout_swarm(strata = 4)), ref)
 
   ref = data.frame(
     x = 1:9,
     y = rep_len(c(1, 2.75), 9),
     group = 1L
   )
-  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = layout_swarm2(grid = 8)), ref)
+  expect_equal(bin_dots(1:9, 0, binwidth = 2, layout = layout_swarm(strata = 8)), ref)
 
   ref = data.frame(
     x = c(1, 2, 2, 3),
     y = c(0.12625, 0.37875, -0.63125, 0.12625),
     group = 1L
   )
-  expect_equal(bin_dots(c(1,2,2,3), 0, binwidth = 1.01, side = "both", layout = layout_swarm2(grid = 4)), ref)
+  expect_equal(bin_dots(c(1,2,2,3), 0, binwidth = 1.01, side = "both", layout = layout_swarm(strata = 4)), ref)
 
   ref = data.frame(
     x = c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3),
     y = c(0, 2, 1, -2, -1, 2, -2, 0, 1, -1, -1, 0, 2, 1, -2),
     group = c(1, 2, 1, 2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 2)
   )
-  expect_equal(bin_dots(ref$x, 0, group = ref$group, binwidth = 1, side = "both", layout = layout_swarm2(grid = 4)), ref)
+  expect_equal(bin_dots(ref$x, 0, group = ref$group, binwidth = 1, side = "both", layout = layout_swarm(strata = 4)), ref)
 })
 
 test_that("small bins work", {
