@@ -103,9 +103,8 @@ find_dotplot_binwidth = function(
   x = dots$x
   group = dots$group
 
-  layout = new_dotplot_layout(
-    layout,
-    dots,
+  layout = match_function(layout, "layout_")(
+    dots = dots,
     maxheight = maxheight,
     heightratio = heightratio,
     stackratio = stackratio,

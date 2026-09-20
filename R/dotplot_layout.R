@@ -84,15 +84,6 @@ dotplot_layout = new_dotplot_layout_class(
   )
 )
 
-#' Create a new dotplot layout
-#' @param layout <[string][character]> name of the layout as passed to `bin_dots()`.
-#' @param ... Additional arguments passed to the dotplot layout constructor.
-#' @return An object of the specified `dotplot_layout` class.
-#' @noRd
-new_dotplot_layout = function(layout, ...) {
-  match_function(layout, "layout_")(...)
-}
-
 
 # bin-based layouts ----------------------------------------------------------------
 
@@ -237,7 +228,7 @@ layout_bar = new_dotplot_layout_class(
 #' Deprecated implementation of swarm dotplot layout
 #' @description
 #' Beeswarm dotplot layout that uses the `"compactswarm"` algorithm from the \pkg{beeswarm} package.
-#' Superceded by [layout_swarm()].
+#' Superceded by [layout_swarm()], which is faster and supports stacking groups of dots.
 #' @inheritParams dotplot_layout
 #' @return <[dotplot_layout]> object of class `layout_oldswarm`.
 layout_oldswarm = new_dotplot_layout_class(

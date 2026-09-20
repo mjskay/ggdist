@@ -91,8 +91,7 @@ bin_dots = function(
   dots = setup_dots(x, y, group, flip)
 
   # bin the dots
-  layout = new_dotplot_layout(
-    layout,
+  layout = match_function(layout, "layout_")(
     dots = dots,
     heightratio = heightratio,
     stackratio = stackratio,
@@ -212,8 +211,8 @@ method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, 
 
 ## setup_dotplot for swarm -----------------------------------------
 
-#' Initialize swarm dotplot layout
-#' @param layout <`layout_oldswarm`> the dotplot layout
+#' Initialize old beeswarm dotplot layout
+#' @param layout <[layout_oldswarm]> the dotplot layout
 #' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
 #' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
@@ -440,7 +439,7 @@ get_row_start_offset = function(layout, dotplot, n_dots) {
 
 ## place_dots for swarm -------------------------------------------------
 
-method(place_dots, layout_oldswarm | layout_swarm) = function(layout, dotplot) {
+method(place_dots, layout_swarm | layout_oldswarm) = function(layout, dotplot) {
   dots = layout@dots
   dots$x = dotplot$dots$x
   dots$y = dots$y + dotplot$y_start + dotplot$dots$y
@@ -757,7 +756,7 @@ grid_swarm = function(xs, y, xsize, ysize = xsize, strata = 3, side = 1, group_p
 #' to adjacent bins being at least `width` apart.
 #' @param bin_midpoints vector: midpoints of each bin
 #' @param binwidth scalar: width of bins
-#' @param count vector of `length(bin_midpoints)``: number of items in each bin
+#' @param count vector of `length(bin_midpoints)`: number of items in each bin
 #' @returns vector of `length(bin_midpoints)` giving new bin midpoints
 #' @noRd
 nudge_bins = function(bin_midpoints, binwidth, count = rep(1, length(bin_midpoints))) {
