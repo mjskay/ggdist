@@ -1,4 +1,4 @@
-#include "util.hpp"
+#include "util.h"
 
 #include <Rcpp.h>
 #include <Rinternals.h>

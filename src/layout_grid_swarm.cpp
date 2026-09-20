@@ -1,4 +1,4 @@
-#include "util.hpp"
+#include "util.h"
 
 #include <Rcpp.h>
 #include <Rinternals.h>
@@ -46,15 +46,15 @@ class GridSwarm {
     const std::vector<Rcpp::NumericVector>& xs_list,
     const double xsize,
     const double ysize,
-    const std::ptrdiff_t strata,
-    const int signed_side
+    const int signed_side,
+    const std::ptrdiff_t strata
   )
     : xs_list{xs_list},
       xsize{xsize},
       ysize{ysize},
-      strata{strata},
       signed_side{signed_side},
       both{signed_side == 0},
+      strata{strata},
       n{sum_sizes(xs_list)},
       out_x_vec(n),
       out_y_vec(n),
@@ -73,12 +73,12 @@ class GridSwarm {
   const double xsize;
   /// Size of dots in the y dimension.
   const double ysize;
-  /// Number of rows in the grid in a distance of 1 `ysize`.
-  const std::ptrdiff_t strata;
   //// Side we are placing on (-1 = bottom, 0 = both, 1 = top).
   const int signed_side;
   /// Are we placing dots on both sides?
   const bool both;
+  /// Number of rows in the grid in a distance of 1 `ysize`.
+  const std::ptrdiff_t strata;
   /// Total number of dots
   const std::ptrdiff_t n;
 
@@ -275,12 +275,12 @@ class GridSwarm {
 //' @param xs_list <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <scalar [numeric]> horizontal spacing between dots
 //' @param ysize <scalar [numeric]> vertical spacing between dots
-//' @param strata <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
-//' rows above or below this row that could overlap with dots in this row).
 //' @param signed_side <scalar [integer]> which side to place dots on?
 //' -  `0` = both
 //' -  `1` = above
 //' - `-1` = below
+//' @param strata <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
+//' rows above or below this row that could overlap with dots in this row).
 //' @returns <[data.frame]> data frame with columns x and y giving the new positions
 //' @noRd
 // [[Rcpp::export(rng = false)]]
@@ -288,10 +288,10 @@ SEXP grid_swarm_(
   const std::vector<Rcpp::NumericVector>& xs_list,
   const double xsize,
   const double ysize,
-  const std::ptrdiff_t strata,
-  const int signed_side
+  const int signed_side,
+  const std::ptrdiff_t strata
 ) {
-  return GridSwarm{xs_list, xsize, ysize, strata, signed_side}.place_dots();
+  return GridSwarm{xs_list, xsize, ysize, signed_side, strata}.place_dots();
 }
 
 // swarm cluster recentering ------------------------------------------------------------

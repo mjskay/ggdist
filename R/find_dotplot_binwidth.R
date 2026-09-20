@@ -7,11 +7,8 @@
 #'
 #' @param x <[numeric]> Data values.
 #' @param maxheight <scalar [numeric]> Maximum height of the dotplot.
-#' @param heightratio <scalar [numeric]> Ratio of bin width to dot height.
-#' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
-#' between dot centers
-#' @eval rd_param_dots_layout()
-#' @eval rd_param_side("dots")
+#' @inheritParams bin_dots
+#' @inheritDotParams dotplot_layout -dots
 #'
 #' @details
 #' This dynamic bin selection algorithm uses a binary search over the number of
@@ -62,7 +59,7 @@ find_dotplot_binwidth = function(
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
-  span = waiver()
+  ...
 ) {
   out = .find_dotplot_binwidth(
     x = x,
@@ -72,7 +69,7 @@ find_dotplot_binwidth = function(
     stackratio = stackratio,
     layout = layout,
     side = side,
-    span = span
+    ...
   )
   attributes(out) = NULL
   out
@@ -90,7 +87,7 @@ find_dotplot_binwidth = function(
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
-  span = waiver()
+  ...
 ) {
   # orientation doesn't matter for finding binwidth, so we can arbitrarily assign it to be "horizontal"
   side = switch_side(match.arg(side), orientation = "horizontal",
@@ -109,7 +106,7 @@ find_dotplot_binwidth = function(
     heightratio = heightratio,
     stackratio = stackratio,
     side = side,
-    span = span
+    ...
   )
 
   # find the implementation of setup_dotplot for this layout type so

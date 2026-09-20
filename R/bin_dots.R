@@ -12,15 +12,14 @@ NULL
 #'
 #' @description
 #' Bins the provided data values using one of several dotplot layout algorithms.
+#' @inheritParams dotplot_layout
 #' @param x <[numeric]> *x* values.
 #' @param y <[numeric]> *y* values (same length as `x`).
-#' @param binwidth <scalar [numeric]> Bin width.
-#' @param heightratio <scalar [numeric]> Ratio of bin width to dot height
-#' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
-#' between dot centers
+#' @param binwidth <scalar [numeric]> Bin (dot) width.
+#' @param group <[orderable vector][xtfrm]> of same length as `x`. The group each `x` value
+#' belongs to. If there is more than one group, dots are laid out in stacks in increasing order
+#' of `xtfrm(group)`.
 #' @eval rd_param_dots_layout()
-#' @eval rd_param_dots_overlaps()
-#' @eval rd_param_dots_span()
 #' @eval rd_param_side("dots")
 #' @param orientation <[string][character]> Whether the dots are laid out horizontally
 #' or vertically. Follows the naming scheme of [geom_slabinterval()]:
@@ -254,8 +253,8 @@ method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = 
     0,
     xsize = dotplot$binwidth,
     ysize = dotplot$y_spacing,
-    strata = layout@strata,
-    side = switch(layout@side, top = 1, bottom = -1, both = 0)
+    side = switch(layout@side, top = 1, bottom = -1, both = 0),
+    strata = layout@strata
   )
   dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
   dotplot$height = get_swarm_height(layout, dotplot, dotplot$dots)
@@ -728,16 +727,19 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @param strata <scalar [integer]> \eqn{\ge 1} number of fractional rows in the grid used to place dots.
 #' May be `Inf`, in which case a non-stratified compact swarm layout is used.
-#' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
+#' @param group_penalty <scalar [numeric]> between 0 and 1: proportion of a row used as a penalty
+#' for keeping groups together in stacked compact swarm layouts. 1 keeps groups together but
+#' may leave whitespace, 0 does not keep groups together but will be a more compact layout.
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm = function(xs, y, xsize, ysize = xsize, strata = 3, side = 1, group_penalty = 0.5) {
+grid_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, group_penalty = 0.5) {
   if (strata == Inf) {
     dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = group_penalty)
   } else {
-    dots = grid_swarm_(xs, xsize, ysize, strata, side)
+    dots = grid_swarm_(xs, xsize, ysize, side, strata)
   }
   dots = dots[order(dots$x), ]
   dots$y = dots$y + y

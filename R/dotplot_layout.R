@@ -10,12 +10,13 @@ NULL
 
 new_dotplot_layout_class = function(...) auto_partial(new_class(...), required = "dots")
 
-#' Base class for dotplot layouts created with `bin_dots()`
+#' Base class for dotplot and beeswarm layout algorithms.
 #' @description
-#' Base class for dotplot layout algorithms used by `bin_dots()`.
+#' \pkg{S7} base class for dotplot and beeswarm layout algorithms.
+#' @template description-dotplot-layout
 #' @details
 #' A `dotplot_layout` defines how dots are arranged in a dotplot created with
-#' `bin_dots()`. Different layouts implement different dotplot layout algorithms.
+#' [bin_dots()]. Different layouts implement different dotplot layout algorithms.
 #'
 #' Layouts are always written assuming a horizontal orientation: `dots$x` contains
 #' data values and `dots$y` contains the height of each dot in a bin/swarm. Thus,
@@ -23,14 +24,22 @@ new_dotplot_layout_class = function(...) auto_partial(new_class(...), required =
 #' Transformations from this canonical orientation to a vertical orientation are
 #' made (if needed) by `bin_dots()` depending on the `orientation` parameter passed
 #' to that function.
-#' @param dots <[numeric]> Positions of dots.
+#' @param dots <[data.frame]> Positions of dots. Not typically passed directly: this
+#' data structure is prepared and passed to the layout by dotplot layout functions
+#' like [bin_dots()] and [find_dotplot_binwidth()]. Has columns:
+#'  - `x` <[numeric]> Dot positions.
+#'  - `y` <[numeric]> Dot heights.
+#'  - `group` <[integer]> Indices of stacked groups of dots in the layout.
+#'  - `order` <[integer]> Data order from the original input data.
 #' @param maxheight <scalar [numeric]> maximum height of the dotplot layout.
-#' @param heightratio <scalar [numeric]> height ratio of the dotplot layout.
-#' @param stackratio <scalar [numeric]> stack ratio of the dotplot layout.
-#' @param side <[string][character]> side where the dotplot layout should be placed.
-#' @param overlaps <[string][character]> how to handle overlaps in the dotplot layout.
-#' @param span <scalar [numeric]> smoothing/spacing parameter used in some layouts.
-#' @return <[dotplot_layout]> object.
+#' @param heightratio <scalar [numeric]> Ratio of bin (dot) width to dot height.
+#' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
+#' between dot centers.
+#' @param side <[string][character]> side where the dotplot layout should be placed. One
+#' of `"top"`, `"bottom"`, or `"both"`.
+#' @eval rd_param_dots_overlaps()
+#' @eval rd_param_dots_span()
+#' @return <[dotplot_layout]> \pkg{S7} object.
 #' @import S7
 dotplot_layout = new_dotplot_layout_class(
   "dotplot_layout",
@@ -89,11 +98,12 @@ dotplot_layout = new_dotplot_layout_class(
 
 #' Binned dotplot layout
 #' @description
-#' Wilkinson-esque dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' Wilkinson-esque binned dotplot layout.
+#' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
-#' @param bin_method <function> function that takes data and bin width as input and returns
+#' @param bin_method <[function]> function that takes data and bin width as input and returns
 #' a list with components `bins` and `bin_midpoints`.
-#' @param align_rows <logical> whether to align rows of dots when `side` is "both".
+#' @param align_rows <[logical]> whether to align rows of dots when `side` is "both".
 #' @return <[dotplot_layout]> object of class `layout_bin`.
 layout_bin = new_dotplot_layout_class(
   "layout_bin",
@@ -119,7 +129,7 @@ layout_bin = new_dotplot_layout_class(
     ),
     bin_method = new_property(
       class_function,
-      default = function(...) cli_abort("`x` must be set to determine `bin_method`.")
+      default = quote(function(...) cli_abort("`x` must be set to determine `bin_method`."))
     ),
     align_rows = new_property(
       class_logical,
@@ -130,7 +140,9 @@ layout_bin = new_dotplot_layout_class(
 
 #' Weave dotplot layout
 #' @description
-#' Weave dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' Weave dotplot layout with aligned rows and exact (when `overlaps = "keep"`) or near-exact (when
+#' `overlaps = "nudge"`) dot placement.
+#' @template description-dotplot-layout
 #' @inheritParams layout_bin
 #' @return <[dotplot_layout]> object of class `layout_weave`.
 layout_weave = new_dotplot_layout_class(
@@ -146,7 +158,8 @@ layout_weave = new_dotplot_layout_class(
 
 #' Hexagonal dotplot layout
 #' @description
-#' Hexagonal dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' Hexagonal dotplot layout.
+#' @template description-dotplot-layout
 #' @inheritParams layout_bin
 #' @return <[dotplot_layout]> object of class `layout_hex`.
 layout_hex = new_dotplot_layout_class(
@@ -191,7 +204,8 @@ bar_bin = function(x, binwidth, span = 0.9) {
 
 #' Bar (waffle) dotplot layout
 #' @description
-#' Bar dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' Bar dotplot layout for discrete data.
+#' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
 #' @return <[dotplot_layout]> object of class `layout_bar`.
 layout_bar = new_dotplot_layout_class(
@@ -238,7 +252,8 @@ layout_oldswarm = new_dotplot_layout_class(
 
 #' Stackable, stratified beeswarm dotplot layout
 #' @description
-#' Stackable, stratified beeswarm dotplot layout for use with `bin_dots()`, `geom_dots()`, etc.
+#' Stackable, stratified beeswarm dotplot layout.
+#' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
 #' @return <[dotplot_layout]> object of class `layout_swarm`.
 layout_swarm = new_dotplot_layout_class(

@@ -15,23 +15,84 @@ layout_bar(
 )
 }
 \arguments{
-\item{dots}{<\link{numeric}> Positions of dots.}
+\item{dots}{<\link{data.frame}> Positions of dots. Not typically passed directly: this
+data structure is prepared and passed to the layout by dotplot layout functions
+like \code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}}. Has columns:
+\itemize{
+\item \code{x} <\link{numeric}> Dot positions.
+\item \code{y} <\link{numeric}> Dot heights.
+\item \code{group} <\link{integer}> Indices of stacked groups of dots in the layout.
+\item \code{order} <\link{integer}> Data order from the original input data.
+}}
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
-\item{heightratio}{<scalar \link{numeric}> height ratio of the dotplot layout.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
 
-\item{stackratio}{<scalar \link{numeric}> stack ratio of the dotplot layout.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
+between dot centers.}
 
-\item{side}{<\link[=character]{string}> side where the dotplot layout should be placed.}
+\item{side}{<\link[=character]{string}> side where the dotplot layout should be placed. One
+of \code{"top"}, \code{"bottom"}, or \code{"both"}.}
 
-\item{overlaps}{<\link[=character]{string}> how to handle overlaps in the dotplot layout.}
+\item{overlaps}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
+\link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
+\link[=layout_swarm]{swarm} or \link[=layout_bar]{bar} layouts).
+For the purposes of this argument, dots are only considered to be overlapping
+if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
+if you set those arguments to other values, overlaps may still occur.
+One of: \itemize{
+\item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
+(usually only slightly) in the \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and
+\link[=layout_hex]{hex} layouts.
+\item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
+using a constrained optimization which minimizes the squared distance of
+dots to their desired positions, subject to the constraint that adjacent
+dots do not overlap.
+}}
 
-\item{span}{<scalar \link{numeric}> smoothing/spacing parameter used in some layouts.}
+\item{span}{<scalar \link{numeric}> Non-negative smoothing/spacing parameter expressed as a
+fraction. The specific use and default value (\code{waiver()}) depend on the
+\code{layout}:
+\itemize{
+\item{For \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and \link[=layout_hex]{hex}: A smoothing
+parameter expressed as a proportion of the \code{binwidth} (default: \code{0}, no smoothing).
+Use \code{span = 1.25} to apply moderate smoothing.
+A positive \code{span} applies a moving average to adjacent
+bins whose midpoints are within \code{span * binwidth} of each other,
+exchanging dots between bins using the method described
+by Wilkinson (1999). Specifically, for every bin \eqn{i} with midpoint
+\eqn{m_i} containing \eqn{f(i)} dots, the algorithm moves
+\eqn{\left\lfloor\frac{f(i + 1) - f(i)}{2}\right\rfloor} dots from bin
+\eqn{i + 1} to bin \eqn{i} if \eqn{m_{i + 1} - m_i \le} \code{span}.
+Good values for \code{span} are typically between \code{1} and \code{2}. \code{span = 1.25} is
+equivalent to Wilkinson's recommendation, which smooths bins that are at most
+\code{binwidth/4} apart.
+}
+\item For \link[=layout_bar]{bar}: Width of bars expressed as a proportion of the data resolution
+(default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
+increase the spacing between bars.
+}}
 }
 \value{
 <\link{dotplot_layout}> object of class \code{layout_bar}.
 }
 \description{
-Bar dotplot layout for use with \code{bin_dots()}, \code{geom_dots()}, etc.
+Bar dotplot layout for discrete data.
+
+Dotplot layouts can be passed to the \code{layout} argument of \code{\link[=bin_dots]{bin_dots()}},
+\code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}}, and dots stats and geoms like \code{\link[=geom_dots]{geom_dots()}}. All dotplot layout
+algorithms are \pkg{S7} classes that are also functions that support
+\link[=auto_partial]{automatic partial function application}. They can be constructed without passing
+their first argument, \code{dots}, which is filled in later by dotplot layout functions like
+\code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}}.
 }
+\seealso{
+Other dotplot layouts:
+\code{\link[=dotplot_layout]{dotplot_layout()}},
+\code{\link[=layout_bin]{layout_bin()}},
+\code{\link[=layout_hex]{layout_hex()}},
+\code{\link[=layout_swarm]{layout_swarm()}},
+\code{\link[=layout_weave]{layout_weave()}}
+}
+\concept{dotplot layouts}

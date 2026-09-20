@@ -23,16 +23,16 @@ compact_swarm_ <- function(xs_list, xsize, ysize, signed_side, group_penalty) {
 #' @param xs_list <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
-#' @param strata <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
-#' rows above or below this row that could overlap with dots in this row).
 #' @param signed_side <scalar [integer]> which side to place dots on?
 #' -  `0` = both
 #' -  `1` = above
 #' - `-1` = below
+#' @param strata <scalar [numeric]> size of the y grid (corresponding to 1 + the number of adjacent
+#' rows above or below this row that could overlap with dots in this row).
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm_ <- function(xs_list, xsize, ysize, strata, signed_side) {
-    .Call(`_ggdist_grid_swarm_`, xs_list, xsize, ysize, strata, signed_side)
+grid_swarm_ <- function(xs_list, xsize, ysize, signed_side, strata) {
+    .Call(`_ggdist_grid_swarm_`, xs_list, xsize, ysize, signed_side, strata)
 }
 
 #' Re-center contiguous clusters around their mean y position so that

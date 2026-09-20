@@ -59,24 +59,24 @@ S3method(vec_arith.ggdist_thickness,default)
 S3method(vec_arith.ggdist_thickness,ggdist_thickness)
 S3method(vec_arith.ggdist_thickness,numeric)
 S3method(vec_arith.numeric,ggdist_thickness)
+S3method(vec_cast,double.ggdist_partial_colour_ramp)
+S3method(vec_cast,double.ggdist_thickness)
 S3method(vec_cast,ggdist_partial_colour_ramp.double)
 S3method(vec_cast,ggdist_partial_colour_ramp.integer)
 S3method(vec_cast,ggdist_thickness.double)
 S3method(vec_cast,ggdist_thickness.integer)
-S3method(vec_cast.double,ggdist_partial_colour_ramp)
-S3method(vec_cast.double,ggdist_thickness)
-S3method(vec_cast.integer,ggdist_partial_colour_ramp)
-S3method(vec_cast.integer,ggdist_thickness)
+S3method(vec_cast,integer.ggdist_partial_colour_ramp)
+S3method(vec_cast,integer.ggdist_thickness)
+S3method(vec_ptype2,double.ggdist_partial_colour_ramp)
+S3method(vec_ptype2,double.ggdist_thickness)
 S3method(vec_ptype2,ggdist_partial_colour_ramp.double)
 S3method(vec_ptype2,ggdist_partial_colour_ramp.ggdist_partial_colour_ramp)
 S3method(vec_ptype2,ggdist_partial_colour_ramp.integer)
 S3method(vec_ptype2,ggdist_thickness.double)
 S3method(vec_ptype2,ggdist_thickness.ggdist_thickness)
 S3method(vec_ptype2,ggdist_thickness.integer)
-S3method(vec_ptype2.double,ggdist_partial_colour_ramp)
-S3method(vec_ptype2.double,ggdist_thickness)
-S3method(vec_ptype2.integer,ggdist_partial_colour_ramp)
-S3method(vec_ptype2.integer,ggdist_thickness)
+S3method(vec_ptype2,integer.ggdist_partial_colour_ramp)
+S3method(vec_ptype2,integer.ggdist_thickness)
 S3method(vec_ptype_abbr,ggdist_partial_colour_ramp)
 S3method(vec_ptype_abbr,ggdist_thickness)
 S3method(vec_ptype_full,ggdist_partial_colour_ramp)
@@ -292,92 +292,110 @@ import(ggplot2)
 import(grid)
 import(vctrs)
 importFrom(Rcpp,sourceCpp)
-importFrom(cli,cli_abort)
-importFrom(cli,cli_warn)
-importFrom(distributional,cdf)
-importFrom(distributional,dist_missing)
-importFrom(distributional,dist_normal)
-importFrom(distributional,dist_sample)
-importFrom(distributional,dist_transformed)
-importFrom(distributional,dist_truncated)
-importFrom(distributional,dist_wrap)
-importFrom(distributional,generate)
-importFrom(distributional,hdr)
-importFrom(distributional,is_distribution)
-importFrom(distributional,support)
-importFrom(distributional,variance)
-importFrom(ggplot2,.pt)
-importFrom(ggplot2,.stroke)
-importFrom(ggplot2,GeomPolygon)
-importFrom(ggplot2,GeomSegment)
-importFrom(ggplot2,has_flipped_aes)
-importFrom(ggplot2,waiver)
-importFrom(glue,glue)
-importFrom(glue,glue_collapse)
-importFrom(grDevices,nclass.FD)
-importFrom(grDevices,nclass.Sturges)
-importFrom(grDevices,nclass.scott)
+importFrom(cli,
+  cli_abort,
+  cli_warn
+)
+importFrom(distributional,
+  cdf,
+  dist_missing,
+  dist_normal,
+  dist_sample,
+  dist_transformed,
+  dist_truncated,
+  dist_wrap,
+  generate,
+  hdr,
+  is_distribution,
+  support,
+  variance
+)
+importFrom(ggplot2,
+  .pt,
+  .stroke,
+  GeomPolygon,
+  GeomSegment,
+  has_flipped_aes,
+  waiver
+)
+importFrom(glue,
+  glue,
+  glue_collapse
+)
+importFrom(grDevices,
+  nclass.FD,
+  nclass.Sturges,
+  nclass.scott
+)
 importFrom(graphics,hist)
-importFrom(rlang,"%||%")
-importFrom(rlang,":=")
-importFrom(rlang,as_function)
-importFrom(rlang,as_label)
-importFrom(rlang,as_name)
-importFrom(rlang,as_quosure)
-importFrom(rlang,caller_env)
-importFrom(rlang,enexpr)
-importFrom(rlang,enexprs)
-importFrom(rlang,enquo)
-importFrom(rlang,enquos0)
-importFrom(rlang,eval_tidy)
-importFrom(rlang,expr)
-importFrom(rlang,get_expr)
-importFrom(rlang,is_integerish)
-importFrom(rlang,new_function)
-importFrom(rlang,pairlist2)
-importFrom(rlang,quo_get_expr)
-importFrom(rlang,quos)
-importFrom(rlang,quos_auto_name)
-importFrom(rlang,syms)
-importFrom(scales,area_pal)
-importFrom(scales,expand_range)
-importFrom(scales,identity_pal)
-importFrom(scales,linetype_pal)
-importFrom(scales,oob_discard)
-importFrom(scales,oob_squish_infinite)
-importFrom(scales,rescale)
-importFrom(scales,rescale_pal)
-importFrom(scales,shape_pal)
-importFrom(stats,D)
-importFrom(stats,approx)
-importFrom(stats,approxfun)
-importFrom(stats,ave)
-importFrom(stats,bw.SJ)
-importFrom(stats,bw.bcv)
-importFrom(stats,bw.nrd)
-importFrom(stats,bw.nrd0)
-importFrom(stats,bw.ucv)
-importFrom(stats,dbeta)
-importFrom(stats,density)
-importFrom(stats,dt)
-importFrom(stats,kmeans)
-importFrom(stats,median)
-importFrom(stats,na.omit)
-importFrom(stats,optim)
-importFrom(stats,optimize)
-importFrom(stats,pbeta)
-importFrom(stats,pnorm)
-importFrom(stats,ppoints)
-importFrom(stats,pt)
-importFrom(stats,qbeta)
-importFrom(stats,qnorm)
-importFrom(stats,qt)
-importFrom(stats,quantile)
-importFrom(stats,rbeta)
-importFrom(stats,rt)
-importFrom(stats,stepfun)
-importFrom(stats,weighted.mean)
-importFrom(stats,weights)
-importFrom(tibble,as_tibble)
-importFrom(tibble,tibble)
+importFrom(rlang,
+  "%||%",
+  ":=",
+  as_function,
+  as_label,
+  as_name,
+  as_quosure,
+  caller_env,
+  enexpr,
+  enexprs,
+  enquo,
+  enquos0,
+  eval_tidy,
+  expr,
+  get_expr,
+  is_integerish,
+  new_function,
+  pairlist2,
+  quo_get_expr,
+  quos,
+  quos_auto_name,
+  syms
+)
+importFrom(scales,
+  area_pal,
+  expand_range,
+  identity_pal,
+  linetype_pal,
+  oob_discard,
+  oob_squish_infinite,
+  rescale,
+  rescale_pal,
+  shape_pal
+)
+importFrom(stats,
+  D,
+  approx,
+  approxfun,
+  ave,
+  bw.SJ,
+  bw.bcv,
+  bw.nrd,
+  bw.nrd0,
+  bw.ucv,
+  dbeta,
+  density,
+  dt,
+  kmeans,
+  median,
+  na.omit,
+  optim,
+  optimize,
+  pbeta,
+  pnorm,
+  ppoints,
+  pt,
+  qbeta,
+  qnorm,
+  qt,
+  quantile,
+  rbeta,
+  rt,
+  stepfun,
+  weighted.mean,
+  weights
+)
+importFrom(tibble,
+  as_tibble,
+  tibble
+)
 useDynLib(ggdist, .registration = TRUE)

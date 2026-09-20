@@ -62,7 +62,6 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3.9000
 LazyData: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -138,3 +137,4 @@ Collate:
     'weighted_hist.R'
     'weighted_quantile.R'
     'zzz.R'
+Config/roxygen2/version: 8.1.0

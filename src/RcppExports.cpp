@@ -36,16 +36,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // grid_swarm_
-SEXP grid_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const std::ptrdiff_t strata, const int signed_side);
-RcppExport SEXP _ggdist_grid_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP strataSEXP, SEXP signed_sideSEXP) {
+SEXP grid_swarm_(const std::vector<Rcpp::NumericVector>& xs_list, const double xsize, const double ysize, const int signed_side, const std::ptrdiff_t strata);
+RcppExport SEXP _ggdist_grid_swarm_(SEXP xs_listSEXP, SEXP xsizeSEXP, SEXP ysizeSEXP, SEXP signed_sideSEXP, SEXP strataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const std::vector<Rcpp::NumericVector>& >::type xs_list(xs_listSEXP);
     Rcpp::traits::input_parameter< const double >::type xsize(xsizeSEXP);
     Rcpp::traits::input_parameter< const double >::type ysize(ysizeSEXP);
-    Rcpp::traits::input_parameter< const std::ptrdiff_t >::type strata(strataSEXP);
     Rcpp::traits::input_parameter< const int >::type signed_side(signed_sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(grid_swarm_(xs_list, xsize, ysize, strata, signed_side));
+    Rcpp::traits::input_parameter< const std::ptrdiff_t >::type strata(strataSEXP);
+    rcpp_result_gen = Rcpp::wrap(grid_swarm_(xs_list, xsize, ysize, signed_side, strata));
     return rcpp_result_gen;
 END_RCPP
 }

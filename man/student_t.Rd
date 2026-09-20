@@ -26,9 +26,10 @@ rstudent_t(n, df, mu = 0, sigma = 1)
 
 \item{sigma}{<\link{numeric}> Scale parameter.}
 
-\item{log, log.p}{logical; if TRUE, probabilities p are given as log(p).}
+\item{log, log.p}{logical; if \code{TRUE}, probabilities/densities
+    are given as logarithms.}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are
+\item{lower.tail}{logical; if \code{TRUE} (default), probabilities are
     \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.}
 
 \item{p}{vector of probabilities.}

@@ -9,6 +9,7 @@
 ^\.gitattributes$
 ^\.git$
 ^\.travis\.yml$
+^\.vscode$
 ^README.Rmd$
 ^README.md$
 ^README_files$
@@ -34,4 +35,5 @@
 ^CRAN-SUBMISSION$
 ^compile_flags.txt$
 ^\.clang-format$
+^\.clangd$
 ^vignettes/articles$

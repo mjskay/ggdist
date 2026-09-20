@@ -565,8 +565,11 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       an exact or minimum dot size using `binwidth`.
       '),
     layout = glue_doc('
-      <[string][character]> The layout method used for the dots. One of: \\itemize{
-        \\item [`"bin"`][layout_bin] (default): places dots on the off-axis at the midpoint of
+      <[dotplot_layout] subclass | [string][character]> The layout method used for the dots. Either
+        a subclass of [dotplot_layout] (i.e. a function returning a [dotplot_layout] object) or a
+        string that when prepended with `"layout_"` yields the name of such a subclass or function,
+        such as: \\itemize{
+        \\item `"bin"` or [layout_bin()] (default): places dots on the off-axis at the midpoint of
           their bins as in the classic Wilkinson (1999) dotplot. This maintains the
           alignment of rows and columns in the dotplot. This layout is slightly
           different from the Wilkinson algorithm: (1) it nudges bin positions
@@ -575,35 +578,37 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           applied via passing `span = 1.25`); (3) it uses a backwards sweep to
           reduce right-edge binning effects; (4) if the input data are symmetrical,
           it bins out from the center to return a symmetrical layout.
-        \\item [`"weave"`][layout_weave]: uses the same basic binning approach of `"bin"`, but
+        \\item `"weave"` or [layout_weave()]: uses the same basic binning approach of `"bin"`, but
           places dots in the off-axis at their actual positions (unless
           `overlaps = "nudge"`, in which case overlaps within rows are nudged out
           of the way). This maintains the alignment of rows but does not align dots
           within columns.
-        \\item [`"hex"`][layout_hex]: uses the same basic binning approach of `"bin"`, but
+        \\item `"hex"` or [layout_hex()]: uses the same basic binning approach of `"bin"`, but
           alternates placing dots at \\eqn{\\pm} `binwidth/4` in the
           off-axis from the bin center, giving a hexagonal layout. For
           an equilateral hexagonal packing, set `dotsize = k` and
           `stackratio = sqrt(3/4) / k` for some `k` (e.g. `0.9`).
-        \\item [`"swarm"`][layout_swarm]: uses a stackable, stratified beeswarm layout inspired by
+        \\item `"swarm"` or [layout_swarm()]: uses a stackable, stratified beeswarm layout inspired by
           the `"compactswarm"` layout from [beeswarm][beeswarm::beeswarm()], rewritten to be faster,
           to allow stacking groups, and to improve visual symmetry when `side = "both"`. Ensures dot
           are positioned exacty at their underlying data values. Does not maintain alignment of rows
           or columns (unless `strata = 1`, which will maintain row alignment), but can be more
           compact, especially for sample data (as opposed to quantile dotplots of theoretical
           distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
-        \\item [`"bar"`][layout_bar]: for discrete distributions, lays out duplicate values in
+        \\item `"bar"` or [layout_bar()]: for discrete distributions, lays out duplicate values in
           rectangular bars.
       }'),
     overlaps = glue_doc('
-      <[string][character]> How to handle overlapping dots or bins in the `"bin"`,
-      `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"` or `"bar"` layouts).
+      <[string][character]> How to handle overlapping dots or bins in the [bin][layout_bin],
+      [weave][layout_weave], and [hex][layout_hex] layouts (dots never overlap in the
+      [swarm][layout_swarm] or [bar][layout_bar] layouts).
       For the purposes of this argument, dots are only considered to be overlapping
       if they would be overlapping when `dotsize = 1` and `stackratio = 1`; i.e.
       if you set those arguments to other values, overlaps may still occur.
       One of: \\itemize{
         \\item `"keep"`: leave overlapping dots as they are. Dots may overlap
-          (usually only slightly) in the `"bin"`, `"weave"`, and `"hex"` layouts.
+          (usually only slightly) in the [bin][layout_bin], [weave][layout_weave], and
+          [hex][layout_hex] layouts.
         \\item `"nudge"`: nudge overlapping dots out of the way. Overlaps are avoided
           using a constrained optimization which minimizes the squared distance of
           dots to their desired positions, subject to the constraint that adjacent
@@ -614,8 +619,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       fraction. The specific use and default value (`waiver()`) depend on the
       `layout`:
       \\itemize{
-        \\item{For `layout = "bin"`, `"hex"`, or `"weave"`: A smoothing parameter
-          expressed as a proportion of the `binwidth` (default: `0`, no smoothing).
+        \\item{For [bin][layout_bin], [weave][layout_weave], and [hex][layout_hex]: A smoothing
+          parameter expressed as a proportion of the `binwidth` (default: `0`, no smoothing).
           Use `span = 1.25` to apply moderate smoothing.
           A positive `span` applies a moving average to adjacent
           bins whose midpoints are within `span * binwidth` of each other,
@@ -628,7 +633,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           equivalent to Wilkinson\'s recommendation, which smooths bins that are at most
           `binwidth/4` apart.
         }
-        \\item For `layout = "bar"`: Width of bars expressed as a proportion of the data resolution
+        \\item For [bar][layout_bar]: Width of bars expressed as a proportion of the data resolution
           (default: 0.9). Values are typically between `0` and `1`. Use smaller values to
           increase the spacing between bars.
       }'),

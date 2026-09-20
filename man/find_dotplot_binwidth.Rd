@@ -10,10 +10,10 @@ find_dotplot_binwidth(
   group = 1L,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "hex", "swarm", "swarm2", "bar"),
+  layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
-  span = waiver()
+  ...
 )
 }
 \arguments{
@@ -21,13 +21,20 @@ find_dotplot_binwidth(
 
 \item{maxheight}{<scalar \link{numeric}> Maximum height of the dotplot.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin width to dot height.}
+\item{group}{<\link[=xtfrm]{orderable vector}> of same length as \code{x}. The group each \code{x} value
+belongs to. If there is more than one group, dots are laid out in stacks in increasing order
+of \code{xtfrm(group)}.}
+
+\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
 
 \item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers}
+between dot centers.}
 
-\item{layout}{<\link[=character]{string}> The layout method used for the dots. One of: \itemize{
-\item \code{"bin"} (default): places dots on the off-axis at the midpoint of
+\item{layout}{<\link{dotplot_layout} subclass | \link[=character]{string}> The layout method used for the dots. Either
+a subclass of \link{dotplot_layout} (i.e. a function returning a \link{dotplot_layout} object) or a
+string that when prepended with \code{"layout_"} yields the name of such a subclass or function,
+such as: \itemize{
+\item \code{"bin"} or \code{\link[=layout_bin]{layout_bin()}} (default): places dots on the off-axis at the midpoint of
 their bins as in the classic Wilkinson (1999) dotplot. This maintains the
 alignment of rows and columns in the dotplot. This layout is slightly
 different from the Wilkinson algorithm: (1) it nudges bin positions
@@ -36,24 +43,24 @@ it does not apply a smoothing pass (but Wilkinson-style smoothing can be
 applied via passing \code{span = 1.25}); (3) it uses a backwards sweep to
 reduce right-edge binning effects; (4) if the input data are symmetrical,
 it bins out from the center to return a symmetrical layout.
-\item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but
+\item \code{"weave"} or \code{\link[=layout_weave]{layout_weave()}}: uses the same basic binning approach of \code{"bin"}, but
 places dots in the off-axis at their actual positions (unless
 \code{overlaps = "nudge"}, in which case overlaps within rows are nudged out
 of the way). This maintains the alignment of rows but does not align dots
 within columns.
-\item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but
+\item \code{"hex"} or \code{\link[=layout_hex]{layout_hex()}}: uses the same basic binning approach of \code{"bin"}, but
 alternates placing dots at \eqn{\pm} \code{binwidth/4} in the
 off-axis from the bin center, giving a hexagonal layout. For
 an equilateral hexagonal packing, set \code{dotsize = k} and
 \code{stackratio = sqrt(3/4) / k} for some \code{k} (e.g. \code{0.9}).
-\item \code{"swarm"}: uses a version of the \code{"compactswarm"} layout from
-\link[beeswarm:beeswarm]{beeswarm}, with minor modifications to improve visual
-symmetry when \code{side = "both"}. Ensures dot are positioned exacty at their
-underlying data values. Does not maintain alignment of rows or
-columns, but can be more compact, especially for sample data (as opposed
-to quantile dotplots of theoretical distributions, which may look better
-with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
-\item \code{"bar"}: for discrete distributions, lays out duplicate values in
+\item \code{"swarm"} or \code{\link[=layout_swarm]{layout_swarm()}}: uses a stackable, stratified beeswarm layout inspired by
+the \code{"compactswarm"} layout from \link[beeswarm:beeswarm]{beeswarm}, rewritten to be faster,
+to allow stacking groups, and to improve visual symmetry when \code{side = "both"}. Ensures dot
+are positioned exacty at their underlying data values. Does not maintain alignment of rows
+or columns (unless \code{strata = 1}, which will maintain row alignment), but can be more
+compact, especially for sample data (as opposed to quantile dotplots of theoretical
+distributions, which may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+\item \code{"bar"} or \code{\link[=layout_bar]{layout_bar()}}: for discrete distributions, lays out duplicate values in
 rectangular bars.
 }}
 
@@ -67,6 +74,48 @@ or the left depending on if \code{orientation} is \code{"horizontal"} or \code{"
 \item \code{"bottomright"} draws the dots on the bottom or the right.
 \item \code{"both"} draws the dots on both sides (like in a violin plot).
 }}
+
+\item{...}{
+  Arguments passed on to \code{\link{dotplot_layout}}
+  \describe{
+    \item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
+\link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
+\link[=layout_swarm]{swarm} or \link[=layout_bar]{bar} layouts).
+For the purposes of this argument, dots are only considered to be overlapping
+if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
+if you set those arguments to other values, overlaps may still occur.
+One of: \itemize{
+\item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
+(usually only slightly) in the \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and
+\link[=layout_hex]{hex} layouts.
+\item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
+using a constrained optimization which minimizes the squared distance of
+dots to their desired positions, subject to the constraint that adjacent
+dots do not overlap.
+}}
+    \item{\code{span}}{<scalar \link{numeric}> Non-negative smoothing/spacing parameter expressed as a
+fraction. The specific use and default value (\code{waiver()}) depend on the
+\code{layout}:
+\itemize{
+\item{For \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and \link[=layout_hex]{hex}: A smoothing
+parameter expressed as a proportion of the \code{binwidth} (default: \code{0}, no smoothing).
+Use \code{span = 1.25} to apply moderate smoothing.
+A positive \code{span} applies a moving average to adjacent
+bins whose midpoints are within \code{span * binwidth} of each other,
+exchanging dots between bins using the method described
+by Wilkinson (1999). Specifically, for every bin \eqn{i} with midpoint
+\eqn{m_i} containing \eqn{f(i)} dots, the algorithm moves
+\eqn{\left\lfloor\frac{f(i + 1) - f(i)}{2}\right\rfloor} dots from bin
+\eqn{i + 1} to bin \eqn{i} if \eqn{m_{i + 1} - m_i \le} \code{span}.
+Good values for \code{span} are typically between \code{1} and \code{2}. \code{span = 1.25} is
+equivalent to Wilkinson's recommendation, which smooths bins that are at most
+\code{binwidth/4} apart.
+}
+\item For \link[=layout_bar]{bar}: Width of bars expressed as a proportion of the data resolution
+(default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
+increase the spacing between bars.
+}}
+  }}
 }
 \value{
 A suitable bin width such that a dotplot created with this bin width
