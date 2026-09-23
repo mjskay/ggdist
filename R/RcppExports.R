@@ -7,8 +7,8 @@ wilkinson_bin_to_right_ <- function(x, width) {
 
 #' Compact swarm layout
 #' @param xs_list <list of [numeric]> list of vectors of sorted x values
-#' @param xsize <scalar [numeric]> horizontal spacing between dots
-#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param xsize <positive scalar [numeric]> horizontal spacing between dots
+#' @param ysize <positive scalar [numeric]> vertical spacing between dots
 #' @param signed_side <scalar [integer]> which side to place dots on?
 #'  -  `0` = both
 #'  -  `1` = above
@@ -21,8 +21,8 @@ compact_swarm_ <- function(xs_list, xsize, ysize, signed_side, group_penalty) {
 
 #' Fractional grid swarm layout
 #' @param xs_list <list of [numeric]> list of vectors of sorted x values
-#' @param xsize <scalar [numeric]> horizontal spacing between dots
-#' @param ysize <scalar [numeric]> vertical spacing between dots
+#' @param xsize <positive scalar [numeric]> horizontal spacing between dots
+#' @param ysize <positive scalar [numeric]> vertical spacing between dots
 #' @param signed_side <scalar [integer]> which side to place dots on?
 #' -  `0` = both
 #' -  `1` = above

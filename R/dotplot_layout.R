@@ -103,7 +103,7 @@ dotplot_layout = new_dotplot_layout_class(
 #' @inheritParams dotplot_layout
 #' @param bin_method <[function]> function that takes data and bin width as input and returns
 #' a list with components `bins` and `bin_midpoints`.
-#' @param align_rows <[logical]> whether to align rows of dots when `side` is "both".
+#' @prop align_rows <[logical]> whether to align rows of dots when `side` is "both".
 #' @return <[dotplot_layout]> object of class `layout_bin`.
 layout_bin = new_dotplot_layout_class(
   "layout_bin",
@@ -133,7 +133,7 @@ layout_bin = new_dotplot_layout_class(
     ),
     align_rows = new_property(
       class_logical,
-      default = FALSE
+      getter = function(self) FALSE
     )
   )
 )
@@ -185,7 +185,7 @@ bar_bin = function(x, binwidth, span = 0.9) {
   # determine the amount of space that each bar will take up
   # TODO: can drop as.numeric here if https://github.com/tidyverse/ggplot2/issues/5709 is fixed
   max_bar_width = resolution(as.numeric(x), zero = FALSE) * span
-  n_bins = max(floor(max_bar_width / binwidth), 1)
+  n_bins = min(max(floor(max_bar_width / binwidth), 1), length(x))
   actual_bar_width = n_bins * binwidth
 
   # determine new x positions
@@ -245,16 +245,50 @@ layout_bar = new_dotplot_layout_class(
 #' Superceded by [layout_swarm()], which is faster and supports stacking groups of dots.
 #' @inheritParams dotplot_layout
 #' @return <[dotplot_layout]> object of class `layout_oldswarm`.
+#' @seealso [layout_swarm()]
+#' @keywords internal
 layout_oldswarm = new_dotplot_layout_class(
   "layout_oldswarm",
   parent = dotplot_layout
 )
 
-#' Stackable, stratified beeswarm dotplot layout
+#' Stackable beeswarm dotplot layout
 #' @description
-#' Stackable, stratified beeswarm dotplot layout.
+#' Fast, stackable beeswarm dotplot layout with optional stratification.
 #' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
+#' @param strata <scalar [numeric]> \eqn{\ge 1} a postive integer giving the number of strata to use
+#' per 1 dot height. Given `y_spacing` representing the vertical distance between the centers of two
+#' dots stacked directly on top of each other (i.e. the dot height times the `stackratio`), strata
+#' operates as follows:
+#' - `strata = 1` will yield a swarm with aligned rows of dots stacked on top of each other.
+#' - `strata = k` for \eqn{1 < k < \infty} will place dots at heights that are multiples of
+#'   `y_spacing / strata.
+#' - `strata = Inf` will place dots using a stackable variation on the compact swarm algorithm
+#'   (see *Details*).
+#' @details
+#' `layout_swarm` is a stackable, exact-*x*-position, compact beeswarm layout. It uses one of two
+#' layout algorithms, depending on the value of `strata`. Both algorithms position dots in exactly
+#' their original data position and create compact layouts that do not have a "lean" (a visual
+#' artifact created by some beeswarm layouts based on the order that dots are placed in). Both
+#' algorithms also allow groups of dots to be stacked on top of each other in a user-specified order.
+#'
+#' **When `strata` is finite**, a *stratified* layout algorithm is used. This algorithm places dots
+#' in alternating left/right sweeps along grid lines, greedily placing the next-closest placeable
+#' dot (in x position) to the most recently-placed dot in the same row. The distance between grid
+#' lines is `y_spacing / strata`, where `y_spacing` is dot height times the `stackratio` (the
+#' vertical distance between dot centers).
+#'
+#' **When `strata` is `Inf`**, an algorithm inspired by the the "compact swarm" algorithm in
+#' \pkg{beeswarm} is used, rewritten to improve performance and to allow for stacking of groups.
+#' This algorithm maintains a priority queue of contiguous regions of unplaced dots, prioritized by
+#' our current best guess at the minimum position of the next dot in each region. We use Fibonacci
+#' search to find the lowest dot in a region without checking all dots in a region. Placed dots are
+#' stored in a frontier sorted by x position, and as dots are placed, we prune dots from the
+#' frontier that can no longer intersect with the remaining dots (using the fact that all remaining
+#' dots will be placed higher than the most recently placed dot). Stacking of groups is achieved by
+#' applying a penalty (as a fraction of one dot height) to regions in the queue based on how far up
+#' in the stacking order the lowest unplaced group in a region is.
 #' @return <[dotplot_layout]> object of class `layout_swarm`.
 layout_swarm = new_dotplot_layout_class(
   "layout_swarm",
@@ -264,7 +298,7 @@ layout_swarm = new_dotplot_layout_class(
       class_data.frame,
       setter = function(self, value) {
         self@dots = value
-        group_swarm_xs(self)
+        split_swarm_xs(self)
       },
       validator = dotplot_layout@properties$dots$validator,
       default = dotplot_layout@properties$dots$default
@@ -289,7 +323,7 @@ layout_swarm = new_dotplot_layout_class(
 #' others in that it needs these splits in order to plot groups in the right
 #' order within each stratum.
 #' @noRd
-group_swarm_xs = function(self) {
+split_swarm_xs = function(self) {
   if (!is.null(self@dots$x) && !is.null(self@dots$group)) {
     x_splits = vec_split(self@dots$x, self@dots$group)
     attr(self, "xs") = x_splits$val[order(x_splits$key)]

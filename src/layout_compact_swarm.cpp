@@ -398,8 +398,8 @@ class CompactSwarm {
 
 //' Compact swarm layout
 //' @param xs_list <list of [numeric]> list of vectors of sorted x values
-//' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @param ysize <scalar [numeric]> vertical spacing between dots
+//' @param xsize <positive scalar [numeric]> horizontal spacing between dots
+//' @param ysize <positive scalar [numeric]> vertical spacing between dots
 //' @param signed_side <scalar [integer]> which side to place dots on?
 //'  -  `0` = both
 //'  -  `1` = above

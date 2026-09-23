@@ -12,8 +12,7 @@ layout_weave(
   side = "top",
   overlaps = "nudge",
   span = 0,
-  bin_method = function(...) cli_abort("`x` must be set to determine `bin_method`."),
-  align_rows = FALSE
+  bin_method = function(...) cli_abort("`x` must be set to determine `bin_method`.")
 )
 }
 \arguments{
@@ -78,8 +77,6 @@ increase the spacing between bars.
 
 \item{bin_method}{<\link{function}> function that takes data and bin width as input and returns
 a list with components \code{bins} and \code{bin_midpoints}.}
-
-\item{align_rows}{<\link{logical}> whether to align rows of dots when \code{side} is "both".}
 }
 \value{
 <\link{dotplot_layout}> object of class \code{layout_weave}.

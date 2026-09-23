@@ -183,7 +183,7 @@ class GridSwarm {
     return true;
   }
 
-  /// Attempt to place dots in the current row in the grid_swarm algorithm
+  /// Attempt to place dots in the current row
   /// @tparam reverse are we placing dots in reverse (from end to beginning)?
   /// @returns `true` if `unplaced` still has dots to place and `false` otherwise.
   template<Direction reverse>
@@ -228,7 +228,7 @@ class GridSwarm {
     return !unplaced.empty();
   }
 
-  /// Place dots in `n_rows` rows in the grid_swarm algorithm, alternating directions.
+  /// Place dots in `n_rows` rows, alternating directions.
   /// @param n_rows Number of rows to place.
   /// @see `place_row()`
   template<Direction reverse>
@@ -273,8 +273,8 @@ class GridSwarm {
 
 //' Fractional grid swarm layout
 //' @param xs_list <list of [numeric]> list of vectors of sorted x values
-//' @param xsize <scalar [numeric]> horizontal spacing between dots
-//' @param ysize <scalar [numeric]> vertical spacing between dots
+//' @param xsize <positive scalar [numeric]> horizontal spacing between dots
+//' @param ysize <positive scalar [numeric]> vertical spacing between dots
 //' @param signed_side <scalar [integer]> which side to place dots on?
 //' -  `0` = both
 //' -  `1` = above

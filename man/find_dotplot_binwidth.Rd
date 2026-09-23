@@ -7,19 +7,61 @@
 find_dotplot_binwidth(
   x,
   maxheight,
+  ...,
   group = 1L,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
-    "bottomright", "both"),
-  ...
+    "bottomright", "both")
 )
 }
 \arguments{
 \item{x}{<\link{numeric}> Data values.}
 
 \item{maxheight}{<scalar \link{numeric}> Maximum height of the dotplot.}
+
+\item{...}{
+  Arguments passed on to \code{\link{dotplot_layout}}
+  \describe{
+    \item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
+\link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
+\link[=layout_swarm]{swarm} or \link[=layout_bar]{bar} layouts).
+For the purposes of this argument, dots are only considered to be overlapping
+if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
+if you set those arguments to other values, overlaps may still occur.
+One of: \itemize{
+\item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
+(usually only slightly) in the \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and
+\link[=layout_hex]{hex} layouts.
+\item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
+using a constrained optimization which minimizes the squared distance of
+dots to their desired positions, subject to the constraint that adjacent
+dots do not overlap.
+}}
+    \item{\code{span}}{<scalar \link{numeric}> Non-negative smoothing/spacing parameter expressed as a
+fraction. The specific use and default value (\code{waiver()}) depend on the
+\code{layout}:
+\itemize{
+\item{For \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and \link[=layout_hex]{hex}: A smoothing
+parameter expressed as a proportion of the \code{binwidth} (default: \code{0}, no smoothing).
+Use \code{span = 1.25} to apply moderate smoothing.
+A positive \code{span} applies a moving average to adjacent
+bins whose midpoints are within \code{span * binwidth} of each other,
+exchanging dots between bins using the method described
+by Wilkinson (1999). Specifically, for every bin \eqn{i} with midpoint
+\eqn{m_i} containing \eqn{f(i)} dots, the algorithm moves
+\eqn{\left\lfloor\frac{f(i + 1) - f(i)}{2}\right\rfloor} dots from bin
+\eqn{i + 1} to bin \eqn{i} if \eqn{m_{i + 1} - m_i \le} \code{span}.
+Good values for \code{span} are typically between \code{1} and \code{2}. \code{span = 1.25} is
+equivalent to Wilkinson's recommendation, which smooths bins that are at most
+\code{binwidth/4} apart.
+}
+\item For \link[=layout_bar]{bar}: Width of bars expressed as a proportion of the data resolution
+(default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
+increase the spacing between bars.
+}}
+  }}
 
 \item{group}{<\link[=xtfrm]{orderable vector}> of same length as \code{x}. The group each \code{x} value
 belongs to. If there is more than one group, dots are laid out in stacks in increasing order
@@ -74,48 +116,6 @@ or the left depending on if \code{orientation} is \code{"horizontal"} or \code{"
 \item \code{"bottomright"} draws the dots on the bottom or the right.
 \item \code{"both"} draws the dots on both sides (like in a violin plot).
 }}
-
-\item{...}{
-  Arguments passed on to \code{\link{dotplot_layout}}
-  \describe{
-    \item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
-\link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
-\link[=layout_swarm]{swarm} or \link[=layout_bar]{bar} layouts).
-For the purposes of this argument, dots are only considered to be overlapping
-if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
-if you set those arguments to other values, overlaps may still occur.
-One of: \itemize{
-\item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
-(usually only slightly) in the \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and
-\link[=layout_hex]{hex} layouts.
-\item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
-using a constrained optimization which minimizes the squared distance of
-dots to their desired positions, subject to the constraint that adjacent
-dots do not overlap.
-}}
-    \item{\code{span}}{<scalar \link{numeric}> Non-negative smoothing/spacing parameter expressed as a
-fraction. The specific use and default value (\code{waiver()}) depend on the
-\code{layout}:
-\itemize{
-\item{For \link[=layout_bin]{bin}, \link[=layout_weave]{weave}, and \link[=layout_hex]{hex}: A smoothing
-parameter expressed as a proportion of the \code{binwidth} (default: \code{0}, no smoothing).
-Use \code{span = 1.25} to apply moderate smoothing.
-A positive \code{span} applies a moving average to adjacent
-bins whose midpoints are within \code{span * binwidth} of each other,
-exchanging dots between bins using the method described
-by Wilkinson (1999). Specifically, for every bin \eqn{i} with midpoint
-\eqn{m_i} containing \eqn{f(i)} dots, the algorithm moves
-\eqn{\left\lfloor\frac{f(i + 1) - f(i)}{2}\right\rfloor} dots from bin
-\eqn{i + 1} to bin \eqn{i} if \eqn{m_{i + 1} - m_i \le} \code{span}.
-Good values for \code{span} are typically between \code{1} and \code{2}. \code{span = 1.25} is
-equivalent to Wilkinson's recommendation, which smooths bins that are at most
-\code{binwidth/4} apart.
-}
-\item For \link[=layout_bar]{bar}: Width of bars expressed as a proportion of the data resolution
-(default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
-increase the spacing between bars.
-}}
-  }}
 }
 \value{
 A suitable bin width such that a dotplot created with this bin width

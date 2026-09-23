@@ -16,6 +16,7 @@ NULL
 #' @param x <[numeric]> *x* values.
 #' @param y <[numeric]> *y* values (same length as `x`).
 #' @param binwidth <scalar [numeric]> Bin (dot) width.
+#' @inheritDotParams dotplot_layout -dots
 #' @param group <[orderable vector][xtfrm]> of same length as `x`. The group each `x` value
 #' belongs to. If there is more than one group, dots are laid out in stacks in increasing order
 #' of `xtfrm(group)`.
@@ -66,16 +67,15 @@ NULL
 #' @export
 bin_dots = function(
   x,
-  y,
+  y = 0,
   binwidth,
+  ...,
   group = 1L,
   heightratio = 1,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm", "bar"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
-  orientation = c("horizontal", "vertical", "y", "x"),
-  overlaps = "nudge",
-  span = waiver()
+  orientation = c("horizontal", "vertical", "y", "x")
 ) {
   orientation = match.arg(orientation)
   flip = switch_orientation(orientation, horizontal = FALSE, vertical = TRUE)
@@ -95,8 +95,7 @@ bin_dots = function(
     heightratio = heightratio,
     stackratio = stackratio,
     side = side,
-    overlaps = overlaps,
-    span = span
+    ...
   )
   dotplot = setup_dotplot(layout, binwidth = binwidth)
   dots = place_dots(layout, dotplot)
@@ -111,7 +110,7 @@ bin_dots = function(
 #' Setup a data frame of dots for use with dotplot layout algorithms
 #' @noRd
 setup_dots = function(x, y, group = 1L, flip = FALSE) {
-  dots = data_frame0(x = x, y = y, group = rep_len(xtfrm(group), length(x)))
+  dots = data_frame0(x = x, y = y, group = xtfrm(group))
   dots = flip_data(dots, flip)
   stopifnot("All y values must be equal" = dots$y == dots$y[1])
 
@@ -140,31 +139,25 @@ setup_dots = function(x, y, group = 1L, flip = FALSE) {
 #' and leave the remaining work required to lay out the dots to `place_dots()`.
 #' @param layout <[dotplot_layout]> the layout (encapsulating a dotplot layout algorithm and the data
 #' to be laid out).
-#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
-#' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @return <[list]> properties of a dotplot applied to the input data with the given layout:
-#' - `nbins`: <scalar [integer]> number of bins
+#' @param binwidth <scalar [numeric]> the desired bin width (`binwidth`).
+#' @return <[list]> properties of a dotplot applied to the input data with the given layout. The
+#' default implementation returns a list with the following elements:
+#'
 #' - `binwidth`: <scalar [numeric]> bin width
 #' - `y_spacing`: <scalar [numeric]> vertical distance between dot centers
 #' - `y_start`: <scalar [numeric]> starting y offset for the first dot in each bin
-#' Subclasses may also add additional elements. They *must* add at least the following elements:
+#'
+#' Subclasses **must** add at least the following elements:
+#'
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
+#'
+#' Subclasses may also add additional elements used by their implementation of [place_dots()].
 #' @noRd
-setup_dotplot = new_generic("setup_dotplot", c("layout"), function(layout, nbins = NULL, binwidth = NULL, ...) {
+setup_dotplot = new_generic("setup_dotplot", c("layout"), function(layout, binwidth, ...) {
   S7_dispatch()
 })
 
-method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth = NULL, ...) {
-  # determine binwidth and number of bins
-  x_spread = diff(range(layout@dots$x))
-  if (x_spread == 0) x_spread = 1
-  if (is.null(binwidth)) {
-    nbins = floor(nbins)
-    binwidth = x_spread / nbins
-  } else {
-    nbins = max(floor(x_spread / binwidth), 1)
-  }
-
+method(setup_dotplot, dotplot_layout) = function(layout, binwidth, ...) {
   # determine y positioning parameters
   y_spacing = binwidth * layout@heightratio
   y_start = switch(layout@side,
@@ -174,7 +167,6 @@ method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth 
   )
 
   list(
-    nbins = nbins,
     binwidth = binwidth,
     y_spacing = y_spacing,
     y_start = y_start
@@ -184,17 +176,15 @@ method(setup_dotplot, dotplot_layout) = function(layout, nbins = NULL, binwidth 
 ## setup_dotplot for bin, hex, weave, bar ----------------------------------
 
 #' Initialize binned dotplot layouts
-#' @param layout <`layout_bin` | `layout_bar`> the dotplot layout
-#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
-#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @inheritParams setup_dotplot
 #' @return <[list]> properties of this dotplot (see `setup_dotplot()`), with additional elements:
-#' - `bins`: <[integer]> vector of same length as `x` giving the bin number (in {1 ... `nbins`}) for each element in `x`
-#' - `bin_midpoints`: <[numeric]> vector of length `nbins` giving the midpoint of each bin
-#' - `bin_counts`: <[integer]> vector of length `nbins` giving the number of elements in each bin
+#' - `bins`: <[integer]> vector of same length as `x` giving the bin number for each element in `x`
+#' - `bin_midpoints`: <[numeric]> vector of length `max(bins)` giving the midpoint of each bin
+#' - `bin_counts`: <[integer]> vector of length `max(bins)` giving the number of elements in each bin
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, binwidth = NULL, ...) {
-  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
+method(setup_dotplot, layout_bin | layout_bar) = function(layout, binwidth, ...) {
+  dotplot = setup_dotplot(super(layout, dotplot_layout), binwidth, ...)
   dotplot = c(dotplot, layout@bin_method(layout@dots$x, dotplot$binwidth, span = layout@span))
 
   # determine height of the tallest bin
@@ -211,17 +201,15 @@ method(setup_dotplot, layout_bin | layout_bar) = function(layout, nbins = NULL, 
 ## setup_dotplot for swarm -----------------------------------------
 
 #' Initialize old beeswarm dotplot layout
-#' @param layout <[layout_oldswarm]> the dotplot layout
-#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
-#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @inheritParams setup_dotplot
 #' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(setup_dotplot, layout_oldswarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
+method(setup_dotplot, layout_oldswarm) = function(layout, binwidth, ...) {
   stop_if_not_installed("beeswarm", '{.fn ggdist::layout_oldswarm}')
 
-  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
+  dotplot = setup_dotplot(super(layout, dotplot_layout), binwidth, ...)
   dotplot$dots = beeswarm::swarmy(
     layout@dots$x,
     0,
@@ -239,24 +227,26 @@ method(setup_dotplot, layout_oldswarm) = function(layout, nbins = NULL, binwidth
 }
 
 #' Initialize stratified swarm dotplot layout
-#' @param layout <`layout_swarm`> the dotplot layout
-#' @param nbins,binwidth <scalar [numeric]> provide either the desired number of bins (`nbins`)
-#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @inheritParams setup_dotplot
 #' @return <[list]> properties of this dotplot  (see `setup_dotplot()`), with additional elements:
 #' - `dots`: <[data.frame]> data frame with `x` and `y` columns giving the positions of dots in the swarm
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #' @noRd
-method(setup_dotplot, layout_swarm) = function(layout, nbins = NULL, binwidth = NULL, ...) {
-  dotplot = setup_dotplot(super(layout, dotplot_layout), nbins, binwidth)
-  dotplot$dots = grid_swarm(
-    layout@xs,
-    0,
-    xsize = dotplot$binwidth,
-    ysize = dotplot$y_spacing,
-    side = switch(layout@side, top = 1, bottom = -1, both = 0),
-    strata = layout@strata
-  )
-  dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
+method(setup_dotplot, layout_swarm) = function(layout, binwidth, ...) {
+  dotplot = setup_dotplot(super(layout, dotplot_layout), binwidth, ...)
+  if (binwidth == 0) {
+    dotplot$dots = layout@dots
+  } else {
+    dotplot$dots = stackable_swarm(
+      layout@xs,
+      0,
+      xsize = dotplot$binwidth,
+      ysize = dotplot$y_spacing,
+      side = switch(layout@side, top = 1, bottom = -1, both = 0),
+      strata = layout@strata
+    )
+    dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
+  }
   dotplot$height = get_swarm_height(layout, dotplot, dotplot$dots)
 
   dotplot
@@ -717,12 +707,9 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 }
 
 
-# stratified swarm -------------------------------------------------------------
+# stackable swarm -------------------------------------------------------------
 
-#' Stratified swarm layout using a fractional grid.
-#' @description
-#' Lays out dots by sweeping one row at a time on a fractional grid, alternating the direction of
-#' sweeps on each row.
+#' Stackable swarm layout using a either the grid swarm or compact swarm algorithm.
 #' @param xs <[list] of [numeric]> groups of sorted x values
 #' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
@@ -735,7 +722,7 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' may leave whitespace, 0 does not keep groups together but will be a more compact layout.
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, group_penalty = 0.5) {
+stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, group_penalty = 0.5) {
   if (strata == Inf) {
     dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = group_penalty)
   } else {

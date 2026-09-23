@@ -12,8 +12,7 @@ layout_bin(
   side = "top",
   overlaps = "nudge",
   span = 0,
-  bin_method = function(...) cli_abort("`x` must be set to determine `bin_method`."),
-  align_rows = FALSE
+  bin_method = function(...) cli_abort("`x` must be set to determine `bin_method`.")
 )
 }
 \arguments{

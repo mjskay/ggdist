@@ -156,6 +156,15 @@ test_that("bin nudging works", {
 })
 
 
+test_that("binwidth = 0 works", {
+  for (layout in list("bin", "bar", "weave", "hex", layout_swarm(strata = 5), layout_swarm(strata = Inf))) {
+    expect_equal(
+      bin_dots(c(0,1,1,1,2,3), binwidth = 0, layout = !!layout)[c("x", "y")],
+      data.frame(x = c(0,1,1,1,2,3), y = 0)
+    )
+  }
+})
+
 test_that("bin layouts work", {
   ref = data.frame(
     x = c(1, 1, 3, 5, 5),
@@ -212,7 +221,7 @@ test_that("old beeswarm layout works", {
   expect_equal(bin_dots(1:7, 0, binwidth = 1, layout = "oldswarm"), ref)
 })
 
-test_that("grid_swarm layout works", {
+test_that("grid swarm layout works", {
   ref = data.frame(
     x = 1:7,
     y = c(1.5, 7.5, 4.5, 1.5, 7.5, 4.5, 1.5),

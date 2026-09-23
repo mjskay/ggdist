@@ -111,9 +111,9 @@ makeContent.dots_grob = function(x) {
       find_dotplot_binwidth(
         d[[x]],
         group = d$order,
-        maxheight,
-        heightratio,
-        stackratio,
+        maxheight = maxheight,
+        heightratio = heightratio,
+        stackratio = stackratio,
         layout = layout,
         side = d$side[[1]],
         span = span
