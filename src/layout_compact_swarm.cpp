@@ -24,11 +24,11 @@
 /// that dot (between the just placed dot and its adjacent-in-x already-placed dots) to a priority
 /// queue, prioritized by our current best guess at the minimum position of the next dot in that
 /// region. Since unplaced regions are between two adjacent already-placed dots, the height of the
-/// lowest dot in a region as a function of x value is generally well-behaved enough to use
-/// Fibonacci search to efficiently find the lowest dot in a region without checking all dots
-/// in a region. We use the priority queue to find the unplaced region with the lowest unplaced dot,
-/// then recursively add the contiguous unplaced regions above and below each newly-placed dot back
-/// to the queue.
+/// lowest dot in a region as a function of x value is generally well-behaved enough to use golden
+/// section search to efficiently find the lowest dot in a region without checking all dots in a
+/// region. We use the priority queue to find the unplaced region with the lowest unplaced dot, then
+/// recursively add the contiguous unplaced regions above and below each newly-placed dot back to
+/// the queue.
 ///
 /// Positions of placed dots are stored in a `frontier` sorted by x position. As dots are placed, we
 /// can trivially track the minimum y position that any subsequent dot could take (since we place

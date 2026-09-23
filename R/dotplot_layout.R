@@ -282,13 +282,13 @@ layout_oldswarm = new_dotplot_layout_class(
 #' **When `strata` is `Inf`**, an algorithm inspired by the the "compact swarm" algorithm in
 #' \pkg{beeswarm} is used, rewritten to improve performance and to allow for stacking of groups.
 #' This algorithm maintains a priority queue of contiguous regions of unplaced dots, prioritized by
-#' our current best guess at the minimum position of the next dot in each region. We use Fibonacci
-#' search to find the lowest dot in a region without checking all dots in a region. Placed dots are
-#' stored in a frontier sorted by x position, and as dots are placed, we prune dots from the
-#' frontier that can no longer intersect with the remaining dots (using the fact that all remaining
-#' dots will be placed higher than the most recently placed dot). Stacking of groups is achieved by
-#' applying a penalty (as a fraction of one dot height) to regions in the queue based on how far up
-#' in the stacking order the lowest unplaced group in a region is.
+#' our current best guess at the minimum position of the next dot in each region. We use golden
+#' section search to find the lowest dot in a region without checking all dots in a region. Placed
+#' dots are stored in a frontier sorted by x position, and as dots are placed, we prune dots from
+#' the frontier that can no longer intersect with the remaining dots (using the fact that all
+#' remaining dots will be placed higher than the most recently placed dot). Stacking of groups is
+#' achieved by applying a penalty (as a fraction of one dot height) to regions in the queue based on
+#' how far up in the stacking order the lowest unplaced group in a region is.
 #' @return <[dotplot_layout]> object of class `layout_swarm`.
 layout_swarm = new_dotplot_layout_class(
   "layout_swarm",

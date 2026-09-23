@@ -6,12 +6,13 @@
 #include <algorithm>
 #include <iterator>
 #include <limits>
-#include <ostream>
 #include <type_traits>
 
 // constants --------------------------------------------------------------------------
 
 constexpr auto INF = std::numeric_limits<double>::infinity();
+
+constexpr auto PHI = 1.6180339887498949;
 
 template<typename Numeric>
 constexpr auto relative_eps(const Numeric x) -> Numeric {
@@ -174,111 +175,62 @@ inline auto advance_to_at_least(
 
 // search ------------------------------------------------------
 
-constexpr auto PHI = 1.6180339887498949;
-constexpr auto one_minus_invphi = 2.0 - PHI;
-
 /// Find minimum of unimodal f(*x) for x in the sequence [lo, hi).
-/// Uses Fibonnaci search to avoid re-evaluating f() on already-checked values
-/// when possible.
+/// Uses a golden section search designed for expensive functions: it avoids re-evaluating f() on
+/// already-checked values.
 /// @param lo iterator to lower limit of interval on a container of sorted values.
 /// @param hi iterator to upper limit of interval on a container of sorted values.
+/// Must have `hi > lo` (i.e. the sequence must have length >= 1).
 /// @param f function to be minimized, taking values from the container `lo` and `hi`
 /// @returns a pair containing:
 ///  - An iterator pointing to the location of the minimum value of `f` in the interval
 ///  - The corresponding minimum value of `f`
 template<typename It, typename F>
 inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<It, decltype(f(*lo))> {
-  const auto first = lo;
-  const auto n = hi - lo;
-  assert(n != 0);
-  if (n == 1_z) return {lo, f(*lo)};
-  if (*lo == *(hi - 1_z)) return {lo, f(*lo)};
+  assert(hi > lo);
+  if (*lo == *(hi - 1_z)) return {lo, f(*lo)}; // f is constant or n = 1
 
-  // Find fib_k = the smallest Fibonacci number <= n
-  // We cache the Fibonacci numbers to save recalculating on repeated calls
-  static auto fib = std::vector<decltype(hi - lo)>{1_z, 1_z};
-  decltype(fib.cend()) fib_k;
-  if (fib.back() < n) {
-    do {
-      fib.push_back(*(fib.cend() - 1_z) + *(fib.cend() - 2_z));
-    } while (fib.back() < n);
-    fib_k = fib.cend() - 1_z;
-  } else {
-    fib_k = std::lower_bound(fib.cbegin(), fib.cend(), n);
-  }
-
-  // initialize probe points
+  // Initialize probe points
+  // At this point we know that n is >= 2. We initialize as follows:
+  //         lo, m1, m2, hi
+  // n = 2: [ 0,  1,  1,  2)
+  // n = 3: [ 0,  1,  2,  3)
+  // n = 4: [ 0,  2,  3,  4)
+  // n = 5: [ 0,  2,  3,  5)
+  //   ...
+  // This initialization ensures:
+  //   lo  <  m1  <= m2  <  hi   (for n = 2)
+  //   lo  <  m1  <  m2  <  hi   (for n > 2)
   auto f0 = f(*lo);
 
-  auto m1 = lo + *(fib_k - 2_z) * (hi - lo) / *fib_k;
+  auto m1 = lo + std::round((hi - lo) * (2.0 - PHI));
   auto f1 = f(*m1);
 
-  auto m2 = lo + *(fib_k - 1_z) * (hi - lo) / *fib_k;
+  auto m2 = m1 + std::round((hi - m1) * (2.0 - PHI));
   auto f2 = m1 == m2 ? f1 : f(*m2);
 
-  // We require fib_k > fib_3 in the loop so that the lowest pair of Fibonnaci numbers we use are:
-  // *(fib_4 - 2) = fib(2) = 1
-  // *(fib_4 - 1) = fib(3) = 2
-  // thus the pair (fib_k - 2, fib_k - 1) will be distinct.
-  const auto fib_3 = fib.cbegin() + 2_z;
   while (hi - lo > 3_z) {
-    // Rcpp::Rcout << "\t" << (fib_k - fib.cbegin()) << ":\t" << (lo - first) << "\t" << (m1 - first) << "\t" << (m2 - first) << "\t" << (hi - first);
     if (f1 < f2) {
-      // Rcpp::Rcout << "\t <" << std::endl;
       // minimum is in [lo, m2):
       //    [lo,     m1, m2, hi)
       //     vv      vv  vv
       // -> [lo, m1, m2, hi)
       //         ^^
-      //         new (if n is a Ftibonacci number)
+      //         new
       hi = m2;
 
-      // reuse m1 as m2
+      // use old m1 as new m2
       m2 = m1;
       f2 = f1;
 
-      // compute new point
-      // if (m2 - lo <= 1_z) {
-      //   if (m2 + 1_z != hi) {
-      //     ++m2;
-      //     f2 = f(*m2);
-      //   }
-      //   // m2 =  + std::min(*(fib_k - 1_z), hi - lo - 1_z);
-      //   // if (m1 != m2) f2 =
-      // } else {
-      if (fib_k > fib_3) {
-        --fib_k;
-        m1 = lo + std::min(*(fib_k - 2_z), hi - lo - 1_z);
-        if (m1 != m2) f1 = f(*m1);
-        assert(m1 != lo);
+      // compute new m1
+      if (m2 - lo > 1_z) {
+        // m2 - lo > 1 implies 1 <= round((m2 - lo) * (2.0 - PHI)) < (m2 - lo),
+        // so the new m1 (below) will satisfy lo < m1 < m2
+        m1 -= std::round((m2 - lo) * (2.0 - PHI));
+        f1 = f(*m1);
       }
-        // f1 = m1 == m2 ? f2 :
-        //      m1 == lo ? f0 : f(*m1);
-      // }
-
-      // const auto m_new = lo + std::min(*(fib_k - 2_z), hi - lo - 1_z);
-      // if (m_new > m2) {
-      //   m2 = m_new;
-      //   f2 = f(*m2);
-      // } else if (m_new < m2) {
-      //   m1 = m_new;
-      //   f1 = f(*m1);
-      // } else {
-      //   --m1;
-      //   f1 = m1 == lo ? f0 : f(*m1);
-      // }
-      // // if (i < 0_z) {
-      // //   m1 = lo;
-      // //   f1 = f0;
-      // // } else {
-      // //   m1 = lo + i;
-      // //   f1 = f(*m1);
-      // // }
-      // // m1 = std::min(std::max(lo, m2 - 1_z), lo + *(fib_k - 2_z) * (hi - lo) / *fib_k);
-      // // f1 = m1 == lo ? f0 : f(*m1);
     } else {
-      // Rcpp::Rcout << "\t >=" << std::endl;
-
       // minimum is in [m1, hi):
       //    [lo, m1, m2,     hi)
       //         vv  vv      vv
@@ -288,55 +240,29 @@ inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<It, decltype(f(*l
       lo = m1;
       f0 = f1;
 
-      // reuse m2 as m1
+      // use old m2 as new m1
       m1 = m2;
       f1 = f2;
 
       // compute new m2
-      if (fib_k > fib_3) {
-        --fib_k;
-        m2 = lo + std::min(*(fib_k - 1_z), hi - lo - 1_z);
-        // m2 = std::max(std::min(m1 + 1_z, hi - 1_z), lo + *(fib_k - 1_z) * (hi - lo) / *fib_k);
-        if (m2 != m1) f2 = f(*m2);
-      }
-    }
-
-    // compensate for collisions when
-    // n is not exactly a Fibonacci number
-    if (m2 < m1) {
-      std::swap(m1, m2);
-      std::swap(f1, f2);
-    } else if (m1 == m2) {
-      if (hi - m2 > 1_z && hi - m2 > m1 - lo) {
-        m2 += std::max((hi - m2) * (2.0 - PHI), 1.0);
+      if (hi - m1 > 1_z) {
+        // hi - m1 > 1 implies 1 <= round((hi - m1) * (2.0 - PHI)) < (hi - m1),
+        // so the new m2 (below) will satisfy m1 < m2 < hi
+        m2 += std::round((hi - m2) * (2.0 - PHI));
         f2 = f(*m2);
-      } else if (m1 - lo > 1_z) {
-        m1 -= std::max((m1 - lo) * (2.0 - PHI), 1.0);
-        f1 = f(*m1);
       }
     }
   }
 
   // We should always converge to something like:
-  //             [   lo,    m1,    m2,    hi)
-  //     == lo + [    0,     1,     1,     2)
+  //             [lo, m1, m2, hi)
+  //     == lo + [ 0,  1,  1,  2)
   // or:
-  //             [   lo,    m1,    m2,    hi)
-  //     == lo + [    0,     1,     2,     3)
-  // This way we know that the minimum is in either lo, m1, or
-  // m2, and that f(*lo), f(*m1), and f(*m2) have already been evaluated
-  const auto lo_i = lo - first;
-  const auto m1_i = m1 - first;
-  const auto m2_i = m2 - first;
-  const auto hi_i = hi - first;
-  // Rcpp::Rcout << "\t" << (fib_k - fib.cbegin()) << ":\t" << (lo - first) << "\t" << (m1 - first) << "\t" << (m2 - first) << "\t" << (hi - first) << std::endl;
-  // std::flush(Rcpp::Rcout);
-  // Rcpp::Rcout << ( - first) << " " << (m1 - first) << " " << (m2 - first) << " " << (hi - first)
-  // << std::endl;
-  if (!(m1 - lo <= 1_z && m2 - m1 <= 1_z && hi - m2 <= 1_z)) {
-    Rcpp::stop("fail");
-  }
-  // assert(m1 - lo <= 1_z && m2 - m1 <= 1_z && hi - m2 <= 1_z);
+  //             [lo, m1, m2, hi)
+  //     == lo + [ 0,  1,  2,  3)
+  // This way we know that the minimum is in either lo, m1, or m2, and
+  // that f(*lo), f(*m1), and f(*m2) have already been evaluated.
+  assert(m1 - lo <= 1_z && m2 - m1 <= 1_z && hi - m2 <= 1_z);
 
   auto best = lo;
   auto f_best = f0;

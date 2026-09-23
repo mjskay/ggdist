@@ -45,9 +45,9 @@ theme_set(theme_ggdist())
 layouts = list(
   bin = layout_bin(),
   weave = layout_weave(),
-  beeswarm = layout_swarm(),
-  gridswarm_3 = layout_swarm2(grid = 3),
-  gridswarm_inf = layout_swarm2(grid = Inf)
+  beeswarm = layout_oldswarm(),
+  gridswarm_3 = layout_swarm(strata = 3),
+  gridswarm_inf = layout_swarm(strata = Inf)
 )
 
 dists = list(
