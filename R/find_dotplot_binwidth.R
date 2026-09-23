@@ -370,6 +370,7 @@ max_f_lte_y = function(
     df = stepped_linear_approx_at_0(iter)
 
     # if (FALSE) {
+    # TODO: ensure stepped is a subset of stepped_mono then remove the stepped stuff above
       df = dplyr::bind_rows(df, lapply(split_monotonic(iter), \(df) {
         df_lt0 = df[df$y < 0, ]
         df_gt0 = df[df$y > 0, ]
