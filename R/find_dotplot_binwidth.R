@@ -522,25 +522,31 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     coord_cartesian(xlim = xlim, ylim = ylim)
 }
 
-
+#' Construct monotonic splits from a sequence.
+#' Given a sequence of `(x, y)` pairs, construct the version of that sequence that is sorted by x
+#' and which contains no duplicates. Then, return a list of all (not necessarily contiguous) subsets
+#' of the sequence in which y is monotonic.
+#' @noRd
 split_monotonic = function(iter, x = "x", y = "y") {
-  iter = iter[order(iter[[x]]), ]
-  iter = iter[!duplicated(iter[[x]]), ]
-  rev_cummin = \(x) rev(cummin(rev(x)))
+  # reverse iter because we are doing most things from the back (specifically cummin())
+  iter_rev = iter[order(iter[[x]], decreasing = TRUE), ]
+  iter_rev = iter_rev[!duplicated(iter_rev[[x]]), ]
 
   splits = list()
-  while (TRUE) {
+  repeat {
     # construct a monotonic split from the end
-    max_y = rev_cummin(iter[[y]])
-    iter$in_split = iter[[y]] == max_y
-    split = iter[iter$in_split, ]
+    max_y = cummin(iter_rev[[y]])
+    in_split = iter_rev[[y]] == max_y
+    split = iter_rev[rev(which(in_split)), ]
     splits = c(splits, list(split))
-    if (all(iter$in_split)) break
+    if (all(in_split)) break
 
-    # remove any points after the last point in the split
-    # that are less than the last point in the split
-    last_in_split = tail(iter[!iter$in_split, ], n = 1)
-    iter = iter[iter[[x]] <= last_in_split[[x]] | iter[[y]] >= last_in_split[[y]], ]
+    # remove any points after the last point not in the split
+    # that are less than the last point not in the split
+    last_not_in_split = iter_rev[which.min(in_split), ]
+    iter_rev = iter_rev[
+      iter_rev[[x]] <= last_not_in_split[[x]] | iter_rev[[y]] >= last_not_in_split[[y]],
+    ]
   }
   splits
 }

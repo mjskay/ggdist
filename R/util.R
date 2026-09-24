@@ -338,6 +338,7 @@ seq_interleaved_from_n = function(n) {
 #' Creates a sequence of interleaved sequences in the order of the group ids
 #' `seq_interleaved_from_1(n)` is equivalent to `seq_interleaved_grouped(rep(1, n))`
 #' `seq_interleaved_from_n(n)` is equivalent to `seq_interleaved_grouped(rep(1, n), from_n = TRUE)`
+#' @importFrom utils head
 #' @noRd
 seq_interleaved_grouped = function(group_ids, from_n = FALSE) {
   groups = vec_locate_sorted_groups(group_ids)
