@@ -144,9 +144,14 @@ find_dotplot_binwidth = function(
   `setup_dotplot<layout>` = method(setup_dotplot, object = layout)
   setup_dotplot_ = function(binwidth) `setup_dotplot<layout>`(layout, binwidth = binwidth)
 
+  # set up initial guesses for the search
   max_binwidth = max(diff(range(x)), maxheight / stackratio / heightratio)
   max_dotplot = setup_dotplot_(max_binwidth)
-  min_binwidth = 0
+  iter = data_frame0(
+    x = c(0, max_binwidth),
+    y = c(0, max_dotplot$height),
+    method = c("min", "max")
+  )
 
   eps = .Machine$double.eps^0.2
   height_eps = maxheight * eps
@@ -154,26 +159,14 @@ find_dotplot_binwidth = function(
   if (isTRUE(max_dotplot$height <= maxheight + height_eps)) {
     # if the max dotplot (i.e. the dotplot at the upper limit of the height we will allow)
     # is valid, then we don't need to search and can just use it.
-    binwidth = max_dotplot$binwidth
+    binwidth = max_binwidth
     height = max_dotplot$height
-
-    iter = data.frame(
-      x = binwidth,
-      y = height,
-      method = "max"
-    )
   } else {
-    # set up initial guesses for the search
-    iter = data.frame(
-      x = c(0, max_binwidth),
-      y = c(0, max_dotplot$height),
-      method = c("min", "max")
-    )
     add_guess = function(binwidth, method) {
       dotplot = setup_dotplot_(binwidth)
-      iter <<- rbind(
+      iter <<- vec_rbind(
         iter,
-        data.frame(
+        data_frame0(
           x = dotplot$binwidth,
           y = dotplot$height,
           method = method
@@ -206,10 +199,11 @@ find_dotplot_binwidth = function(
     # would produce the desired maxheight assuming that density
     if (length(x) >= 2) {
       max_density = max(density(x)$y)
-      binwidth_dens = (
-        sqrt(4 * max_density * maxheight * length(x) * stackratio^2 + heightratio * (stackratio - 1)^2) +
-        sqrt(heightratio) * (stackratio - 1)
-      ) /
+      binwidth_dens =
+        (
+          sqrt(4 * max_density * maxheight * length(x) * stackratio^2 + heightratio * (stackratio - 1)^2) +
+          sqrt(heightratio) * (stackratio - 1)
+        ) /
         (2 * max_density * sqrt(heightratio) * length(x) * stackratio)
       if (binwidth_dens < max_binwidth) add_guess(binwidth_dens, "density")
     }
@@ -332,7 +326,7 @@ find_dotplot_binwidth = function(
   structure(
     binwidth,
     layout = layout,
-    iterations = data.frame(i = seq_len(nrow(iter)), width = iter$x, height = iter$y, method = iter$method, chosen = iter$x == binwidth),
+    iterations = data_frame0(i = seq_len(nrow(iter)), width = iter$x, height = iter$y, method = iter$method, chosen = iter$x == binwidth),
     binwidth_eps = binwidth_eps,
     height_err = abs(height - maxheight),
     height_eps = height_eps
@@ -343,72 +337,42 @@ find_dotplot_binwidth = function(
 
 max_f_lte_y = function(
   f, max_y, eps_x, eps_y,
-  tol = sqrt(.Machine$double.eps),
-  iter = data.frame(x = numeric(), y = numeric(), method = character())
+  iter = data_frame0(x = numeric(), y = numeric(), method = character())
 ) {
-  iter$y = iter$y - max_y
-
-  y_best = max(iter$y[iter$y <= eps_y])
-  best_i = which.max(iter$y == y_best)
-  x_best = iter$x[[best_i]]
-  err_best = abs(y_best)
+  max_y_plus_eps = max_y + eps_y
+  y_best = max(iter$y[iter$y <= max_y_plus_eps])
+  x_best = iter$x[[which.max(iter$y == y_best)]]
+  err_best = abs(y_best - max_y)
 
   for (i in 1:20) {
     if (err_best <= eps_y) break
 
-    stepped_linear_approx_at_0 = function(iter) {
-      df = stepped_linear_approx(iter$x, iter$y + max_y, eps_x)
-      df$y = df$y - max_y
-      df$x_2 = c(df$x[-1], NA)
-      df$y_2 = c(df$y[-1], NA)
-      crosses_zero = (sign(df$y) != sign(df$y_2)) %in% TRUE
-      df = df[crosses_zero, ]
-      df$x_new = (df$x * df$y_2 - df$x_2 * df$y) / (df$y_2 - df$y)
-      df$method = "stepped"
-      df
-    }
-    df = stepped_linear_approx_at_0(iter)
+    # get candidate xs using stepped linear approximation on monotonic subsets of already-checked
+    # points: this tends to work well because of where discontinuities lie in the binwidth -> height
+    # function, and even when the underlying assumptions about the shape of that function do not
+    # hold, will amount to bisection by including the point halfway between points on either side of
+    # the target y value.
+    # x_cand = stepped_linear_approx_at_y(iter$x, iter$y, target_y = max_y, eps_x = eps_x)
+    x_cand = split_monotonic(iter$x, iter$y) |>
+      lapply(\(df) stepped_linear_approx_at_y(df$x, df$y, target_y = max_y, eps_x = eps_x)) |>
+      unlist(recursive = FALSE)
 
-    # if (FALSE) {
-    # TODO: ensure stepped is a subset of stepped_mono then remove the stepped stuff above
-      df = dplyr::bind_rows(df, lapply(split_monotonic(iter), \(df) {
-        df_lt0 = df[df$y < 0, ]
-        df_gt0 = df[df$y > 0, ]
-        f_inv_approx = approxfun(df$y, df$x) #, ties = min, method = "monoH.FC")
-        bi = max(which(df$y < 0))
-        dplyr::bind_rows(
-          # if (i %% 3 == 0) data.frame(x_new = f_inv_approx(0), method = "linear"),
-          # if (i %% 4 == 1) data.frame(x_new = splinefun(df$y, df$x, method = "monoH.FC")(0), method = "spline"),
-          # if (i %% 4 == 1)
-            transform(stepped_linear_approx_at_0(df), method = "stepped_mono")
-          # data.frame(x_new = (df$x[[bi]] + df$x[[bi + 1]]) / 2, method = "bisection"),
-          # if (nrow(df_gt0) >= 2) data.frame(x_new = splinefun(df_gt0$y, df_gt0$x, method = "monoH.FC")(0), method = "spline_gt0"),
-          # if (nrow(df_lt0) >= 2) data.frame(x_new = splinefun(df_lt0$y, df_lt0$x, method = "monoH.FC")(0), method = "spline_lt0")
-        )
-      }))
-    # }
+    # drop non-finite and already-checked (within eps/2) xs
+    x_cand = x_cand[is.finite(x_cand) & map_lgl_(x_cand, \(x) all(abs(x - iter$x) > eps_x/2))]
+    if (length(x_cand) == 0) break
 
-    df = df[!is.na(df$x_new) & sapply(df$x_new, \(x_new) all(abs(x_new - iter$x) > eps_x/2)), ]
-    if (nrow(df) == 0) {
-      # next
-      # if (i %% 4 != 1) next
-      break
-    }
+    # drop duplicate candidates (within eps)
+    x_cand = sort(x_cand)
+    x_cand = x_cand[c(TRUE, diff(x_cand) > eps_x)]
 
-    df = df[order(df$x_new), ]
-    # df = df[!duplicated(df$x_new), ]
-    df = df[c(TRUE, diff(df$x_new) > eps_x), ]
+    # check new candidates
+    for (x_new in x_cand) {
+      y_new = f(x_new)
+      err_new = abs(y_new - max_y)
 
-    for (j in seq_len(nrow(df))) {
-      x_new = df$x_new[[j]]
-      method_new = df$method[[j]]
-      y_new = f(x_new) - max_y
-      err_new = abs(y_new)
+      iter = vec_rbind(iter, data_frame0(x = x_new, y = y_new, method = "stepped_mono"))
 
-      iter = rbind(iter, data.frame(x = x_new, y = y_new, method = method_new))
-
-      if (y_new <= eps_y && err_new < err_best) {
-        # store the best <= eps_y so far
+      if (y_new <= max_y_plus_eps && err_new < err_best) {
         x_best = x_new
         y_best = y_new
         err_best = err_new
@@ -416,29 +380,8 @@ max_f_lte_y = function(
 
       if (err_best <= eps_y) break
     }
-    # err_bests = c(err_bests, err_best)
-
-    # old_width = x_2 - x_1
-    # if (y_new > 0) {
-    #   x_2 = x_new
-    #   y_2 = y_new
-    #   i_1 = max(which(xs < x_new & ys < 0))
-    #   x_1 = xs[[i_1]]
-    #   y_1 = ys[[i_1]]
-    # } else {
-    #   x_1 = x_new
-    #   y_1 = y_new
-    #   i_2 = min(which(xs > x_new & ys > 0))
-    #   x_2 = xs[[i_2]]
-    #   y_2 = ys[[i_2]]
-    # }
-
-    # new_width = x_2 - x_1
-    # bisect = new_width > 0.8 * old_width
-    # stopifnot(y_1 < 0, 0 < y_2)
   }
 
-  iter$y = iter$y + max_y
   list(
     x_best = x_best,
     y_best = y_best,
@@ -471,7 +414,7 @@ binwidth_to_pseudo_binwidth = \(binwidth, layout, eps) {
 }
 
 plot_fdb = function(fdb, zoom = .85, ...) {
-  iters = attr(fdb, "iterations")
+  iter = attr(fdb, "iterations")
   layout = attr(fdb, "layout")
   height_eps = attr(fdb, "height_eps")
   p_range_around = \(x, i, p) {
@@ -479,14 +422,14 @@ plot_fdb = function(fdb, zoom = .85, ...) {
     range = quantile(x[x >= center], p) - quantile(x[x <= center], 1 - p)
     c(max(0, min(center - range/2, quantile(x, (1 - p)/2))), min(max(x), max(center + range/2, quantile(x, (1 + p)/2))))
   }
-  xlim = p_range_around(iters$width, iters$chosen, zoom)
-  ylim = p_range_around(iters$height, iters$chosen, zoom)
+  xlim = p_range_around(iter$width, iter$chosen, zoom)
+  ylim = p_range_around(iter$height, iter$chosen, zoom)
 
   high_res_curve = tibble(
     width = seq(xlim[1], xlim[2], length.out = 50),
     height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
   ) |>
-    vctrs::vec_rbind(iters[c("width", "height")]) |>
+    vctrs::vec_rbind(iter[c("width", "height")]) |>
     vctrs::vec_sort()
 
   strata = if (prop_exists(layout, "strata")) layout@strata else 1
@@ -494,7 +437,7 @@ plot_fdb = function(fdb, zoom = .85, ...) {
   transform_pseudo_n = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_n(bw, layout, height_eps), \(n) pseudo_n_to_binwidth(n, layout, height_eps))
   transform_pseudo_binwidth = scales::new_transform("binwidth", \(bw) binwidth_to_pseudo_binwidth(bw, layout, height_eps), \(n) pseudo_binwidth_to_binwidth(n, layout, height_eps))
 
-  iters |>
+  iter |>
     dplyr::filter(...) |>
     ggplot(aes(width, height)) +
     annotate("ribbon", x = c(0.11, 0.12), ymin = layout@maxheight - attr(fdb, "height_eps"), ymax = layout@maxheight + attr(fdb, "height_eps"), alpha = 0.1) +
@@ -511,12 +454,12 @@ plot_fdb = function(fdb, zoom = .85, ...) {
       data = high_res_curve
     ) +
     geom_line(
-      aes(group = split),
-      data = vctrs::vec_rbind(!!!split_monotonic(iters, "width", "height"), .names_to = "split"),
+      aes(x = x, y = y, group = split),
+      data = vctrs::vec_rbind(!!!split_monotonic(iter$width, iter$height), .names_to = "split"),
       color = "gray65"
     ) +
     geom_point(aes(color = method)) +
-    geom_point(data = iters[iters$chosen, ], shape = 12, size = 3) +
+    geom_point(data = iter[iter$chosen, ], shape = 12, size = 3) +
     geom_hline(yintercept = layout@maxheight, linetype = "dashed") +
     geom_abline(intercept = layout@maxheight, slope = c(layout@heightratio, -layout@heightratio), linetype = "dotted") +
     coord_cartesian(xlim = xlim, ylim = ylim)
@@ -526,17 +469,23 @@ plot_fdb = function(fdb, zoom = .85, ...) {
 #' Given a sequence of `(x, y)` pairs, construct the version of that sequence that is sorted by x
 #' and which contains no duplicates. Then, return a list of all (not necessarily contiguous) subsets
 #' of the sequence in which y is monotonic.
+#' @param x,y <[numeric]> `(x,y)` pairs giving evaluations of a function. Must all be >= 0.
+#' @returns <[list] of [data.frame]s> Each data frame in the output list:
+#' - has columns `"x"` and `"y"` (both [numeric])
+#' - contains only `x,y` pairs that appear in the input
+#' - is monotonic increasing in both `x` and `y`
 #' @noRd
-split_monotonic = function(iter, x = "x", y = "y") {
+split_monotonic = function(x, y) {
   # reverse iter because we are doing most things from the back (specifically cummin())
-  iter_rev = iter[order(iter[[x]], decreasing = TRUE), ]
-  iter_rev = iter_rev[!duplicated(iter_rev[[x]]), ]
+  ord = order(x, decreasing = TRUE)
+  iter_rev = data_frame0(x = x[ord], y = y[ord])
+  iter_rev = iter_rev[!duplicated(iter_rev$x), ]
 
   splits = list()
   repeat {
     # construct a monotonic split from the end
-    max_y = cummin(iter_rev[[y]])
-    in_split = iter_rev[[y]] == max_y
+    max_y = cummin(iter_rev$y)
+    in_split = iter_rev$y == max_y
     split = iter_rev[rev(which(in_split)), ]
     splits = c(splits, list(split))
     if (all(in_split)) break
@@ -545,13 +494,26 @@ split_monotonic = function(iter, x = "x", y = "y") {
     # that are less than the last point not in the split
     last_not_in_split = iter_rev[which.min(in_split), ]
     iter_rev = iter_rev[
-      iter_rev[[x]] <= last_not_in_split[[x]] | iter_rev[[y]] >= last_not_in_split[[y]],
+      iter_rev$x <= last_not_in_split$x | iter_rev$y >= last_not_in_split$y,
     ]
   }
   splits
 }
 
-
+#' Piecewise stepped linear approximation
+#' Approximates a function by piecewise linear approximation in a stepped manner. Instead of linear
+#' approximation between neighboring points (in order of `x`), constructs points such that a
+#' piecewise linear approximation built on those points is a function where `y_new = f(x_new)` is
+#' determined by a linear interpolation between the nearest point `(x, y)` and `(0, 0)`.
+#' This effectively creates a "step" halfway between two points `x_1` and `x_2`. For each halfway
+#' point `x_mid`, we create a slope from `x_mid - eps_x` to `x_mid + eps_x` and do linear
+#' interpolation in that region.
+#' @param x,y <[numeric]> Evaluations of `y = f(x)` to use to approximate `f`. Must all be >= 0.
+#' @param eps_x <scalar [numeric]> Epsilon for `x` values used to determine precision of the
+#' approximation.
+#' @returns <[data.frame]> with columns `x` and `y` giving a superset of the input `(x, y)` pairs
+#' defining a piecewise stepped linear approximation.
+#' @noRd
 stepped_linear_approx = function(x, y, eps_x = .Machine$double.eps^0.25) {
   ord = order(x)
   x = x[ord]
@@ -570,8 +532,34 @@ stepped_linear_approx = function(x, y, eps_x = .Machine$double.eps^0.25) {
   x_3 = (x_1 + x_4 + eps_x) / 2
   y_3 = y_4 / x_4 * x_3
 
-  data.frame(
+  data_frame0(
     x = vec_interleave(x_1, x_2, x_3, x_4),
     y = vec_interleave(y_1, y_2, y_3, y_4)
+  )
+}
+
+#' Find all x values where a piecewise stepped linear approximation intersects `target_y`.
+#' Uses a stepped linear approximation (see `stepped_linear_approx()`) of `y = f(x)` to find
+#' possible `x` values where `f(x) = target_y`.
+#' @param x,y <[numeric]> Evaluations of `y = f(x)` to use to approximate `f`. Must all be >= 0.
+#' @param target_y <scalar [numeric]> `y` value to attempt to find `x` values for.
+#' @param eps_x <scalar [numeric]> Epsilon for `x` values used to determine precision of the
+#' approximation.
+#' @returns <[numeric]> with length `>= 0` giving `x` values such that `f(x) = target_y` using
+#' a piecewise stepped linear approximation.
+#' @noRd
+stepped_linear_approx_at_y = function(x, y, target_y, eps_x = .Machine$double.eps^0.25) {
+  approx = stepped_linear_approx(x, y, eps_x = eps_x)
+  approx$y = approx$y - target_y
+
+  n = nrow(approx)
+  x_1 = approx$x[-n]
+  y_1 = approx$y[-n]
+  x_2 = approx$x[-1]
+  y_2 = approx$y[-1]
+
+  crosses_zero = which(sign(y_1) != sign(y_2))
+  with(data.frame(x_1, y_1, x_2, y_2)[crosses_zero, ],
+    (x_1 * y_2 - x_2 * y_1) / (y_2 - y_1)
   )
 }

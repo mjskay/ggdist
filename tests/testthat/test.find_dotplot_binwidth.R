@@ -34,5 +34,5 @@ test_that("split_monotonic works", {
     )
   )
 
-  expect_equal(split_monotonic(df) |> lapply(`rownames<-`, NULL), ref)
+  expect_equal(split_monotonic(df$x, df$y) |> lapply(`rownames<-`, NULL), ref)
 })
