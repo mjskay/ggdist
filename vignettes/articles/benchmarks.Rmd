@@ -46,8 +46,8 @@ layouts = list(
   bin = layout_bin(),
   weave = layout_weave(),
   beeswarm = layout_oldswarm(),
-  gridswarm_3 = layout_swarm(strata = 3),
-  gridswarm_inf = layout_swarm(strata = Inf)
+  swarm_3 = layout_swarm(strata = 3),
+  swarm_inf = layout_swarm(strata = Inf)
 )
 
 dists = list(

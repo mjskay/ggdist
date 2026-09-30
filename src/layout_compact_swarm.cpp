@@ -195,14 +195,23 @@ class CompactSwarm {
 
   /// "Frontier" of placed dots
   /// Contains placed dots in increasing x order. Used to find the lowest placed point for dots.
-  /// Automatically pruned to remove dots far enough below `min_y` that we will never need to check
-  /// them again.
+  /// Automatically pruned to remove dots far enough below `frontier_min_y` that we will never need
+  /// to check them again.
   Frontier frontier[2] = {};
 
-  /// Minimum y value at which the next dot in any group may be placed.
-  /// We update this minimum as we place dots and use it to remove values from the frontier that we
-  /// won't need to check against again.
-  double min_y = 0.0;
+  /// Minimum y value of dots in the frontier.
+  /// This is the minimum y value of an already-placed dot that could intersect with any unplaced
+  /// dot. We update this minimum as we place dots and use it to remove values from the frontier
+  /// that we won't need to check against again.
+  ///
+  /// Because we place dots from lowest to highest, when there are no groups this is just the last
+  /// placed y value minus 1, because if any remaining dots could have intersected with a dot at
+  /// that position, it would have been placed at a lower y value than the most recently-placed dot.
+  ///
+  /// When there is more than 1 group, the logic is similar but must also account for the difference
+  /// in group penalty terms between the most recently-placed dot and any possible remaining dots
+  /// (see `place_dot()`, which is responsible for updating this value).
+  double frontier_min_y = -1.0;
 
   /// Priority queue of regions to search for the lowest dot to place next.
   std::priority_queue<Unplaced, std::vector<Unplaced>, std::greater<Unplaced>> next_unplaced = {};
@@ -214,9 +223,9 @@ class CompactSwarm {
   /// be placed at without intersecting already-placed dots.
   /// @param x normalized x value of dot to attempt to place.
   /// @param s side to search on.
-  /// @returns a value >= `min_y`: the lowest `y` value `x` can be placed at on Side `s`
-  /// without intersecting anything in the `frontier`. Normalized `y` positions are always
-  /// increasing positively away from the axis (i.e. they are negated if `s == BTM`).
+  /// @returns a the lowest `y` value that `x` can be placed at on Side `s` without intersecting
+  /// anything in the `frontier`. Normalized `y` positions are always non-negative values that
+  /// increase positively away from the axis (i.e. they are negated if `s == BTM`).
   auto min_dot_y(const double x, const Side s) -> double {
     auto y = 0.0;
 
@@ -227,7 +236,7 @@ class CompactSwarm {
       const auto x_distance = std::abs(x - existing_dot->x);
       if (x_distance >= 1.0) break;  // all further dots must be out of range
 
-      if (existing_dot->y < min_y - 1.0) {
+      if (existing_dot->y < frontier_min_y) {
         // this existing dot will never collide with any future dots, we can remove it to make
         // future checks more efficient.
         existing_dot = frontier[s].erase(existing_dot);
@@ -296,7 +305,7 @@ class CompactSwarm {
   }
 
   /// Place a dot
-  /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `min_y`
+  /// Places a dot in `out_x_arr` and `out_y_arr` and updates the `frontier` and `frontier_min_y`
   /// accordingly.
   /// @param x normalized x position to place dot at
   /// @param y normalized y position to place dot at
@@ -310,16 +319,18 @@ class CompactSwarm {
     if (both && y < 1) frontier[!s].emplace(x, -y);
 
     // update the minimum y position used to prune the frontier
-    // we must adjust min_y to account for penalties applied to groups placed after this group
-    // otherwise we might prune dots from earlier groups too soon
-    min_y = std::max(min_y, y - (groups.cend() - groupi));
+    // If there is only one group, this is just y - 1.0 (since a dot more than 1 unit lower than the
+    // most recently-placed dot will never intersect with remaining dots). In the case of more than
+    // one group we must adjust frontier_min_y to account for penalties applied to groups placed
+    // after this group, otherwise we might prune dots from earlier groups too soon.
+    frontier_min_y = std::max(frontier_min_y, y - 1.0 - (groups.cend() - groupi - 1.0) * group_penalty);
 
     // output the non-normalized x and y positions
     out_x_arr[i] = x * xsize;
     out_y_arr[i] = y * ysize * (s ? -1.0 : 1.0);
     ++i;
 
-    if (i % 1000 == 0) Rcpp::checkUserInterrupt();
+    if (i % 1024 == 0) Rcpp::checkUserInterrupt();
   }
 
   // PUBLIC METHODS -----------------------------------------------------------------------------
