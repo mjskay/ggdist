@@ -51,7 +51,7 @@ class CompactSwarm {
   using XIt = Group::const_iterator;
 
   /// An unplaced region containing one or more dots.
-  /// Represents all unplaced dots in the half-open interval [x_1, x_2).
+  /// Represents all unplaced dots in the half-open interval [xi_1, xi_2).
   struct Unplaced {
     /// Lowest group still containing unplaced dots in this region.
     GroupIt groupi;
@@ -59,10 +59,6 @@ class CompactSwarm {
     XIt xi_1;
     /// First dot in groupi after this region
     XIt xi_2;
-    /// Lower limit of this region
-    double x_1;
-    /// Upper limit of this region
-    double x_2;
     /// Current guess at the y value the lowest dot in this region would be placed at.
     double y;
     /// Group-specific penalty applied to `y` when queueing it for placement.
@@ -74,15 +70,11 @@ class CompactSwarm {
       const GroupIt groupi,
       const XIt xi_1,
       const XIt xi_2,
-      const double x_1,
-      const double x_2,
       const double y
     )
       : groupi{groupi},
         xi_1{xi_1},
         xi_2{xi_2},
-        x_1{x_1},
-        x_2{x_2},
         y{y},
         penalty{(groupi - outer.groups.cbegin()) * outer.group_penalty} {};
 
@@ -284,32 +276,22 @@ class CompactSwarm {
     }
   }
 
-  /// Create and enqueue the unplaced region [x_1, x_2) for future search.
+  /// Create and enqueue the unplaced region [xi_1, xi_2) for future search.
   /// @tparam guess If `true` (the default), produces a guess for lower limit of `y` before
   /// enqueuing. If `false`, does not calculate an initial guess at best placement: just enters 0.0
   /// as the "best guess", which will cause the lowest dot in this region to be recalculated later.
   /// @param groupi x values in the current group
   /// @param xi_1 lower limit of region in `*groupi`
   /// @param xi_2 upper limit of region in `*groupi`
-  /// @param x_1 lower limit x value, which may be <= `*xi_1` when the lower limit does not exactly
-  /// coincide with a value in `*groupi`.
-  /// @param x_2 upper limit x value, which may be >= `*xi_2` when the upper limit does not exactly
-  /// coincide with a value in `*groupi`.
   template<bool guess = true>
-  void queue_region(GroupIt groupi, XIt xi_1, XIt xi_2, const double x_1, const double x_2) {
-    // If the current group does not contain any values in this region, check subsequent groups
-    // until we find one that does
-    while (xi_2 <= xi_1 && ++groupi != groups.cend()) {
-      xi_1 = std::lower_bound(groupi->cbegin(), groupi->cend(), x_1);
-      xi_2 = std::lower_bound(xi_1, groupi->cend(), x_2);
-    }
+  void queue_region(GroupIt groupi, XIt xi_1, XIt xi_2) {
     if (xi_2 <= xi_1) return;
 
     if constexpr (guess) {
       const auto [xi, y, s] = min_region_y(xi_1, xi_2);
-      next_unplaced.emplace(*this, groupi, xi_1, xi_2, x_1, x_2, y);
+      next_unplaced.emplace(*this, groupi, xi_1, xi_2, y);
     } else {
-      next_unplaced.emplace(*this, groupi, xi_1, xi_2, x_1, x_2, 0.0);
+      next_unplaced.emplace(*this, groupi, xi_1, xi_2, 0.0);
     }
   }
 
@@ -319,12 +301,17 @@ class CompactSwarm {
   /// @param x normalized x position to place dot at
   /// @param y normalized y position to place dot at
   /// @param s Side to place dot on
+  /// @param groupi Group this dot is from
   void place_dot(const double x, const double y, const Side s, const GroupIt groupi) {
     // update the frontier
     frontier[s].emplace(x, y);
     // when placing on both sides, the opposite frontier shares all points within 1 unit
     // of the axis since these can collide with dots on the other side.
     if (both && y < 1) frontier[!s].emplace(x, -y);
+
+    // update the minimum y position used to prune the frontier
+    // we must adjust min_y to account for penalties applied to groups placed after this group
+    // otherwise we might prune dots from earlier groups too soon
     min_y = std::max(min_y, y - (groups.cend() - groupi));
 
     // output the non-normalized x and y positions
@@ -339,24 +326,31 @@ class CompactSwarm {
  public:
   /// Run the compact swarm algorithm.
   auto place_dots() -> SEXP {
-    // Build initial queue of regions to search.
-    // We can quickly place a row of non-overlapping dots at the base of the plot and enqueue the
-    // regions between each of those dots.
-    auto x_1 = -INF;
+    // Build initial queue of regions >= binwidth wide to search from each group.
     const auto group0 = groups.cbegin();
-    for (auto xi_1 = group0->cbegin(); xi_1 != group0->cend();) {
-      place_dot(*xi_1, 0.0, side, group0);
+    for (auto groupi = group0; groupi != groups.cend(); ++groupi) {
+      for (auto xi_1 = groupi->cbegin(); xi_1 != groupi->cend();) {
+        const auto xi_2 = std::lower_bound(xi_1, groupi->cend(), *xi_1 + 1.0);
 
-      const auto xi_2 = std::lower_bound(xi_1, group0->cend(), *xi_1 + 1.0);
-      const auto x_2 = xi_2 == group0->cend() ? INF : *xi_2;
-      // We queue without guessing here because the next dot on the bottom row hasn't been placed
-      // yet and will likely change the lowest position of this region, so spending the time finding
-      // the lowest point now isn't worth it as it will likely be wrong and need to immediately be
-      // recalculated.
-      queue_region<false>(group0, xi_1 + 1, xi_2, x_1, x_2);
+        // We can quickly place a row of non-overlapping dots from the first group at the base of
+        // the plot and enqueue the regions between each of those dots. We don't place anything
+        // from the other groups yet since their placements must account for the group penalties.
+        if (groupi == group0) {
+          place_dot(*xi_1, 0.0, side, groupi);
+          ++xi_1;  // so that we queue (xi_1, xi_2) instead of [xi_1, xi_2) below.
+        }
 
-      xi_1 = xi_2;
-      x_1 = x_2;
+        // We queue without guessing here because:
+        // - for the first group, the next dot on the bottom row hasn't been placed yet and will
+        //   likely change the lowest position of this region
+        // - for all other groups, depending on the penalty no dots in those groups will be placed
+        //   until at least another set of dots from the first group are placed
+        // so spending the time finding the lowest point now isn't worth it as it will likely be
+        // wrong and need to immediately be recalculated.
+        queue_region<false>(groupi, xi_1, xi_2);
+
+        xi_1 = xi_2;
+      }
     }
 
     // Repeatedly look for the unplaced region containing the lowest dot to insert and insert it
@@ -375,17 +369,9 @@ class CompactSwarm {
         // region
         place_dot(*xi_new, y_new, s_new, u.groupi);
 
-        // Queue regions [u.x_1, *xi_new) and [*xi_new, u.x_2) for future search.
-        // Note that we must specify the new regions in two ways:
-        // - [*xi_1, *xi_new) and [*(xi_new + 1), *xi_2), which are the subsets of `u` in `u.groupi`
-        //   that may still contain unplaced dots after `*xi_new` is placed.
-        // - [u.x_1, *xi_new) and [*xi_new, u.x_2), which are two contiguous regions whose union is
-        //   `u` and which each contain one of the two regions above. We need to keep track of the
-        //   full, contiguous unplaced regions so that if there are dots from other groups to be
-        //   placed in these regions we can correctly calculate the boundaries of the regions for
-        //   those groups.
-        queue_region(u.groupi,     u.xi_1, xi_new,   u.x_1, *xi_new);
-        queue_region(u.groupi, xi_new + 1, u.xi_2, *xi_new,   u.x_2);
+        // Queue regions [xi_1, xi_new) and (xi_new, xi_2) for future search.
+        queue_region(u.groupi, u.xi_1, xi_new);
+        queue_region(u.groupi, xi_new + 1, u.xi_2);
       }
     }
 
