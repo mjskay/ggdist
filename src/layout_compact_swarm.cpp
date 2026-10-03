@@ -130,8 +130,8 @@ class CompactSwarm {
       n{sum_sizes(xs_list)},
       out_x_vec(n),
       out_y_vec(n),
-      out_x_arr{REAL(out_x_vec)},
-      out_y_arr{REAL(out_y_vec)},
+      out_x_arr{out_x_vec.begin()},
+      out_y_arr{out_y_vec.begin()},
       group_penalty{group_penalty}
   {
     groups.reserve(xs_list.size());
@@ -380,7 +380,7 @@ class CompactSwarm {
         // region
         place_dot(*xi_new, y_new, s_new, u.groupi);
 
-        // Queue regions [xi_1, xi_new) and (xi_new, xi_2) for future search.
+        // Queue [xi_1, xi_2) \ {xi_new} == [xi_1, xi_new) and (xi_new, xi_2) for future search.
         queue_region(u.groupi, u.xi_1, xi_new);
         queue_region(u.groupi, xi_new + 1, u.xi_2);
       }

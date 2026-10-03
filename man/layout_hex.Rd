@@ -11,8 +11,7 @@ layout_hex(
   stackratio = 1,
   side = "top",
   overlaps = "nudge",
-  span = 0,
-  bin_method = function(...) cli_abort("`x` must be set to determine `bin_method`.")
+  span = 0
 )
 }
 \arguments{
@@ -28,10 +27,11 @@ like \code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+width.}
 
-\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+height.}
 
 \item{side}{<\link[=character]{string}> side where the dotplot layout should be placed. One
 of \code{"top"}, \code{"bottom"}, or \code{"both"}.}
@@ -74,9 +74,6 @@ equivalent to Wilkinson's recommendation, which smooths bins that are at most
 (default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
 increase the spacing between bars.
 }}
-
-\item{bin_method}{<\link{function}> function that takes data and bin width as input and returns
-a list with components \code{bins} and \code{bin_midpoints}.}
 }
 \value{
 <\link{dotplot_layout}> object of class \code{layout_hex}.

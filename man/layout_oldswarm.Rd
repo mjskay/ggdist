@@ -27,10 +27,11 @@ like \code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+width.}
 
-\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+height.}
 
 \item{side}{<\link[=character]{string}> side where the dotplot layout should be placed. One
 of \code{"top"}, \code{"bottom"}, or \code{"both"}.}
@@ -81,3 +82,7 @@ increase the spacing between bars.
 Beeswarm dotplot layout that uses the \code{"compactswarm"} algorithm from the \pkg{beeswarm} package.
 Superceded by \code{\link[=layout_swarm]{layout_swarm()}}, which is faster and supports stacking groups of dots.
 }
+\seealso{
+\code{\link[=layout_swarm]{layout_swarm()}}
+}
+\keyword{internal}

@@ -16,10 +16,14 @@ NULL
 #' @param x <[numeric]> *x* values.
 #' @param y <[numeric]> *y* values (same length as `x`).
 #' @param binwidth <scalar [numeric]> Bin (dot) width.
-#' @inheritDotParams dotplot_layout -dots
-#' @param group <[orderable vector][xtfrm]> of same length as `x`. The group each `x` value
-#' belongs to. If there is more than one group, dots are laid out in stacks in increasing order
-#' of `xtfrm(group)`.
+#' @inheritDotParams layout_bin -dots -maxheight
+#' @inheritDotParams layout_weave -dots -maxheight
+#' @inheritDotParams layout_hex -dots -maxheight
+#' @inheritDotParams layout_bar -dots -maxheight
+#' @inheritDotParams layout_swarm -dots -maxheight
+#' @param group <[orderable vector][xtfrm]> group identifiers (same length as `x`). The group each
+#' `x` value belongs to. If there is more than one group, dots are laid out in stacks in increasing
+#' order of [`xtfrm`]`(group)`.
 #' @eval rd_param_dots_layout()
 #' @eval rd_param_side("dots")
 #' @param orientation <[string][character]> Whether the dots are laid out horizontally
@@ -92,6 +96,7 @@ bin_dots = function(
   # bin the dots
   layout = match_function(layout, "layout_")(
     dots = dots,
+    maxheight = Inf,
     heightratio = heightratio,
     stackratio = stackratio,
     side = side,
@@ -151,7 +156,7 @@ setup_dots = function(x, y, group = 1L, flip = FALSE) {
 #'
 #' - `height`: <scalar [numeric]> height of the tallest bin in this dotplot
 #'
-#' Subclasses may also add additional elements used by their implementation of [place_dots()].
+#' Subclasses may also add additional elements used by their implementation of `place_dots()`.
 #' @noRd
 setup_dotplot = new_generic("setup_dotplot", c("layout"), function(layout, binwidth, ...) {
   S7_dispatch()
@@ -185,7 +190,7 @@ method(setup_dotplot, dotplot_layout) = function(layout, binwidth, ...) {
 #' @noRd
 method(setup_dotplot, layout_bin | layout_bar) = function(layout, binwidth, ...) {
   dotplot = setup_dotplot(super(layout, dotplot_layout), binwidth, ...)
-  dotplot = c(dotplot, layout@bin_method(layout@dots$x, dotplot$binwidth, span = layout@span))
+  dotplot = c(dotplot, layout@binner(layout@dots$x, dotplot$binwidth, span = layout@span))
 
   # determine height of the tallest bin
   dotplot$bin_counts = tabulate(dotplot$bins)
@@ -243,7 +248,8 @@ method(setup_dotplot, layout_swarm) = function(layout, binwidth, ...) {
       xsize = dotplot$binwidth,
       ysize = dotplot$y_spacing,
       side = switch(layout@side, top = 1, bottom = -1, both = 0),
-      strata = layout@strata
+      strata = layout@strata,
+      cohesion = layout@cohesion
     )
     dotplot$dots = recenter_swarm_clusters(layout, dotplot, dotplot$dots)
   }
@@ -717,14 +723,14 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
 #' @param strata <scalar [integer]> \eqn{\ge 1} number of fractional rows in the grid used to place dots.
 #' May be `Inf`, in which case a non-stratified compact swarm layout is used.
-#' @param group_penalty <scalar [numeric]> between 0 and 1: proportion of a row used as a penalty
+#' @param cohesion <scalar [numeric]> between 0 and 1: proportion of a row used as a penalty
 #' for keeping groups together in stacked compact swarm layouts. 1 keeps groups together but
 #' may leave whitespace, 0 does not keep groups together but will be a more compact layout.
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, group_penalty = 0.5) {
+stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, cohesion = 0.5) {
   if (strata == Inf) {
-    dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = group_penalty)
+    dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = cohesion)
   } else {
     dots = grid_swarm_(xs, xsize, ysize, side, strata)
   }

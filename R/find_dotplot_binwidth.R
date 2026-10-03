@@ -8,7 +8,11 @@
 #' @param x <[numeric]> Data values.
 #' @param maxheight <scalar [numeric]> Maximum height of the dotplot.
 #' @inheritParams bin_dots
-#' @inheritDotParams dotplot_layout -dots
+#' @inheritDotParams layout_bin -dots -maxheight
+#' @inheritDotParams layout_weave -dots -maxheight
+#' @inheritDotParams layout_hex -dots -maxheight
+#' @inheritDotParams layout_bar -dots -maxheight
+#' @inheritDotParams layout_swarm -dots -maxheight
 #'
 #' @details
 #' The dynamic bin selection algorithm uses a variety of heuristics and search algorithms to attempt
@@ -18,33 +22,34 @@
 #'
 #' `find_dotplot_binwidth` internally builds up an approximation of the height function (the
 #' function from `binwidth` onto the height of the dotplot with that bindwidth) and uses it to
-#' select the next candidate `binwidth` to evaluate. Because dotplot height functions tend to be
-#' discontinuous, using an off-the-self numerical optimization tends to require many iterations,
-#' which can be expensive for large dotplots particularly on some layout algorithms. We employ a
-#' number of heuristics to narrow the search space and to select `binwidth`s to evaluate:
+#' select the next candidate `binwidth` to evaluate. Because dotplot height functions are usually
+#' discontinuous, off-the-self numerical optimization can perform poorly or can require many
+#' iterations, which is expensive for large dotplots on some layout algorithms. We employ the
+#' following steps to narrow the search space and find a good `binwidth`:
 #'
-#' - We evaluate the function intially at key positions that help narrow the search or which define
+#' 1. We evaluate the function intially at key positions that help narrow the search or which define
 #' known boundaries between regions of the function that behave differently. For example, between
 #' \eqn{[0,0]} (the origin of all height functions) and a binwidth of `resolution(x)`, the height
-#' function will be linear, so evaluating the height at `resolution(x)` allows linear interpolation
-#' to find the correct `binwidth` if it is less than `resolution(x)`.
+#' function on most layouts is linear, so evaluating the height at `resolution(x)` allows linear
+#' interpolation to quickly find the correct `binwidth` if it is less than `resolution(x)`.
 #'
-#' - For certain layouts, e.g. `layout_bin()`, because the height is a function of the number of
+#' 2. For certain layouts, e.g. `layout_bin()`, because the height is a function of the number of
 #' dots in a particular bin, there are a finite number of `binwidth`s that can have *exactly* the
 #' requested `maxheight`. We use binary search over these points to attempt to find an exact
 #' solution.
 #'
-#' - If binary search fails to find an exact solution, we repeatedly use interpolation with the
+#' 3. If binary search fails to find an exact solution, we repeatedly use interpolation with the
 #' points we have evaluated so far to generate candidate `binwidth`s to check. Intead of using
-#' piecewise linear interpolation, we assume that the region around a point \eqn{(w, h)} (until a
-#' discontinuity halfway between that point and the next evaluated point) has a slope of
-#' \eqn{\frac{h}{w}}. This is justifiable because locally a dotplot's height will be directly
-#' proportional to changes in `binwidth` up to the point where the new `binwidth` causes dots to be
-#' added to or removed from the tallest bin.
+#' piecewise linear interpolation with knots at the existing evaluation points, we assume that the
+#' region around each point \eqn{[w_i, h_i]}, i.e. the region between \eqn{\frac{w_{i-1} + w_i}{2}}
+#' and \eqn{\frac{w_i + w_{i+1}}{2}}, is a line intersecting \eqn{[0,0]} and \eqn{[w_i, h_i]} with a
+#' slope of \eqn{\frac{h_i}{w_i}}. This is justifiable because locally a dotplot's height will be
+#' directly proportional to changes in `binwidth` up to the point where the change in `binwidth`
+#' causes dots to be added to or removed from the tallest bin.
 #'
 #' If we fail to find a `binwidth` yielding a height within \eqn{\pm \epsilon} of `maxheight`, the
-#' `binwidth` yielding the largest dotplot height less than or equal to `maxheight` + \eqn{\epislon}
-#' is returned.
+#' `binwidth` found so far that yields the largest dotplot height less than or equal to `maxheight`
+#' + \eqn{\epsilon} is returned.
 #'
 #' This algorithm is used by [geom_dotsinterval()] (and its variants) to automatically select bin
 #' widths. Unless you are manually implementing your own dotplot [`grob`] or
@@ -425,10 +430,9 @@ plot_fdb = function(fdb, zoom = .85, ...) {
   xlim = p_range_around(iter$width, iter$chosen, zoom)
   ylim = p_range_around(iter$height, iter$chosen, zoom)
 
-  high_res_curve = tibble(
-    width = seq(xlim[1], xlim[2], length.out = 50),
-    height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
-  ) |>
+  width = seq(xlim[1], xlim[2], length.out = 50)
+  height = sapply(width, \(x) setup_dotplot(layout, binwidth = x)$height)
+  high_res_curve = tibble(width, height) |>
     vctrs::vec_rbind(iter[c("width", "height")]) |>
     vctrs::vec_sort()
 

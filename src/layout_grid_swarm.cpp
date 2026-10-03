@@ -58,8 +58,8 @@ class GridSwarm {
       n{sum_sizes(xs_list)},
       out_x_vec(n),
       out_y_vec(n),
-      out_x_arr{REAL(out_x_vec)},
-      out_y_arr{REAL(out_y_vec)},
+      out_x_arr{out_x_vec.begin()},
+      out_y_arr{out_y_vec.begin()},
       row_height{
         (both ? 1.0 : static_cast<double>(signed_side)) * ysize / static_cast<double>(strata)
       } {};
@@ -305,23 +305,24 @@ SEXP grid_swarm_(
 //' @noRd
 // [[Rcpp::export(rng = false)]]
 SEXP recenter_swarm_clusters_(
-  const Rcpp::NumericVector& x_vec,
-  Rcpp::NumericVector& y_vec,
+  const Rcpp::NumericVector x_vec,
+  const Rcpp::NumericVector y_vec,
   const double binwidth
 ) {
   const auto n = ssize_(x_vec);
-  const auto x = REAL(x_vec);
-  auto y = REAL(y_vec);
+  const auto* x = x_vec.cbegin();
+  auto y_out = Rcpp::clone(y_vec);
+  auto* y = y_out.begin();
   auto bin_sum = 0.0;
   auto bin_start = 0_z;
   for (auto bin_end = 1_z; bin_end <= n; ++bin_end) {
     bin_sum += y[bin_end - 1_z];
     if (bin_end == n || x[bin_end] - x[bin_end - 1_z] >= binwidth) {
-      auto mean = bin_sum / static_cast<double>(bin_end - bin_start);
+      const auto mean = bin_sum / static_cast<double>(bin_end - bin_start);
       for (auto i = bin_start; i < bin_end; ++i) y[i] -= mean;
       bin_start = bin_end;
       bin_sum = 0.0;
     }
   }
-  return y_vec;
+  return y_out;
 }

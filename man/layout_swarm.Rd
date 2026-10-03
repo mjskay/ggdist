@@ -2,7 +2,7 @@
 % Please edit documentation in R/dotplot_layout.R
 \name{layout_swarm}
 \alias{layout_swarm}
-\title{Stackable, stratified beeswarm dotplot layout}
+\title{Stackable beeswarm dotplot layout}
 \usage{
 layout_swarm(
   dots = data.frame(x = numeric(), y = numeric(), group = integer(), order = integer()),
@@ -12,7 +12,8 @@ layout_swarm(
   side = "top",
   overlaps = "nudge",
   span = 0,
-  strata = 4L
+  strata = 4L,
+  cohesion = 0.5
 )
 }
 \arguments{
@@ -28,10 +29,11 @@ like \code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]
 
 \item{maxheight}{<scalar \link{numeric}> maximum height of the dotplot layout.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+width.}
 
-\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+height.}
 
 \item{side}{<\link[=character]{string}> side where the dotplot layout should be placed. One
 of \code{"top"}, \code{"bottom"}, or \code{"both"}.}
@@ -74,12 +76,35 @@ equivalent to Wilkinson's recommendation, which smooths bins that are at most
 (default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
 increase the spacing between bars.
 }}
+
+\item{strata}{<scalar \link{numeric}> \eqn{\ge 1}: a postive integer giving the number of strata to use
+per 1 dot height. Given \code{y_spacing} representing the vertical distance between the centers of two
+dots stacked directly on top of each other (the dot height times the \code{stackratio}), strata
+operates as follows:
+\itemize{
+\item \code{strata = 1} will yield a swarm with aligned rows of dots stacked on top of each other.
+\item \code{strata = k} for \eqn{1 < k < \infty} will place dots at heights that are multiples of
+`y_spacing / strata.
+\item \code{strata = Inf} will place dots using a stackable variation on the compact swarm algorithm
+(see \emph{Details}).
+}}
+
+\item{cohesion}{<scalar \link{numeric}> \eqn{\ge 0} and \eqn{\le 1}: Cohesion of stacked dot groups
+when \code{strata = Inf}, given as a fraction of \code{y_spacing}, the vertical distance between the
+centers of two dots stacked directly on top of each other (the dot height times the
+\code{stackratio}). A \code{cohesion} of \code{1} keeps dots from the same group together, but may introduce
+gaps in the layout where one group is stacked on top of another. Lower cohesion trades off
+maintaining the stacking order of groups for a tighter overall layout with fewer gaps. A
+\code{cohesion} of \code{0.5} (the default) is often a reasonable compromise. This parameter controls a
+penalty term added to dot heights when picking the next dot to place such that the height of a
+dot in group \eqn{i} that could be placed at height \code{y} if it were in group \eqn{i - 1} (the
+group below it) is treated as if it had a height of \code{y + cohesion * y_spacing}.}
 }
 \value{
 <\link{dotplot_layout}> object of class \code{layout_swarm}.
 }
 \description{
-Stackable, stratified beeswarm dotplot layout.
+Fast, stackable, compact beeswarm dotplot layout with optional stratification.
 
 Dotplot layouts can be passed to the \code{layout} argument of \code{\link[=bin_dots]{bin_dots()}},
 \code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}}, and dots stats and geoms like \code{\link[=geom_dots]{geom_dots()}}. All dotplot layout
@@ -87,6 +112,32 @@ algorithms are \pkg{S7} classes that are also functions that support
 \link[=auto_partial]{automatic partial function application}. They can be constructed without passing
 their first argument, \code{dots}, which is filled in later by dotplot layout functions like
 \code{\link[=bin_dots]{bin_dots()}} and \code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}}.
+}
+\details{
+\code{layout_swarm} is a stackable, exact-\emph{x}-position, compact beeswarm layout. It uses one of two
+layout algorithms, depending on the value of \code{strata}. Both algorithms position dots in exactly
+their original data position and create compact layouts that do not have a "lean" (the visual
+artifact created by some beeswarm layouts based on the order that dots are placed in). Both
+algorithms allow groups of dots to be stacked on top of each other in an order determined by the
+value of \code{dots$group}.
+
+\strong{When \code{strata} is finite}, a \emph{stratified} layout algorithm is used. This algorithm places dots
+in alternating left/right sweeps along grid lines, greedily placing the next non-overlapping dot
+that is closest in \emph{x} position to the most recently-placed dot in the same row. The distance
+between grid lines is \code{y_spacing / strata}, where \code{y_spacing} is the vertical distance between
+the centers of two dots stacked directly on top of each other (the dot height times the
+\code{stackratio}).
+
+\strong{When \code{strata} is \code{Inf}}, an algorithm inspired by the the "compact swarm" algorithm in
+\pkg{beeswarm} is used, rewritten to improve performance and to allow for stacking of groups.
+This algorithm maintains a priority queue of contiguous regions of unplaced dots. Regions are
+prioritized by the lowest height an unplaced dot in that region can be placed at. We use golden
+section search to find the lowest dot in a region without checking all dots in a region. Placed
+dots are stored in a frontier sorted by x position. As dots are placed, we prune dots from
+the frontier that are low enough that we can guarantee they will not intersect with any remaining
+unplaced dots. Stacking of groups is achieved by queueing regions from each group separately and
+applying a penalty term to the height of regions corresponding to higher groups (see the
+\code{cohesion} parameter).
 }
 \seealso{
 Other dotplot layouts:

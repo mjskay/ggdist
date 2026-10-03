@@ -50,12 +50,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // recenter_swarm_clusters_
-SEXP recenter_swarm_clusters_(const Rcpp::NumericVector& x_vec, Rcpp::NumericVector& y_vec, const double binwidth);
+SEXP recenter_swarm_clusters_(const Rcpp::NumericVector x_vec, const Rcpp::NumericVector y_vec, const double binwidth);
 RcppExport SEXP _ggdist_recenter_swarm_clusters_(SEXP x_vecSEXP, SEXP y_vecSEXP, SEXP binwidthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x_vec(x_vecSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type y_vec(y_vecSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type x_vec(x_vecSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type y_vec(y_vecSEXP);
     Rcpp::traits::input_parameter< const double >::type binwidth(binwidthSEXP);
     rcpp_result_gen = Rcpp::wrap(recenter_swarm_clusters_(x_vec, y_vec, binwidth));
     return rcpp_result_gen;

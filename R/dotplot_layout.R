@@ -32,9 +32,10 @@ new_dotplot_layout_class = function(...) auto_partial(new_class(...), required =
 #'  - `group` <[integer]> Indices of stacked groups of dots in the layout.
 #'  - `order` <[integer]> Data order from the original input data.
 #' @param maxheight <scalar [numeric]> maximum height of the dotplot layout.
-#' @param heightratio <scalar [numeric]> Ratio of bin (dot) width to dot height.
-#' @param stackratio <scalar [numeric]> Ratio of dot height to vertical distance
-#' between dot centers.
+#' @param heightratio <scalar [numeric]> Ratio of vertical distance between dot centers to bin (dot)
+#' width.
+#' @param stackratio <scalar [numeric]> Ratio of vertical distance between dot centers to bin (dot)
+#' height.
 #' @param side <[string][character]> side where the dotplot layout should be placed. One
 #' of `"top"`, `"bottom"`, or `"both"`.
 #' @eval rd_param_dots_overlaps()
@@ -101,7 +102,7 @@ dotplot_layout = new_dotplot_layout_class(
 #' Wilkinson-esque binned dotplot layout.
 #' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
-#' @param bin_method <[function]> function that takes data and bin width as input and returns
+#' @prop binner <[function]> internal function that takes data and bin width as input and returns
 #' a list with components `bins` and `bin_midpoints`.
 #' @prop align_rows <[logical]> whether to align rows of dots when `side` is "both".
 #' @return <[dotplot_layout]> object of class `layout_bin`.
@@ -118,18 +119,19 @@ layout_bin = new_dotplot_layout_class(
         diff_x = diff(value$x)
         if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
           # x is symmetric, use centered binning
-          self@bin_method = wilkinson_bin_from_center
+          attr(self, "binner") = wilkinson_bin_from_center
         } else {
-          self@bin_method = wilkinson_bin
+          attr(self, "binner") = wilkinson_bin
         }
         self
       },
       validator = dotplot_layout@properties$dots$validator,
       default = dotplot_layout@properties$dots$default
     ),
-    bin_method = new_property(
+    binner = new_property(
       class_function,
-      default = quote(function(...) cli_abort("`x` must be set to determine `bin_method`."))
+      default = quote(function(...) cli_abort("`x` must be set to determine `binner`.")),
+      getter = function(self) attr(self, "binner")
     ),
     align_rows = new_property(
       class_logical,
@@ -212,7 +214,7 @@ layout_bar = new_dotplot_layout_class(
   "layout_bar",
   parent = dotplot_layout,
   properties = list(
-    bin_method = new_property(
+    binner = new_property(
       class_function,
       getter = function(self) bar_bin
     ),
@@ -254,41 +256,53 @@ layout_oldswarm = new_dotplot_layout_class(
 
 #' Stackable beeswarm dotplot layout
 #' @description
-#' Fast, stackable beeswarm dotplot layout with optional stratification.
+#' Fast, stackable, compact beeswarm dotplot layout with optional stratification.
 #' @template description-dotplot-layout
 #' @inheritParams dotplot_layout
-#' @param strata <scalar [numeric]> \eqn{\ge 1} a postive integer giving the number of strata to use
+#' @param strata <scalar [numeric]> \eqn{\ge 1}: a postive integer giving the number of strata to use
 #' per 1 dot height. Given `y_spacing` representing the vertical distance between the centers of two
-#' dots stacked directly on top of each other (i.e. the dot height times the `stackratio`), strata
+#' dots stacked directly on top of each other (the dot height times the `stackratio`), strata
 #' operates as follows:
 #' - `strata = 1` will yield a swarm with aligned rows of dots stacked on top of each other.
 #' - `strata = k` for \eqn{1 < k < \infty} will place dots at heights that are multiples of
 #'   `y_spacing / strata.
 #' - `strata = Inf` will place dots using a stackable variation on the compact swarm algorithm
 #'   (see *Details*).
+#' @param cohesion <scalar [numeric]> \eqn{\ge 0} and \eqn{\le 1}: Cohesion of stacked dot groups
+#' when `strata = Inf`, given as a fraction of `y_spacing`, the vertical distance between the
+#' centers of two dots stacked directly on top of each other (the dot height times the
+#' `stackratio`). A `cohesion` of `1` keeps dots from the same group together, but may introduce
+#' gaps in the layout where one group is stacked on top of another. Lower cohesion trades off
+#' maintaining the stacking order of groups for a tighter overall layout with fewer gaps. A
+#' `cohesion` of `0.5` (the default) is often a reasonable compromise. This parameter controls a
+#' penalty term added to dot heights when picking the next dot to place such that the height of a
+#' dot in group \eqn{i} that could be placed at height `y` if it were in group \eqn{i - 1} (the
+#' group below it) is treated as if it had a height of `y + cohesion * y_spacing`.
 #' @details
 #' `layout_swarm` is a stackable, exact-*x*-position, compact beeswarm layout. It uses one of two
 #' layout algorithms, depending on the value of `strata`. Both algorithms position dots in exactly
-#' their original data position and create compact layouts that do not have a "lean" (a visual
+#' their original data position and create compact layouts that do not have a "lean" (the visual
 #' artifact created by some beeswarm layouts based on the order that dots are placed in). Both
-#' algorithms also allow groups of dots to be stacked on top of each other in a user-specified order.
+#' algorithms allow groups of dots to be stacked on top of each other in an order determined by the
+#' value of `dots$group`.
 #'
 #' **When `strata` is finite**, a *stratified* layout algorithm is used. This algorithm places dots
-#' in alternating left/right sweeps along grid lines, greedily placing the next-closest placeable
-#' dot (in x position) to the most recently-placed dot in the same row. The distance between grid
-#' lines is `y_spacing / strata`, where `y_spacing` is dot height times the `stackratio` (the
-#' vertical distance between dot centers).
+#' in alternating left/right sweeps along grid lines, greedily placing the next non-overlapping dot
+#' that is closest in *x* position to the most recently-placed dot in the same row. The distance
+#' between grid lines is `y_spacing / strata`, where `y_spacing` is the vertical distance between
+#' the centers of two dots stacked directly on top of each other (the dot height times the
+#' `stackratio`).
 #'
 #' **When `strata` is `Inf`**, an algorithm inspired by the the "compact swarm" algorithm in
 #' \pkg{beeswarm} is used, rewritten to improve performance and to allow for stacking of groups.
-#' This algorithm maintains a priority queue of contiguous regions of unplaced dots, prioritized by
-#' our current best guess at the minimum position of the next dot in each region. We use golden
+#' This algorithm maintains a priority queue of contiguous regions of unplaced dots. Regions are
+#' prioritized by the lowest height an unplaced dot in that region can be placed at. We use golden
 #' section search to find the lowest dot in a region without checking all dots in a region. Placed
-#' dots are stored in a frontier sorted by x position, and as dots are placed, we prune dots from
-#' the frontier that can no longer intersect with the remaining dots (using the fact that all
-#' remaining dots will be placed higher than the most recently placed dot). Stacking of groups is
-#' achieved by applying a penalty (as a fraction of one dot height) to regions in the queue based on
-#' how far up in the stacking order the lowest unplaced group in a region is.
+#' dots are stored in a frontier sorted by x position. As dots are placed, we prune dots from
+#' the frontier that are low enough that we can guarantee they will not intersect with any remaining
+#' unplaced dots. Stacking of groups is achieved by queueing regions from each group separately and
+#' applying a penalty term to the height of regions corresponding to higher groups (see the
+#' `cohesion` parameter).
 #' @return <[dotplot_layout]> object of class `layout_swarm`.
 layout_swarm = new_dotplot_layout_class(
   "layout_swarm",
@@ -312,6 +326,11 @@ layout_swarm = new_dotplot_layout_class(
       class_numeric,
       validator = validate_positive_scalar_integerish,
       default = 4L
+    ),
+    cohesion = new_property(
+      class_numeric,
+      validator = validate_unit_scalar,
+      default = 0.5
     )
   )
 )

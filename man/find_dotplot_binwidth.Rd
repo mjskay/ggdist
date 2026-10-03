@@ -22,7 +22,7 @@ find_dotplot_binwidth(
 \item{maxheight}{<scalar \link{numeric}> Maximum height of the dotplot.}
 
 \item{...}{
-  Arguments passed on to \code{\link{dotplot_layout}}
+  Arguments passed on to \code{\link{layout_bin}}, \code{\link{layout_weave}}, \code{\link{layout_hex}}, \code{\link{layout_bar}}, \code{\link{layout_swarm}}
   \describe{
     \item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
 \link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
@@ -61,16 +61,38 @@ equivalent to Wilkinson's recommendation, which smooths bins that are at most
 (default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
 increase the spacing between bars.
 }}
+    \item{\code{strata}}{<scalar \link{numeric}> \eqn{\ge 1}: a postive integer giving the number of strata to use
+per 1 dot height. Given \code{y_spacing} representing the vertical distance between the centers of two
+dots stacked directly on top of each other (the dot height times the \code{stackratio}), strata
+operates as follows:
+\itemize{
+\item \code{strata = 1} will yield a swarm with aligned rows of dots stacked on top of each other.
+\item \code{strata = k} for \eqn{1 < k < \infty} will place dots at heights that are multiples of
+`y_spacing / strata.
+\item \code{strata = Inf} will place dots using a stackable variation on the compact swarm algorithm
+(see \emph{Details}).
+}}
+    \item{\code{cohesion}}{<scalar \link{numeric}> \eqn{\ge 0} and \eqn{\le 1}: Cohesion of stacked dot groups
+when \code{strata = Inf}, given as a fraction of \code{y_spacing}, the vertical distance between the
+centers of two dots stacked directly on top of each other (the dot height times the
+\code{stackratio}). A \code{cohesion} of \code{1} keeps dots from the same group together, but may introduce
+gaps in the layout where one group is stacked on top of another. Lower cohesion trades off
+maintaining the stacking order of groups for a tighter overall layout with fewer gaps. A
+\code{cohesion} of \code{0.5} (the default) is often a reasonable compromise. This parameter controls a
+penalty term added to dot heights when picking the next dot to place such that the height of a
+dot in group \eqn{i} that could be placed at height \code{y} if it were in group \eqn{i - 1} (the
+group below it) is treated as if it had a height of \code{y + cohesion * y_spacing}.}
   }}
 
-\item{group}{<\link[=xtfrm]{orderable vector}> of same length as \code{x}. The group each \code{x} value
-belongs to. If there is more than one group, dots are laid out in stacks in increasing order
-of \code{xtfrm(group)}.}
+\item{group}{<\link[=xtfrm]{orderable vector}> group identifiers (same length as \code{x}). The group each
+\code{x} value belongs to. If there is more than one group, dots are laid out in stacks in increasing
+order of \code{\link{xtfrm}}\code{(group)}.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+width.}
 
-\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+height.}
 
 \item{layout}{<\link{dotplot_layout} subclass | \link[=character]{string}> The layout method used for the dots. Either
 a subclass of \link{dotplot_layout} (i.e. a function returning a \link{dotplot_layout} object) or a
@@ -126,14 +148,46 @@ Searches for a nice-looking bin width to use to draw a dotplot such that
 the height of the dotplot fits within a given space (\code{maxheight}).
 }
 \details{
-This dynamic bin selection algorithm uses a binary search over the number of
-bins to find a bin width such that if the input data (\code{x}) is binned
-using a Wilkinson-style dotplot algorithm the height of the tallest bin
-will be less than \code{maxheight}.
+The dynamic bin selection algorithm uses a variety of heuristics and search algorithms to attempt
+to quickly find a \code{binwidth} for the provided \code{layout} such that the height of the tallest bin
+will be less than or equal to \code{maxheight} + \eqn{\epsilon} for an internally-determined relative
+\eqn{\epsilon} (which depends on \code{maxheight}).
 
-This algorithm is used by \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} (and its variants) to automatically
-select bin widths. Unless you are manually implementing you own dotplot \code{\link{grob}}
-or \code{geom}, you probably do not need to use this function directly
+\code{find_dotplot_binwidth} internally builds up an approximation of the height function (the
+function from \code{binwidth} onto the height of the dotplot with that bindwidth) and uses it to
+select the next candidate \code{binwidth} to evaluate. Because dotplot height functions are usually
+discontinuous, off-the-self numerical optimization can perform poorly or can require many
+iterations, which is expensive for large dotplots on some layout algorithms. We employ the
+following steps to narrow the search space and find a good \code{binwidth}:
+\enumerate{
+\item We evaluate the function intially at key positions that help narrow the search or which define
+known boundaries between regions of the function that behave differently. For example, between
+\eqn{[0,0]} (the origin of all height functions) and a binwidth of \code{resolution(x)}, the height
+function on most layouts is linear, so evaluating the height at \code{resolution(x)} allows linear
+interpolation to quickly find the correct \code{binwidth} if it is less than \code{resolution(x)}.
+\item For certain layouts, e.g. \code{layout_bin()}, because the height is a function of the number of
+dots in a particular bin, there are a finite number of \code{binwidth}s that can have \emph{exactly} the
+requested \code{maxheight}. We use binary search over these points to attempt to find an exact
+solution.
+\item If binary search fails to find an exact solution, we repeatedly use interpolation with the
+points we have evaluated so far to generate candidate \code{binwidth}s to check. Intead of using
+piecewise linear interpolation with knots at the existing evaluation points, we assume that the
+region around each point \eqn{[w_i, h_i]}, i.e. the region between \eqn{\frac{w_{i-1} + w_i}{2}}
+and \eqn{\frac{w_i + w_{i+1}}{2}}, is a line intersecting \eqn{[0,0]} and \eqn{[w_i, h_i]} with a
+slope of \eqn{\frac{h_i}{w_i}}. This is justifiable because locally a dotplot's height will be
+directly proportional to changes in \code{binwidth} up to the point where the change in \code{binwidth}
+causes dots to be added to or removed from the tallest bin.
+}
+
+If we fail to find a \code{binwidth} yielding a height within \eqn{\pm \epsilon} of \code{maxheight}, the
+\code{binwidth} found so far that yields the largest dotplot height less than or equal to \code{maxheight}
+\itemize{
+\item \eqn{\epsilon} is returned.
+}
+
+This algorithm is used by \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} (and its variants) to automatically select bin
+widths. Unless you are manually implementing your own dotplot \code{\link{grob}} or
+\code{\link[ggplot2:Geom]{geom}}, you probably do not need to use this function directly.
 }
 \examples{
 

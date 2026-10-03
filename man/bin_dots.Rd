@@ -26,9 +26,8 @@ bin_dots(
 \item{binwidth}{<scalar \link{numeric}> Bin (dot) width.}
 
 \item{...}{
-  Arguments passed on to \code{\link{dotplot_layout}}
+  Arguments passed on to \code{\link{layout_bin}}, \code{\link{layout_weave}}, \code{\link{layout_hex}}, \code{\link{layout_bar}}, \code{\link{layout_swarm}}
   \describe{
-    \item{\code{maxheight}}{<scalar \link{numeric}> maximum height of the dotplot layout.}
     \item{\code{overlaps}}{<\link[=character]{string}> How to handle overlapping dots or bins in the \link[=layout_bin]{bin},
 \link[=layout_weave]{weave}, and \link[=layout_hex]{hex} layouts (dots never overlap in the
 \link[=layout_swarm]{swarm} or \link[=layout_bar]{bar} layouts).
@@ -66,16 +65,38 @@ equivalent to Wilkinson's recommendation, which smooths bins that are at most
 (default: 0.9). Values are typically between \code{0} and \code{1}. Use smaller values to
 increase the spacing between bars.
 }}
+    \item{\code{strata}}{<scalar \link{numeric}> \eqn{\ge 1}: a postive integer giving the number of strata to use
+per 1 dot height. Given \code{y_spacing} representing the vertical distance between the centers of two
+dots stacked directly on top of each other (the dot height times the \code{stackratio}), strata
+operates as follows:
+\itemize{
+\item \code{strata = 1} will yield a swarm with aligned rows of dots stacked on top of each other.
+\item \code{strata = k} for \eqn{1 < k < \infty} will place dots at heights that are multiples of
+`y_spacing / strata.
+\item \code{strata = Inf} will place dots using a stackable variation on the compact swarm algorithm
+(see \emph{Details}).
+}}
+    \item{\code{cohesion}}{<scalar \link{numeric}> \eqn{\ge 0} and \eqn{\le 1}: Cohesion of stacked dot groups
+when \code{strata = Inf}, given as a fraction of \code{y_spacing}, the vertical distance between the
+centers of two dots stacked directly on top of each other (the dot height times the
+\code{stackratio}). A \code{cohesion} of \code{1} keeps dots from the same group together, but may introduce
+gaps in the layout where one group is stacked on top of another. Lower cohesion trades off
+maintaining the stacking order of groups for a tighter overall layout with fewer gaps. A
+\code{cohesion} of \code{0.5} (the default) is often a reasonable compromise. This parameter controls a
+penalty term added to dot heights when picking the next dot to place such that the height of a
+dot in group \eqn{i} that could be placed at height \code{y} if it were in group \eqn{i - 1} (the
+group below it) is treated as if it had a height of \code{y + cohesion * y_spacing}.}
   }}
 
-\item{group}{<\link[=xtfrm]{orderable vector}> of same length as \code{x}. The group each \code{x} value
-belongs to. If there is more than one group, dots are laid out in stacks in increasing order
-of \code{xtfrm(group)}.}
+\item{group}{<\link[=xtfrm]{orderable vector}> group identifiers (same length as \code{x}). The group each
+\code{x} value belongs to. If there is more than one group, dots are laid out in stacks in increasing
+order of \code{\link{xtfrm}}\code{(group)}.}
 
-\item{heightratio}{<scalar \link{numeric}> Ratio of bin (dot) width to dot height.}
+\item{heightratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+width.}
 
-\item{stackratio}{<scalar \link{numeric}> Ratio of dot height to vertical distance
-between dot centers.}
+\item{stackratio}{<scalar \link{numeric}> Ratio of vertical distance between dot centers to bin (dot)
+height.}
 
 \item{layout}{<\link{dotplot_layout} subclass | \link[=character]{string}> The layout method used for the dots. Either
 a subclass of \link{dotplot_layout} (i.e. a function returning a \link{dotplot_layout} object) or a
