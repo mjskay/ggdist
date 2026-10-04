@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Rcpp.h>
-#include <Rinternals.h>
-
 #include <algorithm>
+#include <cassert>
+#include <cmath>
 #include <iterator>
 #include <limits>
 #include <type_traits>
@@ -28,11 +27,6 @@ constexpr std::ptrdiff_t operator""_z(unsigned long long n) {
 
 /// Size literal for C++ arrays / vectors
 constexpr std::size_t operator""_uz(unsigned long long n) {
-  return n;
-}
-
-/// Size literal for R vectors
-constexpr R_xlen_t operator""_rz(unsigned long long n) {
   return n;
 }
 
