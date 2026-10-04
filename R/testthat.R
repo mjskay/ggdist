@@ -176,14 +176,23 @@ write_svg_with_gradient = function(plot, file, title = "") {
 # expectations -------------------------------------------------------------------------------
 
 #' `expect_error(print(plot), ...)` that prints to a null graphics device
-#' This keeps this expectation from interfering with other expectations that use graphics devices
-#' (like vdiffr).
+#' This expectation opens a temporary `pdf()` graphics device that outputs to nowhere, executes
+#' `expect_error(print(plot), ...)`, then ensures the temporary graphics device is closed. This
+#' makes it possible to test for errors that should be raised during plotting without putting the
+#' graphics device into an inconsistent state (otherwise this expectation could interfere with other
+#' tests that use a graphics device).
+#' @param plot a plot to `print()`
+#' @param ... arguments passed to `expect_error()`
+#' @returns The result of `expect_error(print(plot), ...)`
 #' @noRd
 expect_error_on_plot_print = function(plot, ...) {
   grDevices::pdf(NULL)
-  pdf_dev = dev.cur()
-  tryCatch(
-    expect_error(print(plot), ...),
-    finally = suppressWarnings(grDevices::dev.off(pdf_dev))
-  )
+  pdf_dev = grDevices::dev.cur()
+  # dev.off() may throw a "Killing locked device" warning: I believe this happens when we are
+  # testing something that throws an error during printing to the graphics device that leaves it
+  # in a locked state. In this case we can ignore the warning since dev.off() will unlock the
+  # device in order to kill it, which is what we want.
+  on.exit(suppressWarnings(grDevices::dev.off(pdf_dev)))
+
+  testthat::expect_error(print(plot), ...)
 }
