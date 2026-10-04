@@ -171,3 +171,19 @@ write_svg_with_gradient = function(plot, file, title = "") {
     plot + ggtitle(title) + theme_test(base_family = "Liberation Sans")
   )
 }
+
+
+# expectations -------------------------------------------------------------------------------
+
+#' `expect_error(print(plot), ...)` that prints to a null graphics device
+#' This keeps this expectation from interfering with other expectations that use graphics devices
+#' (like vdiffr).
+#' @noRd
+expect_error_on_plot_print = function(plot, ...) {
+  grDevices::pdf(NULL)
+  pdf_dev = dev.cur()
+  tryCatch(
+    expect_error(print(plot), ...),
+    finally = suppressWarnings(grDevices::dev.off(pdf_dev))
+  )
+}

@@ -6,6 +6,7 @@
 #include <iterator>
 #include <limits>
 #include <type_traits>
+#include <vector>
 
 // constants --------------------------------------------------------------------------
 
@@ -98,9 +99,29 @@ constexpr auto end_(C& container) {
 template<typename It, typename = std::void_t<>>
 struct is_reverse_iterator : std::false_type {};
 template<typename It>
-struct is_reverse_iterator<It, std::void_t<std::is_base_of<decltype(std::reverse_iterator(std::declval<It>().base())), It>>> : std::true_type {};
+struct is_reverse_iterator<It, std::void_t<decltype(std::declval<It>().base())>>
+    : std::is_base_of<decltype(std::reverse_iterator(std::declval<It>().base())), It> {};
 template<typename It>
 constexpr bool is_reverse_iterator_v = is_reverse_iterator<It>::value;
+
+static_assert(!is_reverse_iterator_v<std::vector<double>::iterator>);
+static_assert(!is_reverse_iterator_v<std::vector<double>::const_iterator>);
+static_assert(is_reverse_iterator_v<std::vector<double>::reverse_iterator>);
+static_assert(is_reverse_iterator_v<std::vector<double>::const_reverse_iterator>);
+
+/// Is `It` a const iterator?
+template<typename It, typename = std::void_t<>>
+struct is_const_iterator : std::false_type {};
+template<typename It>
+struct is_const_iterator<It, std::void_t<typename std::iterator_traits<It>::reference>>
+    : std::is_const<std::remove_reference_t<typename std::iterator_traits<It>::reference>> {};
+template<typename It>
+constexpr bool is_const_iterator_v = is_const_iterator<It>::value;
+
+static_assert(!is_const_iterator_v<std::vector<double>::iterator>);
+static_assert(!is_const_iterator_v<std::vector<double>::reverse_iterator>);
+static_assert(is_const_iterator_v<std::vector<double>::const_iterator>);
+static_assert(is_const_iterator_v<std::vector<double>::const_reverse_iterator>);
 
 /// Erase an element from a container via a (possibly reversed) iterator
 /// @tparam reverse is the iterator reversed?
@@ -154,16 +175,14 @@ template<typename C, typename It, typename V = typename C::value_type, typename 
 inline auto advance_to_at_least(
   C& container, It it, V&& min_value, Comp&& comp = {}
 ) -> It {
-  if constexpr (std::is_base_of_v<decltype(container.crbegin()), It>) {
+  if constexpr (is_reverse_iterator_v<It> && is_const_iterator_v<It>) {
     return std::reverse_iterator(std::upper_bound(container.cbegin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
-  } else if constexpr (std::is_base_of_v<decltype(container.rbegin()), It>) {
+  } else if constexpr (is_reverse_iterator_v<It>) {
     return std::reverse_iterator(std::upper_bound(container.begin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
-  } else if constexpr (std::is_base_of_v<decltype(container.begin()), It>) {
-    return std::lower_bound(it, container.end(), std::forward<V>(min_value), std::forward<Comp>(comp));
-  } else if constexpr (std::is_base_of_v<decltype(container.cbegin()), It>) {
+  } else if constexpr (is_const_iterator_v<It>) {
     return std::lower_bound(it, container.cend(), std::forward<V>(min_value), std::forward<Comp>(comp));
   } else {
-    static_assert(false, "`it` must be an iterator for `container`");
+    return std::lower_bound(it, container.end(), std::forward<V>(min_value), std::forward<Comp>(comp));
   }
 }
 

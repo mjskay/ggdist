@@ -31,12 +31,10 @@ test_that("geom_blur_dots displays correctly", {
     writer = write_svg_with_gradient
   )
 
-  expect_error(
-    print(
-      ggplot(df, aes(x = x, sd = sd)) +
-        geom_blur_dots(aes(y = "gaussian"), shape = 2),
-      newpage = FALSE
-    ),
+  expect_error_on_plot_print(
+    ggplot(df, aes(x = x, sd = sd)) +
+      geom_blur_dots(aes(y = "gaussian"), shape = 2)
+    ,
     class = "ggdist_invalid_blur_dot_shape"
   )
 

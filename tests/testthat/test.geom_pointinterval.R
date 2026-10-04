@@ -154,11 +154,10 @@ test_that("dist aesthetic can be NULLed out", {
 # error on missing xmin/ymin/xmax/ymax ------------------------------------
 
 test_that("missing min/max aesthetics are caught", {
-  expect_error(
-    print(newpage = FALSE,
-      ggplot(data.frame(x = 1), aes(x = x)) +
-        geom_pointinterval()
-    ),
+  expect_error_on_plot_print(
+    ggplot(data.frame(x = 1), aes(x = x)) +
+      geom_pointinterval()
+    ,
     "You did not specify xmin or xmax aesthetics"
   )
 })

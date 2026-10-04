@@ -183,15 +183,16 @@ test_that("mapping custom aesthetics works", {
     rbind(tibble(x = qnorm(ppoints(20), 3, 2), y = "b")) %>%
     ggplot(aes(x = x, y = y, group = NA))
 
+  expect_error(
+    ggplot_build(p + geom_dots(aes(slab_color = x > 1.9, slab_shape = x), orientation = "horizontal")),
+    "A continuous variable cannot be mapped to shape"
+  )
+
+  skip_if_sensitive_to_density()
   vdiffr::expect_doppelganger("dots: slab_color plus slab_shape mapping",
     p +
       geom_dots(aes(slab_color = x > 1.9, slab_shape = x > 1.9), orientation = "horizontal") +
       geom_hline(yintercept = c(1, 1.9, 2, 2.9), alpha = 0.25)
-  )
-
-  expect_error(
-    ggplot_build(p + geom_dots(aes(slab_color = x > 1.9, slab_shape = x), orientation = "horizontal")),
-    "A continuous variable cannot be mapped to shape"
   )
 
 })

@@ -117,8 +117,8 @@ test_that("coordinate transformations work", {
       geom_hline(yintercept = c(1.9, 2.9))
   )
 
-  expect_error(
-    print(p + coord_polar(), newpage = FALSE),
+  expect_error_on_plot_print(
+    p + coord_polar(),
     "geom_dotsinterval does not work properly with non-linear coordinates"
   )
 
@@ -127,6 +127,7 @@ test_that("coordinate transformations work", {
 
 test_that("scale transformations work", {
   skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
 
 
   p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%
@@ -343,6 +344,7 @@ test_that("dot order is correct", {
     p + geom_dots(aes(order = g), layout = layout_swarm(strata = 3), linewidth = 5)
   )
 
+  skip_if_sensitive_to_density()
   vdiffr::expect_doppelganger("compact swarm dot order",
     p + geom_dots(aes(order = g), layout = layout_swarm(strata = Inf), linewidth = 5)
   )
