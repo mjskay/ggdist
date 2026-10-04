@@ -2,61 +2,61 @@
 
 Major changes:
 
-* Rewrote the layout algorithm for the `"swarm"` layout in `geom_dots()`.
-  The new layout is much faster, particularly for large plots. The
-  algorithm also supports a new `grid` parameter that adjusts the
-  resolution of the grid used for layout. A classic "compact swarm"
-  layout can be achieved with `grid = Inf`, and more regularly-spaced
-  layouts with lower values, typically in the range of `1` to `8`.
-* The `order` aesthetic is now supported for all layouts in `geom_dots()`.
-  Notably, `layout = "swarm"` and `layout = "weave"` now support creating
-  stacked swarm plots using something like `geom_dots(aes(fill = var, order = var, group = NA), side = "both", layout = "weave")`.
-* The `geom_dots()` family gains a `span` parameter. This parameter controls
-  smoothing/spacing in various dotplot layouts. In bin-based layouts (`"bin"`,
-  `"weave"`, `"hex"`), it implements moving-average dotplot smoothing as
-  described in Wilkinson (1999) by exchanging dots between adjacent bins
-  that are within `span * binwidth` of each other (try
-  `geom_dots(span = 1.25)`). In the `"bar"` layout it controls the width
-  of the bars relative to the data resolution (try
-  `geom_dots(layout = "bar", span = 0.5)`).
-* Dotplot layout algorithms are now exposed via `layout_XXX()` automatic
-  partially-applied functions (actually S7 classes). For example,
-  `geom_dots(layout = "weave")` is now equivalent to
-  `geom_dots(layout = layout_weave())`, similar to other extension points in
-  `{ggdist}`. This allows finer customization of layout algorithms (or even
-  custom layout algorithms).
+* Overhaul of dotplot layout in `geom_dots()`, including improved performance, better automatic
+  binwidth selection, and new layout options (including stackable swarms):
+  * Rewrote the `"swarm"` dotplot layout from the ground up to improve performance, allow stacking
+    groups, and provide additional parameters to control appearance. The new layout is much faster,
+    particularly for large plots. The new algorithm means the `{beeswarm}` package is no longer
+    needed to render swarms.
+  * The `order` aesthetic is now supported for all layouts in `geom_dots()`, including `"swarm"` and
+    `"weave"`.
+  * The new `strata` parameter for the `"swarm"` layout adjusts a grid used for layout, where
+    `strata = Inf` is a classic "compact swarm" layout and more regularly-spaced rows of dots can be
+    created with with lower values, typically in the range of `1` to `8`.
+  * The new `cohesion` parameter for the `"swarm"` layout  with `strata = Inf` gives control over
+    the appearance of group stacks when using the `order` parameter. `cohesion` takes a value
+    between `0` and `1`, where high cohesion (`1`) means dots in the same group are stacked together
+    even if this creates gaps in the layout, and lower cohesion (closer to `0`) trades off this
+    guarantee in exchange for tighter layouts.
+  * The new `span` parameter controls smoothing/spacing in various dotplot layouts. In bin-based
+    layouts (`"bin"`, `"weave"`, `"hex"`), it implements moving-average dotplot smoothing as
+    described in Wilkinson (1999) by exchanging dots between adjacent bins that are within
+    `span * binwidth` of each other (try `geom_dots(span = 1.25)`). In the `"bar"` layout it
+    controls the width of the bars relative to the data resolution (try
+    `geom_dots(layout = "bar", span = 0.5)`).
+  * The `"swarm"` and `"weave"` layouts now re-center contiguous clusters of dots around their mean
+    height when `side = "both"`. This makes the swarm more visually symmetrical, and particularly
+    makes small, isolated clusters less likely to appear lopsided (inspired by a question from
+    @jbengler at the ggextenders talk).
+  * Automatic binwidth detection in dots geometries now accounts for `layout` and `side` parameters
+    to improve binwidth selection for non-default layouts, most notably `layout = "swarm"` and
+    `side = "both"`. The binwidth search algorithm has also been improved. This may cause minor
+    changes to existing plots that use automatic binwidths.
+  * Dotplot layout algorithms are now exposed via `layout_XXX()` automatic partially-applied
+    functions (actually S7 classes). For example, `geom_dots(layout = "weave")` is now equivalent to
+    `geom_dots(layout = layout_weave())`, similar to other extension points in `{ggdist}`. This
+    allows finer customization of layout algorithms and the creation of custom layout algorithms.
 
 Minor changes:
 
-* `geom_dots()` with `layout = "swarm"` or `"weave"` now re-centers contiguous
-  clusters of dots around their mean y position. This makes the swarm more visually symmetrical, and particularly makes small, isolated clusters less likely to appear
-  lopsided (inspired by a question from @jbengler at the ggextenders talk).
-* Automatic binwidth detection in dots geometries now accounts for `layout` and
-  `side` parameters to improve binwidth selection for non-default layouts, most
-  notably `layout = "swarm"` and `side = "both"`. This may cause minor changes to
-  existing plots that use automatic binwidths.
 * `auto_partial()` can now wrap S7 class constructors.
 
 Internal changes:
 
-* Ensure duplicate points in paths are removed before drawing (e.g. when slabs
-  are split up). This does not change the appearance of output but should
-  (hopefully) make snapshot testing across different graphical devices /
-  platforms more reliable.
-* Set up `variant` testing with `vdiffr` so that platform-specific snapshots can
-  be tested.
+* Ensure duplicate points in paths are removed before drawing (e.g. when slabs are split up). This
+  does not change the appearance of output but should (hopefully) make snapshot testing across
+  different graphical devices / platforms more reliable.
+* Set up `variant` testing with `vdiffr` so that platform-specific snapshots can be tested.
 
 Bug fixes:
 
-* `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
-  determine order from the `order` aesthetic to be robust to infinities
-  (#255; thanks @damonbayer).
-* Key glyphs draw correctly again on ggplot2 4.0 (#262; thanks @mitchelloharawild
-  for pinpointing the solution).
-* Sub-geom color and fill scales now register theme elements for setting default
-  palettes using `ggplot2::register_theme_elements()`. This means that, just like
-  base `{ggplot2}` scales, the default palette for (e.g.)
-  `scale_point_color_continuous()` can be set via
+* `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to determine order from the
+  `order` aesthetic to be robust to infinities (#255; thanks @damonbayer).
+* Key glyphs draw correctly again on ggplot2 4.0 (#262; thanks @mitchelloharawild for pinpointing the
+  solution).
+* Sub-geom color and fill scales now register theme elements for setting default palettes using
+  `ggplot2::register_theme_elements()`. This means that, just like base `{ggplot2}` scales, the
+  default palette for (e.g.) `scale_point_color_continuous()` can be set via
   `theme(palette.point_color.continuous = ...)`. This also fixes #263.
 
 
