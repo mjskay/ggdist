@@ -40,6 +40,7 @@ Major changes:
 Minor changes:
 
 * `auto_partial()` can now wrap S7 class constructors.
+* Require R >= 4.1 and use the base pipe (`|>`) instead of `{magrittr}` pipe (`%>%`).
 
 Internal changes:
 

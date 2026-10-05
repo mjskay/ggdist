@@ -296,6 +296,24 @@ test_that("dotplot layouts work", {
     p + geom_dots(aes(side = side), layout = "hex", stackratio = 0.92)
   )
 
+})
+
+test_that("swarm layouts work", {
+  skip_if_no_vdiffr()
+  skip_if_sensitive_to_density()
+
+  df = rbind(
+    cbind(mtcars, side = "top", stringsAsFactors = FALSE),
+    cbind(mtcars, side = "both", stringsAsFactors = FALSE),
+    cbind(mtcars, side = "bottom", stringsAsFactors = FALSE),
+    stringsAsFactors = FALSE
+  )
+
+  p = df |>
+    ggplot(aes(x = mpg)) +
+    facet_grid(~ side) +
+    geom_hline(yintercept = c(1, 0.5, -0.5, -1))
+
   vdiffr::expect_doppelganger("swarm",
     p + geom_dots(aes(side = side), layout = "swarm", scale = 1)
   )

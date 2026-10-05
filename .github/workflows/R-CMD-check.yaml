@@ -27,8 +27,9 @@ jobs:
           - {os: macos-latest,   r: 'release'}
 
           - {os: windows-latest, r: 'release'}
-          # use 4.1 to check with rtools40's older compiler
-          - {os: windows-latest, r: '4.1'}
+          # Use 4.1 on Windows to check with rtools40's older compiler
+          # Also note the vignettes don't work on R 4.1 due to use of the `_` pipe placeholder
+          - {os: windows-latest, r: '4.1', check-args: 'c("--no-build-vignettes", "--no-vignettes")'}
 
           - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
@@ -36,7 +37,7 @@ jobs:
           - {os: ubuntu-latest,  r: 'oldrel-2'}
           - {os: ubuntu-latest,  r: 'oldrel-3'}
           - {os: ubuntu-latest,  r: 'oldrel-4'}
-          - {os: ubuntu-latest,  r: 'oldrel-5'}
+          - {os: ubuntu-latest,  r: '4.1', check-args: 'c("--no-build-vignettes", "--no-vignettes")'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -88,3 +89,4 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          args: ${{ matrix.config.check-args }}
