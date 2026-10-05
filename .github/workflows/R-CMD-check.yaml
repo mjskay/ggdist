@@ -24,24 +24,26 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
+          - {os: macos-latest,   r: 'release',  vignettes: true}
 
-          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'release',  vignettes: true}
           # Use 4.1 on Windows to check with rtools40's older compiler
           # Also note the vignettes don't work on R 4.1 due to use of the `_` pipe placeholder
-          - {os: windows-latest, r: '4.1', check-args: 'c("--no-build-vignettes", "--no-vignettes")'}
+          - {os: windows-latest, r: '4.1',      vignettes: false}
 
-          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
-          - {os: ubuntu-latest,  r: 'oldrel-1'}
-          - {os: ubuntu-latest,  r: 'oldrel-2'}
-          - {os: ubuntu-latest,  r: 'oldrel-3'}
-          - {os: ubuntu-latest,  r: 'oldrel-4'}
-          - {os: ubuntu-latest,  r: '4.1', check-args: 'c("--no-build-vignettes", "--no-vignettes")'}
+          - {os: ubuntu-latest,  r: 'devel',    vignettes: true, http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'release',  vignettes: true }
+          - {os: ubuntu-latest,  r: 'oldrel-1', vignettes: true }
+          - {os: ubuntu-latest,  r: 'oldrel-2', vignettes: true }
+          - {os: ubuntu-latest,  r: 'oldrel-3', vignettes: true }
+          - {os: ubuntu-latest,  r: 'oldrel-4', vignettes: true }
+          - {os: ubuntu-latest,  r: '4.1',      vignettes: false}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      EXTRA_BUILD_ARGS: ${{ matrix.config.vignettes && 'NULL' || 'c("--no-build-vignettes")' }}
+      EXTRA_CHECK_ARGS: ${{ matrix.config.vignettes && 'NULL' || 'c("--no-build-vignettes", "--no-vignettes", "--ignore-vignettes")' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -88,5 +90,5 @@ jobs:
         uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
-          args: ${{ matrix.config.check-args }}
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf", ${{ env.EXTRA_BUILD_ARGS }})'
+          args: 'c("--no-manual", "--as-cran", ${{ env.EXTRA_CHECK_ARGS }})'
