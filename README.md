@@ -4,8 +4,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mjskay/ggdist/actions/workflows/R-CMD-check.yaml)
-[![Coverage
-status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://app.codecov.io/github/mjskay/ggdist?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/mjskay/ggdist/graph/badge.svg)](https://app.codecov.io/gh/mjskay/ggdist)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/ggdist) [![Paper
