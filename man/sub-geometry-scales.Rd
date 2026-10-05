@@ -245,8 +245,8 @@ library(ggplot2)
 
 # This plot shows how to set multiple specific aesthetics
 # NB it is very ugly and is only for demo purposes.
-data.frame(distribution = "Normal(1,2)") \%>\%
-  parse_dist(distribution) \%>\%
+data.frame(distribution = "Normal(1,2)") |>
+  parse_dist(distribution) |>
   ggplot(aes(y = distribution, xdist = .dist, args = .args)) +
   stat_halfeye(
     shape = 21,  # this point shape has a fill and outline

@@ -54,7 +54,7 @@ dist_df = tribble(
 # An example with normal "dodge" positioning
 # Notice how dodge points are placed in the center of their bounding boxes,
 # which can cause slabs to be positioned outside their bounds.
-dist_df \%>\%
+dist_df |>
   ggplot(aes(
     x = factor(group), ydist = dist_normal(mean, sd),
     fill = subgroup
@@ -65,13 +65,13 @@ dist_df \%>\%
   geom_rect(
     aes(xmin = group, xmax = group + 1, ymin = 2, ymax = 13, color = subgroup),
     position = "dodge",
-    data = . \%>\% filter(group == 3),
+    data = dist_df |> filter(group == 3),
     alpha = 0.1
   ) +
   geom_point(
     aes(x = group, y = 7.5, color = subgroup),
     position = position_dodge(width = 1),
-    data = . \%>\% filter(group == 3),
+    data = dist_df |> filter(group == 3),
     shape = 1,
     size = 4,
     stroke = 1.5
@@ -84,7 +84,7 @@ dist_df \%>\%
 # justification parameter of stat_halfeye, ensuring that they are
 # placed appropriately. On slabinterval family geoms, position_dodgejust()
 # will automatically detect the appropriate justification.
-dist_df \%>\%
+dist_df |>
   ggplot(aes(
     x = factor(group), ydist = dist_normal(mean, sd),
     fill = subgroup
@@ -95,13 +95,13 @@ dist_df \%>\%
   geom_rect(
     aes(xmin = group, xmax = group + 1, ymin = 2, ymax = 13, color = subgroup),
     position = "dodgejust",
-    data = . \%>\% filter(group == 3),
+    data = dist_df |> filter(group == 3),
     alpha = 0.1
   ) +
   geom_point(
     aes(x = group, y = 7.5, color = subgroup),
     position = position_dodgejust(width = 1, justification = 0),
-    data = . \%>\% filter(group == 3),
+    data = dist_df |> filter(group == 3),
     shape = 1,
     size = 4,
     stroke = 1.5

@@ -325,7 +325,7 @@ layout_swarm = new_dotplot_layout_class(
     strata = new_property(
       class_numeric,
       validator = validate_positive_scalar_integerish,
-      default = 4L
+      default = Inf
     ),
     cohesion = new_property(
       class_numeric,

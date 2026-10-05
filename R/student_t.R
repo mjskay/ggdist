@@ -35,7 +35,7 @@
 #' expand.grid(
 #'   df = c(3,5,10,30),
 #'   scale = c(1,1.5)
-#' ) %>%
+#' ) |>
 #'   ggplot(aes(y = 0, dist = "student_t", arg1 = df, arg2 = 0, arg3 = scale, color = ordered(df))) +
 #'   stat_slab(p_limits = c(.01, .99), fill = NA) +
 #'   scale_y_continuous(breaks = NULL) +

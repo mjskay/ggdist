@@ -70,10 +70,10 @@ slabinterval_plot = ggplot() +
   stat_slab(aes(y = "08", xdist = d), position = position_nudge(y = - 0.2)) +
   stat_histinterval(aes(y = "09", xdist = d_quantiles), position = position_nudge(y = - 0.25)) +
   stat_slab(
-    aes(y = "10", xdist = d, fill_ramp = after_stat(level)), 
+    aes(y = "10", xdist = d, fill_ramp = after_stat(level)),
     show.legend = FALSE, .width = c(.5, .8, .95),
     fill = scales::brewer_pal()(7)[[5]],
-    position = position_nudge(y = -0.5)    
+    position = position_nudge(y = -0.5)
   ) +
   stat_spike(
     aes(y = "10", xdist = d, linetype = after_stat(at)),
@@ -102,19 +102,19 @@ dotsinterval_plot = ggplot() +
   geom_weave(aes(y = "03", x = x1, fill = x1 > 4, group = NA), linewidth = NA, alpha = 0.75, binwidth = NA) +
   geom_swarm(aes(y = "04", x = x2, fill = x2 > 4, group = NA), linewidth = NA, alpha = 0.75, binwidth = NA, position = position_nudge(y = 0.1)) +
   scale_fill_brewer(palette = "Dark2", guide = "none") +
-  
+
   ggnewscale::new_scale_fill() +
   stat_dotsinterval(aes(y = "05", xdist = d, fill = after_stat(level)), layout = "weave", slab_linewidth = NA, .width = c(.66, .95), quantiles = 200, position = position_nudge(y = -0.3)) +
   scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "fill", guide = "none") +
-  
+
   ggnewscale::new_scale_fill() +
   geom_dots(aes(y = "06", x = x1, fill = "a"), side = "bottom", scale = 0.75, linewidth = NA, position = position_nudge(y = -0.1)) +
   stat_slabinterval(aes(y = "06", x = x1, fill = "a"), scale = 0.5, position = position_nudge(y = -0.1)) +
   geom_dots(aes(y = "07", x = x2, fill = "b"), side = "bottom", scale = 0.75, linewidth = NA, position = position_nudge(y = -0.2)) +
   stat_slabinterval(aes(y = "07", x = x2, fill = "b"), scale = 0.5, position = position_nudge(y = -0.2)) +
   scale_fill_brewer(palette = "Set2", guide = "none") +
-  
-  
+
+
   scale_x_continuous(limits = dists_xlim, expand = c(0,0), labels = NULL) +
   scale_y_discrete(limits = rev, labels = NULL) +
   labs(
@@ -127,20 +127,21 @@ dotsinterval_plot = ggplot() +
 
 ```{r preview_lineribbon, include=FALSE}
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
-mtcars_preds = mtcars %>%
-  group_by(cyl) %>%
-  expand(hp = seq(min(hp), max(hp), length.out = 50)) %>%
-  bind_cols(predict(m_mpg, newdata = ., se.fit = TRUE))
+mtcars_grid = mtcars |>
+  group_by(cyl) |>
+  expand(hp = seq(min(hp), max(hp), length.out = 50))
+mtcars_preds = mtcars_grid |>
+  bind_cols(predict(m_mpg, newdata = mtcars_grid, se.fit = TRUE))
 
 mtcars_plot = function(.width = c(.5, .8, .95), alpha = 1/4, ...) {
-  mtcars_preds %>%
+  mtcars_preds |>
     ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
     stat_lineribbon(
-      aes(ydist = dist_student_t(df, fit, se.fit)), 
+      aes(ydist = dist_student_t(df, fit, se.fit)),
       .width = .width, alpha = alpha, ...
     ) +
     geom_point(aes(y = mpg), data = mtcars) +
-    
+
     scale_fill_brewer(palette = "Set2") +
     scale_color_brewer(palette = "Dark2") +
     labs(
@@ -177,7 +178,7 @@ especially for visualizing distributions and uncertainty. It is designed for bot
 frequentist and Bayesian uncertainty visualization, taking the view that uncertainty
 visualization can be unified through the perspective of distribution visualization:
 for frequentist models, one visualizes confidence distributions or bootstrap distributions (see `vignette("freq-uncertainty-vis")`);
-for Bayesian models, one visualizes probability distributions (see the [tidybayes](https://mjskay.github.io/tidybayes/) 
+for Bayesian models, one visualizes probability distributions (see the [tidybayes](https://mjskay.github.io/tidybayes/)
 package, which builds on top of `{ggdist}`).
 
 The `geom_slabinterval()` / `stat_slabinterval()` family (see `vignette("slabinterval")`) makes it
@@ -196,7 +197,7 @@ set.seed(12345) # for reproducibility
 data.frame(
   abc = c("a", "b", "c"),
   value = rnorm(300, c(1, 8, 3), c(1, 1.7, 1))
-) %>%
+) |>
   ggplot(aes(y = abc, x = value, fill = abc)) +
   geom_dots(layout = "weave", side = "bottom", linewidth = 0) +
   stat_slabinterval() +
@@ -207,15 +208,15 @@ data.frame(
   )
 ```
 
-The `geom_lineribbon()` / `stat_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize 
+The `geom_lineribbon()` / `stat_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize
 fit lines with an arbitrary number of uncertainty bands:
-  
+
 ```{r lineribbon, echo=FALSE, message=FALSE, warning=FALSE}
 mtcars_plot()
 ```
 
 All stats in `{ggdist}` also support visualizing analytical distributions and vectorized distribution
-data types like [distributional](https://pkg.mitchelloharawild.com/distributional/) objects or `posterior::rvar()` 
+data types like [distributional](https://pkg.mitchelloharawild.com/distributional/) objects or `posterior::rvar()`
 objects. This is particularly useful when visualizing uncertainty in frequentist
 models (see `vignette("freq-uncertainty-vis")`) or when visualizing priors in a
 Bayesian analysis.
@@ -229,7 +230,7 @@ stats for visualizing uncertainty in Bayesian models, see the vignettes in `{tid
 
 These cheat sheets focus on the `slabinterval` family of geometries:
 
-<a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630" /></a>  
+<a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630" /></a>
 
 ## Installation
 
@@ -251,28 +252,28 @@ devtools::install_github("mjskay/ggdist")
 ## Dependencies
 
 `{ggdist}` aims to have minimal additional dependencies beyond those already
-required by `{ggplot2}`. The `{ggdist}` dependencies fall into the following 
+required by `{ggplot2}`. The `{ggdist}` dependencies fall into the following
 categories:
 
 1. `{ggplot2}`.
 
 2. Packages that `{ggplot2}` also depends on. These packages add no additional
-dependency cost because `{ggplot2}` already requires them: `{rlang}`, `{cli}`, 
+dependency cost because `{ggplot2}` already requires them: `{rlang}`, `{cli}`,
 `{scales}`, `{tibble}`, `{vctrs}`, `{withr}`, `{gtable}`, `{glue}`, and `{S7}`.
 
-3. Packages that `{ggplot2}` does not depend on. These are all well-maintained 
+3. Packages that `{ggplot2}` does not depend on. These are all well-maintained
 packages with few dependencies and a clear need within `{ggdist}`:
    - `{distributional}`: this implementation of distribution vectors powers
      much of `{ggdist}`. This package adds minimal additional cost, as its only
      dependency that is not also a dependency of `{ggplot2}` is `{numDeriv}`, which
      is needed by `{ggdist}` anyway (see below).
-   - `{numDeriv}`: used for calculating Jacobians of scale transformations. 
-     Needed because testing has revealed common situations where 
+   - `{numDeriv}`: used for calculating Jacobians of scale transformations.
+     Needed because testing has revealed common situations where
      `stats::numericDeriv()` fails but `{numDeriv}` does not. Widely used by other
      CRAN packages and has no additional dependencies.
    - `{quadprog}`: Used to solve constrained optimization problems during different
      parts of dotplot layout, particularly to avoid dot overlaps in the `"bin"`
-     and `"weave"` layouts. Widely used by other CRAN packages and has no 
+     and `"weave"` layouts. Widely used by other CRAN packages and has no
      additional dependencies.
    - `{Rcpp}`: Used to implement faster dotplot layout. Widely used by other CRAN
      packages and has no additional dependencies.

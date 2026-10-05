@@ -14,11 +14,11 @@ make_line_data = function(offset = 0, seed = 123, g = "a") {
   tibble(
     x = seq(0, 1, length.out = 15),
     g = g
-  ) %>%
-    group_by_all() %>%
-    do(tibble(
-      y = rnorm(500, mean = .$x + offset)
-    ))
+  ) |>
+    group_by_all() |>
+    reframe(
+      y = rnorm(500, mean = x + offset)
+    )
 }
 
 test_that("one-group stat_lineribbons work", {
@@ -49,34 +49,34 @@ test_that("one-group geom_lineribbons work", {
   df = make_line_data()
 
   vdiffr::expect_doppelganger("one-group geom_lineribbon",
-    df %>%
-      group_by(x, g) %>%
-      mode_qi(y, .width = c(.50, .75, .90)) %>%
+    df |>
+      group_by(x, g) |>
+      mode_qi(y, .width = c(.50, .75, .90)) |>
       ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
   )
   vdiffr::expect_doppelganger("one-group geom_lineribbon (manual aes)",
-    df %>%
-      group_by(x, g) %>%
-      mean_qi(y, .width = c(.50, .75, .90)) %>%
+    df |>
+      group_by(x, g) |>
+      mean_qi(y, .width = c(.50, .75, .90)) |>
       ggplot(aes(x = x, y = y, ymin = .lower - 10, ymax = .upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
   )
   vdiffr::expect_doppelganger("one-group geom_lineribbon (horizontal)",
-    df %>%
-      group_by(x, g) %>%
-      mode_qi(y, .width = c(.50, .75, .90)) %>%
-      rename(l = .lower, u = .upper) %>%
+    df |>
+      group_by(x, g) |>
+      mode_qi(y, .width = c(.50, .75, .90)) |>
+      rename(l = .lower, u = .upper) |>
       ggplot(aes(x = y, y = x, xmin = l, xmax = u)) +
       geom_lineribbon() +
       scale_fill_brewer()
   )
   vdiffr::expect_doppelganger("one-group geom_lineribbon (reverse order)",
-    df %>%
-      group_by(x, g) %>%
-      mean_hdi(y, .width = c(.50, .75, .90)) %>%
+    df |>
+      group_by(x, g) |>
+      mean_hdi(y, .width = c(.50, .75, .90)) |>
       ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
@@ -86,7 +86,7 @@ test_that("one-group geom_lineribbons work", {
 test_that("geom_lineribbons unspecified fill and color work", {
   skip_if_no_vdiffr()
 
-  p = tibble(x = 1:3, lower = 0:2, upper = 2:4) %>%
+  p = tibble(x = 1:3, lower = 0:2, upper = 2:4) |>
     ggplot(aes(x = x, y = x, ymin = lower, ymax = upper))
 
   vdiffr::expect_doppelganger("lineribbon without .width",
@@ -110,7 +110,7 @@ test_that("two-group stat_lineribbons work", {
   df = bind_rows(
     make_line_data(),
     make_line_data(offset = 4, seed = 234, g = "b")
-  ) %>%
+  ) |>
     arrange(x)
 
   p = ggplot(df, aes(x = x, y = y))
@@ -151,7 +151,7 @@ test_that("stat_dist_lineribbon works", {
     x = 1:10,
     sd = seq(1, 3, length.out = 10),
     g = rep(c("a","b"), 5)
-  ) %>%
+  ) |>
     ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd))
 
   vdiffr::expect_doppelganger("basic stat_dist_lineribbon",
@@ -167,7 +167,7 @@ test_that("the stepped lineribbons work", {
   skip_if_no_vdiffr()
 
 
-  p = data.frame(x = 1:5) %>%
+  p = data.frame(x = 1:5) |>
     ggplot(aes(x = x, dist = "norm", arg1 = x))
 
   vdiffr::expect_doppelganger("lineribbon with step = TRUE works",
@@ -220,13 +220,13 @@ test_that("geom_lineribbon without line works", {
   )
 
   vdiffr::expect_doppelganger("geom_lineribbon without line",
-    df %>%
+    df |>
       ggplot(aes(x = x, ymin = lower, ymax = upper)) +
       geom_lineribbon()
   )
 
   vdiffr::expect_doppelganger("geom_lineribbon without line, vertical",
-    df %>%
+    df |>
       ggplot(aes(y = x, xmin = lower, xmax = upper)) +
       geom_lineribbon()
   )
@@ -260,7 +260,7 @@ test_that("geom_lineribbon with some NA ymin/ymax has correct draw order", {
   )
 
   vdiffr::expect_doppelganger("geom_lineribbon with NAs in ymin / ymax",
-    df %>%
+    df |>
       ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
@@ -278,7 +278,7 @@ test_that("stat_lineribbon draw order works", {
     y = c(1:10, 10:1),
     sd = rep(c(1, 2), each = 10),
     g = rep(c("a","b"), each = 10)
-  ) %>%
+  ) |>
     ggplot(aes(x = x, ydist = dist_normal(y, sd), fill = g, fill_ramp = after_stat(level))) +
     guides(fill_ramp = guide_legend(order = 1), fill = guide_legend(order = 2))
 
@@ -302,7 +302,7 @@ test_that("geom_lineribbon draw order works with infinite values", {
     lower = c(0:4, c(0.5, 1.5, -Inf, 3.5, 4.5)),
     upper = c(2:6, 2:6 - 0.5),
     .width = rep(c(0.75, 0.5), each = 5)
-  ) %>%
+  ) |>
     ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
     geom_lineribbon()
 

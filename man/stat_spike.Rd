@@ -415,7 +415,7 @@ df = tibble(
 )
 
 # annotate the density at the mode of a distribution
-df \%>\%
+df |>
   ggplot(aes(y = g, xdist = d)) +
   stat_slab(aes(xdist = d)) +
   stat_spike(at = "Mode") +
@@ -425,7 +425,7 @@ df \%>\%
 # annotate the endpoints of intervals of a distribution
 # here we'll use an arrow instead of a point by setting size = 0
 arrow_spec = arrow(angle = 45, type = "closed", length = unit(4, "pt"))
-df \%>\%
+df |>
   ggplot(aes(y = g, xdist = d)) +
   stat_halfeye(point_interval = mode_hdci) +
   stat_spike(
@@ -436,7 +436,7 @@ df \%>\%
 
 # annotate quantiles of a sample
 set.seed(1234)
-data.frame(x = rnorm(1000, 1:2), g = c("a","b")) \%>\%
+data.frame(x = rnorm(1000, 1:2), g = c("a","b")) |>
   ggplot(aes(x, g)) +
   stat_slab() +
   stat_spike(at = function(x) quantile(x, ppoints(10))) +

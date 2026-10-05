@@ -26,6 +26,30 @@ authors:
     href: https://www.mjskay.com
 
 
+articles:
+- title: Geom families
+  navbar: Geom families
+  contents:
+  - dotsinterval
+  - slabinterval
+  - lineribbon
+
+- title: Scales
+  navbar: Scales
+  contents:
+  - thickness
+
+- title: Uncertainty visualization
+  navbar: Uncertainty visualization
+  contents:
+  - freq-uncertainty-vis
+
+- title: Benchmarks
+  navbar: Benchmarks
+  contents:
+  - starts_with("articles/benchmarks")
+
+
 reference:
 - title: "Package overview"
   contents:

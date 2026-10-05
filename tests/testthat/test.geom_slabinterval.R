@@ -50,7 +50,7 @@ test_that("geom_slab works", {
   p = tibble(
     x = seq(-4,4, length.out = 20),
     d = dnorm(x)
-  ) %>%
+  ) |>
     ggplot(aes(thickness = d))
 
   vdiffr::expect_doppelganger("geom_slab one group",
@@ -78,7 +78,7 @@ test_that("normalize works", {
     2,  "A",  1, "norm",    0,       2,
     2,  "A",  2, "norm",    0,       2,
     1,  "B",  2, "norm",    8,       2
-  ) %>%
+  ) |>
     ggplot(aes(y = y, dist = dist, arg1 = mu, arg2 = sigma, fill = id)) +
     facet_grid(~p)
 
@@ -107,7 +107,7 @@ test_that("alpha channel in fill colors works", {
 
 
   vdiffr::expect_doppelganger("alpha channel in slab fill",
-    tibble(x = c(0,1), y = "a", d = c(1,2)) %>%
+    tibble(x = c(0,1), y = "a", d = c(1,2)) |>
       ggplot(aes(x = x, y = y, thickness = d)) +
       geom_slab(fill = scales::alpha("black", 0.2))
   )
@@ -127,7 +127,7 @@ test_that("side and justification can vary", {
   )
 
   vdiffr::expect_doppelganger("varying side",
-    df %>%
+    df |>
       ggplot(aes(x = x, y = g, color = g, thickness = y,
         side = g,
         scale = ifelse(g == "a", 0.5, 0.25)
@@ -137,7 +137,7 @@ test_that("side and justification can vary", {
   )
 
   vdiffr::expect_doppelganger("varying side and just",
-    df %>%
+    df |>
       ggplot(aes(x = x, y = g, thickness = y,
         side = ifelse(g == "a", "top", "bottom"),
         justification = as.numeric(g == "a"),
@@ -148,7 +148,7 @@ test_that("side and justification can vary", {
 
   expect_error(
     ggplotGrob(
-      df %>%
+      df |>
         ggplot(aes(
           x = x, y = g, thickness = y, group = g,
           side = ifelse(x < 5, "top", "bottom")
@@ -160,7 +160,7 @@ test_that("side and justification can vary", {
 
   expect_error(
     ggplotGrob(
-      df %>%
+      df |>
         ggplot(aes(
           x = x, y = g, thickness = y, group = g,
           justification = ifelse(x < 5, 0.5, 1)
@@ -172,7 +172,7 @@ test_that("side and justification can vary", {
 
   expect_error(
     ggplotGrob(
-      df %>%
+      df |>
         ggplot(aes(
           x = x, y = g, thickness = y, group = g,
           scale = ifelse(x < 5, 0.5, 0.25)
@@ -193,7 +193,7 @@ test_that("define_orientation_variables fails on incorrect orientation", {
 })
 
 test_that("incorrect side, orientation are caught", {
-  p = data.frame(x = 1) %>%
+  p = data.frame(x = 1) |>
     ggplot(aes(x = x, y = x, thickness = x))
 
   expect_error(
@@ -234,7 +234,7 @@ test_that("geoms without interval data are valid", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("slabinterval without interval data", {
-    data.frame(x = 1:2) %>%
+    data.frame(x = 1:2) |>
       ggplot(aes(x = x, xmin = x,xmax = x, datatype = "slab", thickness = x)) +
       geom_slabinterval()
   })
@@ -250,7 +250,7 @@ test_that("NAs in thickness produce gaps", {
     rbind(
       tibble(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6),
       tibble(y = "blank", t = NA, x = 0:6)
-    ) %>%
+    ) |>
       ggplot(aes(x, y, thickness = t)) +
       geom_slab(color = "black")
   })
@@ -261,7 +261,7 @@ test_that("NAs in thickness produce gaps", {
       y = "gaps",
       t = c(NA, 1:2, NA, 2:1, NA),
       x = 0:6
-    ) %>%
+    ) |>
       ggplot(aes(x, y, thickness = t)) +
       geom_slab(color = "black", side = "both")
   })
@@ -299,7 +299,7 @@ test_that("NA width works", {
         f = c(0,1,0,0,Inf,0),
         g = rep(c("a","b"), each = 3),
         w = rep(c(1, NA), each = 3)
-      ) %>% ggplot(aes(x = g, y = y, thickness = f, width = w)) +
+      ) |> ggplot(aes(x = g, y = y, thickness = f, width = w)) +
         geom_slab(color = "red")
     ),
     "Removed 3 rows"

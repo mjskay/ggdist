@@ -31,7 +31,7 @@
 #' data.frame(
 #'   x = rnorm(400, c(1,4)),
 #'   g = c("a","b")
-#' ) %>%
+#' ) |>
 #'   ggplot(aes(x, fill = g, side = g)) +
 #'   geom_weave(linewidth = 0, scale = 0.5) +
 #'   scale_side_mirrored()

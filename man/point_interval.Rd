@@ -277,37 +277,37 @@ library(ggplot2)
 
 set.seed(123)
 
-rnorm(1000) \%>\%
+rnorm(1000) |>
   median_qi()
 
-data.frame(x = rnorm(1000)) \%>\%
+data.frame(x = rnorm(1000)) |>
   median_qi(x, .width = c(.50, .80, .95))
 
 data.frame(
     x = rnorm(1000),
     y = rnorm(1000, mean = 2, sd = 2)
-  ) \%>\%
+  ) |>
   median_qi(x, y)
 
 data.frame(
     x = rnorm(1000),
     group = "a"
-  ) \%>\%
+  ) |>
   rbind(data.frame(
     x = rnorm(1000, mean = 2, sd = 2),
     group = "b")
-  ) \%>\%
-  group_by(group) \%>\%
+  ) |>
+  group_by(group) |>
   median_qi(.width = c(.50, .80, .95))
 
 multimodal_draws = data.frame(
     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
   )
 
-multimodal_draws \%>\%
+multimodal_draws |>
   mode_hdi(.width = c(.66, .95))
 
-multimodal_draws \%>\%
+multimodal_draws |>
   ggplot(aes(x = x, y = 0)) +
   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 

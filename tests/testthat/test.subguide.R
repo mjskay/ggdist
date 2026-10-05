@@ -19,7 +19,7 @@ test_that("slab subguide works with dodging", {
     stringsAsFactors = FALSE
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(ydist = x, x = group, fill = subgroup)) +
     scale_y_continuous(expand = expansion(add = 1)) +
     scale_x_discrete(position = "top")
@@ -43,11 +43,11 @@ test_that("slab subguide positioning works", {
 
   df = data.frame(x = dist_normal(0,1))
 
-  p = df %>%
+  p = df |>
     ggplot(aes(xdist = x)) +
     scale_x_continuous(expand = expansion(add = 1))
 
-  p_vert = df %>%
+  p_vert = df |>
     ggplot(aes(ydist = x)) +
     scale_y_continuous(expand = expansion(add = 1))
 
@@ -123,7 +123,7 @@ test_that("slab subguide works with side and justification", {
 
   df = data.frame(x = dist_normal(0,1))
 
-  p = df %>%
+  p = df |>
     ggplot(aes(xdist = x)) +
     scale_x_continuous(expand = expansion(add = 1))
 
@@ -135,7 +135,7 @@ test_that("slab subguide works with side and justification", {
       stat_slabinterval(aes(y = "3 top"), subguide = sg, side = "top", n = 5)
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(ydist = x)) +
     scale_y_continuous(expand = expansion(add = 1))
 
@@ -170,7 +170,7 @@ test_that("dots subguide works with dodging", {
     subgroup = c("d", "e", "d")
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(xdist = x, y = group, fill = subgroup)) +
     scale_x_continuous(expand = expansion(add = 0.25))
 
@@ -193,7 +193,7 @@ test_that("dots subguide works with side and justification", {
 
   df = data.frame(x = dist_exponential(1))
 
-  p = df %>%
+  p = df |>
     ggplot(aes(xdist = x)) +
     scale_x_continuous(expand = expansion(add = 0.3))
 
@@ -206,7 +206,7 @@ test_that("dots subguide works with side and justification", {
       geom_hline(yintercept = c(0.1, 1.55, 2.45, 3.9), alpha = 0.25)
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(ydist = x)) +
     scale_y_continuous(expand = expansion(add = 0.5))
 
@@ -246,7 +246,7 @@ test_that("integer subguide corner cases work", {
   sg = subguide_integer(theme = theme_test())
 
   vdiffr::expect_doppelganger("integer subguide with small range",
-    df %>%
+    df |>
       ggplot(aes(x = x, thickness = t, y = 0)) +
       geom_slab(subguide = sg, color = "black")
   )
@@ -255,7 +255,7 @@ test_that("integer subguide corner cases work", {
   df = data.frame(x = c(1, 2), t = c(0, 0))
 
   vdiffr::expect_doppelganger("integer subguide with zero range",
-    df %>%
+    df |>
       ggplot(aes(x = x, thickness = t, y = 0)) +
       geom_slab(subguide = sg, color = "black")
   )

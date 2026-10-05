@@ -2,7 +2,7 @@
 title: "Thickness scale"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
@@ -12,20 +12,20 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
+
 ```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
-  
-This vignette describes the `thickness` scale / aesthetic used by the slab+interval 
-family of geoms and stats in `ggdist` (see `vignette("slabinterval")` for more on 
-that family). 
+
+This vignette describes the `thickness` scale / aesthetic used by the slab+interval
+family of geoms and stats in `ggdist` (see `vignette("slabinterval")` for more on
+that family).
 
 ## Setup
-  
+
 The following libraries are required to run this vignette:
-  
+
 ```{r setup, message = FALSE, warning = FALSE}
 library(ggplot2)
 library(dplyr)
@@ -42,13 +42,13 @@ theme_set(theme_ggdist())
 ## The `thickness` scale
 
 The `thickness` scale is a positional subscale used by `geom_slabinterval()`
-to construct *slabs*, which are ribbon-like geometries with a fixed baseline and a 
-height determined by the `thickness` aesthetic. The `thickness` scale is most 
+to construct *slabs*, which are ribbon-like geometries with a fixed baseline and a
+height determined by the `thickness` aesthetic. The `thickness` scale is most
 typically used via `stat_slabinterval()` and its derivative stats, which allow you
 to map distribution functions (like densities or CDFs) onto the `thickness` aesthetic.
 
 `thickness` exists as a scale separate from the typical `x` and `y` aesthetics
-(or even `width`/`height`, `xmin`/`xmax`, or `ymin`/`ymax`) so that it is easy to plot multiple 
+(or even `width`/`height`, `xmin`/`xmax`, or `ymin`/`ymax`) so that it is easy to plot multiple
 slabs on the same plot, each with its own separate `thickness` subscale.
 For example:
 
@@ -62,10 +62,10 @@ df = tibble(
   name  = rep(c(1,    2, "3a","3b",  4,   5),  each = 4)
 )
 
-df_group = df %>%
+df_group = df |>
   summarise(x = mean(x), .by = c(name, group, panel, y))
 
-df %>%
+df |>
   ggplot(aes(x = x, y = y, fill = group, thickness = h)) +
   geom_slab(color = "gray25", alpha = 0.75) +
   scale_y_discrete(expand = expansion(add = 0.1)) +
@@ -98,7 +98,7 @@ increasingly more specific sets within which to scale the slabs:
 - `"groups"` scales according to the maximum within each **group** within each **x/y position** within each **panel**.
 
 The **x/y position** referred to above is the unique *x* **or** *y* position of the slab on its
-off-axis. For example, this would be the unique *y* positions in the above chart (`"a"` or `"b"`), 
+off-axis. For example, this would be the unique *y* positions in the above chart (`"a"` or `"b"`),
 because the chart is drawn with a horizontal `orientation`.
 
 ### `normalize = "all"`
@@ -119,7 +119,7 @@ subguide_orangered = subguide_outside(
 )
 
 plot_slabs_with_scales = function(..., subguide = subguide_orangered) {
-  df %>%
+  df |>
     ggplot(aes(x = x, y = y, fill = group)) +
     geom_hline(yintercept = c(1,1.9, 2,2.9), color = "orangered", linetype = "11", linewidth = 0.5) +
     geom_slab(
@@ -157,7 +157,7 @@ plot_slabs_with_scales(normalize = "all") +
 
 Notice how the minimum and maximum value on each `thickness` subscale is the
 same: it is the maximum thickness value over all slabs; i.e. the height
-of the tallest slab in the data. This is a conservative default setting that 
+of the tallest slab in the data. This is a conservative default setting that
 ensures all slabs in the same geometry are scaled together.
 
 ### `normalize = "panels"`
@@ -204,11 +204,11 @@ each *y* position within each panel. Thus:
 
 ### `normalize = "groups"`
 
-Finally, it can be useful to scale all slabs according to their maximum height. 
-You can do this using `normalize = "groups"`. 
+Finally, it can be useful to scale all slabs according to their maximum height.
+You can do this using `normalize = "groups"`.
 
-Notably, if you have multiple groups at the same x/y position, you cannot 
-combine `normalize = "groups"` with any thickness subguide except `"none"`, 
+Notably, if you have multiple groups at the same x/y position, you cannot
+combine `normalize = "groups"` with any thickness subguide except `"none"`,
 because the thickness subguides on each y value will not be unique. Hence
 this error:
 
@@ -229,7 +229,7 @@ plot_slabs_with_scales(normalize = "groups", subguide = "none") +
 Notice how all groups are scaled to have their maximum height at the maximum
 thickness value; thus, slab `1` and slab `3b` are no longer the same height.
 
-Why is slab `3b` not scaled to touch the maximum `thickness`? `geom_slab()` 
+Why is slab `3b` not scaled to touch the maximum `thickness`? `geom_slab()`
 technically only considers values in different groups to be in different slabs,
 so slab `3a` and `3b` are actually parts of the same slab, as indicated by the
 unbroken outline they are drawn with.
@@ -249,7 +249,7 @@ df_prior_post = data.frame(
   posterior = dist_normal(0.1, 0.3)
 )
 
-prior_post_plot = df_prior_post %>%
+prior_post_plot = df_prior_post |>
   ggplot() +
   stat_slab(
     aes(xdist = posterior),
@@ -284,22 +284,22 @@ prior_post_plot +
 ```
 
 `scaled_thickness_shared()` works by scaling values and then tagging them with
-a special `thickness()` datatype. That type carries information about the 
-original scale limits (used to draw subguides), and also tells the slab 
-geometries that they should not do any further normalization. Thus, when you 
+a special `thickness()` datatype. That type carries information about the
+original scale limits (used to draw subguides), and also tells the slab
+geometries that they should not do any further normalization. Thus, when you
 use `scale_thickness_shared()`, the `normalize` parameter on each slab geometry
 is ignored.
 
 ## Spacing slabs with `height` and `scale`
 
-The `thickness` aesthetic is drawn within a subset of the bounding box of 
+The `thickness` aesthetic is drawn within a subset of the bounding box of
 `geom_slab()` determined by the `scale` aesthetic, which defaults to `0.9`:
 
 ```{r default_height_scale}
 cap = arrow(angle = 90, length = unit(5, "pt"), ends = "both")
 
 scale_plot = function(scale = 0.9) {
-  tibble(d = dist_normal(c(4,5)), y = c("a","b")) %>%
+  tibble(d = dist_normal(c(4,5)), y = c("a","b")) |>
     ggplot(aes(xdist = d, y = y)) +
     geom_hline(
       yintercept = c(1, 1 + scale, 2, 2 + scale),
@@ -347,7 +347,7 @@ scale_plot(scale = 0.65) +
 ### Spacing dodged slabs
 
 `height` and `scale` are particularly useful when combined with dodging, as modifying `height`
-allows you to change the spacing **between** sets of slabs with the same y value, 
+allows you to change the spacing **between** sets of slabs with the same y value,
 and modifying `scale` allows you to change the spacing **within** sets:
 
 ```{r default_dodge, fig.width = 7, fig.height = 7}
@@ -357,7 +357,7 @@ dodged_scale_plot = function(height = 1, scale = 0.9, add = 0) {
     d = dist_normal(c(4,5,4,5)),
     y = c("a","a","b","b"),
     group = c("d","e","d","e")
-  ) %>%
+  ) |>
     ggplot(aes(xdist = d, y = y, fill = group)) +
     geom_hline(yintercept = c(1,2) + height/2, color = "gray85") +
     geom_hline(
@@ -429,14 +429,14 @@ dodged_scale_plot(height = 0.8, scale = 0.65, add = 0.6) +
 
 ### Ridgeline plots with `height > 1`
 
-Finally, `height` can also be greater than `1`, which can be used to create 
+Finally, `height` can also be greater than `1`, which can be used to create
 overlapping slabs, as in so-called ridgeline plots:
 
 ```{r ridgeline}
 data.frame(
   d = dist_normal(10:1/4, 1 + 10:1/15),
   y = letters[1:10]
-) %>%
+) |>
   ggplot(aes(xdist = d, y = y)) +
   stat_slab(height = 3, color = "gray25") +
   labs(

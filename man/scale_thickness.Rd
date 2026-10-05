@@ -201,7 +201,7 @@ prior_post = data.frame(
 # distributions plotted using two separate geoms will not have their slab
 # functions drawn on the same scale (thus here, the two distributions have
 # different areas under their density curves):
-prior_post \%>\%
+prior_post |>
   ggplot() +
   stat_halfeye(aes(xdist = posterior)) +
   stat_slab(aes(xdist = prior), fill = NA, color = "red")
@@ -209,7 +209,7 @@ prior_post \%>\%
 # For this kind of prior/posterior chart, it makes more sense to have the
 # densities on the same scale; thus, the areas under both would be the same.
 # We can do that using scale_thickness_shared():
-prior_post \%>\%
+prior_post |>
   ggplot() +
   stat_halfeye(aes(xdist = posterior)) +
   stat_slab(aes(xdist = prior), fill = NA, color = "#e41a1c") +

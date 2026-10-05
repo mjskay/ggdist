@@ -491,11 +491,11 @@ df = tibble(
 # orientation is detected automatically based on
 # which axis is discrete
 
-df \%>\%
+df |>
   ggplot(aes(x = value, y = g)) +
   geom_swarm()
 
-df \%>\%
+df |>
   ggplot(aes(y = value, x = g)) +
   geom_swarm()
 }

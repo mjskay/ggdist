@@ -11,8 +11,8 @@ library(dplyr)
 test_that("ggmcmc translators work", {
   data("RankCorr_u_tau", package = "ggdist")
 
-  orig = RankCorr_u_tau %>%
-    dplyr::rename(.variable = i, .value = u_tau) %>%
+  orig = RankCorr_u_tau |>
+    dplyr::rename(.variable = i, .value = u_tau) |>
     group_by(.variable)
 
   result = to_ggmcmc_names(orig)
@@ -25,10 +25,10 @@ test_that("ggmcmc translators work", {
 test_that("broom translators work", {
   data("RankCorr_u_tau", package = "ggdist")
 
-  orig = RankCorr_u_tau %>%
-    dplyr::rename(.variable = i, .value = u_tau) %>%
-    group_by(.variable) %>%
-    median_qi(.value) %>%
+  orig = RankCorr_u_tau |>
+    dplyr::rename(.variable = i, .value = u_tau) |>
+    group_by(.variable) |>
+    median_qi(.value) |>
     group_by(.variable)
 
   result = to_broom_names(orig)

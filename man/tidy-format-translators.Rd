@@ -56,14 +56,14 @@ library(dplyr)
 
 data(RankCorr_u_tau, package = "ggdist")
 
-df = RankCorr_u_tau \%>\%
-  dplyr::rename(.variable = i, .value = u_tau) \%>\%
-  group_by(.variable) \%>\%
+df = RankCorr_u_tau |>
+  dplyr::rename(.variable = i, .value = u_tau) |>
+  group_by(.variable) |>
   median_qi(.value)
 
 df
 
-df \%>\%
+df |>
   to_broom_names()
 
 }

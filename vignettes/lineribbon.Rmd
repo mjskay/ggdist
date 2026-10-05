@@ -2,7 +2,7 @@
 title: "Lineribbon stats and geoms"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
@@ -12,21 +12,21 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
+
 ```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
-  
+
 The following vignette describes the `geom_lineribbon()` family of stats and geoms in `ggdist`, a family of stats and geoms
 for creating line+ribbon plots: for example, plots with a fit line and one or more uncertainty bands. This vignette also
 describes the `curve_interval()` function for calculating curvewise (joint) intervals for lineribbon plots.
 
 
 ## Setup
-  
+
 The following libraries are required to run this vignette:
-  
+
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
@@ -61,7 +61,7 @@ All lineribbon geoms can be plotted horizontally or vertically. Depending on how
 The base lineribbon geometry can only be applied to already-summarized data: data frames where
 each row contains a point and the upper and lower bounds of an interval. For the purposes of
 this example, we will first look at how to generate such a data frame from a data frame
-of sample data; such data could include Bayesian posterior 
+of sample data; such data could include Bayesian posterior
 distributions (for examples of this usage, see vignettes in [tidybayes](https://mjskay.github.io/tidybayes/)) or
 bootstrap sampling distributions. For the simple example here, we'll just generate a distribution of lines
 manually:
@@ -76,7 +76,7 @@ df = tibble(
   slope = rnorm(n, 1, 0.25),
   x = list(-4:5),
   y = Map(function(x, y) x + y * -4:5, intercept, slope)
-) %>%
+) |>
   unnest(c(x, y))
 ```
 
@@ -84,8 +84,8 @@ df = tibble(
 of 5000 lines. Here is a subsample of 100 of the lines:
 
 ```{r spaghetti, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  filter(.draw %in% 1:100) %>%
+df |>
+  filter(.draw %in% 1:100) |>
   ggplot(aes(x = x, y = y, group = .draw)) +
   geom_line(alpha = 0.25)
 ```
@@ -93,17 +93,17 @@ df %>%
 We can summarize the data frame at each x position using `median_qi()` (or any other function in the `point_interval()` family):
 
 ```{r summarized_df}
-df %>%
-  group_by(x) %>%
+df |>
+  group_by(x) |>
   median_qi(y)
 ```
 
 Given data summarized like that above, we can then construct a line+ribbon chart using `geom_lineribbon()`:
 
 ```{r one_ribbon, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  group_by(x) %>%
-  median_qi(y) %>%
+df |>
+  group_by(x) |>
+  median_qi(y) |>
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
   geom_lineribbon(fill = "gray65")
 ```
@@ -120,9 +120,9 @@ quite dark with just one color. Let's make two changes to improve the chart:
 The result looks like this:
 
 ```{r geom_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  group_by(x) %>%
-  median_qi(y, .width = c(.50, .80, .95)) %>%
+df |>
+  group_by(x) |>
+  median_qi(y, .width = c(.50, .80, .95)) |>
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
   geom_lineribbon() +
   scale_fill_brewer()
@@ -138,13 +138,13 @@ the aesthetic mappings onto `ymin` and `ymax`, which are automatically set by `s
 simplifies the previous example considerably:
 
 ```{r stat_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
+df |>
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon() +
   scale_fill_brewer()
 ```
 
-The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above. 
+The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above.
 We can change this to get other sets of any number of intervals (e.g., `c(.66, .95)`, `c(.80, .95, .99)`, etc).
 
 ### Lineribbon "gradients"
@@ -160,7 +160,7 @@ a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete on
 (e.g. `scale_fill_brewer()`):
 
 ```{r stat_lineribbon_gradient, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
+df |>
   ggplot(aes(x = x, y = y, fill = after_stat(.width))) +
   stat_lineribbon(.width = ppoints(50)) +
   scale_fill_distiller() +
@@ -178,7 +178,7 @@ legend, use `guide_rampbar()`, and if necessary, use the `to = ` argument to
 specify the color to ramp to in the legend (default is `"gray65"`):
 
 ```{r stat_lineribbon_gradient_rampbar, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
+df |>
   ggplot(aes(x = x, y = y, fill_ramp = after_stat(.width))) +
   stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
   scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5")) +
@@ -196,10 +196,10 @@ to be proportional to the *density*.
 ### Lineribbon density gradients
 
 Making the fill proportional to density is a bit more complicated to achieve,
-but can be approximated using an **experimental** feature in the latest version 
-of ggdist. This feature exposes density and CDF information to interval 
+but can be approximated using an **experimental** feature in the latest version
+of ggdist. This feature exposes density and CDF information to interval
 sub-geometries. As this feature is fragile and not fully supported across all
-scenarios of use, it must be enabled by setting 
+scenarios of use, it must be enabled by setting
 `options(ggdist.experimental.slab_data_in_intervals = TRUE)`.
 
 Internally, with this feature enabled,
@@ -213,7 +213,7 @@ within groups of the second:
 
 ```{r stat_lineribbon_density, fig.width = tiny_width, fig.height = tiny_height}
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
-  df %>%
+  df |>
     ggplot(aes(x = x, y = y, fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
     scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
@@ -230,16 +230,16 @@ steps in probability space (i.e. the CDF), which are not even steps in terms of
 *density*. It is not strictly necessary to fix for the correctness of the color,
 but is more visually appealing without the jumpiness.
 
-We can pick some steps that are more likely to be even in density space using 
+We can pick some steps that are more likely to be even in density space using
 evenly-spaced *z* values and translating them into probability levels using `pnorm()`.
 It does not matter if our target distribution is non-Normal, since the actual
 densities are still set using `pdf_min` and `pdf_max` (so colors will still be
-correct), but the closer the distribution is to Normal the less jumpy-looking 
+correct), but the closer the distribution is to Normal the less jumpy-looking
 the gradient will be.
 
 ```{r stat_lineribbon_density_smooth, fig.width = tiny_width, fig.height = tiny_height}
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
-  df %>%
+  df |>
     ggplot(aes(x = x, y = y, fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
     scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
@@ -270,7 +270,7 @@ df_2groups = rbind(
 The naive approach to plotting will make the lines hard to distinguish:
 
 ```{r stat_lineribbon_2groups_brewer, fig.width = tiny_width, fig.height = tiny_height}
-df_2groups %>%
+df_2groups |>
   ggplot(aes(x = x, y = y, color = g)) +
   stat_lineribbon() +
   scale_fill_brewer()
@@ -279,7 +279,7 @@ df_2groups %>%
 Instead, we could change the fill color and allow the lines the be semi-transparent:
 
 ```{r stat_lineribbon_2groups_alpha, fig.width = tiny_width, fig.height = tiny_height}
-df_2groups %>%
+df_2groups |>
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(alpha = 1/4) +
   labs(title = "stat_lineribbon(aes(fill = g), alpha = 1/4)")
@@ -290,28 +290,28 @@ effect (see `help("scale_fill_ramp")`), though this tends to work best when
 the lines do not overlap:
 
 ```{r stat_lineribbon_2groups_ramp, fig.width = tiny_width, fig.height = tiny_height}
-df_2groups %>%
+df_2groups |>
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(aes(fill_ramp = after_stat(level))) +
   labs(title = "stat_lineribbon(aes(fill = g, fill_ramp = after_stat(level)))")
 ```
 
-One way to avoid problems created by overlapping ribbons (besides using `alpha`, 
-as above) is to use commutative blending modes available in R > 4.2. The 
+One way to avoid problems created by overlapping ribbons (besides using `alpha`,
+as above) is to use commutative blending modes available in R > 4.2. The
 [ggblend](https://mjskay.github.io/ggblend/) package enables support for such
-blending modes, and its documentation includes examples of their use with 
+blending modes, and its documentation includes examples of their use with
 `stat_lineribbon()`.
 
 In some situations, you may also try controlling the draw order of ribbons directly,
-by adjusting the `order` aesthetic. By default, if the `order` aesthetic is not 
+by adjusting the `order` aesthetic. By default, if the `order` aesthetic is not
 specified, `geom_lineribbon()` draws ribbons that are widest on average at the
 bottom. `stat_lineribbon()`, by default, is a bit smarter, and sets the `order`
-aesthetic to `after_stat(level)`, using the `level` computed variable to draw 
+aesthetic to `after_stat(level)`, using the `level` computed variable to draw
 ribbons in order of their confidence / probability mass. An alternative might
 be to draw all ribbons from the same group on top of each other, like so:
 
 ```{r stat_lineribbon_2groups_group_order, fig.width = tiny_width, fig.height = tiny_height}
-df_2groups %>%
+df_2groups |>
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(aes(
     fill_ramp = after_stat(level),
@@ -339,7 +339,7 @@ analytical_df
 We can visualize this conditional distribution using `stat_lineribbon()` with `distributional::dist_normal()`:
 
 ```{r stat_lineribbon_dist, fig.width = tiny_width, fig.height = tiny_height}
-analytical_df %>%
+analytical_df |>
   ggplot(aes(x = x, ydist = dist_normal(y_mean, y_sd))) +
   stat_lineribbon() +
   scale_fill_brewer()
@@ -347,7 +347,7 @@ analytical_df %>%
 
 ## More examples
 
-For more examples of lineribbons, including multiple lineribbons in the same plot, 
+For more examples of lineribbons, including multiple lineribbons in the same plot,
 see the examples at the end of `vignette("freq-uncertainty-vis")`.
 
 ## Curve boxplots (aka lineribbons with joint intervals or curvewise intervals)
@@ -366,11 +366,11 @@ df = tibble(
   .draw = 1:k,
   mean = seq(-5, 5, length.out = k),
   x = list(seq(-15, 15, length.out = n))
-) %>%
-  unnest(x) %>%
+) |>
+  unnest(x) |>
   mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
 
-df %>%
+df |>
   ggplot(aes(x = x, y = y)) +
   geom_line(aes(group = .draw), alpha = 0.2)
 ```
@@ -378,9 +378,9 @@ df %>%
 If one used one of the `point_interval()` functions to summarize this curve (such as `median_qi()`, `mean_qi()`, etc), it would calculate *pointwise* intervals:
 
 ```{r pointwise_ribbon, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  group_by(x) %>%
-  median_qi(y, .width = .5) %>%
+df |>
+  group_by(x) |>
+  median_qi(y, .width = .5) |>
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha = 0.15, data = df) +
@@ -395,9 +395,9 @@ Depending on what type of inference we care about, this might be sufficient for 
 One solution I like for such situations is to show spaghetti plots: just plot the underlying curves. This is a so-called *frequency framing* uncertainty visualization, and it tends to work fairly well. However, in some cases you may want a visual summary using intervals, in which case curvewise intervals could help. Using `curve_interval()` instead of `point_interval()` or `median_qi()` calculates these:
 
 ```{r curvewise_ribbon, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("posterior", quietly = TRUE)}
-df %>%
-  group_by(x) %>%
-  curve_interval(y, .width = .5) %>%
+df |>
+  group_by(x) |>
+  curve_interval(y, .width = .5) |>
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha = 0.15, data = df) +
@@ -417,22 +417,22 @@ large_df = tibble(
   .draw = 1:k,
   mean = seq(-5,5, length.out = k),
   x = list(seq(-15,15,length.out = n))
-) %>%
-  unnest(x) %>%
+) |>
+  unnest(x) |>
   mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
 
-pointwise_plot = large_df %>%
-  group_by(x) %>%
-  median_qi(y, .width = c(.5, .8, .95)) %>%
+pointwise_plot = large_df |>
+  group_by(x) |>
+  median_qi(y, .width = c(.5, .8, .95)) |>
   ggplot(aes(x = x, y = y)) +
   geom_hline(yintercept = 1, color = "gray75", linetype = "dashed") +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   scale_fill_brewer() +
   ggtitle("point_interval()")
 
-curvewise_plot = large_df %>%
-  group_by(x) %>%
-  curve_interval(y, .width = c(.5, .8, .95)) %>%
+curvewise_plot = large_df |>
+  group_by(x) |>
+  curve_interval(y, .width = c(.5, .8, .95)) |>
   ggplot(aes(x = x, y = y)) +
   geom_hline(yintercept = 1, color = "gray75", linetype = "dashed") +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
@@ -446,9 +446,9 @@ Notice how the pointwise intervals miss out on the peaks of this distribution of
 
 ### Limitations of curvewise intervals
 
-One challenge with curvewise intervals is that they can tend to be very conservative, 
+One challenge with curvewise intervals is that they can tend to be very conservative,
 especially at moderate-to-large intervals widths. Let's bootstrap some LOESS fits
-to horsepower versus MPG in the `mtcars` dataset: 
+to horsepower versus MPG in the `mtcars` dataset:
 
 ```{r mtcars_boot}
 set.seed(1234)
@@ -466,8 +466,8 @@ mtcars_boot = tibble(
   )),
   hp = lapply(m, predict, newdata = tibble(mpg)),
   mpg = list(mpg)
-) %>%
-  select(-m) %>%
+) |>
+  select(-m) |>
   unnest(c(hp, mpg))
 ```
 
@@ -477,8 +477,8 @@ problems of some kinds of problems we might get with joint intervals. Let's
 look at a spaghetti plot of just 400 draws from this bootstrap distribution first:
 
 ```{r mtcars_spaghetti, fig.width = tiny_width, fig.height = tiny_height}
-mtcars_boot %>%
-  filter(.draw < 400) %>%
+mtcars_boot |>
+  filter(.draw < 400) |>
   ggplot(aes(x = mpg, y = hp)) +
   geom_line(aes(group = .draw), alpha = 1/10) +
   geom_point(data = mtcars) +
@@ -488,7 +488,7 @@ mtcars_boot %>%
 Now, pointwise intervals:
 
 ```{r mtcars_point_interval, fig.width = tiny_width, fig.height = tiny_height}
-mtcars_boot %>%
+mtcars_boot |>
   ggplot(aes(x = mpg, y = hp)) +
   stat_lineribbon(.width = c(.5, .7, .9)) +
   geom_point(data = mtcars) +
@@ -499,9 +499,9 @@ mtcars_boot %>%
 Finally, curvewise intervals:
 
 ```{r mtcars_curve_interval, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("posterior", quietly = TRUE)}
-mtcars_boot %>%
-  group_by(mpg) %>%
-  curve_interval(hp, .width = c(.5, .7, .9)) %>%
+mtcars_boot |>
+  group_by(mpg) |>
+  curve_interval(hp, .width = c(.5, .7, .9)) |>
   ggplot(aes(x = mpg, y = hp)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_point(data = mtcars) +
@@ -510,16 +510,16 @@ mtcars_boot %>%
 ```
 
 Notice how noisy the curvewise intervals are. In addition, because a number of
-curves tend to start low and end high (or vice versa), above 50%, the bands 
+curves tend to start low and end high (or vice versa), above 50%, the bands
 rapidly expand to cover almost all of the curves in the sample, regardless of
-coverage level. You can try different methods to sometimes get improved 
-bands; e.g. using the `"bd-mbd"` method per Sun and Genton 
+coverage level. You can try different methods to sometimes get improved
+bands; e.g. using the `"bd-mbd"` method per Sun and Genton
 ([2011](https://doi.org/10.1198/jcgs.2011.09224)) works better on this dataset:
 
 ```{r mtcars_curve_interval_bd, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("fda", quietly = TRUE) && requireNamespace("posterior", quietly = TRUE)}
-mtcars_boot %>%
-  group_by(mpg) %>%
-  curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") %>%
+mtcars_boot |>
+  group_by(mpg) |>
+  curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") |>
   ggplot(aes(x = mpg, y = hp)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_point(data = mtcars) +
@@ -527,10 +527,10 @@ mtcars_boot %>%
   coord_cartesian(ylim = c(0, 400))
 ```
 
-In general I have found that there is no one method that consistently works 
+In general I have found that there is no one method that consistently works
 well on all datasets. No matter the method, intervals often become problematic
 above 50%, hence the default `.width` for `curve_interval()` is `0.5` (unlike
-the default for `point_interval()`, which is `0.95`). In any case, caution 
+the default for `point_interval()`, which is `0.95`). In any case, caution
 when using these intervals is advised.
 
 

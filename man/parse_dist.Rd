@@ -152,7 +152,7 @@ parse_dist(c("normal(0,1)", "student_t(3,0,1)"))
 
 # ... or on columns of a data frame, where it adds the
 # parsed specs back on as columns
-data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) \%>\%
+data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) |>
   parse_dist(prior)
 
 # parse_dist is particularly useful with the output of brms::prior(),

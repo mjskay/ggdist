@@ -77,7 +77,7 @@ theme_set(theme_ggdist())
 expand.grid(
   eta = 1:6,
   K = 2:6
-) \%>\%
+) |>
   ggplot(aes(y = ordered(eta), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
   stat_slab() +
   facet_grid(~ paste0(K, "x", K)) +

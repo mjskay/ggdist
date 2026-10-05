@@ -264,7 +264,7 @@ set.seed(12345)
 tibble(
   x = rep(1:10, 100),
   y = rnorm(1000, x)
-) \%>\%
+) |>
   ggplot(aes(x = x, y = y)) +
   stat_ribbon() +
   scale_fill_brewer()
@@ -275,7 +275,7 @@ tibble(
 tibble(
   x = 1:10,
   sd = seq(1, 3, length.out = 10)
-) \%>\%
+) |>
   ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
   stat_ribbon() +
   scale_fill_brewer()

@@ -498,11 +498,11 @@ df = data.frame(
   se = posterior::mcse_quantile(x, p)
 )
 
-df \%>\%
+df |>
   ggplot(aes(x = q, sd = se)) +
   geom_blur_dots()
 
-df \%>\%
+df |>
   ggplot(aes(x = q, sd = se)) +
   # or blur = blur_interval(.width = .95) to set the interval width
   geom_blur_dots(blur = "interval")

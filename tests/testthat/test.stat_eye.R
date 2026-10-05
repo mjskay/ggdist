@@ -41,7 +41,7 @@ test_that("two-parameter eye plots work", {
 
 
   set.seed(123)
-  df = tibble(x = rnorm(1000), y = "a", y_int = 1) %>%
+  df = tibble(x = rnorm(1000), y = "a", y_int = 1) |>
     rbind(tibble(x = rnorm(1000, 1), y = "b", y_int = 2))
 
   p = ggplot(df, aes(x = x, y = y))
@@ -80,7 +80,7 @@ test_that("dodged eye plots work", {
     x = "a",
     g = "g1",
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     rbind(data.frame(
       y = rnorm(900),
       x = "b",

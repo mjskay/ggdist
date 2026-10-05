@@ -124,7 +124,7 @@ d
 plot(d)
 
 # here we'll use the same data as above with stat_slab():
-data.frame(x) \%>\%
+data.frame(x) |>
   ggplot() +
   stat_slab(
     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),

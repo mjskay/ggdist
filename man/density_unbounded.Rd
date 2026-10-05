@@ -107,7 +107,7 @@ plot(d)
 # or density_unbounded() (which is equivalent to stats::density()). Notice
 # how the bounded density (green) is biased near the boundary of the support,
 # while the unbounded density is not.
-data.frame(x) \%>\%
+data.frame(x) |>
   ggplot() +
   stat_slab(
     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),

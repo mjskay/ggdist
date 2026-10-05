@@ -59,11 +59,11 @@ rd_dotsinterval_shortcut_geom = function(
       # orientation is detected automatically based on
       # which axis is discrete
 
-      df %>%
+      df |>
         ggplot(aes(x = value, y = g)) +
         geom_<<geom_name>>()
 
-      df %>%
+      df |>
         ggplot(aes(y = value, x = g)) +
         geom_<<geom_name>>()
       ')
@@ -131,7 +131,7 @@ rd_dotsinterval_shortcut_stat = function(
       tibble(
         x = rep(1:10, 100),
         y = rnorm(1000, x)
-      ) %>%
+      ) |>
         ggplot(aes(x = x, y = y)) +
         stat_<<stat_name>>()
 
@@ -141,7 +141,7 @@ rd_dotsinterval_shortcut_stat = function(
       tibble(
         x = 1:10,
         sd = seq(1, 3, length.out = 10)
-      ) %>%
+      ) |>
         ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
         stat_<<stat_name>>(quantiles = 50)
       ')

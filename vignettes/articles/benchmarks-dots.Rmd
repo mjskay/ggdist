@@ -1,5 +1,5 @@
 ---
-title: "ggdist benchmarks"
+title: "Dotplot benchmarks"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
 output:
@@ -16,9 +16,9 @@ vignette: >
 ```{r, child="children/chunk_options.txt"}
 ```
 
-## ggdist Benchmarks
+## Introduction
 
-This article describes some benchmarks of ggdist algorithms.
+This article provides benchmarks of some dotplot layout algorithms in ggdist.
 
 ## Setup
 
@@ -41,13 +41,16 @@ theme_set(theme_ggdist())
 
 ## Dotplot layout benchmarks
 
+We will benchmark finding dotplot binwidths using the primary layout algorithms plus the old
+implementation of the swarm algorithm (`layout_oldswarm()`):
+
 ```{r}
 layouts = list(
   bin = layout_bin(),
   weave = layout_weave(),
-  beeswarm = layout_oldswarm(),
   swarm_3 = layout_swarm(strata = 3),
-  swarm_inf = layout_swarm(strata = Inf)
+  swarm_inf = layout_swarm(strata = Inf),
+  beeswarm = layout_oldswarm()
 )
 
 dists = list(
@@ -74,6 +77,7 @@ df = bench::press(
 )
 ```
 
+Results:
 
 ```{r}
 df |>

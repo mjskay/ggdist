@@ -63,7 +63,7 @@ NULL
 #' # grob. For practical use it is much easier to use geom_dots(), which will
 #' # automatically select good bin widths for you (and which uses
 #' # find_dotplot_binwidth() and bin_dots() internally)
-#' bin_df %>%
+#' bin_df |>
 #'   ggplot(aes(x = x, y = y)) +
 #'   geom_point(size = 4) +
 #'   coord_fixed()
@@ -728,7 +728,7 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 #' may leave whitespace, 0 does not keep groups together but will be a more compact layout.
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = 3, cohesion = 0.5) {
+stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = Inf, cohesion = 0.5) {
   if (strata == Inf) {
     dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = cohesion)
   } else {

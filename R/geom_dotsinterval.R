@@ -412,11 +412,11 @@ draw_slabs_dots = function(
 #' # orientation is detected automatically based on
 #' # which axis is discrete
 #'
-#' df %>%
+#' df |>
 #'   ggplot(aes(x = value, y = g)) +
 #'   geom_dotsinterval()
 #'
-#' df %>%
+#' df |>
 #'   ggplot(aes(y = value, x = g)) +
 #'   geom_dotsinterval()
 #'
@@ -425,14 +425,14 @@ draw_slabs_dots = function(
 #'
 #' data(RankCorr_u_tau, package = "ggdist")
 #'
-#' RankCorr_u_tau %>%
+#' RankCorr_u_tau |>
 #'   ggplot(aes(x = u_tau, y = factor(i))) +
 #'   stat_dots(quantiles = 100)
 #'
 #' # color and fill aesthetics can be mapped within the geom
 #' # dotsinterval adds an interval
 #'
-#' RankCorr_u_tau %>%
+#' RankCorr_u_tau |>
 #'   ggplot(aes(x = u_tau, y = factor(i), fill = after_stat(x > 6))) +
 #'   stat_dotsinterval(quantiles = 100)
 #'

@@ -12,7 +12,7 @@ layout_swarm(
   side = "top",
   overlaps = "nudge",
   span = 0,
-  strata = 4L,
+  strata = Inf,
   cohesion = 0.5
 )
 }

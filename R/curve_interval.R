@@ -112,9 +112,9 @@ globalVariables(".value")
 #'   )
 #'
 #' # see pointwise intervals...
-#' df %>%
-#'   group_by(x) %>%
-#'   median_qi(y, .width = c(.5)) %>%
+#' df |>
+#'   group_by(x) |>
+#'   median_qi(y, .width = c(.5)) |>
 #'   ggplot(aes(x = x, y = y)) +
 #'   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
 #'   geom_line(aes(group = .draw), alpha=0.15, data = df) +
@@ -124,9 +124,9 @@ globalVariables(".value")
 #'
 #' @examplesIf requireNamespace("posterior", quietly = TRUE)
 #' # ... compare them to curvewise intervals
-#' df %>%
-#'   group_by(x) %>%
-#'   curve_interval(y, .width = c(.5)) %>%
+#' df |>
+#'   group_by(x) |>
+#'   curve_interval(y, .width = c(.5)) |>
 #'   ggplot(aes(x = x, y = y)) +
 #'   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
 #'   geom_line(aes(group = .draw), alpha=0.15, data = df) +

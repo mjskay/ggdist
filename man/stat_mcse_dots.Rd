@@ -544,7 +544,7 @@ library(ggplot2)
 theme_set(theme_ggdist())
 
 set.seed(1234)
-data.frame(x = rnorm(1000)) \%>\%
+data.frame(x = rnorm(1000)) |>
   ggplot(aes(x = x)) +
   stat_mcse_dots(quantiles = 100, layout = "weave")
 \dontshow{\}) # examplesIf}

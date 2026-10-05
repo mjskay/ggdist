@@ -18,7 +18,7 @@ test_that("theme helper functions work", {
     y = 0,
     g = c("aaa","bbb"),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(x, y)) +
     geom_point() +
     theme_test() +

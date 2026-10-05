@@ -2,7 +2,7 @@
 title: "Slab + interval stats and geoms"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
@@ -12,18 +12,18 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
+
 ```{r, child="children/chunk_options.txt"}
 ```
 
 ## Introduction
-  
+
 This vignette describes the slab+interval geoms and stats in `ggdist`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.
 
 ## Setup
-  
+
 The following libraries are required to run this vignette:
-  
+
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
@@ -43,9 +43,7 @@ theme_set(theme_ggdist())
 ## Roadmap: The `slabinterval` meta-geometry
 
 ```{r slabinterval_family, echo=FALSE, fig.height=5.5, fig.width=6.2}
-dists_df = tibble(
-  # enforce order
-  geom = rev(c(
+geom_order = rev(c(
     "halfeye",
     "eye",
     "gradientinterval",
@@ -57,8 +55,10 @@ dists_df = tibble(
     "histinterval",
     "dots",
     "dotsinterval"
-  )) %>%
-    factor(., levels = .),
+  ))
+
+dists_df = tibble(
+  geom = rev(factor(geom_order, levels = geom_order)),
   dist = dist_normal(4, 1)
 )
 
@@ -81,8 +81,8 @@ header_theme = theme(
   plot.margin = unit(c(5.5, 0, 5.5, 5.5), "points")
 )
 
-dists_header_plot = dists_df_("halfeye") %>%
-  mutate(geom = "slabinterval") %>%
+dists_header_plot = dists_df_("halfeye") |>
+  mutate(geom = "slabinterval") |>
   ggplot(aes(y = geom, xdist = dist)) +
   stat_slabinterval(position = position_nudge(y = - 0.2)) +
   scale_x_continuous(limits = dists_xlim, expand = c(0,0), breaks = NULL) +
@@ -107,9 +107,9 @@ statgeom_theme = list(
 statgeom_header_plot = data.frame(
   geom = factor("slabinterval"),
   prefix = factor(c("stat_...", "geom_..."), levels = c("stat_...", "geom_..."))
-) %>%
+) |>
   ggplot(aes(x = prefix, y = geom)) +
-  geom_hline(aes(yintercept = as.numeric(geom) - .1), color = "gray80", data = . %>% filter(prefix == "stat_...")) +
+  geom_hline(aes(yintercept = as.numeric(geom) - .1), color = "gray80", data = \(d) d |> filter(prefix == "stat_...")) +
   geom_point(size = 5, color = "gray65", position = position_nudge(y = -.1)) +
   scale_x_discrete(position = "top") +
   scale_y_discrete(breaks = NULL, expand = c(0.4,0)) +
@@ -119,7 +119,7 @@ statgeom_header_plot = data.frame(
 
 # SHORTCUT STATS
 
-dists_plot = dists_df %>%
+dists_plot = dists_df |>
   ggplot(aes(y = geom, xdist = dist)) +
   geom_blank() + # ensures order
   stat_eye(data = dists_df_("eye")) +
@@ -156,14 +156,14 @@ statgeom_plot = tribble(
   "histinterval",       "stat_...",
   "dots",             c("stat_...", "geom_..."),
   "dotsinterval",     c("stat_...", "geom_...")
-) %>%
-  unnest(prefix) %>%
+) |>
+  unnest(prefix) |>
   mutate(
     geom = factor(geom, levels = levels(dists_df$geom)),
     prefix = factor(prefix, levels = c("stat_...", "geom_..."))
-  ) %>%
+  ) |>
   ggplot(aes(x = prefix, y = geom)) +
-  geom_hline(aes(yintercept = as.numeric(geom) - .1), color = "gray80", data = . %>% filter(prefix == "stat_...")) +
+  geom_hline(aes(yintercept = as.numeric(geom) - .1), color = "gray80", data = \(d) d |> filter(prefix == "stat_...")) +
   geom_point(size = 5, color = "gray65", position = position_nudge(y = -.1)) +
   scale_x_discrete(breaks = NULL) +
   scale_y_discrete(breaks = NULL, expand = c(0,.6)) +
@@ -216,7 +216,7 @@ arrow_ = function(..., curvature = 0, x, xend = x, y, yend = y) {
 }
 
 
-dists_df_("halfeye") %>%
+dists_df_("halfeye") |>
   ggplot(aes(y = 0, xdist = dist)) +
   stat_slabinterval(
     aes(linewidth = NULL),
@@ -302,9 +302,9 @@ dists_df_("halfeye") %>%
   labs(subtitle = "Properties of geom_slabinterval")
 ```
 
-Depending on whether you want a horizontal or vertical orientation, you can provide `ymin` and `ymax` instead of `xmin` and `xmax`. By default, some aesthetics (e.g., `fill`, `color`, `size`, `alpha`) set properties of multiple sub-geometries at once. For example, the `color` aesthetic by default sets both the color of the point and the interval, but can also be overridden by `point_color` or `interval_color` to set the color of each sub-geometry separately. 
+Depending on whether you want a horizontal or vertical orientation, you can provide `ymin` and `ymax` instead of `xmin` and `xmax`. By default, some aesthetics (e.g., `fill`, `color`, `size`, `alpha`) set properties of multiple sub-geometries at once. For example, the `color` aesthetic by default sets both the color of the point and the interval, but can also be overridden by `point_color` or `interval_color` to set the color of each sub-geometry separately.
 
-`geom_slabinterval()` is most useful when paired with `stat_slabinterval()`, which will automatically calculate intervals, densities, and cumulative distribution functions, and maps these onto endpoints of the interval sub-geometry or the `thickness` of the slab sub-geometry. 
+`geom_slabinterval()` is most useful when paired with `stat_slabinterval()`, which will automatically calculate intervals, densities, and cumulative distribution functions, and maps these onto endpoints of the interval sub-geometry or the `thickness` of the slab sub-geometry.
 
 The scaling of slab `thickness` is determined by a combination of the geometry's `height`/`width`, its `scale`, the `normalize` parameter, and any `thickness` scales added to the plot (such as `scale_thickness_shared()`). For a comprehensive discussion and examples of slab scaling and normalization, see the [`thickness` scale article](https://mjskay.github.io/ggdist/articles/thickness.html).
 
@@ -314,19 +314,19 @@ Using `geom_slabinterval()` and `stat_slabinterval()` directly is not always adv
 
 * **Shortcut stats**, starting with `stat_`, which compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Some have geom counterparts (e.g. `stat_interval()` corresponds to `geom_interval()`, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. `stat_ccdfinterval()`), as they are primarily differentiated based on what kind of statistical summary they compute. If you've already computed a function (such as a density or CDF), you can just use `geom_slabinterval()` directly. These stats can be used on two types of data, depending on what aesthetic mappings you provide:
 
-   * **Sample data**; e.g. draws from a data distribution, bootstrap distribution, Bayesian posterior distribution (or any other distribution, really). To use the stats on sample data, map sample values onto the `x` or `y` aesthetic. 
-   
+   * **Sample data**; e.g. draws from a data distribution, bootstrap distribution, Bayesian posterior distribution (or any other distribution, really). To use the stats on sample data, map sample values onto the `x` or `y` aesthetic.
+
    * **Distribution objects and analytical distributions**. To use the stats on this type of data, you must use the `xdist`, or `ydist` aesthetics, which take [distributional](https://pkg.mitchelloharawild.com/distributional/) objects, `posterior::rvar()` objects, or distribution names (e.g. `"norm"`, which refers to the Normal distribution provided by the `dnorm/pnorm/qnorm` functions).
 
 All slabinterval geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
 
 We'll start with one of the most common existing use cases for these kinds geoms: eye plots.
 
-## Eye plots and half-eye plots 
+## Eye plots and half-eye plots
 
 ### On sample data
 
-Eye plots combine densities (as violins) with intervals to give a more detailed picture of uncertainty than is available just by looking at intervals. 
+Eye plots combine densities (as violins) with intervals to give a more detailed picture of uncertainty than is available just by looking at intervals.
 
 For these first few demos we'll use these data:
 
@@ -339,7 +339,7 @@ df = tribble(
   "c",          "h", rnorm(1000, mean = 8),
   "c",          "i", rnorm(1000, mean = 9),
   "c",          "j", rnorm(1000, mean = 7)
-) %>%
+) |>
   unnest(value)
 ```
 
@@ -347,7 +347,7 @@ We can summarize it at the group level using a "half-eye" plot, which combines a
 (ignoring subgroups for now):
 
 ```{r group_halfeye, fig.width = tiny_height, fig.height = tiny_height}
-df %>%
+df |>
   ggplot(aes(y = group, x = value)) +
   stat_halfeye() +
   ggtitle("stat_halfeye() (or stat_slabinterval())")
@@ -357,7 +357,7 @@ We can use the `side` parameter to more finely control where the slab (in this c
 `stat_eye()` is also a shortcut for `stat_slabinterval(side = "both")`, as it creates "eye" plots:
 
 ```{r eye_side, fig.width = med_width, fig.height = small_height}
-p = df %>%
+p = df |>
   ggplot(aes(x = group, y = value)) +
   theme(panel.background = element_rect(color = "grey70"))
 
@@ -379,7 +379,7 @@ If automatic detection of the desired axis fails, you can specify it manually; e
 The `side` parameter works for horizontal geoms as well. `"top"` and `"right"` are considered synonyms, as are `"bottom"` and `"left"`; either form works with both horizontal and vertical versions of the geoms:
 
 ```{r eyeh_side, fig.width = med_width, fig.height = small_height}
-p = df %>%
+p = df |>
   ggplot(aes(x = value, y = group)) +
   theme(panel.background = element_rect(color = "grey70"))
 
@@ -395,11 +395,11 @@ p = df %>%
 )
 ```
 
-The slabinterval geoms support dodging through the standard mechanism of `position = "dodge"`. 
+The slabinterval geoms support dodging through the standard mechanism of `position = "dodge"`.
 Unlike with `geom_violin()`, densities in groups that are not dodged (here, 'a' and 'b') have the same area and max width as those in groups that are dodged ('c'):
 
 ```{r eye_dodge}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_eye(position = "dodge") +
   ggtitle("stat_eye(position = 'dodge')")
@@ -436,7 +436,7 @@ dist_df = tribble(
 We can use the `distributional::dist_normal()` function to construct a vector of normal distributions from these means and standard deviations, and map it to the `ydist` aesthetic, which sets the distributions drawn along the `y` axis:
 
 ```{r dist_eye_dodge_distributional}
-dist_df %>%
+dist_df |>
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
   stat_eye(position = "dodge") +
   ggtitle("stat_eye(position = 'dodge')", "aes(ydist = dist_normal(mean, sd))")
@@ -445,7 +445,7 @@ dist_df %>%
 Distributional vectors, combined with the `xdist` and `ydist` aesthetics, make it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
 
 ```{r beta_stacked}
-data.frame(alpha = seq(5, 100, length.out = 10)) %>%
+data.frame(alpha = seq(5, 100, length.out = 10)) |>
   ggplot(aes(y = alpha, xdist = dist_beta(alpha, 10))) +
   stat_halfeye() +
   labs(
@@ -458,7 +458,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
 If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using `stat_slabinterval(show_interval = FALSE, ...)`. A shortcut for `stat_slabinterval(show_interval = FALSE, ...)` is `stat_slab()`. We'll also turn off the fill color with `fill = NA` to make the stacking easier to see, and use outline `color` to show the value of `alpha`:
 
 ```{r beta_overplotted_slabh}
-data.frame(alpha = seq(5, 100, length.out = 10)) %>%
+data.frame(alpha = seq(5, 100, length.out = 10)) |>
   ggplot(aes(xdist = dist_beta(alpha, 10), color = alpha)) +
   stat_slab(fill = NA) +
   coord_cartesian(expand = FALSE) +
@@ -474,7 +474,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
 ### Visualizing frequentist uncertainty
 
 Distributional vectors also make it easy to visualize frequentist *confidence* distributions, which
-are often Normal or Student's t distributions. For examples of this, see `vignette("freq-uncertainty-vis")`. 
+are often Normal or Student's t distributions. For examples of this, see `vignette("freq-uncertainty-vis")`.
 
 ### Visualizing priors
 
@@ -512,7 +512,7 @@ priors
 The `parse_dist()` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist`, `.args`, and `.dist_obj` columns:
 
 ```{r parse_dist}
-priors %>%
+priors |>
   parse_dist(prior)
 ```
 
@@ -522,8 +522,8 @@ the `lb` and `ub` columns output by `brms::prior()`, as on the half-Normal prior
 parameter. The `.dist_obj` vector can be assigned to the `xdist` or `ydist` aesthetic in ggdist:
 
 ```{r prior_dist_halfeyeh}
-priors %>%
-  parse_dist(prior) %>%
+priors |>
+  parse_dist(prior) |>
   ggplot(aes(y = paste(class, "~", format(.dist_obj)), xdist = .dist_obj)) +
   stat_halfeye(subguide = subguide_inside(position = "right", title = "density")) +
   labs(
@@ -560,7 +560,7 @@ prior_post = data.frame(
   posterior = dist_normal(0.1, 0.5)
 )
 
-separate_scale_plot = prior_post %>%
+separate_scale_plot = prior_post |>
   ggplot() +
   stat_halfeye(aes(xdist = posterior)) +
   stat_slab(aes(xdist = prior), fill = NA, color = "red") +
@@ -568,7 +568,7 @@ separate_scale_plot = prior_post %>%
     subtitle = "default: no shared thickness scale"
   )
 
-shared_scale_plot = prior_post %>%
+shared_scale_plot = prior_post |>
   ggplot() +
   stat_halfeye(aes(xdist = posterior)) +
   stat_slab(aes(xdist = prior), fill = NA, color = "#e41a1c") +
@@ -579,7 +579,7 @@ separate_scale_plot + shared_scale_plot + plot_annotation(title = "prior (slab) 
 ```
 
 With `scale_thickness_shared()` applied, both densities have the same area under
-their curves. 
+their curves.
 Further details of scaling of the `thickness` aesthetic are discussed in the
 [thickness article](https://mjskay.github.io/ggdist/articles/thickness.html)
 
@@ -588,7 +588,7 @@ Further details of scaling of the `thickness` aesthetic are discussed in the
 The `stat_slabinterval()` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
 
 ```{r dist_halfeyeh_log_scale, fig.width = small_height, fig.height = small_height/1.75}
-data.frame(dist = dist_lognormal(log(10), 2*log(10))) %>%
+data.frame(dist = dist_lognormal(log(10), 2*log(10))) |>
   ggplot(aes(xdist = dist)) +
   stat_halfeye() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
@@ -610,11 +610,11 @@ Like the remaining shortcut stats, these stats also follow these conventions:
 In some cases you might prefer histograms to density plots. `stat_histinterval()` provides an alternative to `stat_halfeye()` that uses histograms instead of densities; it is roughly equivalent to `stat_slabinterval(density = "histogram")`:
 
 ```{r stat_histinterval_horizontal, fig.width = med_width, fig.height = small_height}
-p = df %>%
+p = df |>
   ggplot(aes(x = group, y = value)) +
   theme(panel.background = element_rect(color = "grey70"))
 
-ph = df %>%
+ph = df |>
   ggplot(aes(y = group, x = value)) +
   theme(panel.background = element_rect(color = "grey70"))
 
@@ -640,20 +640,20 @@ You can use the `slab_color` aesthetic to show the outline of the bars. By defau
 ### Histograms of analytical distributions
 
 While `stat_histinterval()` will not produce histograms of continuous analytical
-distributions, the `stat_slabinterval()` family will automatically detect discrete 
+distributions, the `stat_slabinterval()` family will automatically detect discrete
 distributions supplied on the `xdist` and `ydist` aesthetics and
 plot them using stepped histograms instead of densities. As with `stat_histinterval()`,
 you can choose whether or not to draw outlines between bars of the histogram
-using `outline_bars = TRUE` or `FALSE` (the default is `FALSE`). 
+using `outline_bars = TRUE` or `FALSE` (the default is `FALSE`).
 
-Here is an example of histograms of analytical distributions that also shows a redundant 
+Here is an example of histograms of analytical distributions that also shows a redundant
 encoding of the density by mapping the `pdf` computed variable onto `fill` (in addition to the default mapping onto `thickness`):
 
 ```{r dist_slab_discrete, fig.width = med_width, fig.height = small_height}
 tibble(
   group = c("a","b","c","d","e"),
   lambda = c(13,7,4,3,2)
-) %>%
+) |>
   ggplot(aes(x = group)) +
   stat_slab(aes(ydist = dist_poisson(lambda), fill = after_stat(pdf))) +
   geom_line(aes(y = lambda, group = NA), linewidth = 1) +
@@ -668,7 +668,7 @@ This was inspired by an example from Isabella Ghement.
 
 Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](https://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
 
-For all of the examples above, both on sample data and analytical distributions, you can replace `slabinterval` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
+For all of the examples above, both on sample data and analytical distributions, you can replace `slabinterval` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot.
 
 `stat_ccdfinterval()` is roughly equivalent to `stat_slabinterval(aes(thickness = after_stat(1 - cdf)), justification = 0.5, side = "topleft", normalize = "none", expand = TRUE)`
 
@@ -677,7 +677,7 @@ For all of the examples above, both on sample data and analytical distributions,
 The CCDF interval plots are probably more useful than the CDF interval plots in most cases, as the bars typically grow up from the baseline. For example, replacing `stat_eye()` with `stat_ccdfinterval()` in our previous subgroup plot produces CCDF bar plots:
 
 ```{r ccdf_barplot}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup, group = subgroup)) +
   stat_ccdfinterval(position = "dodge") +
   ggtitle("stat_ccdfinterval(position = 'dodge')")
@@ -686,7 +686,7 @@ df %>%
 The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use `ggplot2::expand_limits()` to ensure the bar is drawn down to 0. Let's also adjust the position of the slab relative to the position of the interval using the `justification` parameter:
 
 ```{r ccdf_justification}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(position = "dodge", justification = 1) +
   expand_limits(y = 0) +
@@ -699,7 +699,7 @@ All other parameters, like `orientation` and `side`, work in the same way it doe
 
 ### On analytical distributions
 
-As with other plot types, you can also use `stat_ccdfinterval()`/`stat_cdfinterval()` to visualize analytical 
+As with other plot types, you can also use `stat_ccdfinterval()`/`stat_cdfinterval()` to visualize analytical
 distributions or distribution vectors, using the `xdist` or `ydist` aesthetic (see previous examples).
 
 ### Summing up CDF bar plots
@@ -713,7 +713,7 @@ All of the stats in this section follow the naming scheme `stat_[c]cdfinterval`:
 
 ## Gradient plots
 
-An alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_gradientinterval` family does (actually, it uses `slab_alpha`, a variant of the `alpha` aesthetic, described below). 
+An alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_gradientinterval` family does (actually, it uses `slab_alpha`, a variant of the `alpha` aesthetic, described below).
 
 It is roughly equivalent to `stat_slabinterval(aes(slab_alpha = after_stat(f)), thickness = 1, justification = 0.5)`.
 
@@ -722,7 +722,7 @@ It is roughly equivalent to `stat_slabinterval(aes(slab_alpha = after_stat(f)), 
 For example, replacing `stat_eye()` with `stat_gradientinterval()` produces gradient + interval plots:
 
 ```{r gradient_dodge}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_gradientinterval(position = "dodge") +
   labs(title = "stat_gradientinterval(position = 'dodge')")
@@ -732,18 +732,18 @@ df %>%
 
 ### Avoiding "choppy"-looking gradients
 
-Depending on your graphics device, gradients may be "choppy" looking. 
+Depending on your graphics device, gradients may be "choppy" looking.
 You can fix this choppiness by setting `fill_type = "gradient"`, which uses a
 gradient feature introduced in some graphics engines in R 4.1. If you use
 `stat_gradientinterval()` in R 4.1, you will receive a message suggesting you
 may want to explicitly set `fill_type = "gradient"` to improve output quality.
-If you are using R 4.2 or greater, you should not need to set 
+If you are using R 4.2 or greater, you should not need to set
 `fill_type = "gradient"` as support for gradients can be auto-detected in that
 version, but you will get a warning message if you use `stat_gradientinterval()`
 with a graphics engine that does not support gradients.
 
 ```{r gradient_dodge_nice}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_gradientinterval(position = "dodge", fill_type = "gradient") +
   labs(title = "stat_gradientinterval(position = 'dodge', fill_type = 'gradient')")
@@ -766,7 +766,7 @@ The encodings thus far are *continuous* probability encodings: they map probabil
 For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots. With so many dots here, the outlines mask the fill, so it makes sense to map `subgroup` to the outline `color` of the dots as well:
 
 ```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup, color = subgroup)) +
   stat_dots(position = "dodgejust") +
   labs(
@@ -785,7 +785,7 @@ The above plots are a bit hard to read due to the large number of dots. Particul
 The `quantiles` argument to `stat_dots` constructs a quantile dotplot with the specified number of quantiles. Here is one with 50 quantiles, so each dot represents approximately a 2% (1/50) chance. We'll turn off outline color too (`color = NA`):
 
 ```{r quantile_dots_dodge, fig.width = med_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_dots(position = "dodgejust", quantiles = 50, color = NA) +
   labs(title = "stat_dots(quantiles = 50)")
@@ -814,7 +814,7 @@ not look as nice.
 By default, `stat_ccdfinterval()` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = after_stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `after_stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
 
 ```{r ccdf_gradient, fig.width = med_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(aes(slab_alpha = after_stat(f)),
     thickness = 1, position = "dodge", fill_type = "gradient"
@@ -830,7 +830,7 @@ associated with its height, the result would be a so-called *fuzzygram* ([Haber 
 
 ### Highlighting and other combinations
 
-The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. 
+The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot.
 Taking the earlier example of visualizing priors, we can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
 
 ```{r norm_vs_t_highlight, fig.width = small_width, fig.height = small_height}
@@ -838,7 +838,7 @@ priors = tibble(
   dist = c(dist_normal(0, 1), dist_student_t(3, 0, 1))
 )
 
-priors %>%
+priors |>
   ggplot(aes(y = format(dist), xdist = dist)) +
   stat_halfeye(aes(fill = after_stat(abs(x) < 1.5))) +
   ggtitle("stat_halfeye()", "aes(fill = after_stat(abs(x) < 1.5)))") +
@@ -849,7 +849,7 @@ priors %>%
 We could also combine these aesthetics arbitrarily. Here is a (probably not very useful) eye plot + gradient plot combination, with the portion of the distribution above 1 highlighted:
 
 ```{r norm_vs_t_gradient_eye, fig.width = small_width, fig.height = small_height}
-priors %>%
+priors |>
   ggplot(aes(y = format(dist), xdist = dist)) +
   stat_eye(aes(slab_alpha = after_stat(f), fill = after_stat(x > 1)), fill_type = "gradient") +
   ggtitle(
@@ -865,7 +865,7 @@ priors %>%
 We can also take advantage of the fact that all slabinterval stats also supply `cdf` and `pdf` aesthetics to create charts that make use of both the CDF and the PDF in their aesthetic mappings. For example, we could create [Correll & Gleicher](https://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots by fading the tails outside of the 95% interval in proportion to $|1 - 2F(x)|$ (where $F(x)$ is the CDF):
 
 ```{r correll_gradient, fig.width = small_width, fig.height = small_height/1.75}
-priors %>%
+priors |>
   ggplot(aes(y = format(dist), xdist = dist)) +
   stat_gradientinterval(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))),
     fill_type = "gradient"
@@ -880,7 +880,7 @@ priors %>%
 We could also do a mashup of faded-tail gradients with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails, producing plots like those in [Helske *et al.*](https://arxiv.org/abs/2002.07671):
 
 ```{r helske_gradient_eye, fig.width = small_width, fig.height = small_height}
-priors %>%
+priors |>
   ggplot(aes(y = format(dist), xdist = dist)) +
   stat_eye(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
   scale_slab_alpha_continuous(guide = "none") +
@@ -893,11 +893,11 @@ priors %>%
 A related idea is one from [Tukey](https://doi.org/10.1080/00031305.1986.10475361): rather than
 visually emphasizing where a value is likely, emphasize where it is *unlikely*. While Tukey
 used a visual representation showing both pointwise and simultaneous intervals, for this
-example we will do something a bit different, inverting the faded-tails function from 
+example we will do something a bit different, inverting the faded-tails function from
 Correll & Gleicher to create bars that "block out" the regions of low likelihood:
 
 ```{r tukey_pencils, fig.width = small_width, fig.height = small_height}
-dist_df %>%
+dist_df |>
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
   stat_slab(
     aes(
@@ -924,7 +924,7 @@ Thanks to a Jessica Hullman for suggesting the Tukey paper that inspired this id
 Another common chart type involves filling in the interior of a halfeye plot
 according to some intervals. Here, we can use the fact that computed variables
 from the interval sub-geometry are made available to the slab sub-geometry and
-vice versa. 
+vice versa.
 
 For example, within the slab sub-geometry, the `.width` and `level`
 computed variables correspond to the smallest intervals that contain the `x`
@@ -932,7 +932,7 @@ value at that portion of the slab. Thus, we can map `.width` or `level` onto
 the slab fill:
 
 ```{r halfeye_filled_intervals, fig.width = small_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(y = group, x = value)) +
   stat_halfeye(aes(fill = after_stat(level))) +
   # na.translate = FALSE drops the unnecessary NA from the legend, which covers
@@ -947,16 +947,16 @@ df %>%
 ```
 
 (**Note:** in previous versions of ggdist, using `cut_cdf_qi()` was the recommended
-way to achieve this affect. That function still exists for backwards compatibility, 
+way to achieve this affect. That function still exists for backwards compatibility,
 but mapping `level` or `.width` is now the recommended approach, as it generalizes
 to other interval types, such as highest-density intervals --- see later.)
 
 To apply the color scale to all values outside the intervals, one option is to
-split `stat_halfeye()` into its constituent parts (`stat_slab()` and 
+split `stat_halfeye()` into its constituent parts (`stat_slab()` and
 `stat_pointinterval()`), then include a "100%" interval in `.width`:
 
 ```{r halfeye_filled_intervals_2, fig.width = small_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(y = group, x = value)) +
   stat_slab(aes(fill = after_stat(level)), .width = c(.66, .95, 1)) +
   stat_pointinterval() +
@@ -973,13 +973,13 @@ variables change correspondingly, allowing us to highlight other types of interv
 besides quantile intervals; for example, highest-density intervals:
 
 ```{r halfeye_qi_vs_hdi, fig.width = small_width, fig.height = small_height}
-qi_plot = data.frame(dist = dist_beta(10, 2)) %>%
+qi_plot = data.frame(dist = dist_beta(10, 2)) |>
   ggplot(aes(xdist = dist)) +
   stat_halfeye(aes(fill = after_stat(level)), point_interval = median_qi, .width = c(.5, .8, .95)) +
   scale_fill_brewer(na.value = "gray95") +
   labs(subtitle = "stat_halfeye(aes(fill = after_stat(level)), point_interval = median_qi)")
 
-hdi_plot = data.frame(dist = dist_beta(10, 2)) %>%
+hdi_plot = data.frame(dist = dist_beta(10, 2)) |>
   ggplot(aes(xdist = dist)) +
   stat_halfeye(aes(fill = after_stat(level)), point_interval = mode_hdci, .width = c(.5, .8, .95)) +
   scale_fill_brewer(na.value = "gray95") +
@@ -996,16 +996,16 @@ annotations to slabs. The easiest way to use spikes is to use `stat_spike()` and
 pass it a numeric position or a function giving numeric position(s) at which
 you wish to place a spike (or a list of these). If passed a function, the function
 will be applied to the *distributional* or `posterior::rvar()` object used
-internally to represent the distribution. 
+internally to represent the distribution.
 
-This means that point estimates (e.g., `mean()`, `median()`, `Mode()`), 
-quantiles (`quantile()`), and interval estimates (`qi()`, `hdci()`, `hdi()`) 
+This means that point estimates (e.g., `mean()`, `median()`, `Mode()`),
+quantiles (`quantile()`), and interval estimates (`qi()`, `hdci()`, `hdi()`)
 can be provided to `stat_spike()` directly. This makes it easy to
 modify the previous example to highlight how medians and quantile intervals
 differ from modes and highest-density intervals in terms of their densities:
 
 ```{r halfeye_qi_vs_hdi_spikes, fig.width = small_width, fig.height = small_height}
-qi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
+qi_plot_spikes = data.frame(dist = dist_beta(10, 2)) |>
   ggplot(aes(xdist = dist)) +
   stat_slab(aes(fill = after_stat(level)), point_interval = median_qi, .width = c(.5, .95)) +
   # stat_spike(at = c(median, qi)) would also work, but this demonstrates how
@@ -1016,7 +1016,7 @@ qi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
   scale_thickness_shared() +
   labs(subtitle = "stat_slab() + stat_spike(at = c(median, qi))")
 
-hdi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
+hdi_plot_spikes = data.frame(dist = dist_beta(10, 2)) |>
   ggplot(aes(xdist = dist)) +
   stat_slab(aes(fill = after_stat(level)), point_interval = mode_hdi, .width = c(.5, .95)) +
   stat_spike(aes(linetype = after_stat(at)), at = c("mode" = Mode, "interval (hdi)" = hdi)) +
@@ -1035,17 +1035,17 @@ their heights) use a shared scale, so they line up correctly.
 ### Using color ramps for `fill` and `color` aesthetics
 
 `ggdist` supplies `color_ramp` (or `colour_ramp`) and `fill_ramp` aesthetics
-which can be used to vary ("ramp") the outline or fill colors smoothly from a 
-base color (default `"white"`) to whatever color the geometry would otherwise 
+which can be used to vary ("ramp") the outline or fill colors smoothly from a
+base color (default `"white"`) to whatever color the geometry would otherwise
 have.
 
 Taking the above example with interval-filled slabs, we could use the `fill_ramp` aesthetic
 instead of the `fill` aesthetic to set the slab color based on the interval it is in.
-We could then vary the base fill color separately from the interval based on 
+We could then vary the base fill color separately from the interval based on
 another column in the original data table, such as the `subgroup` column:
 
 ```{r halfeye_filled_intervals_subgroup, fig.width = small_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(y = group, x = value)) +
   stat_halfeye(
     aes(fill = subgroup, fill_ramp = after_stat(level)),
@@ -1066,14 +1066,14 @@ df %>%
   )
 ```
 
-We could similarly use `stat_interval()` 
+We could similarly use `stat_interval()`
 with the `color_ramp` aesthetic to vary subgroup color separately from the
 whiteness of the intervals. Here, `level` is a variable generated by all stats in
 the `stat_slabinterval()` family which contains the level of the generated intervals,
 as an ordered factor.
 
 ```{r dist_interval_color_ramp, fig.width = small_width, fig.height = small_height}
-dist_df %>%
+dist_df |>
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), color = subgroup)) +
   stat_interval(aes(color_ramp = after_stat(level)), position = "dodge") +
   labs(
@@ -1089,15 +1089,15 @@ See `help("scale_color_ramp")` for more information on the color ramp aesthetics
 [Barrowman and Myers](https://doi.org/10.1198/0003130032369) proposed an alternative to density-based eye plots (such
 as created by `stat_eye()` by default) called *raindrop plots*.
 In these, the thickness of the slab is proportional to `log(pdf)` instead of `pdf`, and
-is bounded within the 95% interval. We can construct a function that uses the `pdf` 
-and `.width` computed variables to give a thickness proportional to `log(pdf)` 
+is bounded within the 95% interval. We can construct a function that uses the `pdf`
+and `.width` computed variables to give a thickness proportional to `log(pdf)`
 within the 95% interval, and use it to create raindrop plots.
 
 Barrowman and Myers apply this technique with a 95% raindrop superimposed on
 a 99% raindrop, which we can replicate:
 
 ```{r raindrop, fig.width = small_width, fig.height = small_height/1.5}
-priors %>%
+priors |>
   ggplot(aes(y = format(dist), xdist = dist)) +
   # must also use normalize = "groups" because min(log(pdf)) will be different for each dist
   stat_slab(
@@ -1122,7 +1122,7 @@ priors %>%
 When plotting densities (as in `stat_halfeye()`, `stat_slab()`, etc) it can be useful to
 overplot many densities simultaneously, an approach sometimes called *ridge plots*
 (e.g. as in the [ggridges](https://wilkelab.org/ggridges/) package).
-This can be done by setting `scale` or `height` to a value greater than 1. 
+This can be done by setting `scale` or `height` to a value greater than 1.
 Setting `height` is often the best approach as it will correctly adjust plot boundaries
 (unless you need to use `position = "dodge"`, in which case you should use `scale`
 and adjust plot boundaries manually).
@@ -1135,16 +1135,16 @@ ridges_df = data.frame(
   x = rnorm(700, mean = 1:7, sd = 2)
 )
 
-ridges_df %>%
+ridges_df |>
   ggplot(aes(y = group, x = x)) +
   stat_slab(height = 2, color = "black") +
   ggtitle("stat_slab(height = 2, color = 'black')")
 ```
 
 Depending on if it makes sense for your data (for example, if the scale is unbounded),
-you may also wish to adjust the `density` and `trim` parameters. The default `density`, 
-`density_bounded()`, estimates the bounds of the distribution, which is useful if your data 
-has natural boundaries (e.g., is restricted to be positive). But if you know the underlying 
+you may also wish to adjust the `density` and `trim` parameters. The default `density`,
+`density_bounded()`, estimates the bounds of the distribution, which is useful if your data
+has natural boundaries (e.g., is restricted to be positive). But if you know the underlying
 distribution is unbounded, you can set `density = "unbounded"`. You may also want to set
 `trim` to `FALSE` to ensure the densities smoothly go down to 0, rather than being cut off
 at the limits of the raw data. Combining both of these with `expand = TRUE`
@@ -1155,7 +1155,7 @@ to give each group on the y axis a different color and to vary the fill along
 the `x` axis in a way that provides a "softer" form of region of practical equivalence:
 
 ```{r slab_ridge_ramp, fig.width = small_width, fig.height = small_height}
-ridges_df %>%
+ridges_df |>
   ggplot(aes(
     y = group, x = x,
     fill = group, fill_ramp = after_stat(abs(x)),
@@ -1176,7 +1176,7 @@ ridges_df %>%
 ```
 
 We use a tighter ramp on `color` compared to `fill` (via `-dnorm()` instead of `abs()`)
-because we want the outlines to quickly ramp back to black outside of 0 so that they 
+because we want the outlines to quickly ramp back to black outside of 0 so that they
 have sufficient contrast against the slabs when they overlap.
 
 ### Varying side, scale, and justification within geoms
@@ -1185,9 +1185,9 @@ The `side`, `scale`, and `justification` parameters can also be varied within
 all geoms in the `geom_slabinterval()` family, allowing (for example) different groups to hang above or below the interval:
 
 ```{r varying_side_dotplot, fig.width = small_width, fig.height = small_height}
-dist_df %>%
-  filter(subgroup == "h") %>%
-  mutate(side = c("top", "both", "bottom")) %>%
+dist_df |>
+  filter(subgroup == "h") |>
+  mutate(side = c("top", "both", "bottom")) |>
   ggplot(aes(y = group, xdist = dist_normal(mean, sd), side = side)) +
   stat_dotsinterval(scale = 2/3) +
   labs(
@@ -1202,7 +1202,7 @@ dist_df %>%
 Sometimes you may want to include multiple different types of slabs in the same plot
 in order to take advantage of the features each slab type provides. For example,
 people often combine densities with dotplots to show the underlying datapoints that
-go into a density estimate, creating so-called "rain cloud" plots. 
+go into a density estimate, creating so-called "rain cloud" plots.
 
 To use multiple
 slab geometries together, you can use the `side` parameter to change which side
@@ -1214,7 +1214,7 @@ can be repurposed to be used with other geoms; here to replace points with label
 (the idea of replacing points with labels comes from Brenton Wiernik).
 
 ```{r halfeye_quantile_dotplot, fig.width = small_width, fig.height = small_height}
-df %>%
+df |>
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_slab(side = "left", scale = 0.5, position = "dodge") +
   stat_dotsinterval(scale = 0.5, quantiles = 100, position = "dodge") +
@@ -1235,12 +1235,12 @@ df %>%
 When constructing composite plots it may be useful to position the slab and interval parts of the geometry separately.
 While some relative positioning of these geometries is supported by manipulating the `justification` parameter, if you
 want complete, separate control over positioning of intervals versus slabs, the simplest approach can be to specify those
-geometries separately. 
+geometries separately.
 
 For example, the following uses a separate specification of a `stat_slab()` and a `stat_pointinterval()` instead of a combined `stat_slabinterval()` in order to use `position_dodgejust()` on the intervals but not the slabs:
 
 ```{r slab_and_pointinterval, fig.width = small_width, fig.height = small_height/1.25}
-df %>%
+df |>
   ggplot(aes(fill = group, color = group, x = value)) +
   stat_slab(alpha = .3) +
   stat_pointinterval(position = position_dodgejust(width = .2), justification = 0.1) +

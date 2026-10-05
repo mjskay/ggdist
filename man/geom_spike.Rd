@@ -246,10 +246,10 @@ df = tibble(
 )
 
 # annotate the density at the mean of a distribution
-df \%>\% mutate(
+df |> mutate(
   mean = mean(d),
   density(d, list(density_at_mean = mean))
-) \%>\%
+) |>
   ggplot(aes(y = g)) +
   stat_slab(aes(xdist = d)) +
   geom_spike(aes(x = mean, thickness = density_at_mean)) +
@@ -259,10 +259,10 @@ df \%>\% mutate(
 # annotate the endpoints of intervals of a distribution
 # here we'll use an arrow instead of a point by setting size = 0
 arrow_spec = arrow(angle = 45, type = "closed", length = unit(4, "pt"))
-df \%>\% mutate(
+df |> mutate(
   median_qi(d, .width = 0.9),
   density(d, list(density_lower = .lower, density_upper = .upper))
-) \%>\%
+) |>
   ggplot(aes(y = g)) +
   stat_halfeye(aes(xdist = d), .width = 0.9, color = "gray35") +
   geom_spike(

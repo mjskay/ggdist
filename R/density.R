@@ -63,7 +63,7 @@
 #' # or density_unbounded() (which is equivalent to stats::density()). Notice
 #' # how the bounded density (green) is biased near the boundary of the support,
 #' # while the unbounded density is not.
-#' data.frame(x) %>%
+#' data.frame(x) |>
 #'   ggplot() +
 #'   stat_slab(
 #'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
@@ -162,7 +162,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #' # or density_unbounded() (which is equivalent to stats::density()). Notice
 #' # how the bounded density (green) is biased near the boundary of the support,
 #' # while the unbounded density is not.
-#' data.frame(x) %>%
+#' data.frame(x) |>
 #'   ggplot() +
 #'   stat_slab(
 #'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
@@ -176,7 +176,7 @@ density_unbounded = auto_partial(name = "density_unbounded", function(
 #' # We can also supply arguments to the density estimators by using their
 #' # full function names instead of the string suffix; e.g. we can supply
 #' # the exact bounds of c(0,1) rather than using the bounds of the data.
-#' data.frame(x) %>%
+#' data.frame(x) |>
 #'   ggplot() +
 #'   stat_slab(
 #'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
@@ -300,7 +300,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' plot(d)
 #'
 #' # here we'll use the same data as above with stat_slab():
-#' data.frame(x) %>%
+#' data.frame(x) |>
 #'   ggplot() +
 #'   stat_slab(
 #'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),

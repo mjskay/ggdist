@@ -78,9 +78,9 @@ test_that("parse_dist + marginalize_lkjcorr produces correct results", {
 
 
   vdiffr::expect_doppelganger("LKJ marginalization works",
-    tibble(prior = "lkjcorr(3)") %>%
-      parse_dist(prior) %>%
-      marginalize_lkjcorr(K = 2) %>%
+    tibble(prior = "lkjcorr(3)") |>
+      parse_dist(prior) |>
+      marginalize_lkjcorr(K = 2) |>
       ggplot(aes(y = prior, dist = .dist, args = .args)) +
       stat_dist_halfeye(n = 20) +
       xlim(-1, 1) +

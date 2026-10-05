@@ -83,7 +83,7 @@ arrow_ = function(..., curvature = 0, x, xend = x, y, yend = y) {
 }
 
 
-tibble(dist = dist_normal(4, 1.2)) %>%
+tibble(dist = dist_normal(4, 1.2)) |>
   ggplot(aes(y = 0, xdist = dist)) +
 
   geom_hline(yintercept = 0:1, color = "gray95") +
@@ -169,7 +169,7 @@ the standalone `geom_dots()` geometry, it is not necessary to use these custom
 aesthetics:
 
 ```{r dots_components, echo=FALSE, fig.height=3.04, fig.width=6.5}
-tibble(dist = dist_normal(4, 1.2)) %>%
+tibble(dist = dist_normal(4, 1.2)) |>
   ggplot(aes(y = 0, xdist = dist)) +
 
   geom_hline(yintercept = 0:1, color = "gray95") +
@@ -227,7 +227,7 @@ Size and layout of dots in the dotplot are controlled by four parameters:
 `scale`, `binwidth`, `dotsize`, and `stackratio`.
 
 ```{r layout_params, echo=FALSE, fig.height=3.7, fig.width=6}
-data.frame(x = c(.4, .7, .7, 1, 1, 1)) %>%
+data.frame(x = c(.4, .7, .7, 1, 1, 1)) |>
   ggplot(aes(x = x)) +
 
   geom_hline(yintercept = 0:1, color = "gray95") +
@@ -321,7 +321,7 @@ side_plot = function(...) {
     x = x,
     side = c("topright", "both", "bottomleft"),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(side = side, ...)) +
     geom_dots() +
     facet_grid(~ side, labeller = "label_both") +
@@ -356,7 +356,7 @@ When `side` is `"top"`, these layouts look like this:
 layout_plot = function(layout, side, ...) {
   data.frame(
     x = x
-  ) %>%
+  ) |>
     ggplot(aes(x = x)) +
     geom_dots(layout = layout, side = side, stackratio = if (layout == "hex") 0.9 else 1) +
     labs(
@@ -394,7 +394,7 @@ abc_df = tibble(
   abc = rep(c("a", "b", "c"), 100)
 )
 
-abc_df %>%
+abc_df |>
   ggplot(aes(x = abc, y = value)) +
   geom_dots(side = "both") +
   ggtitle('geom_dots(side = "both")')
@@ -404,7 +404,7 @@ abc_df %>%
 more classic-looking "beeswarm" plots:
 
 ```{r beeswarm_hex, fig.width = small_width, fig.height = small_height}
-abc_df %>%
+abc_df |>
   ggplot(aes(x = abc, y = value)) +
   geom_dots(side = "both", layout = "hex", stackratio = 0.92) +
   ggtitle('geom_dots(side = "both", layout = "hex")')
@@ -426,12 +426,12 @@ swarm_data = tibble(
   g = rep(c("a","b"), 150)
 )
 
-swarm_plot = swarm_data %>%
+swarm_plot = swarm_data |>
   ggplot(aes(x = g, y = y)) +
   geom_swarm(linewidth = 0, alpha = 0.75) +
   labs(title = "geom_swarm()")
 
-weave_plot = swarm_data %>%
+weave_plot = swarm_data |>
   ggplot(aes(x = g, y = y)) +
   geom_weave(linewidth = 0, alpha = 0.75) +
   labs(title = "geom_weave()")
@@ -456,7 +456,7 @@ abcc_df = tibble(
   hi = rep(c("h", "h", "h", "i"), 75)
 )
 
-abcc_df %>%
+abcc_df |>
   ggplot(aes(y = value, x = abc, fill = hi)) +
   geom_weave(position = "dodge", linewidth = 0, alpha = 0.75) +
   scale_fill_brewer(palette = "Dark2") +
@@ -479,7 +479,7 @@ dots in data order within the layout but allow aesthetics to vary across them.
 For example:
 
 ```{r beeswarm_shape_color_together, fig.width = small_width, fig.height = small_height}
-abcc_df %>%
+abcc_df |>
   ggplot(aes(y = value, x = abc, fill = hi, group = NA)) +
   geom_dots(linewidth = 0) +
   scale_color_brewer(palette = "Dark2") +
@@ -496,7 +496,7 @@ the sort order within bins. This can be used to create "stacked" dotplots by
 setting `order` to a discrete variable:
 
 ```{r beeswarm_shape_color_together_stacked, fig.width = small_width, fig.height = small_height}
-abcc_df %>%
+abcc_df |>
   ggplot(aes(y = value, x = abc, fill = hi, group = NA, order = hi)) +
   geom_dots(linewidth = 0) +
   scale_color_brewer(palette = "Dark2") +
@@ -513,8 +513,8 @@ will not automatically set the `group` aesthetic, we can simply assign them to
 the desired aesthetic we want to vary:
 
 ```{r beeswarm_shape_color_continuous, fig.width = small_width, fig.height = small_height}
-abcc_df %>%
-  arrange(hi) %>%
+abcc_df |>
+  arrange(hi) |>
   ggplot(aes(y = value, x = abc, shape = abc, color = value)) +
   geom_dots() +
   ggtitle(
@@ -542,7 +542,7 @@ increasing_samples = data.frame(
   n = rep(ns, ns)
 )
 
-increasing_samples %>%
+increasing_samples |>
   ggplot(aes(x = x)) +
   geom_dots() +
   facet_wrap(~ n) +
@@ -564,7 +564,7 @@ other value (max or min, respectively). The bin width can be in data units
 For example, we could constrain the dot size to be greater than 1mm:
 
 ```{r increasing_samples_min_binwidth, fig.width = med_width, fig.height = med_height}
-increasing_samples %>%
+increasing_samples |>
   ggplot(aes(x = x)) +
   geom_dots(binwidth = unit(c(1, Inf), "mm")) +
   facet_wrap(~ n) +
@@ -580,7 +580,7 @@ the layout will compress the spacing between dots to keep them within the geomet
 bounds:
 
 ```{r increasing_samples_min_binwidth_compress, fig.width = med_width, fig.height = med_height}
-increasing_samples %>%
+increasing_samples |>
   ggplot(aes(x = x)) +
   geom_dots(binwidth = unit(c(1, Inf), "mm"), overflow = "compress", alpha = 0.75) +
   facet_wrap(~ n) +
@@ -606,7 +606,7 @@ abcd_df = tibble(
   g = rep(c("a","b"), 500)
 )
 
-abcd_df %>%
+abcd_df |>
   ggplot(aes(x = x)) +
   geom_dots() +
   scale_y_continuous(breaks = NULL) +
@@ -622,7 +622,7 @@ the tallest bin fits in the plot, but this means the dots are hard to see.
 Bar-like layouts can be achieved by using `layout = "bar"`:
 
 ```{r discrete_dots_bar, fig.width = small_width, fig.height = small_height}
-abcd_df %>%
+abcd_df |>
   ggplot(aes(x = x, fill = g, order = g)) +
   geom_dots(layout = "bar", group = NA, color = NA) +
   scale_y_continuous(breaks = NULL) +
@@ -652,7 +652,7 @@ we can create lozenge-like shapes. We'll abbreviate the kernel `"ep"` to save ty
 out `"epanechnikov"` (partial matching is allowed):
 
 ```{r discrete_dots_ep, fig.width = small_width, fig.height = small_height}
-abcd_df %>%
+abcd_df |>
   ggplot(aes(x = x)) +
   geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both") +
   scale_y_continuous(breaks = NULL) +
@@ -687,7 +687,7 @@ dist_df = tibble(
   dist_name = format(dist)
 )
 
-dist_df %>%
+dist_df |>
   ggplot(aes(y = dist_name, xdist = dist)) +
   stat_dotsinterval(subguide = 'integer') +
   ggtitle(
@@ -715,7 +715,7 @@ to color dots according to the interval containing them (we'll also use the
 `"weave"` layout since it maintains x positions better than the `"bin"` layout):
 
 ```{r dotsinterval_dist_1000_level_color, fig.width = small_width, fig.height = small_height}
-dist_df %>%
+dist_df |>
   ggplot(aes(y = dist_name, xdist = dist, slab_fill = after_stat(level))) +
   stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave", slab_color = NA) +
   scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_fill") +
@@ -743,7 +743,7 @@ Thus, because it relies upon generated variables from the stat, you can use the
 `after_stat()` or `stage()` functions from `ggplot2` to map those variables. For example:
 
 ```{r dotsinterval_dist_color, fig.width = small_width, fig.height = small_height}
-dist_df %>%
+dist_df |>
   ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(x))) +
   stat_dotsinterval(slab_shape = 19, quantiles = 500) +
   scale_color_distiller(aesthetics = "slab_color", guide = "colorbar2") +
@@ -780,7 +780,7 @@ ab_df = tibble(
   sd = c(1, 1.5)
 )
 
-ab_df %>%
+ab_df |>
   ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = after_stat(x < 6))) +
   stat_dots(position = "dodge", color = NA, layout = "weave") +
   labs(
@@ -816,7 +816,7 @@ set.seed(12345) # for reproducibility
 tibble(
   abc = rep(c("a", "b", "b", "c"), 50),
   value = rnorm(200, c(1, 8, 8, 3), c(1, 1.5, 1.5, 1))
-) %>%
+) |>
   ggplot(aes(y = abc, x = value, fill = abc)) +
   stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA) +
@@ -838,7 +838,7 @@ with `posterior::mcse_quantile()` to show the error in each quantile of a quanti
 dotplot:
 
 ```{r mcse_blur_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
-increasing_samples %>%
+increasing_samples |>
   ggplot(aes(x = x)) +
   stat_mcse_dots(quantiles = 100) +
   facet_wrap(~ n) +
@@ -852,7 +852,7 @@ Custom blur functions can be selected using the `blur` parameter, including the
 built-in `blur_interval()`, which draws an interval with a default width of 95%:
 
 ```{r mcse_interval_dots, fig.width=med_width, fig.height=med_height, warning=FALSE, eval=requireNamespace("posterior", quietly = TRUE) && getRversion() >= "4.1"}
-increasing_samples %>%
+increasing_samples |>
   ggplot(aes(x = x)) +
   stat_mcse_dots(quantiles = 100, blur = "interval") +
   facet_wrap(~ n) +
@@ -875,10 +875,10 @@ First, we'll demo varying the `side` aesthetic to create two dotplots that are
 the `scale` so that the dots don't overlap:
 
 ```{r iris_v, fig.width = med_width, fig.height = med_height}
-iris_v = iris %>%
+iris_v = iris |>
   filter(Species != "setosa")
 
-iris_v %>%
+iris_v |>
   ggplot(aes(x = Petal.Length, y = Species, side = Species)) +
   geom_dots(scale = 0.5) +
   scale_side_mirrored(guide = "none") +
@@ -907,15 +907,15 @@ prediction_grid = with(iris_v,
   data.frame(Petal.Length = seq(min(Petal.Length), max(Petal.Length), length.out = 100))
 )
 
-prediction_grid %>%
-  bind_cols(predict(m, ., se.fit = TRUE)) %>%
+prediction_grid |>
+  bind_cols(predict(m, newdata = prediction_grid, se.fit = TRUE)) |>
   mutate(
     # distribution describing uncertainty in log odds
     log_odds = dist_normal(fit, se.fit),
     # inverse-logit transform the log odds to get
     # distribution describing uncertainty in Pr(Species == "virginica")
     p_virginica = dist_transformed(log_odds, plogis, qlogis)
-  ) %>%
+  ) |>
   ggplot(aes(x = Petal.Length)) +
   geom_dots(
     aes(y = as.numeric(Species == "virginica"), side = Species),

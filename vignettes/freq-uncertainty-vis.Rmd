@@ -2,7 +2,7 @@
 title: "Frequentist uncertainty visualization"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
@@ -17,7 +17,7 @@ vignette: >
 ```
 
 ## Introduction
-  
+
 This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use `xdist` and `ydist` aesthetics supported by `ggdist` stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on the families of geoms and stats in ggdist, see `vignette("slabinterval")`, `vignette("dotsinterval")`, and `vignette("lineribbon")`.
 
 *Confidence distributions* are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a *probability* distribution, in the frequentist framework we visualize a *confidence* distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.
@@ -25,9 +25,9 @@ This vignette shows how to combine the `ggdist` geoms with output from the `broo
 For more on confidence distributions, see: Xie, Min‐ge, and Kesar Singh. [Confidence distribution, the frequentist distribution estimator of a parameter: A review](https://statweb.rutgers.edu/mxie/RCPapers/insr.12000.pdf). _International Statistical Review_ 81.1 (2013): 3-39.
 
 ## Setup
-  
+
 The following libraries are required to run this vignette:
-  
+
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
@@ -62,7 +62,7 @@ ABC =
 This is a typical tidy format data frame: one observation per row. Graphically:
 
 ```{r data_plot, fig.width = med_width, fig.height = med_height/1.5}
-ABC %>%
+ABC |>
   ggplot(aes(x = response, y = condition)) +
   geom_point(alpha = 0.5) +
   ylab("condition")
@@ -98,16 +98,16 @@ We can get the estimates and standard errors easily by using `broom::tidy()`:
 tidy(m_ABC)
 ```
 
-Finally, we can construct vectors of probability distributions using functions 
-like `distributional::dist_student_t()` from 
+Finally, we can construct vectors of probability distributions using functions
+like `distributional::dist_student_t()` from
 the [distributional](https://pkg.mitchelloharawild.com/distributional/) package.
 The `stat_slabinterval()` family of functions supports these objects.
 
 Putting everything together, we have:
 
 ```{r halfeye, fig.width = tiny_width, fig.height = tiny_height}
-m_ABC %>%
-  tidy() %>%
+m_ABC |>
+  tidy() |>
   ggplot(aes(y = term)) +
   stat_halfeye(
     aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = estimate, sigma = std.error))
@@ -129,9 +129,9 @@ With:
 Putting everything together, we have:
 
 ```{r halfeye_with_data, fig.width = tiny_width, fig.height = tiny_height}
-ABC %>%
-  expand(condition) %>%
-  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
+ABC |>
+  expand(condition) |>
+  augment(m_ABC, newdata = _, se_fit = TRUE) |>
   ggplot(aes(y = condition)) +
   stat_halfeye(
     aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
@@ -145,9 +145,9 @@ ABC %>%
 Of course, this works with the entire `stat_slabinterval()` family. Here are gradient plots instead:
 
 ```{r gradientinterval, fig.width = tiny_width, fig.height = tiny_height}
-ABC %>%
-  expand(condition) %>%
-  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
+ABC |>
+  expand(condition) |>
+  augment(m_ABC, newdata = _, se_fit = TRUE) |>
   ggplot(aes(y = condition)) +
   stat_gradientinterval(
     aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
@@ -156,15 +156,15 @@ ABC %>%
 ```
 
 **Note:** The example above uses the **experimental** `fill_type = "gradient"`
-option. This can be omitted if your system does not support it; see further 
+option. This can be omitted if your system does not support it; see further
 discussion in the section on gradient plots in `vignette("slabinterval")`.
 
 Or complementary cumulative distribution function (CCDF) bar plots:
 
 ```{r ccdfinterval, fig.width = tiny_width, fig.height = tiny_height}
-ABC %>%
-  expand(condition) %>%
-  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
+ABC |>
+  expand(condition) |>
+  augment(m_ABC, newdata = _, se_fit = TRUE) |>
   ggplot(aes(y = condition)) +
   stat_ccdfinterval(
     aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit))
@@ -174,9 +174,9 @@ ABC %>%
 We can also create quantile dotplots by using the `dots` family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a *frequency framing* approach to uncertainty communication that can be easier for people to interpret ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)):
 
 ```{r dotplot, fig.width = tiny_width, fig.height = tiny_height}
-ABC %>%
-  expand(condition) %>%
-  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
+ABC |>
+  expand(condition) |>
+  augment(m_ABC, newdata = _, se_fit = TRUE) |>
   ggplot(aes(y = condition)) +
   stat_dots(
     aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
@@ -197,10 +197,10 @@ m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 Again we'll use `tidyr::expand()` with `broom::tidy()`, but now we'll employ `stat_lineribbon()`:
 
 ```{r lineribbon, fig.width = tiny_width, fig.height = tiny_height}
-mtcars %>%
-  group_by(cyl) %>%
-  expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
-  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
+mtcars |>
+  group_by(cyl) |>
+  expand(hp = seq(min(hp), max(hp), length.out = 101)) |>
+  augment(m_mpg, newdata = _, se_fit = TRUE) |>
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_lineribbon(
     aes(ydist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)),
@@ -224,10 +224,10 @@ variable is computed by `stat_lineribbon()` and is an ordered factor version of
 `.width`):
 
 ```{r lineribbon_lightened, fig.width = tiny_width, fig.height = tiny_height}
-mtcars %>%
-  group_by(cyl) %>%
-  expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
-  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
+mtcars |>
+  group_by(cyl) |>
+  expand(hp = seq(min(hp), max(hp), length.out = 101)) |>
+  augment(m_mpg, newdata = _, se_fit = TRUE) |>
   ggplot(aes(x = hp, color = ordered(cyl))) +
   stat_lineribbon(aes(
     ydist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit),
@@ -244,10 +244,10 @@ mtcars %>%
   )
 ```
 
-One way to avoid problems created by overlapping ribbons (besides using `alpha`, 
-as above) is to use commutative blending modes available in R > 4.2. The 
+One way to avoid problems created by overlapping ribbons (besides using `alpha`,
+as above) is to use commutative blending modes available in R > 4.2. The
 [ggblend](https://mjskay.github.io/ggblend/) package enables support for such
-blending modes, and its documentation includes examples of their use with 
+blending modes, and its documentation includes examples of their use with
 `stat_lineribbon()`.
 
 For more examples of using lineribbons, see `vignette("lineribbon")`.

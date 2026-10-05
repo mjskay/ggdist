@@ -14,7 +14,7 @@ DOI](https://img.shields.io/badge/DOI-10.1109%2FTVCG.2023.3327195-blue)](https:/
 DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 <!-- badges: end -->
 
-<img src="man/figures/README/preview-1.png" width="864" />
+<img src="man/figures/README/preview-1.png" alt="" width="864" />
 
 [ggdist](https://mjskay.github.io/ggdist/) is an R package that provides
 a flexible set of `{ggplot2}` geoms and stats designed especially for
@@ -40,13 +40,13 @@ The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and
 combined with half-eyes, composite plots like rain cloud plots):
 
-<img src="man/figures/README/halfeye_dotplot-1.png" width="672" />
+<img src="man/figures/README/halfeye_dotplot-1.png" alt="" width="672" />
 
 The `geom_lineribbon()` / `stat_lineribbon()` family (see
 `vignette("lineribbon")`) makes it easy to visualize fit lines with an
 arbitrary number of uncertainty bands:
 
-<img src="man/figures/README/lineribbon-1.png" width="672" />
+<img src="man/figures/README/lineribbon-1.png" alt="" width="672" />
 
 All stats in `{ggdist}` also support visualizing analytical
 distributions and vectorized distribution data types like
@@ -98,7 +98,7 @@ the following categories:
 2.  Packages that `{ggplot2}` also depends on. These packages add no
     additional dependency cost because `{ggplot2}` already requires
     them: `{rlang}`, `{cli}`, `{scales}`, `{tibble}`, `{vctrs}`,
-    `{withr}`, `{gtable}`, and `{glue}`.
+    `{withr}`, `{gtable}`, `{glue}`, and `{S7}`.
 
 3.  Packages that `{ggplot2}` does not depend on. These are all
     well-maintained packages with few dependencies and a clear need
@@ -139,7 +139,7 @@ Uncertainty in the Grammar of Graphics. *IEEE Transactions on
 Visualization and Computer Graphics*, 30(1), 414–424. DOI:
 [10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
 
-Matthew Kay (2025). ggdist: Visualizations of Distributions and
-Uncertainty. R package version 3.3.3,
+Matthew Kay (2026). ggdist: Visualizations of Distributions and
+Uncertainty. R package version 3.3.3.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

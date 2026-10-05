@@ -43,7 +43,7 @@
 #'
 #' # NOTE: cut_cdf_qi() used to be the recommended way to do intervals overlaid
 #' # on densities, like this...
-#' tibble(x = dist_normal(0, 1)) %>%
+#' tibble(x = dist_normal(0, 1)) |>
 #'   ggplot(aes(xdist = x)) +
 #'   stat_slab(
 #'     aes(fill = after_stat(cut_cdf_qi(cdf)))
@@ -52,7 +52,7 @@
 #'
 #' # ... however this is now more easily and flexibly accomplished by directly
 #' # mapping .width or level onto fill:
-#' tibble(x = dist_normal(0, 1)) %>%
+#' tibble(x = dist_normal(0, 1)) |>
 #'   ggplot(aes(xdist = x)) +
 #'   stat_slab(
 #'     aes(fill = after_stat(level)),
@@ -66,7 +66,7 @@
 #' # With a halfeye (or other geom with slab and interval), NA values will
 #' # show up in the fill scale from the CDF function applied to the internal
 #' # interval geometry data and can be ignored, hence na.translate = FALSE
-#' tibble(x = dist_normal(0, 1)) %>%
+#' tibble(x = dist_normal(0, 1)) |>
 #'   ggplot(aes(xdist = x)) +
 #'   stat_halfeye(aes(
 #'     fill = after_stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95, 1)))
@@ -76,7 +76,7 @@
 #' # we could also use the labels parameter to apply nicer formatting
 #' # and provide a better name for the legend, and omit the 100% interval
 #' # if desired
-#' tibble(x = dist_normal(0, 1)) %>%
+#' tibble(x = dist_normal(0, 1)) |>
 #'   ggplot(aes(xdist = x)) +
 #'   stat_halfeye(aes(
 #'     fill = after_stat(cut_cdf_qi(

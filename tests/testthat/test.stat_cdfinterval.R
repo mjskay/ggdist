@@ -16,7 +16,7 @@ test_that("dodged ccdf barplots work", {
     x = "a",
     g = "g1",
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     rbind(data.frame(
       y = rep(1:5, each = 3) + 1:3,
       x = "b",

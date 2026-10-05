@@ -20,15 +20,15 @@ test_that("curve_interval works with lineribbon", {
     .draw = 1:k,
     mean = seq(-5,5, length.out = k),
     x = list(seq(-15,15,length.out = n))
-  ) %>%
-    unnest(x) %>%
-    mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3))) %>%
+  ) |>
+    unnest(x) |>
+    mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3))) |>
     group_by(x)
 
 
   vdiffr::expect_doppelganger("curve_interval with mhd",
-    curve_df %>%
-      curve_interval(y, .width = c(.5, .8), .interval = "mhd") %>%
+    curve_df |>
+      curve_interval(y, .width = c(.5, .8), .interval = "mhd") |>
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
       geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
@@ -41,13 +41,13 @@ test_that("curve_interval works with lineribbon", {
   ab_curve_df = bind_rows(
     mutate(curve_df, group = "a"),
     mutate(curve_df, group = "b", .draw = b_draw[.draw])
-  ) %>%
+  ) |>
     arrange(.draw)
 
   vdiffr::expect_doppelganger("conditional curve_interval with mhd",
-    ab_curve_df %>%
-      group_by(group) %>%
-      curve_interval(y, .along = x, .width = c(.5, .8), .interval = "mhd") %>%
+    ab_curve_df |>
+      group_by(group) |>
+      curve_interval(y, .along = x, .width = c(.5, .8), .interval = "mhd") |>
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
       geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
@@ -58,9 +58,9 @@ test_that("curve_interval works with lineribbon", {
   # joint works
   # TODO: fix
   # vdiffr::expect_doppelganger("joint curve_interval with mhd",
-  #   ab_curve_df %>%
-  #     arrange(.draw) %>%  # TODO: this should not be needed
-  #     curve_interval(y, .along = c(group, x), .width = c(.5, .8), .interval = "mhd") %>%
+  #   ab_curve_df |>
+  #     arrange(.draw) |>  # TODO: this should not be needed
+  #     curve_interval(y, .along = c(group, x), .width = c(.5, .8), .interval = "mhd") |>
   #     ggplot(aes(x = x, y = y)) +
   #     geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   #     geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
@@ -70,8 +70,8 @@ test_that("curve_interval works with lineribbon", {
 
   skip_if_not_installed("fda")
   vdiffr::expect_doppelganger("curve_interval with bd-mbd",
-    curve_df %>%
-      curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") %>%
+    curve_df |>
+      curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") |>
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
       geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +

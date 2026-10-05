@@ -16,17 +16,17 @@ var_names = grepl("(b\\[[1-3],[1-4]\\])|tau\\[[1-3]\\]|typical_r", dimnames(raw[
 thin_extra = 20
 
 # subset the chains to only the desired variables and apply extra thinning
-RankCorr = raw %>%
+RankCorr = raw |>
   lapply(function(chain) {
-    chain[seq(1, nrow(chain), by = thin_extra), var_names] %>%
+    chain[seq(1, nrow(chain), by = thin_extra), var_names] |>
       mcmc(mcpar(chain)[[1]], mcpar(chain)[[2]], mcpar(chain)[[3]] * thin_extra)
-  }) %>%
+  }) |>
   as.mcmc.list()
 
 usethis::use_data(RankCorr, overwrite = TRUE, compress = 'xz')
 
-RankCorr_u_tau = RankCorr %>%
-  tidybayes::spread_draws(u_tau[i]) %>%
+RankCorr_u_tau = RankCorr |>
+  tidybayes::spread_draws(u_tau[i]) |>
   as.data.frame()
 
 usethis::use_data(RankCorr_u_tau, overwrite = TRUE, compress = 'xz')

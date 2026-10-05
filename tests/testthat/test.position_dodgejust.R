@@ -21,7 +21,7 @@ test_that("position_dodgejust works", {
   )
 
   just_test_plot = function(just = 0, side = "right") {
-    dist_df %>%
+    dist_df |>
       ggplot(aes(
         x = factor(group), dist = dist_normal(mean, sd),
         fill = interaction(group, subgroup)
@@ -69,7 +69,7 @@ test_that("position_dodgejust works on zero-width geoms", {
   expect_warning(
     vdiffr::expect_doppelganger(
       "zero-width dodgejust",
-      tibble(x = c(1,1), y = "a", group = c("a","b")) %>%
+      tibble(x = c(1,1), y = "a", group = c("a","b")) |>
         ggplot(aes(x = x, y = y, color = group, shape = group)) +
         geom_point(position = position_dodgejust(), size = 4) +
         scale_shape_manual(values = c(0, 3))
@@ -83,7 +83,7 @@ test_that("position_dodgejust works on zero-width geoms", {
 
 test_that("position_dodgejust warns on missing y/ymax", {
   expect_error(ggplot_build(
-    data.frame(xmin = 1) %>%
+    data.frame(xmin = 1) |>
       ggplot(aes(xmin = xmin)) +
       geom_blank(position = position_dodgejust(width = 1))
   ), "Neither y nor ymax defined")
@@ -94,7 +94,7 @@ test_that("position_dodgejust warns on missing y/ymax", {
 
 test_that("position_dodgejust warns on overlapping intervals", {
   expect_warning(ggplot_build(
-    data.frame(y = 1:2, x = factor("a")) %>%
+    data.frame(y = 1:2, x = factor("a")) |>
       ggplot(aes(x = x, y = y,
         xmin = 0.5 - 0.1 * y,
         xmax = 1.5 - 0.1 * y,
@@ -106,7 +106,7 @@ test_that("position_dodgejust warns on overlapping intervals", {
   ), "position_dodgejust requires non-overlapping x intervals")
 
   expect_warning(ggplot_build(
-    data.frame(y = 1:2, x = factor("a")) %>%
+    data.frame(y = 1:2, x = factor("a")) |>
       ggplot(aes(y = x, x = y,
         ymin = 0.5 - 0.1 * y,
         ymax = 1.5 - 0.1 * y,

@@ -206,7 +206,7 @@ bin_df
 # grob. For practical use it is much easier to use geom_dots(), which will
 # automatically select good bin widths for you (and which uses
 # find_dotplot_binwidth() and bin_dots() internally)
-bin_df \%>\%
+bin_df |>
   ggplot(aes(x = x, y = y)) +
   geom_point(size = 4) +
   coord_fixed()

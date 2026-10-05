@@ -387,7 +387,7 @@ compute_interval_slabinterval = function(
 #' )
 #'
 #' # here are vertical eyes:
-#' df %>%
+#' df |>
 #'   ggplot(aes(x = group, y = value)) +
 #'   stat_eye()
 #'
@@ -397,7 +397,7 @@ compute_interval_slabinterval = function(
 #' # But you may wish to account for sample size if using these geoms
 #' # for something other than visualizing posteriors; in which case
 #' # you can use after_stat(f*n):
-#' df %>%
+#' df |>
 #'   ggplot(aes(x = group, y = value)) +
 #'   stat_eye(aes(thickness = after_stat(pdf*n)))
 #'
@@ -416,12 +416,12 @@ compute_interval_slabinterval = function(
 #' # Using functions from the distributional package (like dist_normal()) with the
 #' # dist aesthetic can lead to more compact/expressive specifications
 #'
-#' dist_df %>%
+#' dist_df |>
 #'   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
 #'   stat_eye(position = "dodge")
 #'
 #' # using the old character vector + args approach
-#' dist_df %>%
+#' dist_df |>
 #'   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
 #'   stat_eye(position = "dodge")
 #'
@@ -436,7 +436,7 @@ compute_interval_slabinterval = function(
 #' # scales package currently have this property).
 #' # For example, here is a log-Normal distribution plotted on the log
 #' # scale, where it will appear Normal:
-#' data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) %>%
+#' data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) |>
 #'   ggplot(aes(y = 1, dist = dist, arg1 = logmean, arg2 = logsd)) +
 #'   stat_halfeye() +
 #'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
@@ -828,7 +828,7 @@ StatSlab$default_aes$size = NULL
 #' data.frame(
 #'   group = letters[1:3],
 #'   value = rnorm(3000, 3:1)
-#' ) %>%
+#' ) |>
 #'   ggplot(aes(y = group, x = value)) +
 #'   stat_slab(color = "black", expand = TRUE, trim = FALSE, height = 2)
 #' @export

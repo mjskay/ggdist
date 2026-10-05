@@ -19,7 +19,7 @@
 #' df = expand.grid(
 #'     mean = 1:3,
 #'     input = seq(-2, 6, length.out = 100)
-#'   ) %>%
+#'   ) |>
 #'   mutate(
 #'     group = letters[4 - mean],
 #'     density = dnorm(input, mean, 1)
@@ -27,18 +27,18 @@
 #'
 #' # orientation is detected automatically based on
 #' # use of x or y
-#' df %>%
+#' df |>
 #'   ggplot(aes(y = group, x = input, thickness = density)) +
 #'   geom_slab()
 #'
-#' df %>%
+#' df |>
 #'   ggplot(aes(x = group, y = input, thickness = density)) +
 #'   geom_slab()
 #'
 #' # RIDGE PLOTS
 #' # "ridge" plots can be created by increasing the slab height and
 #' # setting the slab color
-#' df %>%
+#' df |>
 #'   ggplot(aes(y = group, x = input, thickness = density)) +
 #'   geom_slab(height = 2, color = "black")
 #'

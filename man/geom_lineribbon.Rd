@@ -203,9 +203,9 @@ set.seed(12345)
 tibble(
   x = rep(1:10, 100),
   y = rnorm(1000, x)
-) \%>\%
-  group_by(x) \%>\%
-  median_qi(.width = c(.5, .8, .95)) \%>\%
+) |>
+  group_by(x) |>
+  median_qi(.width = c(.5, .8, .95)) |>
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
   # automatically uses aes(fill = forcats::fct_rev(ordered(.width)))
   geom_lineribbon() +

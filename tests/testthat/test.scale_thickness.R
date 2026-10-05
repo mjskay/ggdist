@@ -18,7 +18,7 @@ test_that("basic scale_thickness_shared works", {
     posterior = dist_normal(0, 0.5)
   )
 
-  p = prior_post %>%
+  p = prior_post |>
     ggplot() +
     stat_halfeye(aes(xdist = posterior), n = 10) +
     stat_slab(aes(xdist = prior), fill = NA, color = "#e41a1c", n = 10)

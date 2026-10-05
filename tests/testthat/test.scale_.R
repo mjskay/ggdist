@@ -15,7 +15,7 @@ test_that("direct scale setting works", {
 
 
   vdiffr::expect_doppelganger("direct scale setting",
-    tibble(dist = "norm", mean = 1, sd = 2) %>%
+    tibble(dist = "norm", mean = 1, sd = 2) |>
       ggplot(aes(y = "", dist = dist, arg1 = mean, arg2 = sd)) +
       stat_dist_halfeye(
         n = 20,
@@ -52,8 +52,8 @@ test_that("mapping custom aesthetics works", {
     x_num = c(1, 2, 3),
     y = list(c(-0.75, -0.25)),
     f = .1
-  ) %>%
-    unnest(y) %>%
+  ) |>
+    unnest(y) |>
     bind_rows(tibble(
       datatype = "interval",
       x = c("a", "b", "c"),
@@ -61,7 +61,7 @@ test_that("mapping custom aesthetics works", {
       y = 0
     ))
 
-  p = df %>%
+  p = df |>
     ggplot(aes(x = x, y = y, datatype = datatype, ymin = -1, ymax = 1, thickness = f))
 
   # POINT
@@ -179,8 +179,8 @@ test_that("mapping custom aesthetics works", {
 
 
   # DOTS
-  p = tibble(x = qnorm(ppoints(20)), y = "a") %>%
-    rbind(tibble(x = qnorm(ppoints(20), 3, 2), y = "b")) %>%
+  p = tibble(x = qnorm(ppoints(20)), y = "a") |>
+    rbind(tibble(x = qnorm(ppoints(20), 3, 2), y = "b")) |>
     ggplot(aes(x = x, y = y, group = NA))
 
   expect_error(

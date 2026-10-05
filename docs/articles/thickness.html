@@ -53,7 +53,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/dotsinterval.html">Dots + interval stats and geoms</a></li>
+    <li><a class="dropdown-item" href="../articles/dotsinterval.html">Dots + interval stats and geoms</a></li>
     <li><a class="dropdown-item" href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a></li>
     <li><a class="dropdown-item" href="../articles/lineribbon.html">Lineribbon stats and geoms</a></li>
     <li><a class="dropdown-item" href="../articles/slabinterval.html">Slab + interval stats and geoms</a></li>
@@ -82,15 +82,15 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Thickness scale</h1>
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
-            
-            <h4 data-toc-skip class="date">2025-10-04</h4>
-      
+
+            <h4 data-toc-skip class="date">2026-10-04</h4>
+
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/thickness.Rmd" class="external-link"><code>vignettes/thickness.Rmd</code></a></small>
       <div class="d-none name"><code>thickness.Rmd</code></div>
     </div>
 
-    
-    
+
+
 <style type="text/css">
 .kable-table table {
   margin-left: 0;
@@ -146,10 +146,10 @@ slabs on the same plot, each with its own separate
 <span>  name  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,    <span class="fl">2</span>, <span class="st">"3a"</span>,<span class="st">"3b"</span>,  <span class="fl">4</span>,   <span class="fl">5</span><span class="op">)</span>,  each <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df_group</span> <span class="op">=</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">df_group</span> <span class="op">=</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">group</span>, <span class="va">panel</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span>, thickness <span class="op">=</span> <span class="va">h</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_slab.html">geom_slab</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"gray25"</span>, alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>add <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -161,7 +161,7 @@ slabs on the same plot, each with its own separate
 <span>    panel.grid.major.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_line</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"gray85"</span><span class="op">)</span>,</span>
 <span>    panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"gray70"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/intro-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/intro-1.png" class="r-plt" alt="" width="648"></p>
 <p>In the above plot, the values assigned to the <code>thickness</code>
 aesthetic are all scaled onto a common scale, and the slabs are
 positioned with their baselines at the <code>y</code> value specified
@@ -217,7 +217,7 @@ previous plot of the default normalization settings:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">plot_slabs_with_scales</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span>, <span class="va">subguide</span> <span class="op">=</span> <span class="va">subguide_orangered</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1.9</span>, <span class="fl">2</span>,<span class="fl">2.9</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"orangered"</span>, linetype <span class="op">=</span> <span class="st">"11"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/geom_slab.html">geom_slab</a></span><span class="op">(</span></span>
@@ -251,7 +251,7 @@ previous plot of the default normalization settings:</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_slab(normalize = 'all')"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"default normalization settings"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/normalize_all-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/normalize_all-1.png" class="r-plt" alt="" width="648"></p>
 <p>Notice how the minimum and maximum value on each
 <code>thickness</code> subscale is the same: it is the maximum thickness
 value over all slabs; i.e. the height of the tallest slab in the data.
@@ -271,7 +271,7 @@ all slabs together. You can do this using
 <span>    title <span class="op">=</span> <span class="st">"geom_slab(normalize = 'panels')"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"scales to the maximum height within each panel"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/normalize_panels-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/normalize_panels-1.png" class="r-plt" alt="" width="648"></p>
 <p>Notice how the <code>thickness</code> scales <em>inside</em> a given
 panel are the same: panel <code>"e"</code> has a maximum
 <code>thickness</code> of <code>2</code> (the height of slab
@@ -295,7 +295,7 @@ accordingly.</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_slab(normalize = 'xy')"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"scales to the maximum height within each x/y position within each panel"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/normalize_xy-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/normalize_xy-1.png" class="r-plt" alt="" width="648"></p>
 <p>In this plot, because <code>orientation = "horizontal"</code>,
 <code>normalize = "xy"</code> scales within each unique <em>y</em>
 position; i.e. the values <code>"a"</code> and <code>"b"</code>.
@@ -341,7 +341,7 @@ subguide:</p>
 <span>    title <span class="op">=</span> <span class="st">"geom_slab(normalize = 'groups')"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"scales to the maximum height within each group within each x/y position within each panel"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/normalize_groups-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/normalize_groups-1.png" class="r-plt" alt="" width="648"></p>
 <p>Notice how all groups are scaled to have their maximum height at the
 maximum thickness value; thus, slab <code>1</code> and slab
 <code>3b</code> are no longer the same height.</p>
@@ -367,7 +367,7 @@ their thickness scales annotated:</p>
 <span>  posterior <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">prior_post_plot</span> <span class="op">=</span> <span class="va">df_prior_post</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">prior_post_plot</span> <span class="op">=</span> <span class="va">df_prior_post</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">posterior</span><span class="op">)</span>,</span>
@@ -387,7 +387,7 @@ their thickness scales annotated:</p>
 <span>    title <span class="op">=</span> <span class="st">"two different slab geometries"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"thickness scales are not shared across geometries by default"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/prior_post-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/prior_post-1.png" class="r-plt" alt="" width="648"></p>
 <p>Notice how the two geometries have different <code>thickness</code>
 scales. If we add <code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> to the plot,
 they will be given the same scale:</p>
@@ -398,7 +398,7 @@ they will be given the same scale:</p>
 <span>    title <span class="op">=</span> <span class="st">"two different slab geometries"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using scale_thickness_shared() to share thickness scale across geometries"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/prior_post_shared-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/prior_post_shared-1.png" class="r-plt" alt="" width="648"></p>
 <p><code>scaled_thickness_shared()</code> works by scaling values and
 then tagging them with a special <code><a href="../reference/thickness.html">thickness()</a></code> datatype. That
 type carries information about the original scale limits (used to draw
@@ -417,7 +417,7 @@ bounding box of <code><a href="../reference/geom_slab.html">geom_slab()</a></cod
 <code class="sourceCode R"><span><span class="va">cap</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">5</span>, <span class="st">"pt"</span><span class="op">)</span>, ends <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">scale_plot</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">scale</span> <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">d</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span></span>
 <span>      yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span> <span class="op">+</span> <span class="va">scale</span>, <span class="fl">2</span>, <span class="fl">2</span> <span class="op">+</span> <span class="va">scale</span><span class="op">)</span>,</span>
@@ -450,7 +450,7 @@ bounding box of <code><a href="../reference/geom_slab.html">geom_slab()</a></cod
 <span>    title <span class="op">=</span> <span class="st">"geom_slab()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using default height = 1 and scale = 0.9"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/default_height_scale-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/default_height_scale-1.png" class="r-plt" alt="" width="648"></p>
 <p>This allows us to adjust the spacing between slabs using
 <code>scale</code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -459,7 +459,7 @@ bounding box of <code><a href="../reference/geom_slab.html">geom_slab()</a></cod
 <span>    title <span class="op">=</span> <span class="st">"geom_slab()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using scale = 0.65 to increase spacing between slabs"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/scale_reduced-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/scale_reduced-1.png" class="r-plt" alt="" width="648"></p>
 <div class="section level3">
 <h3 id="spacing-dodged-slabs">Spacing dodged slabs<a class="anchor" aria-label="anchor" href="#spacing-dodged-slabs"></a>
 </h3>
@@ -475,7 +475,7 @@ spacing <strong>within</strong> sets:</p>
 <span>    d <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"b"</span><span class="op">)</span>,</span>
 <span>    group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>,<span class="st">"e"</span>,<span class="st">"d"</span>,<span class="st">"e"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">d</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">height</span><span class="op">/</span><span class="fl">2</span>, color <span class="op">=</span> <span class="st">"gray85"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span></span>
@@ -522,7 +522,7 @@ spacing <strong>within</strong> sets:</p>
 <span>    title <span class="op">=</span> <span class="st">'geom_slab(position = "dodgejust")'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using default height = 1 and scale = 0.9"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/default_dodge-1.png" width="672"></p>
+<p><img src="thickness_files/figure-html/default_dodge-1.png" class="r-plt" alt="" width="672"></p>
 <p>If we decrease <code>height</code>, it increases the space
 <strong>between</strong> sets of slabs with the same <em>y</em>
 value:</p>
@@ -532,7 +532,7 @@ value:</p>
 <span>    title <span class="op">=</span> <span class="st">'geom_slab(position = "dodgejust")'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using height = 0.8 to increase the space between sets"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/dodge_height_reduced-1.png" width="672"></p>
+<p><img src="thickness_files/figure-html/dodge_height_reduced-1.png" class="r-plt" alt="" width="672"></p>
 <p>And if we decrease <code>scale</code>, it increases the spacing
 <strong>within</strong> sets of slabs with the same <em>y</em>
 value:</p>
@@ -542,7 +542,7 @@ value:</p>
 <span>    title <span class="op">=</span> <span class="st">'geom_slab(position = "dodgejust")'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using height = 0.8 and scale = 0.65"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/dodge_height_scale_reduced-1.png" width="672"></p>
+<p><img src="thickness_files/figure-html/dodge_height_scale_reduced-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="ridgeline-plots-with-height-1">Ridgeline plots with <code>height &gt; 1</code><a class="anchor" aria-label="anchor" href="#ridgeline-plots-with-height-1"></a>
@@ -554,14 +554,14 @@ plots:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  d <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">1</span><span class="op">/</span><span class="fl">4</span>, <span class="fl">1</span> <span class="op">+</span> <span class="fl">10</span><span class="op">:</span><span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
-<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xdist <span class="op">=</span> <span class="va">d</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"gray25"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"geom_slab()"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"using height &gt; 1 to create ridgeline plots"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="thickness_files/figure-html/ridgeline-1.png" width="648"></p>
+<p><img src="thickness_files/figure-html/ridgeline-1.png" class="r-plt" alt="" width="648"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -575,7 +575,7 @@ plots:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -19,8 +19,8 @@ test_that("vanilla dots geoms and stats work", {
     ~dist,  ~x,
     "norm", rnorm(20),
     "t",    rt(20, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla geom_dots",
@@ -52,13 +52,13 @@ test_that("vanilla dots geoms and stats work", {
     ~dist,  ~x, ~datatype,
     "norm", rnorm(20), "slab",
     "t",    rt(20, 3), "slab"
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     bind_rows(tribble(
       ~ dist,  ~x, ~datatype, ~lower, ~upper,
       "norm", 0, "interval", -1, 1,
       "t", 0, "interval", -2, 2
-    )) %>%
+    )) |>
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla geom_dotsinterval",
@@ -72,8 +72,8 @@ test_that("vanilla dots geoms and stats work", {
     ~dist,  ~x,
     "norm", rnorm(100),
     "t",    rt(100, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot()
 
   vdiffr::expect_doppelganger("vanilla stat_dotsinterval",
@@ -101,13 +101,13 @@ test_that("coordinate transformations work", {
     ~dist,  ~x, ~datatype,
     "norm", rnorm(20), "slab",
     "t",    rt(20, 3), "slab"
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     bind_rows(tribble(
       ~ dist,  ~x, ~datatype, ~lower, ~upper,
       "norm", 0, "interval", -1, 1,
       "t", 0, "interval", -2, 2
-    )) %>%
+    )) |>
     ggplot() +
     geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype))
 
@@ -130,7 +130,7 @@ test_that("scale transformations work", {
   skip_if_sensitive_to_density()
 
 
-  p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%
+  p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) |>
     ggplot(aes(xdist = x, y = 0)) +
     geom_hline(yintercept = 0.9)
 
@@ -138,7 +138,7 @@ test_that("scale transformations work", {
     p + stat_dist_dotsinterval() + scale_x_log10()
   )
 
-  p = data.frame(x = qlnorm(ppoints(20))) %>%
+  p = data.frame(x = qlnorm(ppoints(20))) |>
     ggplot(aes(x = x, y = 0)) +
     geom_hline(yintercept = 0.9)
 
@@ -146,7 +146,7 @@ test_that("scale transformations work", {
     p + stat_dist_dotsinterval() + scale_x_log10()
   )
 
-  p = data.frame(x = qlnorm(ppoints(100))) %>%
+  p = data.frame(x = qlnorm(ppoints(100))) |>
     ggplot(aes(x = x, y = 0)) +
     geom_hline(yintercept = 0.9)
 
@@ -168,7 +168,7 @@ test_that("stat_dist_dots[interval] works", {
     ~dist,  ~args,
     "norm", list(0, 1),
     "t",    list(3)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args))
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dots",
@@ -192,7 +192,7 @@ test_that("stat_dist_dots works on NA data", {
   p = tibble(
     x = c("norm", NA, "norm"),
     y = c("a","b", NA)
-  ) %>%
+  ) |>
     ggplot(aes(dist = x, y = y))
 
   expect_warning(
@@ -216,7 +216,7 @@ test_that("stat_dist_dots works on distributional objects", {
     x = dist_normal(0:1, 1:2),
     y = c("a","b"),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(dist = x, y = y))
 
   vdiffr::expect_doppelganger("stat_dist_dots with dist_normal",
@@ -234,7 +234,7 @@ test_that("geom_dots binwidth can be specified in unit()s", {
 
   # these dots should be the same size (10% of facet height)
   vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
-    mtcars %>%
+    mtcars |>
       ggplot(aes(y = mpg)) +
       geom_dots(binwidth = unit(0.1, "native"), overflow = "keep") +
       facet_grid(~ am, scales = "free")
@@ -244,7 +244,7 @@ test_that("geom_dots binwidth can be specified in unit()s", {
 test_that("geom_dots allows constraints on binwidth", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = seq(0, 2, length.out = 20)) %>%
+  p = data.frame(x = seq(0, 2, length.out = 20)) |>
     ggplot(aes(x = x, y = 0L)) +
     coord_cartesian(expand = FALSE)
 
@@ -282,7 +282,7 @@ test_that("dotplot layouts work", {
     stringsAsFactors = FALSE
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(x = mpg)) +
     facet_grid(~ side) +
     geom_hline(yintercept = c(1, 0.5, -0.5, -1))
@@ -301,7 +301,7 @@ test_that("dotplot layouts work", {
   )
 
   vdiffr::expect_doppelganger("swarm vertical",
-    mtcars %>%
+    mtcars |>
       ggplot(aes(y = mpg)) +
       geom_dots(layout = "swarm") +
       geom_vline(xintercept = 0.9)
@@ -321,7 +321,7 @@ test_that("dot order is correct", {
     x = qnorm(ppoints(50)),
     g = c("a", "b"),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
     scale_fill_brewer(palette = "Set1", guide = guide_legend(order = 1)) +
     scale_color_brewer(palette = "Paired", guide = guide_legend(order = 2)) +
@@ -369,7 +369,7 @@ test_that("bar layout works", {
   )
 
   vdiffr::expect_doppelganger("bar layout with order",
-    df %>%
+    df |>
       ggplot(aes(x, fill = g, group = NA, order = g)) +
       geom_dots(layout = "bar")
   )
@@ -382,7 +382,7 @@ test_that("na.rm is propagated to quantile dotplot", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("na.rm with quantile arg",
-    data.frame(x = qnorm(ppoints(100), 1)) %>%
+    data.frame(x = qnorm(ppoints(100), 1)) |>
       ggplot(aes(x, y = 0)) +
       stat_dots(na.rm = TRUE, quantiles = 20) +
       scale_x_continuous(limits = c(0,4))
@@ -392,7 +392,7 @@ test_that("na.rm is propagated to quantile dotplot", {
 test_that("geom_dots works with NA in non-data axis", {
   skip_if_no_vdiffr()
 
-  p = mtcars %>%
+  p = mtcars |>
     ggplot(aes(x = mpg, y = factor(cyl))) +
     scale_y_discrete(limits = c("4", "6")) +
     geom_hline(yintercept = c(1, 1.9, 2, 2.9))
@@ -413,7 +413,7 @@ test_that("empty slab from NA removal works", {
 
 
   vdiffr::expect_doppelganger("dots with no slab from NA removal", {
-    tibble(x = c(1, NA), datatype = c("interval", "slab")) %>%
+    tibble(x = c(1, NA), datatype = c("interval", "slab")) |>
       ggplot(aes(x = x, xmin = x - 1, xmax = x + 1, datatype = datatype)) +
       geom_dotsinterval(na.rm = TRUE)
   })
@@ -426,28 +426,28 @@ test_that("geom_dots works on discrete distributions", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("one integer bin",
-    data.frame(x = rep(1L, 10)) %>%
+    data.frame(x = rep(1L, 10)) |>
       ggplot(aes(x = x, y = 0)) +
       stat_dots(orientation = "horizontal") +
       geom_hline(yintercept = 0.9)
   )
 
   vdiffr::expect_doppelganger("three integer bins",
-    data.frame(x = c(rep(1L, 10), rep(2L, 12), rep(3L, 5))) %>%
+    data.frame(x = c(rep(1L, 10), rep(2L, 12), rep(3L, 5))) |>
       ggplot(aes(x = x, y = 0)) +
       stat_dots(orientation = "horizontal") +
       geom_hline(yintercept = 0.9)
   )
 
   vdiffr::expect_doppelganger("one character bin",
-    tibble(x = rep("a", 10)) %>%
+    tibble(x = rep("a", 10)) |>
       ggplot(aes(x = x, y = 0)) +
       stat_dots(orientation = "horizontal") +
       geom_hline(yintercept = 0.9)
   )
 
   vdiffr::expect_doppelganger("three character bins",
-    data.frame(x = c(rep("a", 10), rep("b", 12), rep("c", 5))) %>%
+    data.frame(x = c(rep("a", 10), rep("b", 12), rep("c", 5))) |>
       ggplot(aes(x = x, y = 0)) +
       stat_dots(orientation = "horizontal") +
       geom_hline(yintercept = 0.9)
@@ -701,7 +701,7 @@ test_that("dist_categorical works with explicit integer levels", {
 test_that("geom_dots correctly adjusts dot size for stroke size", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = ppoints(40)) %>%
+  p = data.frame(x = ppoints(40)) |>
     ggplot(aes(x = x))
 
   vdiffr::expect_doppelganger("size = 1 and 3",
@@ -719,7 +719,7 @@ test_that("side, justification, and scale can vary", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("varying side",
-    mtcars %>%
+    mtcars |>
       ggplot(aes(
         x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom")
@@ -729,7 +729,7 @@ test_that("side, justification, and scale can vary", {
   )
 
   vdiffr::expect_doppelganger("varying side and just",
-    mtcars %>%
+    mtcars |>
       ggplot(aes(x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
         justification = case_when(cyl == 4 ~ 1, cyl == 6 ~ 0.25, cyl == 8 ~ 0)
@@ -744,7 +744,7 @@ test_that("side, justification, and scale can vary", {
       scale = c(rep(1/3, 4), rep(2/3, 7)),
       side = c(rep("top", 4), rep("bottom", 7)),
       justification = c(rep(0, 4), rep(1, 7))
-    ) %>%
+    ) |>
       ggplot(aes(x = x, y = group, scale = scale, side = side, justification = justification, color = group)) +
       stat_dots()
   )

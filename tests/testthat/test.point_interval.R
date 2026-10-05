@@ -29,20 +29,20 @@ get_draws = function() {
 test_that("median_qi works on a grouped variable", {
   draws = get_draws()
 
-  ref = draws %>%
-    group_by(ff) %>%
+  ref = draws |>
+    group_by(ff) |>
     summarise(
       tau.lower = as.vector(quantile(tau, .025)),
       tau.upper = as.vector(quantile(tau, .975)),
       tau = median(tau)
     )
 
-  result_simple = draws %>%
-    group_by(ff) %>%
+  result_simple = draws |>
+    group_by(ff) |>
     median_qi(tau)
 
-  result = draws %>%
-    group_by(ff) %>%
+  result = draws |>
+    group_by(ff) |>
     median_qi(tau, .simple_names = FALSE)
 
   expect_equal(result_simple$tau, ref$tau)
@@ -54,12 +54,12 @@ test_that("median_qi works on a grouped variable", {
 })
 
 test_that("mean_qi works on multiple columns", {
-  draws = get_draws() %>%
-    group_by(.iteration) %>%
-    spread(ff, tau) %>%
+  draws = get_draws() |>
+    group_by(.iteration) |>
+    spread(ff, tau) |>
     ungroup()
 
-  ref = draws %>%
+  ref = draws |>
     summarise(
       a.lower = as.vector(quantile(a, .025)),
       a.upper = as.vector(quantile(a, .975)),
@@ -69,7 +69,7 @@ test_that("mean_qi works on multiple columns", {
       b = mean(b)
     )
 
-  result = draws %>%
+  result = draws |>
     mean_qi(a, b)
 
   expect_equal(result$a, ref$a)
@@ -83,14 +83,14 @@ test_that("mean_qi works on multiple columns", {
 test_that("mean_qi works on non-95% probs", {
   draws = get_draws()
 
-  ref = draws %>%
+  ref = draws |>
     summarise(
       tau.lower = as.vector(quantile(tau, .25)),
       tau.upper = as.vector(quantile(tau, .75)),
       tau = mean(tau)
     )
 
-  result = draws %>%
+  result = draws |>
     mean_qi(tau, .width = .5)
 
   expect_equal(result$tau, ref$tau)
@@ -101,8 +101,8 @@ test_that("mean_qi works on non-95% probs", {
 test_that("mean_qi works on multiple probs with groups", {
   draws = get_draws()
 
-  ref95 = draws %>%
-    group_by(ff) %>%
+  ref95 = draws |>
+    group_by(ff) |>
     summarise(
       .lower = as.vector(quantile(tau, .025)),
       .upper = as.vector(quantile(tau, .975)),
@@ -110,11 +110,11 @@ test_that("mean_qi works on multiple probs with groups", {
       .width = .95,
       .point = "mean",
       .interval = "qi"
-    ) %>%
+    ) |>
     select(ff, tau, .lower, .upper, .width, .point, .interval)
 
-  ref50 = draws %>%
-    group_by(ff) %>%
+  ref50 = draws |>
+    group_by(ff) |>
     summarise(
       .lower = as.vector(quantile(tau, .25)),
       .upper = as.vector(quantile(tau, .75)),
@@ -122,18 +122,18 @@ test_that("mean_qi works on multiple probs with groups", {
       .width = .5,
       .point = "mean",
       .interval = "qi"
-    ) %>%
+    ) |>
     select(ff, tau, .lower, .upper, .width, .point, .interval)
 
   ref = bind_rows(ref50, ref95)
 
-  result = draws %>%
-    group_by(ff) %>%
+  result = draws |>
+    group_by(ff) |>
     mean_qi(tau, .width = c(.5, .95))
 
-  result_list = draws %>%
-    group_by(ff) %>%
-    summarise_at("tau", list) %>%
+  result_list = draws |>
+    group_by(ff) |>
+    summarise_at("tau", list) |>
     mean_qi(tau, .width = c(.5, .95))
 
   expect_equal(as.data.frame(result), as.data.frame(ref))
@@ -141,11 +141,11 @@ test_that("mean_qi works on multiple probs with groups", {
 })
 
 test_that("mean_qi works on multiple probs with multiple vars", {
-  draws = get_draws() %>%
+  draws = get_draws() |>
     mutate(tau2 = tau * 2)
 
-  ref95 = draws %>%
-    group_by(ff) %>%
+  ref95 = draws |>
+    group_by(ff) |>
     summarise(
       tau.lower = as.vector(quantile(tau, .025)),
       tau.upper = as.vector(quantile(tau, .975)),
@@ -156,11 +156,11 @@ test_that("mean_qi works on multiple probs with multiple vars", {
       .width = .95,
       .point = "mean",
       .interval = "qi"
-    ) %>%
+    ) |>
     select(ff, tau, tau.lower, tau.upper, tau2, tau2.lower, tau2.upper, .width, .point, .interval)
 
-  ref50 = draws %>%
-    group_by(ff) %>%
+  ref50 = draws |>
+    group_by(ff) |>
     summarise(
       tau.lower = as.vector(quantile(tau, .25)),
       tau.upper = as.vector(quantile(tau, .75)),
@@ -171,18 +171,18 @@ test_that("mean_qi works on multiple probs with multiple vars", {
       .width = .50,
       .point = "mean",
       .interval = "qi"
-    ) %>%
+    ) |>
     select(ff, tau, tau.lower, tau.upper, tau2, tau2.lower, tau2.upper, .width, .point, .interval)
 
   ref = bind_rows(ref50, ref95)
 
-  result = draws %>%
-    group_by(ff) %>%
+  result = draws |>
+    group_by(ff) |>
     mean_qi(tau, tau2, .width = c(.5, .95))
 
-  result_list = draws %>%
-    group_by(ff) %>%
-    summarise_at(c("tau", "tau2"), list) %>%
+  result_list = draws |>
+    group_by(ff) |>
+    summarise_at(c("tau", "tau2"), list) |>
     mean_qi(tau, tau2, .width = c(.5, .95))
 
   expect_equal(as.data.frame(result), as.data.frame(ref))
@@ -198,7 +198,7 @@ test_that("mean_qi correctly identifies the desired columns when ... is empty", 
     .x = c(qnorm(ppoints(500)), qnorm(ppoints(500), 1)),
     y = c(qnorm(ppoints(500), 2), qnorm(ppoints(500), 3)),
     g = c(rep("a", 500), rep("b", 500))
-  ) %>%
+  ) |>
     group_by(g)
 
   expect_equal(mean_qi(testdf, .x, y), mean_qi(testdf))
@@ -210,7 +210,7 @@ test_that("multiple-response intervals work", {
     x = c(rnorm(1000), rnorm(1000, mean = 5))
   )
 
-  ref = dd %>%
+  ref = dd |>
     summarise(
       .lower = list(hdi(x, .width = .5)[, 1]),
       .upper = list(hdi(x, .width = .5)[, 2]),
@@ -218,8 +218,8 @@ test_that("multiple-response intervals work", {
       .width = .5,
       .point = "mode",
       .interval = "hdi"
-    ) %>%
-    unnest(c(.lower, .upper)) %>%
+    ) |>
+    unnest(c(.lower, .upper)) |>
     select(x, everything())
 
   expect_equal(mode_hdi(dd, x, .width = .5), ref)
@@ -433,13 +433,13 @@ test_that("ll and ul work", {
 
   expect_equal(mean_ll(df, x, .width = c(.75, 1)), ref)
   expect_equal(median_ll(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
-  expect_equal(mode_ll(df, x, .width = c(.75, 1)) %>% mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
+  expect_equal(mode_ll(df, x, .width = c(.75, 1)) |> mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
 
   ref = tibble(x = 0.5, .lower = 0, .upper = c(0.75, 1), .width = c(0.75, 1), .point = "mean", .interval = "ul")
 
   expect_equal(mean_ul(df, x, .width = c(.75, 1)), ref)
   expect_equal(median_ul(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
-  expect_equal(mode_ul(df, x, .width = c(.75, 1)) %>% mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
+  expect_equal(mode_ul(df, x, .width = c(.75, 1)) |> mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
 })
 
 # rvars -------------------------------------------------
@@ -714,8 +714,8 @@ test_that("flattened indices retain index order", {
   skip_if_not_installed("mvtnorm")  # needed for dist_multivariate_normal()
 
   vdiffr::expect_doppelganger("flattened indices geom_pointinterval",
-    tibble(x = dist_multivariate_normal(list(1:10), list(diag(10)))) %>%
-      median_qi(x, .width = c(.66, .95)) %>%
+    tibble(x = dist_multivariate_normal(list(1:10), list(diag(10)))) |>
+      median_qi(x, .width = c(.66, .95)) |>
       ggplot(aes(x, xmin = .lower, xmax = .upper, y = .index)) +
       geom_pointinterval()
   )
@@ -728,7 +728,7 @@ test_that("flattened indices retain index order", {
         dist_normal()
       ),
       y = c("a","b")
-    )  %>%
+    )  |>
       ggplot(aes(xdist = x, y = y, group = after_stat(.index))) +
       stat_pointinterval(position = "dodge")
   )

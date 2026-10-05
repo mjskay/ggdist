@@ -108,7 +108,7 @@ rd_slabinterval_shortcut_stat = function(
         group = c("a", "b", "c"),
         value = rnorm(1500, mean = c(5, 7, 9), sd = c(1, 1.5, 1))
       )
-      df %>%
+      df |>
         ggplot(aes(x = value, y = group)) +
         stat_<<stat_name>>()<<example_layers>>
 
@@ -120,7 +120,7 @@ rd_slabinterval_shortcut_stat = function(
       )
       # Vectorized distribution types, like distributional::dist_normal()
       # and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
-      dist_df %>%
+      dist_df |>
         ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
         stat_<<stat_name>>()<<example_layers>>
       ')

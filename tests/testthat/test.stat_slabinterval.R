@@ -20,8 +20,8 @@ test_that("gradientinterval works", {
     ~dist,  ~x,
     "norm", rnorm(100),
     "t",    rt(100, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot() +
     scale_slab_alpha_continuous(range = c(0,1))
 
@@ -44,8 +44,8 @@ test_that("fill_type = 'gradient' works", {
     ~dist,  ~x,
     "norm", rnorm(100),
     "t",    rt(100, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot() +
     scale_slab_alpha_continuous(range = c(0,1))
 
@@ -69,8 +69,8 @@ test_that("histinterval outline works", {
     ~dist,  ~x,
     "norm", rnorm(100),
     "t",    rt(100, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot()
 
   vdiffr::expect_doppelganger("histinterval with outline",
@@ -96,8 +96,8 @@ test_that("slab outline works", {
     ~dist,  ~x,
     "norm", rnorm(100),
     "t",    rt(100, 3)
-  ) %>%
-    unnest(x) %>%
+  ) |>
+    unnest(x) |>
     ggplot()
 
   vdiffr::expect_doppelganger("slab with outline",
@@ -110,7 +110,7 @@ test_that("scale transformation works", {
   skip_if_no_vdiffr()
 
 
-  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
+  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) |>
     ggplot(aes(y = 0, x = x)) +
     scale_x_log10(breaks = 10^seq(-2,2), limits = 10^c(-2,2))
 
@@ -135,7 +135,7 @@ test_that("scale transformation works on halfeye", {
   skip_if_sensitive_to_density()
 
 
-  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
+  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) |>
     ggplot(aes(y = 0, x = x)) +
     scale_x_log10(breaks = 10^seq(-1,1))
 
@@ -170,7 +170,7 @@ test_that("pdf and cdf aesthetics work", {
     x = c("a", "b"),
     y = qnorm(ppoints(100), c(1, 2), 2),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
@@ -188,7 +188,7 @@ test_that("constant distributions work", {
     x = c("constant = 1", "constant = 2", "constant = 3"),
     y = rep(c(0, 1, 2), times = 10),
     stringsAsFactors = FALSE
-  ) %>%
+  ) |>
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("constant dist on halfeye",
@@ -207,7 +207,7 @@ test_that("constant distributions work", {
   p = tibble(
     x = c("constant = 1", "constant = 2", "constant = 3"),
     y = c(0, 1, 2)
-  ) %>%
+  ) |>
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("constant dist on halfeye with n = 1",
@@ -223,7 +223,7 @@ test_that("side and justification can vary", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("varying side and just",
-    mtcars %>%
+    mtcars |>
       ggplot(aes(x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
         justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1),
@@ -244,7 +244,7 @@ test_that("n is calculated correctly", {
   )
 
   ld = layer_data(
-    df %>%
+    df |>
       ggplot(aes(x = x, y = g, thickness = after_stat(pdf*n), fill = after_stat(n))) +
       stat_sample_slabinterval(n = 2)
   )
@@ -268,7 +268,7 @@ test_that("n is calculated correctly", {
 test_that("NAs are handled correctly", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = c(1:5000, NA)) %>%
+  p = data.frame(x = c(1:5000, NA)) |>
     ggplot(aes(x = x, y = "a"))
 
   expect_warning(
@@ -299,7 +299,7 @@ test_that("trim and expand work", {
 
   vdiffr::expect_doppelganger("untrimmed and expanded",
     variant = variant_mac(),
-    df %>%
+    df |>
       ggplot(aes(x = x, y = g)) +
       stat_sample_slabinterval(n = 15, slab_color = "black", expand = TRUE, trim = FALSE),
   )
@@ -312,7 +312,7 @@ test_that("expand can take length two vector", {
     x = c(1, 2, 2, 3)
   )
 
-  p = df %>%
+  p = df |>
     ggplot(aes(x = x, y = g)) +
     lims(x = c(0, 4))
 

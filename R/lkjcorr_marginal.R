@@ -54,7 +54,7 @@
 #' expand.grid(
 #'   eta = 1:6,
 #'   K = 2:6
-#' ) %>%
+#' ) |>
 #'   ggplot(aes(y = ordered(eta), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
 #'   stat_slab() +
 #'   facet_grid(~ paste0(K, "x", K)) +
@@ -163,9 +163,9 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #'
 #' # Say we have an LKJ(3) prior on a 2x2 correlation matrix. We can visualize
 #' # its marginal distribution as follows...
-#' data.frame(prior = "lkjcorr(3)") %>%
-#'   parse_dist(prior) %>%
-#'   marginalize_lkjcorr(K = 2) %>%
+#' data.frame(prior = "lkjcorr(3)") |>
+#'   parse_dist(prior) |>
+#'   marginalize_lkjcorr(K = 2) |>
 #'   ggplot(aes(y = prior, xdist = .dist_obj)) +
 #'   stat_halfeye() +
 #'   xlim(-1, 1) +
@@ -174,9 +174,9 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' # Say our prior list has multiple LKJ priors on correlation matrices
 #' # of different sizes, we can supply a predicate expression to select
 #' # only those rows we want to modify
-#' data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") %>%
-#'   parse_dist(prior) %>%
-#'   marginalize_lkjcorr(K = 2, coef == "a") %>%
+#' data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") |>
+#'   parse_dist(prior) |>
+#'   marginalize_lkjcorr(K = 2, coef == "a") |>
 #'   marginalize_lkjcorr(K = 4, coef == "b")
 #'
 #' @importFrom rlang quo_get_expr

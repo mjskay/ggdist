@@ -20,7 +20,7 @@ test_that("distribution eye plots work with the args aesthetic", {
     "norm", list(0, 1),
     "beta", list(5, 5),
     NA, NA
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args))
 
   expect_warning(
@@ -69,7 +69,7 @@ test_that("args and arg1...n work with named args", {
 
 
   vdiffr::expect_doppelganger("named args for dist", {
-    tibble(args = list(list(mean = 1)), sd = 2) %>%
+    tibble(args = list(list(mean = 1)), sd = 2) |>
       ggplot(aes(xdist = "norm", args = args, arg1 = sd)) +
       stat_halfeye(n = 15)
   })
@@ -77,7 +77,7 @@ test_that("args and arg1...n work with named args", {
 })
 
 test_that("layer data is correct", {
-  p = data.frame(dist = dist_normal(0, 1)) %>%
+  p = data.frame(dist = dist_normal(0, 1)) |>
     ggplot(aes(xdist = dist)) +
     stat_halfeye(n = 5, p_limits = c(0.01, 0.99))
 
@@ -99,7 +99,7 @@ test_that("layer data is correct", {
       xmin = NA_real_,
       xmax = NA_real_,
       stringsAsFactors = FALSE
-    ) %>%
+    ) |>
     rbind(data.frame(
       size = c(6, 1),
       thickness = NA_real_,
@@ -116,7 +116,7 @@ test_that("layer data is correct", {
       xmin = qnorm(c(0.17, 0.025)),
       xmax = qnorm(c(0.83, 0.975)),
       stringsAsFactors = FALSE
-    )) %>%
+    )) |>
     cbind(data.frame(
       y = 0,
       height = 1,
@@ -138,14 +138,14 @@ test_that("xdist and ydist aesthetics work", {
   df = data.frame(var = c(1,2), dist = dist_normal(0:1,1))
 
   vdiffr::expect_doppelganger("ydist",
-    df %>%
+    df |>
       ggplot(aes(x = var, ydist = dist)) +
       stat_dist_halfeye(n = 15) +
       scale_y_continuous(limits = c(-7, 7))
   )
 
   vdiffr::expect_doppelganger("xdist",
-    df %>%
+    df |>
       ggplot(aes(xdist = dist, y = var)) +
       stat_dist_halfeye(n = 15) +
       scale_x_continuous(limits = c(-7, 7))
@@ -158,7 +158,7 @@ test_that("mapping dist to x or y gives helpful error", {
 
   expect_error(
     ggplot_build(
-      df %>%
+      df |>
         ggplot(aes(x = var, y = dist)) +
         stat_dist_halfeye(n = 15)
     ),
@@ -167,7 +167,7 @@ test_that("mapping dist to x or y gives helpful error", {
 
   expect_error(
     ggplot_build(
-      df %>%
+      df |>
         ggplot(aes(x = dist, y = var)) +
         stat_dist_halfeye(n = 15)
     ),
@@ -180,7 +180,7 @@ test_that("stat fill aesthetic on halfeye works", {
 
 
   vdiffr::expect_doppelganger("gradient fill/color halfeye",
-    tibble(dist = "norm", mean = 0, sd = 1) %>%
+    tibble(dist = "norm", mean = 0, sd = 1) |>
       ggplot(aes(
         y = 1, dist = dist, arg1 = mean, arg2 = sd,
         fill = after_stat(f),
@@ -201,7 +201,7 @@ test_that("stat_dist_gradientinterval works", {
     ~dist, ~args,
     "norm", list(0, 1),
     "t", list(3)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args, fill = dist)) +
     scale_slab_alpha_continuous(range = c(0,1))
 
@@ -222,7 +222,7 @@ test_that("fill_type = 'gradient' works", {
     ~dist, ~args,
     "norm", list(0, 1),
     "t", list(3)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args, fill = dist)) +
     scale_slab_alpha_continuous(range = c(0,1))
 
@@ -244,7 +244,7 @@ test_that("stat_dist_pointinterval, interval, and slab work", {
     ~dist, ~args,
     "norm", list(0, 1),
     "t", list(3)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args)) +
     scale_color_brewer()
 
@@ -292,7 +292,7 @@ test_that("scale transformation works", {
 
 
   # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
-  p_log = tibble(dist = "lnorm") %>%
+  p_log = tibble(dist = "lnorm") |>
     ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
@@ -309,7 +309,7 @@ test_that("scale transformation works", {
   )
 
 
-  p_log_wrap = data.frame(x = dist_wrap("lnorm")) %>%
+  p_log_wrap = data.frame(x = dist_wrap("lnorm")) |>
     ggplot(aes(xdist = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with dist_wrap(lnorm)",
@@ -317,7 +317,7 @@ test_that("scale transformation works", {
   )
 
 
-  p_rev = tibble(dist = "lnorm") %>%
+  p_rev = tibble(dist = "lnorm") |>
     ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
     scale_x_reverse()
 
@@ -331,7 +331,7 @@ test_that("scale transformation works", {
 
 
   # transform that should require numerical diff
-  p_logit = data.frame(dist = dist_beta(2,2)) %>%
+  p_logit = data.frame(dist = dist_beta(2,2)) |>
     ggplot(aes(xdist = dist)) +
     scale_x_continuous(trans = scales::trans_new("logit", qlogis, plogis))
 
@@ -341,7 +341,7 @@ test_that("scale transformation works", {
 
 
   # transform that should work with symbolic diff
-  p_log_sym = data.frame(dist = dist_lognormal(2,2)) %>%
+  p_log_sym = data.frame(dist = dist_lognormal(2,2)) |>
     ggplot(aes(xdist = dist)) +
     scale_x_continuous(trans = scales::trans_new("log", function(x) log(x), function(x) exp(x)))
 
@@ -357,7 +357,7 @@ test_that("scale transformation works on dist_sample", {
   skip_if_sensitive_to_density()
 
 
-  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%
+  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) |>
     ggplot(aes(xdist = x, y = 0))
 
   vdiffr::expect_doppelganger("trans scale dist_sample",
@@ -368,7 +368,7 @@ test_that("scale transformation works on dist_sample", {
       geom_point(aes(x = x), data =  data.frame(x = range(qlnorm(ppoints(200)))))
   )
 
-  p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
+  p_log_samp = data.frame(x = qlnorm(ppoints(200))) |>
     ggplot(aes(x = x, y = 0))
 
   vdiffr::expect_doppelganger("trans scale sample data",
@@ -379,7 +379,7 @@ test_that("scale transformation works on dist_sample", {
 
 
 test_that("scale transformation sets appropriate axis limits", {
-  p = data.frame(x = dist_lognormal(10, 0.5)) %>%
+  p = data.frame(x = dist_lognormal(10, 0.5)) |>
     ggplot(aes(xdist = x)) +
     stat_halfeye()
 
@@ -402,7 +402,7 @@ test_that("scale transformation sets appropriate axis limits", {
 
 test_that("scale transformation works when no slab is present", {
   ld = layer_data(
-    data.frame(x = dist_lognormal(log(100), log(10))) %>%
+    data.frame(x = dist_lognormal(log(100), log(10))) |>
       ggplot(aes(xdist = x)) +
       stat_pointinterval() +
       scale_x_log10()
@@ -451,7 +451,7 @@ test_that("auto-grouping works on stat_dist", {
   p = tibble(
     dist = c("norm", "norm"),
     x = c(1, 2)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, arg1 = x, y = 0))
 
   vdiffr::expect_doppelganger("stat_dist with no grouping",
@@ -468,7 +468,7 @@ test_that("pdf and cdf aesthetics work", {
     ~dist, ~args,
     "norm", list(0, 1),
     "t", list(3)
-  ) %>%
+  ) |>
     ggplot(aes(dist = dist, args = args, fill = dist, thickness = after_stat(pdf), slab_alpha = after_stat(cdf))) +
     scale_slab_alpha_continuous(range = c(0,1))
 
@@ -485,7 +485,7 @@ test_that("distributional objects work", {
     ~name, ~dist,
     "norm", dist_normal(0, 1.5),
     "t", dist_student_t(3)
-  ) %>%
+  ) |>
     ggplot(aes(x = name, dist = dist))
 
   vdiffr::expect_doppelganger("dist objects in stat_dist_halfeye",
@@ -504,7 +504,7 @@ test_that("dist_sample objects work", {
   vdiffr::expect_doppelganger("dist_sample",
     tibble(
       x = dist_sample(list(qnorm(ppoints(100)), qnorm(ppoints(100), mean = 1)))
-    ) %>%
+    ) |>
       ggplot(aes(dist = x, y = "a")) +
       stat_dist_slab(fill = NA, color = "black", n = 15)
   )
@@ -518,7 +518,7 @@ test_that("stat_dist_ works on factor dist names", {
   p = data.frame(
     x = factor(c("norm", "norm")),
     y = factor(c("a", "b"))
-  ) %>%
+  ) |>
     ggplot(aes(dist = x, y = y))
 
   vdiffr::expect_doppelganger("stat_dist_ with factor dist name",
@@ -532,7 +532,7 @@ test_that("automatic finite limits work", {
 
 
   # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
-  p = data.frame(dist = dist_beta(2,2)) %>%
+  p = data.frame(dist = dist_beta(2,2)) |>
     ggplot(aes(y = 0, dist = dist))
 
   vdiffr::expect_doppelganger("dist_slab beta(2,2)",
@@ -548,7 +548,7 @@ test_that("justification can vary", {
     1, "norm", dist_normal(0, 1.5),  1,
     2, "norm", dist_normal(0, 1),  0.5,
     3, "t",    dist_student_t(3),    0
-  ) %>%
+  ) |>
     ggplot(aes(x = id, dist = dist, justification = just))
 
   vdiffr::expect_doppelganger("ccdf with varying just",
@@ -564,7 +564,7 @@ test_that("NA distributional objects work", {
     ~name, ~dist,
     "norm", dist_normal(0, 1.5),
     "missing", NULL
-  ) %>%
+  ) |>
     ggplot(aes(x = name, dist = dist))
 
   vdiffr::expect_doppelganger("NA dists in stat_dist_slabinterval",
@@ -580,7 +580,7 @@ test_that("NA distributional objects work", {
 test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
   expect_warning(
     invisible(ggplot_build(
-      tibble(y = c("a","b","c"), x = list(1,2,3)) %>%
+      tibble(y = c("a","b","c"), x = list(1,2,3)) |>
         ggplot(aes(y = y, dist = x)) + stat_dist_slabinterval()
     ))
     ,
@@ -600,7 +600,7 @@ test_that("stat_dist_ detects discrete distributions", {
   skip_if_no_vdiffr()
 
 
-  p = tibble(lambda = c(13,7,2)) %>%
+  p = tibble(lambda = c(13,7,2)) |>
     ggplot(aes(x = lambda))
 
   vdiffr::expect_doppelganger("dist_poisson", {
@@ -961,7 +961,7 @@ test_that("stat_dist_ preserves existing grouping order", {
 
   # the labels should overlap the points exactly if grouping order is preserved
   vdiffr::expect_doppelganger("grouped labels with pointintervals",
-    df %>%
+    df |>
       ggplot() +
       aes(x = Model, y = Coefficient,
         label = Parameter, color = Parameter,
@@ -984,7 +984,7 @@ test_that("constant distributions work", {
   p = tibble(
     x = c("constant = 1", "normal(2,1)", "constant = 2"),
     y = c(dist_normal(1:2, 0:1), dist_sample(list(2)))
-  ) %>%
+  ) |>
     ggplot(aes(x = x, dist = y))
 
   vdiffr::expect_doppelganger("constant dist on halfeye",
@@ -1003,7 +1003,7 @@ test_that("constant distributions work", {
   p = tibble(
     x = c("constant = 10", "lognormal(2,1)", "constant = 2"),
     y = c(dist_wrap("lnorm", c(log(10), 2), 0:1), dist_sample(list(2)))
-  ) %>%
+  ) |>
     ggplot(aes(x = x, dist = y)) +
     scale_y_log10()
 
@@ -1018,7 +1018,7 @@ test_that("constant distributions work", {
   # with sample data...
   p = data.frame(
     x = c(5, 5)
-  ) %>%
+  ) |>
     ggplot(aes(x = x)) +
     expand_limits(x = c(0,10))
 
@@ -1041,7 +1041,7 @@ test_that("point_interval works", {
 
   p = data.frame(
     x = dist_mixture(dist_normal(0, 0.5), dist_normal(4, 1), weights = c(0.5, 0.5))
-  ) %>%
+  ) |>
     ggplot(aes(xdist = x))
 
   vdiffr::expect_doppelganger("mixture dist with median_qi",
@@ -1077,7 +1077,7 @@ test_that("rvars work", {
   p = tibble(
     mu = 1:2,
     x = posterior::rvar_rng(rnorm, 2, mu, 1:2)
-  ) %>%
+  ) |>
     ggplot(aes(y = mu, xdist = x, fill = after_stat(cdf)))
 
   vdiffr::expect_doppelganger("halfeye with rvar and cdf",
@@ -1137,7 +1137,7 @@ test_that("stats work without attaching the ggdist namespace", {
   ))
 
   vdiffr::expect_doppelganger("simple halfeye",
-    data.frame(x = dist_normal(0,1)) %>%
+    data.frame(x = dist_normal(0,1)) |>
       ggplot(aes(xdist = x)) +
       ggdist::stat_halfeye()
   )
@@ -1152,7 +1152,7 @@ test_that("multiple dists supplied to the same group", {
   p = data.frame(
     y = dist_normal(c(0, 10, 20, 0, 10, 20)),
     x = c(0,0,0,1,1,1)
-  ) %>%
+  ) |>
     ggplot(aes(ydist = y, x = x, group = rep(c("a","a","b"), 2)))
 
 

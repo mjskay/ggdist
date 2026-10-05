@@ -19,16 +19,16 @@ globalVariables(".width")
 #' # orientation is detected automatically based on
 #' # use of xmin/xmax or ymin/ymax
 #'
-#' RankCorr_u_tau %>%
-#'   group_by(i) %>%
-#'   median_qi(.width = c(.5, .8, .95, .99)) %>%
+#' RankCorr_u_tau |>
+#'   group_by(i) |>
+#'   median_qi(.width = c(.5, .8, .95, .99)) |>
 #'   ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
 #'   geom_interval() +
 #'   scale_color_brewer()
 #'
-#' RankCorr_u_tau %>%
-#'   group_by(i) %>%
-#'   median_qi(.width = c(.5, .8, .95, .99)) %>%
+#' RankCorr_u_tau |>
+#'   group_by(i) |>
+#'   median_qi(.width = c(.5, .8, .95, .99)) |>
 #'   ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
 #'   geom_interval() +
 #'   scale_color_brewer()
