@@ -341,15 +341,18 @@ seq_interleaved_from_n = function(n) {
 #' @importFrom utils head
 #' @noRd
 seq_interleaved_grouped = function(group_ids, from_n = FALSE) {
-  groups = vec_locate_sorted_groups(group_ids)
-  groups$n = lengths(groups$loc)
-  groups$start_on_n = xor(c(FALSE, head(cumsum(groups$n), -1) %% 2 == 1), from_n)
-  groups |>
-    pmap_(function(key, loc, n, start_on_n) {
-      i = if (start_on_n) seq_interleaved_from_n(n) else seq_interleaved_from_1(n)
-      loc[i]
-    }) |>
-    unlist(recursive = FALSE)
+  n = length(group_ids)
+  group_order = order(group_ids)
+  group_ns = vec_unrep(group_ids[group_order])$times
+
+  i = numeric(n)
+  from_1 = rep_len(c(!from_n, from_n), n)
+  from_n = !from_1
+  i[from_1] = ceiling(sequence(group_ns, from = 1L)/2)[from_1]
+  i[from_n] = ceiling(sequence(group_ns, from = group_ns * 2, by = -1L)/2)[from_n]
+
+  first_index_in_group = rep.int(c(0, head(cumsum(group_ns), -1)), group_ns)
+  group_order[i + first_index_in_group]
 }
 
 #' a variant of seq_interleaved that proceeds outwards from the middle,

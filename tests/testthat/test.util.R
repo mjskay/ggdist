@@ -77,3 +77,30 @@ test_that("stop_if_not_installed works properly", {
   expect_s3_class(e, "error")
   expect_equal(e$ggdist_package, "_fake_package")
 })
+
+
+# sequences ----------------------------------------------------------------------------------
+
+test_that("seq_interleaved_grouped works", {
+  expect_equal(
+    seq_interleaved_grouped(c(2, 1, 3, 4, 4, 5, 3, 4, 1, 1, 2, 3)),
+    c(2L, 10L, 9L, 11L, 1L, 12L, 3L, 7L, 4L, 8L, 5L, 6L)
+  )
+
+  expect_equal(
+    seq_interleaved_grouped(c(1, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 5)),
+    c(1L, 3L, 2L, 5L, 4L, 8L, 6L, 7L, 9L, 11L, 10L, 12L)
+  )
+
+  expect_equal(
+    seq_interleaved_grouped(c(1, 2, 5, 3, 6, 8, 4, 4, 3, 2, 34, 4, 6, 76, 3, 2)),
+    c(1L, 16L, 2L, 10L, 4L, 15L, 9L, 12L, 7L, 8L, 3L, 13L, 5L, 6L, 11L, 14L)
+  )
+})
+
+test_that("seq_interleaved_centered_grouped works", {
+  expect_equal(
+    seq_interleaved_centered_grouped(rep(1, 8)),
+    c(4L, 6L, 2L, 8L, 1L, 7L, 3L, 5L)
+  )
+})

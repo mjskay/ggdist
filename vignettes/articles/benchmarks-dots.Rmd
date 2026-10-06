@@ -39,20 +39,27 @@ theme_set(theme_ggdist())
 .old_options = options(width = 100)
 ```
 
-## Dotplot layout benchmarks
+## Layouts
 
-We will benchmark finding dotplot binwidths using the primary layout algorithms plus the old
-implementation of the swarm algorithm (`layout_oldswarm()`):
+We will benchmark using using the primary layout algorithms plus the old implementation of the swarm
+algorithm (`layout_oldswarm()`):
 
-```{r}
+```{r layouts}
 layouts = list(
   bin = layout_bin(),
   weave = layout_weave(),
+  hex = layout_hex(),
   swarm_3 = layout_swarm(strata = 3),
   swarm_inf = layout_swarm(strata = Inf),
   beeswarm = layout_oldswarm()
 )
+```
 
+## Binwidth finding benchmarks
+
+We'll benchmark finding binwidths on a few different distributions at different sizes:
+
+```{r}
 dists = list(
   normal = rnorm,
   uniform = runif,
@@ -99,4 +106,27 @@ df |>
   # scale_y_log10() +
   facet_wrap(~ dist) +
   theme(panel.grid.major.y = element_line(color = "gray75"))
+```
+
+## Binning benchmarks
+
+### Small bins
+
+Layout on many small bins can be slow in some pathological cases if we aren't careful in our
+implementation (doing splits on bins becomes costly), so we'll benchmark that:
+
+```{r}
+x = ppoints(10000)
+
+df = bench::press(
+  layout = names(layouts),
+  {
+    bench::mark(
+      bin_dots(x, binwidth = 0.00001, layout = layouts[[layout]], overlaps = "keep"),
+      min_iterations = 1
+    )
+  }
+)
+
+df
 ```

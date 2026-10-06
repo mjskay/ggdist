@@ -314,15 +314,14 @@ method(place_dots, layout_bin | layout_bar) = function(layout, dotplot) {
 method(place_dots, layout_hex) = function(layout, dotplot) {
   dots = place_dots(super(layout, layout_bin), dotplot)
 
-  dots = ddply_(dots, "bin", function(bin_df) {
-    n_dots = nrow(bin_df)
-    row_start_offset = get_row_start_offset(layout, dotplot, n_dots)
-    # depending on whether this is an even or odd column, need to start the
-    # x offset to the left or to the right
-    x_offset_start = if (row_start_offset %% 2 == 0) 1 else -1
-    bin_df$x = bin_df$x + rep_len(c(-0.25, 0.25) * x_offset_start, n_dots) * dotplot$binwidth
-    bin_df
-  })
+  bin_ns = vec_unrep(dots$bin)$times
+  n_in_bin = rep.int(bin_ns, bin_ns)
+  row_start_offset = get_row_start_offset(layout, dotplot, n_in_bin)
+  # depending on whether this is an even or odd column, need to start the
+  # x offset to the left or to the right
+  bin_start_offset = (row_start_offset %% 2) * 2 - 1
+  x_offset_in_bin = (sequence(bin_ns) %% 2) * 0.5 - 0.25
+  dots$x = dots$x + bin_start_offset * x_offset_in_bin * dotplot$binwidth
 
   dots
 }
@@ -389,34 +388,33 @@ place_dots_x_binned = function(layout, dotplot, dots) {
 #' @returns <[data.frame]> modified version of `dots` with updated `y` column
 #' @noRd
 place_dots_y_binned = function(layout, dotplot, dots) {
-  dots = ddply_(dots, "bin", function(bin_df) {
-    y_offset = seq(
-      0,
-      dotplot$y_spacing * (nrow(bin_df) - 1),
-      length.out = nrow(bin_df)
-    )
-    row_start_offset = get_row_start_offset(layout, dotplot, nrow(bin_df))
-    switch(layout@side,
-      top = {},
-      bottom = {
-        y_offset = -y_offset
-      },
-      both = {
-        y_offset = y_offset - dotplot$y_spacing * row_start_offset
-      }
-    )
-    bin_df$y = bin_df$y + dotplot$y_start + y_offset
+  # index_in_bin = sequence from 0 to length(bin) - 1 within each bin
+  first_rank_in_bin = rank(dots$bin, ties = "min")
+  index_in_bin = rank(dots$bin, ties = "first") - first_rank_in_bin
+  y_offset = index_in_bin * dotplot$y_spacing
 
-    bin_df
-  })
+  switch(layout@side,
+    top = {},
+    bottom = {
+      y_offset = -y_offset
+    },
+    both = {
+      n_in_bin = rank(dots$bin, ties = "max") - first_rank_in_bin + 1
+      row_start_offset = get_row_start_offset(layout, dotplot, n_in_bin)
+      y_offset = y_offset - dotplot$y_spacing * row_start_offset
+    }
+  )
+
+  dots$y = dots$y + dotplot$y_start + y_offset
   dots
 }
 
 #' Get the number of rows the start of a dot column will be offset by
 #' @param layout <[dotplot_layout]> dotplot layout
 #' @param dotplot <[list]> dotplot properties as returned by `setup_dotplot()`
-#' @param n_dots <[integer]> number of dots in the column
-#' @returns <[integer]> number of rows the start of the column is offset by
+#' @param n_dots <[integer]> vector of number of dots in each column
+#' @returns <[integer]> of same length as `n_dots` giving the number of rows the start of that
+#' column is offset by.
 #' @noRd
 get_row_start_offset = function(layout, dotplot, n_dots) {
   if (layout@side == "both") {
@@ -755,9 +753,9 @@ stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = Inf, 
 #' @returns vector of `length(bin_midpoints)` giving new bin midpoints
 #' @noRd
 nudge_bins = function(bin_midpoints, binwidth, count = rep(1, length(bin_midpoints))) {
-  n = length(bin_midpoints)
-  if (n < 2) return(bin_midpoints)
+  if (all(diff(bin_midpoints) >= binwidth)) return(bin_midpoints)
 
+  n = length(bin_midpoints)
   # make coefs minimize squared distance to bin centers, weighted
   # by the number of elements in each bin
   d = count^2 * bin_midpoints

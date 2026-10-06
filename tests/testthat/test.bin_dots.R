@@ -172,7 +172,7 @@ test_that("bin layouts work", {
     group = 1L,
     bin = c(1L,  1L, 2L, 3L, 3L)
   )
-  expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "bin")), ref)
+  expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "bin"), ref)
 
   ref = data.frame(
     x = c(1, 2, 3, 4.5, 5.1),
@@ -180,7 +180,7 @@ test_that("bin layouts work", {
     group = 1L,
     bin = c(1L,  1L, 2L, 3L, 3L)
   )
-  expect_equal(as.data.frame(bin_dots(c(1:3, 4.5, 5.1), 0, binwidth = 1.5, layout = "weave")), ref)
+  expect_equal(bin_dots(c(1:3, 4.5, 5.1), 0, binwidth = 1.5, layout = "weave"), ref, ignore_attr = "row.names")
 
   expect_error(bin_dots(1:5, 0, binwidth = 2, layout = "abc"))
 })
