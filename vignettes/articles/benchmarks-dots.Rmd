@@ -120,13 +120,22 @@ x = ppoints(10000)
 
 df = bench::press(
   layout = names(layouts),
+  side = c("top", "both"),
   {
     bench::mark(
-      bin_dots(x, binwidth = 0.00001, layout = layouts[[layout]], overlaps = "keep"),
+      bin_dots(x, binwidth = 0.00001, layout = layouts[[layout]], overlaps = "keep", side = side),
       min_iterations = 1
     )
   }
 )
 
 df
+```
+
+```{r}
+df |>
+  ggplot(aes(y = layout, x = median, color = side)) +
+  geom_point(position = position_dodge(width = 0.2)) +
+  guides(color = guide_legend(reverse = TRUE)) +
+  bench::scale_x_bench_time(base = NULL)
 ```

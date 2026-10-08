@@ -268,3 +268,14 @@ test_that("grid swarm layout works", {
 test_that("small bins work", {
   expect_equal(wilkinson_bin(c(0, .Machine$double.eps*2), .Machine$double.eps)$bins, 1:2)
 })
+
+test_that("weave layout with side = both works", {
+  ref = data.frame(
+    x = c(-1.5, 1.5, 2.5, 4.5, 5, 6, 7, 7.5, 8.5, 10.5, 11, 12, 13, 13.5, 14.5, 16.5, 17, 18, 19, 19.5, 20.5, 22.5, 23, 24, 25, 25.5, 26.5, 28.5, 31.5, 32.5),
+    y = c(-2.4, -8.4, 3.6, -2.4, 9.6, -14.4, 15.6, -8.4, 3.6, -2.4, 9.6, -14.4, 15.6, -8.4, 3.6, -2.4, 9.6, -14.4, 15.6, -8.4, 3.6, -2.4, 9.6, -14.4, 15.6, -8.4, 3.6, -2.4, -8.4, 3.6),
+    group = c(1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L),
+    bin = c(1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6)
+  )
+
+  expect_equal(bin_dots(x = 1:30, binwidth = 6, layout = "weave", side = "both"), ref, ignore_attr = "row.names")
+})

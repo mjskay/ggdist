@@ -332,13 +332,13 @@ method(place_dots, layout_weave) = function(layout, dotplot) {
 
   # keep original x positions, but re-order within bins so that overlaps
   # across bins are less likely
-  dots = ddply_(dots, "bin", function(bin_df) {
-    seq_fun = if (layout@side == "both") seq_interleaved_centered_grouped else seq_interleaved_grouped
-    bin_df = bin_df[seq_fun(bin_df$group),]
-    bin_df$row = seq_len(nrow(bin_df))
-    if (layout@side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
-    bin_df
-  })
+  if (layout@side == "both") {
+    dots = dots[seq_interleaved_centered_grouped(dots$group, dots$bin),]
+    dots$row = index_in_group(dots$bin) - round((n_in_group(dots$bin) - 1) / 2)
+  } else {
+    dots = dots[seq_interleaved_grouped(dots$group, dots$bin),]
+    dots$row = index_in_group(dots$bin)
+  }
 
   if (layout@overlaps == "nudge") {
     # nudge values within each row to ensure there are no overlaps
@@ -389,8 +389,8 @@ place_dots_x_binned = function(layout, dotplot, dots) {
 #' @noRd
 place_dots_y_binned = function(layout, dotplot, dots) {
   # index_in_bin = sequence from 0 to length(bin) - 1 within each bin
-  first_rank_in_bin = rank(dots$bin, ties = "min")
-  index_in_bin = rank(dots$bin, ties = "first") - first_rank_in_bin
+  first_rank_in_bin = vec_rank(dots$bin, ties = "min")
+  index_in_bin = vec_rank(dots$bin, ties = "sequential") - first_rank_in_bin
   y_offset = index_in_bin * dotplot$y_spacing
 
   switch(layout@side,
@@ -399,7 +399,7 @@ place_dots_y_binned = function(layout, dotplot, dots) {
       y_offset = -y_offset
     },
     both = {
-      n_in_bin = rank(dots$bin, ties = "max") - first_rank_in_bin + 1
+      n_in_bin = vec_rank(dots$bin, ties = "max") - first_rank_in_bin + 1
       row_start_offset = get_row_start_offset(layout, dotplot, n_in_bin)
       y_offset = y_offset - dotplot$y_spacing * row_start_offset
     }

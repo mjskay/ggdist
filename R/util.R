@@ -266,6 +266,42 @@ rev_order = function(x) {
 }
 
 
+# grouped data -------------------------------------------------------------------------------
+
+#' Interact groups
+#' @param ... parallel orderable vectors indicating groups
+#' @returns sequential indices starting from 1 giving the group id of each element, ordered
+#' by the first element of `...`, then the second, and so on.
+interact = function(...) {
+  vec_rank(data_frame0(...), ties = "dense")
+}
+
+#' Get number of elements in each group and match it with the index of each element in a group.
+#' @param group_ids vector of group ids
+#' @returns returns a vector of the same length as `group_ids` giving the size of each group
+#' for each element.
+n_in_group = function(group_ids) {
+  vec_rank(group_ids, ties = "max") - vec_rank(group_ids, ties = "min") + 1L
+}
+
+#' Get the zero-based index of each element within its group.
+#' @param group_ids vector of group ids
+#' @returns returns a vector of the same length as `group_ids` giving the index of that element
+#' within its group; i.e. for each unique value in groups, the first element will get the index
+#' `0`, the second `1`, etc.
+zero_index_in_group = function(group_ids) {
+  vec_rank(group_ids, ties = "sequential") - vec_rank(group_ids, ties = "min")
+}
+
+#' Get the 1-based index of each element within its group.
+#' @param group_ids vector of group ids
+#' @returns returns a vector of the same length as `group_ids` giving the index of that element
+#' within its group; i.e. for each unique value in groups, the first element will get the index
+#' `1`, the second `2`, etc.
+index_in_group = function(group_ids) {
+  zero_index_in_group(group_ids) + 1L
+}
+
 # array manipulation ------------------------------------------------------
 
 # flatten dimensions of an array
@@ -334,26 +370,43 @@ seq_interleaved_from_n = function(n) {
   i
 }
 
-#' `seq_interleaved_from_1()` but on a vector of group ids
-#' Creates a sequence of interleaved sequences in the order of the group ids
+#' Grouped sequences of interleaved forward and reverse indices
+#' Within each unique value of `interact(bin_ids, group_ids)`, acts as if
+#' `seq_interleaved_from_1(group_size)` or `seq_interleaved_from_n(group_size)` were called.
+#' When `from_n == FALSE`, the first group in each bin starts from 1, otherwise the first group
+#' in each bin starts from `n` (last element in that group). Subsequent groups in the same bin
+#' start from `1` if the previous group in that bin ended on `n/2`, and start from `n` if the
+#' previous group ended on `1`.
 #' `seq_interleaved_from_1(n)` is equivalent to `seq_interleaved_grouped(rep(1, n))`
 #' `seq_interleaved_from_n(n)` is equivalent to `seq_interleaved_grouped(rep(1, n), from_n = TRUE)`
-#' @importFrom utils head
 #' @noRd
-seq_interleaved_grouped = function(group_ids, from_n = FALSE) {
+seq_interleaved_grouped = function(group_ids, bin_ids = 1L, from_n = FALSE, rev_bins = FALSE) {
   n = length(group_ids)
-  group_order = order(group_ids)
+  if (n <= 1L) return(seq_len(n))
+
+  bin_ids = vec_recycle(bin_ids, n)
+  group_ids = interact(bin_ids, group_ids)
+  group_order = order(bin_ids, group_ids)
   group_ns = vec_unrep(group_ids[group_order])$times
+  bin_ns = vec_unrep(bin_ids[group_order])$times
 
-  i = numeric(n)
-  from_1 = rep_len(c(!from_n, from_n), n)
-  from_n = !from_1
-  i[from_1] = ceiling(sequence(group_ns, from = 1L)/2)[from_1]
-  i[from_n] = ceiling(sequence(group_ns, from = group_ns * 2, by = -1L)/2)[from_n]
+  # (1, 1, 2, 2, 3, 3, ... ceiling(n/2), ceiling(n/2)) in each group
+  i = ceiling(sequence(group_ns, from = 1L)/2)
+  # interleave i with (n, n, n - 1, n - 1, .... ceiling(n/2), ceiling(n/2)) in each group
+  from_n = sequence(bin_ns) %% 2L == as.logical(from_n)
+  i[from_n] = ceiling(sequence(group_ns, from = group_ns * 2L, by = -1L)/2)[from_n]
 
-  first_index_in_group = rep.int(c(0, head(cumsum(group_ns), -1)), group_ns)
-  group_order[i + first_index_in_group]
+  first_index_in_group = rep.int(c(0L, head(cumsum(group_ns), -1L)), group_ns)
+  i = i + first_index_in_group
+
+  if (rev_bins) {
+    first_index_in_bin = rep.int(c(0L, head(cumsum(bin_ns), -1L)), bin_ns)
+    bin_rev_i = sequence(bin_ns, from = bin_ns, by = -1L) + first_index_in_bin
+    i = i[bin_rev_i]
+  }
+  group_order[i]
 }
+
 
 #' a variant of seq_interleaved that proceeds outwards from the middle,
 #' for use with layout = "weave" when side = "both" in dots geoms
@@ -375,26 +428,41 @@ seq_interleaved_centered = function(n) {
   if (n %% 4 == 2) rev(out) else out
 }
 
-#' `seq_interleaved_centered()` but on a vector of group ids
-#' Creates a sequence of interleaved sequences in the order of the group ids,
-#' from the middle out.
+#' `seq_interleaved_centered()` but in groups within bins
+#' Within each unique value of `bin_ids`, creates a sequence of interleaved sequences in the order
+#' of the `group_ids` in that bin, from the middle out.
 #' `seq_interleaved_centered(n)` is equivalent to `seq_interleaved_centered_grouped(rep(1, n))`
 #' @noRd
-seq_interleaved_centered_grouped = function(group_ids) {
-  i = order(group_ids)
+seq_interleaved_centered_grouped = function(group_ids, bin_ids = 1L) {
   n = length(group_ids)
-  if (n <= 2) return(i)
+  if (n <= 1L) return(seq_len(n))
 
-  bottom_i = i[c(FALSE, TRUE)]
-  top_i = i[c(TRUE, FALSE)]
-  out = c(
-    bottom_i[rev(seq_interleaved_grouped(group_ids[bottom_i], from_n = TRUE))],
-    top_i[seq_interleaved_grouped(group_ids[top_i])]
-  )
+  bin_ids = vec_recycle(bin_ids, n)
+
+  nonside_group_order = order(bin_ids, group_ids)
+  is_top = (zero_index_in_group(bin_ids[nonside_group_order]) %% 2L == 0L)[order(nonside_group_order)]
+
+  bin_group_order = order(bin_ids, is_top, group_ids)
+  group_ids = group_ids[bin_group_order]
+  bin_ids = bin_ids[bin_group_order]
+  is_top = is_top[bin_group_order]
+  is_btm = !is_top
+
+  i = seq_len(n)
+  i[is_top] = i[is_top][seq_interleaved_grouped(group_ids[is_top], bin_ids[is_top])]
+  i[is_btm] = i[is_btm][seq_interleaved_grouped(group_ids[is_btm], bin_ids[is_btm], from_n = TRUE, rev_bins = TRUE)]
 
   # we reverse alternating stacks with even n (n %% 4 == 0 and n %% 4 == 2),
   # because in a weave layout with side = "both" bins with even n must have
   # an extra dot on one side of the center line, and we want to avoid always
   # putting the extra dot on the same side
-  if (n %% 4 == 2) rev(out) else out
+  bin_ns = vec_unrep(bin_ids)$times
+  n_in_bin = rep.int(bin_ns, bin_ns)
+  to_reverse = n_in_bin %% 4L == 2L
+  first_index_in_bin = rep.int(c(0L, head(cumsum(bin_ns), -1L)), bin_ns)
+  bin_rev_i = seq_len(n)
+  bin_rev_i[to_reverse] = (sequence(bin_ns, from = bin_ns, by = -1L) + first_index_in_bin)[to_reverse]
+  i = i[bin_rev_i]
+
+  bin_group_order[i]
 }

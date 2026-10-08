@@ -104,3 +104,35 @@ test_that("seq_interleaved_centered_grouped works", {
     c(4L, 6L, 2L, 8L, 1L, 7L, 3L, 5L)
   )
 })
+
+test_that("seq_interleaved_grouped works on binned groups", {
+  bins =       c(1,1,1,2,2,2,2,3,4,4,5,5,5,5,5,5,5,7,7,8,9,9,9,9,9,10,10,10,10)
+  bin_groups = c(1,1,2,1,1,2,2,1,2,2,1,2,2,1,2,2,2,1,1,2,2,2,2,2,2, 1, 1, 1, 1)
+  first_index = rank(bins, ties.method = "min")
+  ref = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 12, 17, 13, 16, 15, 18, 19, 20, 21, 25, 22, 24, 23, 26, 29, 27, 28)
+
+  expect_equal(
+    data.frame(bins, bin_groups, first_index) |>
+      dlply_("bins", \(d) seq_interleaved_grouped(d$bin_groups) + c(d$first_index) - 1) |>
+      unlist(),
+    ref
+  )
+
+  expect_equal(seq_interleaved_grouped(bin_groups, bins), ref)
+})
+
+test_that("seq_interleaved_centered_grouped works on binned groups", {
+  bins =       c(1,1,1,2,2,2,2,3,4,4,5,5,5,5,5,5,5,7,7,8,9,9,9,9,9,10,10,10,10)
+  bin_groups = c(1,1,2,1,1,2,2,1,2,2,1,2,2,1,2,2,2,1,1,2,2,2,2,2,2, 1, 1, 1, 1)
+  first_index = rank(bins, ties.method = "min")
+  ref = c(2, 1, 3, 7, 5, 4, 6, 8, 9, 10, 16, 13, 14, 11, 17, 12, 15, 18, 19, 20, 22, 24, 21, 25, 23, 27, 29, 26, 28)
+
+  expect_equal(
+    data.frame(bins, bin_groups, first_index) |>
+      dlply_("bins", \(d) seq_interleaved_centered_grouped(d$bin_groups) + c(d$first_index) - 1) |>
+      unlist(),
+    ref
+  )
+
+  expect_equal(seq_interleaved_centered_grouped(bin_groups, bins), ref)
+})
