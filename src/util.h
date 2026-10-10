@@ -195,13 +195,13 @@ inline auto advance_to_at_least(
 /// @param hi iterator to upper limit of interval on a container of sorted values.
 /// Must have `hi > lo` (i.e. the sequence must have length >= 1).
 /// @param f function to be minimized, taking values from the container `lo` and `hi`
-/// @returns a pair containing:
-///  - An iterator pointing to the location of the minimum value of `f` in the interval
-///  - The corresponding minimum value of `f`
+/// @returns `{m, it}` a pair containing:
+///  - `m = f(*it)`: The minimum value of `f`
+///  - `it`: An iterator pointing to the location of the minimum value of `f` in the interval
 template<typename It, typename F>
-inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<It, decltype(f(*lo))> {
+inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<decltype(f(*lo)), It> {
   assert(hi > lo);
-  if (*lo == *(hi - 1_z)) return {lo, f(*lo)}; // f is constant or n = 1
+  if (*lo == *(hi - 1_z)) return {f(*lo), lo}; // f is constant or n = 1
 
   // Initialize probe points
   // At this point we know that n is >= 2. We initialize as follows:
@@ -288,5 +288,5 @@ inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<It, decltype(f(*l
     f_best = f2;
   }
 
-  return {best, f_best};
+  return {f_best, best};
 }

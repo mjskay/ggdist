@@ -67,7 +67,7 @@ dists = list(
   constant = \(n) rep(1, n)
 )
 
-set.seed(12345)
+set.seed(123456)
 df = bench::press(
   layout = names(layouts),
   n = c(100, 1000, 2500, 5000),
@@ -118,6 +118,7 @@ aren't careful in our implementation, so we'll benchmark those:
 ```{r}
 x = ppoints(10000)
 
+set.seed(123456)
 df = bench::press(
   layout = names(layouts),
   side = c("top", "both"),
@@ -126,7 +127,7 @@ df = bench::press(
   {
     bench::mark(
       bin_dots(x, binwidth = binwidth, layout = layouts[[layout]], side = side, span = span),
-      min_iterations = 10
+      min_iterations = 20
     )
   }
 )
