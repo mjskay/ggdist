@@ -110,10 +110,10 @@ df |>
 
 ## Binning benchmarks
 
-### Small bins
+### Extreme binwidths
 
-Layout on many small bins can be slow in some pathological cases if we aren't careful in our
-implementation (doing splits on bins becomes costly), so we'll benchmark that:
+Layout on many small bins or with all dots in one bin can be slow in some pathological cases if we
+aren't careful in our implementation, so we'll benchmark those:
 
 ```{r}
 x = ppoints(10000)
@@ -121,10 +121,12 @@ x = ppoints(10000)
 df = bench::press(
   layout = names(layouts),
   side = c("top", "both"),
+  binwidth = c(1, 0.01, 0.00001),
+  span = c(0, 1.25),
   {
     bench::mark(
-      bin_dots(x, binwidth = 0.00001, layout = layouts[[layout]], overlaps = "keep", side = side),
-      min_iterations = 1
+      bin_dots(x, binwidth = binwidth, layout = layouts[[layout]], side = side, span = span),
+      min_iterations = 10
     )
   }
 )
@@ -134,8 +136,8 @@ df
 
 ```{r}
 df |>
-  ggplot(aes(y = layout, x = median, color = side)) +
-  geom_point(position = position_dodge(width = 0.2)) +
-  guides(color = guide_legend(reverse = TRUE)) +
+  ggplot(aes(y = layout, x = median, color = factor(binwidth), shape = interaction(side, span))) +
+  geom_swarm(group = NA, binwidth = unit(2, "mm")) +
+  scale_shape_discrete() +
   bench::scale_x_bench_time(base = NULL)
 ```

@@ -341,11 +341,14 @@ method(place_dots, layout_weave) = function(layout, dotplot) {
   }
 
   if (layout@overlaps == "nudge") {
-    # nudge values within each row to ensure there are no overlaps
-    dots = ddply_(dots, "row", function(row_df) {
-      row_df$x = nudge_bins(row_df$x, dotplot$binwidth)
-      row_df
-    })
+    # Nudge values within each row to ensure there are no overlaps.
+    # By pulling out `x`` into its own vector we can update slices of it while avoiding creating
+    # many copies of the (potentially large) `dots` data frame
+    x = dots$x
+    for (row_i in vec_group_loc(dots$row)$loc) {
+      x[row_i] = nudge_bins(x[row_i], dotplot$binwidth)
+    }
+    dots$x = x
   }
 
   dots$row = NULL
@@ -753,9 +756,12 @@ stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = Inf, 
 #' @returns vector of `length(bin_midpoints)` giving new bin midpoints
 #' @noRd
 nudge_bins = function(bin_midpoints, binwidth, count = rep(1, length(bin_midpoints))) {
-  if (all(diff(bin_midpoints) >= binwidth)) return(bin_midpoints)
-
   n = length(bin_midpoints)
+  # short circuit expensive nudging calcluations if we can --- even doing the n <= 1 check before
+  # the all(diff(...)) check can to save substantial time in some cases (e.g. weave on a very large
+  # dotplot with a binwidth that contains all dots)
+  if (n <= 1 || all(diff(bin_midpoints) >= binwidth)) return(bin_midpoints)
+
   # make coefs minimize squared distance to bin centers, weighted
   # by the number of elements in each bin
   d = count^2 * bin_midpoints
