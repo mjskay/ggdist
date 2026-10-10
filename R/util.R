@@ -205,28 +205,12 @@ ddply_ = function(data, groups, fun, ...) {
   vec_rbind(!!!dlply_(data, groups, fun, ...))
 }
 
-fct_explicit_na_ = function(x) {
-  x = as.factor(x)
-  if (anyNA(x) || anyNA(levels(x))) {
-    na_name = "(Missing)"
-    levels_x = levels(x)
-    while (na_name %in% levels_x) {
-      na_name = paste0(na_name, "+")
-    }
-    levels(x) = c(levels_x, na_name)
-    x[is.na(x)] = na_name
-  }
-  x
-}
-
 dlply_ = function(data, groups, fun, ...) {
-  # must make NAs explicit or they will be dropped by split()
-  group_factors = lapply(data[, groups, drop = FALSE], fct_explicit_na_)
+  group_cols = data[, groups, drop = FALSE]
 
-  if (length(group_factors) >= 1) {
-    # group_is = a list where each element is a numeric vector of indices
-    # corresponding to one group
-    group_is = unname(split(seq_len(nrow(data)), group_factors, drop = TRUE, lex.order = TRUE))
+  if (ncol(group_cols) >= 1) {
+    # group_is = a list where each element is a numeric vector of indices corresponding to one group
+    group_is = vec_locate_sorted_groups(group_cols)$loc
 
     lapply(group_is, function(group_i) {
       # faster version of row_df = data[group_i, , drop = FALSE]
