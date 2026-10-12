@@ -119,7 +119,7 @@ aren't careful in our implementation, so we'll benchmark those:
 x = ppoints(10000)
 
 set.seed(123456)
-df = bench::press(
+df_bw = bench::press(
   layout = names(layouts),
   side = c("top", "both"),
   binwidth = c(1, 0.01, 0.00001),
@@ -132,11 +132,11 @@ df = bench::press(
   }
 )
 
-df
+df_bw
 ```
 
 ```{r}
-df |>
+df_bw |>
   ggplot(aes(y = layout, x = median, color = factor(binwidth), shape = interaction(side, span))) +
   geom_swarm(group = NA, binwidth = unit(2, "mm")) +
   scale_shape_discrete() +

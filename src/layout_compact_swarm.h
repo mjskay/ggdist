@@ -67,10 +67,10 @@ class CompactSwarm {
     /// Group-specific penalty applied to `y` when queueing it for placement.
     double penalty;
     /// Optional vector of normalized unplaced points in this region.
-    /// When present, `xi_1` and `xi_2` are iterators on `xs`. When a region is less than a set
-    /// width we stop splitting it into sub-regions and instead copy its elements into `xs` and
-    /// remove them as they are placed. This helps keep the `next_unplaced` queue from growing
-    /// too large. See `queue_region()`.
+    /// When present, `xi_1` and `xi_2` are iterators on `xs`. When a narrow region contains many
+    /// unplaced dots, we do not split it into sub-regions and instead copy its elements into `xs`
+    /// and remove them as they are placed. This helps keep the `next_unplaced` queue from filling
+    /// with many regions that must be ejected and re-inserted often. See `queue_region()`.
     std::shared_ptr<Xs> xs;
 
     /// A region of unplaced dots in the plot.
@@ -306,6 +306,13 @@ class CompactSwarm {
     }
   }
 
+  /// Max number of elements in a "small" (low-count) unplaced region.
+  /// Used to decide when to split an unplaced region or not (see `queue_region()`).
+  static constexpr std::ptrdiff_t small_region_size = 8_z;
+  /// Max binwidth of a "narrow" unplaced region.
+  /// Used to decide when to split an unplaced region or not (see `queue_region()`).
+  static constexpr double narrow_binwidth = 0.5;
+
   /// Create and enqueue the unplaced region [xi_1, xi_2) for future search.
   /// @tparam guess If `true` (the default), produces a guess for lower limit of `y` before
   /// enqueuing. If `false`, does not calculate an initial guess at best placement: just enters 0.0
@@ -321,11 +328,14 @@ class CompactSwarm {
   void queue_region(XIt xi_1, XIt xi_2, const double penalty, std::shared_ptr<Xs> xs = nullptr) {
     if (xi_2 <= xi_1) return;
 
-    if (!xs && *(xi_2 - 1) - *xi_1 <= 0.433) {
-      // When the distance between the endpoints of a region become small, we copy the points in
-      // that region into a new vector and stop splitting the region (instead we will just erase
-      // values from `xs` as we place dots). This keeps the queue from getting filled with many
-      // small regions, which can kill performance.
+    if (!xs && xi_2 - xi_1 > small_region_size && *(xi_2 - 1_z) - *xi_1 <= narrow_binwidth) {
+      // If an interval [xi_1, xi_2) has many unplaced dots and is narrow, it is expensive to split
+      // that interval into many separate unplaced regions in the queue, because whenever one dot in
+      // that interval is placed we will tend to need to eject and re-calculate the lowest height of
+      // all of the unplaced regions in that interval. Instead, for such an interval, we copy the
+      // points in that interval into a new vector and stop splitting it into more regions on
+      // placement (instead we will just erase values from `xs` as we place dots) until it only has
+      // a small number of dots left.
       xs = std::make_shared<Xs>(xi_1, xi_2);
       xi_1 = xs->cbegin();
       xi_2 = xs->cend();
@@ -418,16 +428,18 @@ class CompactSwarm {
         // lowest region
         place_dot(*xi_new, y_new, s_new, u.penalty);
 
-        if (u.xs) {
-          // For small regions we keep a vector of the remaining elements and erase from it.
-          // This is faster than putting many small regions in the queue.
+        if (u.xs && u.xs->size() > small_region_size) {
+          // For narrow regions with a large number of unplaced dots we keep a vector of the
+          // remaining elements and erase from it, which is faster than putting many small regions
+          // with overlapping dots in the queue.
           u.xs->erase(xi_new);
           queue_region(u.xs->cbegin(), u.xs->cend(), u.penalty, u.xs);
         } else {
-          // For larger regions, we split the region and queue both halves:
+          // For wide regions or regions with a small number of unplaced points, we split the region
+          // and queue both halves:
           // [xi_1, xi_2) \ {xi_new} == [xi_1, xi_new) U (xi_new, xi_2)
-          queue_region(u.xi_1, xi_new, u.penalty);
-          queue_region(xi_new + 1_z, u.xi_2, u.penalty);
+          queue_region(u.xi_1, xi_new, u.penalty, u.xs);
+          queue_region(xi_new + 1_z, u.xi_2, u.penalty, u.xs);
         }
       }
     }
