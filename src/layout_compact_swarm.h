@@ -118,8 +118,6 @@ class CompactSwarm {
 
   /// Frontier of placed dots on one side of the plot.
   using Frontier = std::set<Dot>;
-  /// Iterator pointing to a single Dot in a Frontier.
-  using DotIt = typename Frontier::iterator;
 
   // CONSTRUCTORS ---------------------------------------------------------------------------------
  public:
@@ -182,9 +180,9 @@ class CompactSwarm {
   /// Unnormalized y values.
   Doubles out_y;
   /// C array backing `out_x`
-  double* out_x_arr;
+  double* const out_x_arr;
   /// C array backing `out_y`
-  double* out_y_arr;
+  double* const out_y_arr;
 
   /// Index of the next-to-be-placed value in out_x and out_y
   std::ptrdiff_t i = 0_z;
@@ -214,7 +212,7 @@ class CompactSwarm {
   /// Contains placed dots in increasing x order. Used to find the lowest placed point for dots.
   /// Automatically pruned to remove dots far enough below `frontier_min_y` that we will never need
   /// to check them again.
-  Frontier frontier[2] = {};
+  Frontier frontier[2];
 
   /// Minimum y value of dots in the frontier.
   /// This is the minimum y value of an already-placed dot that could intersect with any unplaced
@@ -286,7 +284,8 @@ class CompactSwarm {
   /// position it would be placed at on Side `s`. `y` positions are always increasing positively
   /// away from the axis (i.e. they are negated if `s == BTM`).
   auto min_region_y(const XIt xi_1, const XIt xi_2, const Side s) -> std::tuple<double, XIt, Side> {
-    auto [y, xi] = unimodal_min(xi_1, xi_2, [this, s](const double x) { return min_dot_y(x, s); });
+    const auto [y, xi] =
+      unimodal_min(xi_1, xi_2, [this, s](const double x) { return min_dot_y(x, s); });
     return {y, xi, s};
   }
 
@@ -306,9 +305,10 @@ class CompactSwarm {
     }
   }
 
-  /// Max number of elements in a "small" (low-count) unplaced region.
+  /// Max size of a narrow unplaced region that we will split.
+  /// Narrow regions <= this size may be split; narrow regions > this size are not split.
   /// Used to decide when to split an unplaced region or not (see `queue_region()`).
-  static constexpr std::ptrdiff_t small_region_size = 8_z;
+  static constexpr std::ptrdiff_t narrow_split_size = 12_z;
   /// Max binwidth of a "narrow" unplaced region.
   /// Used to decide when to split an unplaced region or not (see `queue_region()`).
   static constexpr double narrow_binwidth = 0.5;
@@ -328,7 +328,7 @@ class CompactSwarm {
   void queue_region(XIt xi_1, XIt xi_2, const double penalty, std::shared_ptr<Xs> xs = nullptr) {
     if (xi_2 <= xi_1) return;
 
-    if (!xs && xi_2 - xi_1 > small_region_size && *(xi_2 - 1_z) - *xi_1 <= narrow_binwidth) {
+    if (!xs && xi_2 - xi_1 > narrow_split_size && *(xi_2 - 1_z) - *xi_1 <= narrow_binwidth) {
       // If an interval [xi_1, xi_2) has many unplaced dots and is narrow, it is expensive to split
       // that interval into many separate unplaced regions in the queue, because whenever one dot in
       // that interval is placed we will tend to need to eject and re-calculate the lowest height of
@@ -428,10 +428,14 @@ class CompactSwarm {
         // lowest region
         place_dot(*xi_new, y_new, s_new, u.penalty);
 
-        if (u.xs && u.xs->size() > small_region_size) {
+        if (u.xs && u.xs->size() > narrow_split_size) {
           // For narrow regions with a large number of unplaced dots we keep a vector of the
           // remaining elements and erase from it, which is faster than putting many small regions
           // with overlapping dots in the queue.
+          // We know we can erase here because `xs` is created when its size is > narrow_split_size
+          // and multiple references to it are only ever created after it is split, which occurs
+          // after its size is <= narrow_split_size (after which this branch will never be taken).
+          assert(u.xs.use_count() == 1);
           u.xs->erase(xi_new);
           queue_region(u.xs->cbegin(), u.xs->cend(), u.penalty, u.xs);
         } else {

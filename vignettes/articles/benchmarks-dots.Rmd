@@ -67,7 +67,7 @@ dists = list(
   constant = \(n) rep(1, n)
 )
 
-set.seed(123456)
+set.seed(20261019)
 df = bench::press(
   layout = names(layouts),
   n = c(100, 1000, 2500, 5000),
@@ -118,7 +118,7 @@ aren't careful in our implementation, so we'll benchmark those:
 ```{r}
 x = ppoints(10000)
 
-set.seed(123456)
+set.seed(20261019)
 df_bw = bench::press(
   layout = names(layouts),
   side = c("top", "both"),
@@ -138,7 +138,7 @@ df_bw
 ```{r}
 df_bw |>
   ggplot(aes(y = layout, x = median, color = factor(binwidth), shape = interaction(side, span))) +
-  geom_swarm(group = NA, binwidth = unit(2, "mm")) +
+  geom_swarm(group = NA, binwidth = unit(c(1.5, 4), "mm")) +
   scale_shape_discrete() +
   bench::scale_x_bench_time(base = NULL)
 ```

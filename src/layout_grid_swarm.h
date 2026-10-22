@@ -189,6 +189,7 @@ class GridSwarm {
     row_i->insert(x_insert_loc, x);
     min_next_x = x + negate_if<reverse>(1.0);
 
+    if (i % 1024_z == 0_z) check_interrupt();
     return true;
   }
 
@@ -268,9 +269,7 @@ class GridSwarm {
       while (
         place_rows<FWD>(strata) &&
         place_rows<REV>(strata)
-      ) {
-        check_interrupt();
-      }
+      );
     }
 
     return {std::move(out_x_vec), std::move(out_y_vec)};
