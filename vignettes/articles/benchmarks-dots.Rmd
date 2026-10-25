@@ -70,7 +70,7 @@ dists = list(
 set.seed(20261019)
 df = bench::press(
   layout = names(layouts),
-  n = c(100, 1000, 2500, 5000),
+  n = c(100, 1000, 5000, 10000),
   dist = names(dists),
   grouped = c(TRUE, FALSE),
   {

@@ -33,7 +33,7 @@ class GridSwarm {
     FWD = false,
     REV = true
   };
-  constexpr friend Direction operator!(const Direction direction) {
+  constexpr friend auto operator!(const Direction direction) -> Direction {
     return static_cast<Direction>(!static_cast<bool>(direction));
   };
 
@@ -97,9 +97,9 @@ class GridSwarm {
   /// Unnormalized y values.
   Doubles out_y_vec;
   /// C array backing `out_x_vec`
-  double* out_x_arr;
+  double* const out_x_arr;
   /// C array backing `out_y_vec`
-  double* out_y_arr;
+  double* const out_y_arr;
 
   /// Index of the next-to-be-placed value in out_x_vec / out_y_vec
   std::ptrdiff_t i = 0_z;
@@ -113,7 +113,7 @@ class GridSwarm {
   /// Normalized x positions of unplaced dots in the group we are currently placing
   /// Input x values are divded by `xsize` prior to running the placement algorithm to simplify
   /// distance calculations.
-  std::deque<double> unplaced = {};
+  std::deque<double> unplaced;
 
   /// Rows of dots
   /// Contains the normalized x position of each placed dot in each row.
@@ -142,11 +142,7 @@ class GridSwarm {
   /// that a dot could be placed at in this row after `x` is placed
   /// @returns `true` if the dot was placed successfully
   template<Direction reverse>
-  auto place_dot(
-    const double x,
-    const RowIt row_i,
-    double& min_next_x
-  ) -> bool {
+  auto place_dot(const double x, const RowIt row_i, double& min_next_x) -> bool {
     auto x_insert_loc = row_i->end();
 
     // check +/- (strata - 1) rows from the target row to see if the dot overlaps an existing dot

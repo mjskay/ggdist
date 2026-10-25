@@ -27,18 +27,20 @@
 /// lowest dot in a region as a function of x value is generally well-behaved enough to use golden
 /// section search to efficiently find the lowest dot in a region without checking all dots in a
 /// region. We use the priority queue to find the unplaced region with the lowest unplaced dot, then
-/// recursively add the contiguous unplaced regions above and below each newly-placed dot back to
-/// the queue.
+/// split the unplaced region into the contiguous regions above and below the newly-placed dot back
+/// to the queue (to scale to layouts with many dots, the algorithm avoids splitting narrow unplaced
+/// regions with many dots in them as this can lead to a very large queue).
 ///
 /// Positions of placed dots are stored in a `frontier` sorted by x position. As dots are placed, we
-/// can trivially track the minimum y position that any subsequent dot could take (since we place
-/// dots in increasing y order) and prune dots from the frontier that can no longer collide with
-/// the minimum y position. This allows us to quickly check for collisions when determining the
-/// height a dot would be placed at.
+/// can determine the minimum y position of a placed dot that any subsequent dot could collide with
+/// (since we place dots in increasing y order, this is one dot height lower than the most
+/// recently-placed dot). We use this to prune dots from the frontier that will never collide with
+/// any remaining dots, which speeds up checks for collisions when determining the height a dot
+/// would be placed at.
 ///
-/// Dots can be grouped, and groups of dots are stacked. Stacking is achieved by applying a penalty
-/// to regions in the queue based on how far up in the stacking order the lowest group in an
-/// unplaced region is.
+/// Dots can be grouped, and groups of dots are stacked. Stacking is achieved by queueing regions
+/// for each group separately and applying a penalty to regions in the queue based on how far up in
+/// the stacking order its group is.
 /// @tparam Doubles Input and output datatype for vectors of `double`s. Must be a contiguous
 /// container (in the STL sense) of `double`s and must have a constructor that takes a single
 /// integer and yields a container of that size. Examples include `std::vector<double>` and
@@ -306,9 +308,10 @@ class CompactSwarm {
   }
 
   /// Max size of a narrow unplaced region that we will split.
-  /// Narrow regions <= this size may be split; narrow regions > this size are not split.
-  /// Used to decide when to split an unplaced region or not (see `queue_region()`).
-  static constexpr std::ptrdiff_t narrow_split_size = 12_z;
+  /// Narrow regions <= this size may be split; narrow regions > this size are not split. Used to
+  /// decide when to split an unplaced region or not (see `queue_region()`). Empirically 8 seems to
+  /// be a decent tradeoff between splitting and not splitting.
+  static constexpr std::ptrdiff_t narrow_split_size = 8_z;
   /// Max binwidth of a "narrow" unplaced region.
   /// Used to decide when to split an unplaced region or not (see `queue_region()`).
   static constexpr double narrow_binwidth = 0.5;

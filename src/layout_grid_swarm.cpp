@@ -1,5 +1,5 @@
-#include "util.h"
 #include "layout_grid_swarm.h"
+#include "util.h"
 
 #include <Rcpp.h>
 
