@@ -41,55 +41,51 @@ constexpr auto sq(const V x) -> V {
 
 // container helpers ---------------------------------------------------------------------------
 
+/// Type for signed size of a container
+template<typename C>
+using ssize_type =
+  std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(std::declval<C>().size())>>;
+
 /// Signed size of a container (from C++20)
 template<typename C>
-constexpr auto ssize_(const C& c) -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
-    using signed_c_size_t = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
-    return static_cast<signed_c_size_t>(c.size());
+constexpr auto ssize_(const C& container) -> ssize_type<C> {
+  return static_cast<ssize_type<C>>(container.size());
 }
 
 /// Signed sum of sizes of a container of containers
-template<typename C>
-constexpr auto sum_sizes(const C& container) -> std::ptrdiff_t {
-  std::ptrdiff_t n = 0_z;
-  for (const auto& x : container) n += x.size();
+template<typename Cs>
+constexpr auto sum_sizes(const Cs& containers) -> ssize_type<typename Cs::value_type> {
+  auto n = ssize_type<typename Cs::value_type>{0};
+  for (const auto& c : containers) n += c.size();
   return n;
 }
 
 // reversible sequence helpers ------------------------------------------------------
 
-// These helpers allow us to write the core grid swarm placement methods in a way that
+// These helpers allow us to write the core stratified swarm placement methods in a way that
 // is agnostic to whether we are iterating forward or backward through the candidate dots.
 
-/// const begin iterator for forward or reverse iteration
+/// begin iterator for forward or reverse iteration
 /// @tparam reverse iterate in reverse?
 /// @tparam C container type
 /// @param container object to iterate over
 template<bool reverse, typename C>
 constexpr auto begin_(C& container) {
-  if constexpr (reverse && std::is_const_v<C>) {
-    return container.crbegin();
-  } else if constexpr (reverse) {
+  if constexpr (reverse) {
     return container.rbegin();
-  } else if constexpr (std::is_const_v<C>) {
-    return container.cbegin();
   } else {
     return container.begin();
   }
 }
 
-/// const end iterator for forward or reverse iteration
+/// end iterator for forward or reverse iteration
 /// @tparam reverse iterate in reverse?
 /// @tparam C container type
 /// @param container object to iterate over
 template<bool reverse, typename C>
 constexpr auto end_(C& container) {
-  if constexpr (reverse && std::is_const_v<C>) {
-    return container.crend();
-  } else if constexpr (reverse) {
+  if constexpr (reverse) {
     return container.rend();
-  } else if constexpr (std::is_const_v<C>) {
-    return container.cend();
   } else {
     return container.end();
   }
@@ -100,7 +96,7 @@ template<typename It, typename = std::void_t<>>
 struct is_reverse_iterator : std::false_type {};
 template<typename It>
 struct is_reverse_iterator<It, std::void_t<decltype(std::declval<It>().base())>>
-    : std::is_base_of<decltype(std::reverse_iterator(std::declval<It>().base())), It> {};
+  : std::is_base_of<decltype(std::reverse_iterator(std::declval<It>().base())), It> {};
 template<typename It>
 constexpr bool is_reverse_iterator_v = is_reverse_iterator<It>::value;
 
@@ -114,7 +110,7 @@ template<typename It, typename = std::void_t<>>
 struct is_const_iterator : std::false_type {};
 template<typename It>
 struct is_const_iterator<It, std::void_t<typename std::iterator_traits<It>::reference>>
-    : std::is_const<std::remove_reference_t<typename std::iterator_traits<It>::reference>> {};
+  : std::is_const<std::remove_reference_t<typename std::iterator_traits<It>::reference>> {};
 template<typename It>
 constexpr bool is_const_iterator_v = is_const_iterator<It>::value;
 
@@ -124,7 +120,6 @@ static_assert(is_const_iterator_v<std::vector<double>::const_iterator>);
 static_assert(is_const_iterator_v<std::vector<double>::const_reverse_iterator>);
 
 /// Erase an element from a container via a (possibly reversed) iterator
-/// @tparam reverse is the iterator reversed?
 /// @tparam C container type
 /// @tparam It iterator type
 /// @param container object to erase from
@@ -140,7 +135,7 @@ constexpr auto erase_(C& container, const It it) -> It {
 
 /// Optionally negate a value
 /// @tparam negate negate the value?
-/// @param value value to negate (if `reverse` is `true`)
+/// @param value value to negate (if `negate` is `true`)
 /// @returns `value` or `-value`
 template<bool negate, typename V>
 constexpr auto negate_if(const V value) -> V {
@@ -156,12 +151,12 @@ constexpr auto negate_if(const V value) -> V {
 /// @param a first value
 /// @param b second value
 /// @returns minimum (or maximum) of `a` and `b`
-template<bool reverse>
-constexpr auto min_(const double a, const double b) -> double {
+template<bool reverse, typename V>
+constexpr auto min_(const V& a, const V& b) -> const V& {
   if constexpr (reverse) {
-    return std::max(a, b);
+    return std::max<V>(a, b);
   } else {
-    return std::min(a, b);
+    return std::min<V>(a, b);
   }
 }
 
@@ -171,18 +166,36 @@ constexpr auto min_(const double a, const double b) -> double {
 /// @param container sorted container
 /// @param it current iterator position
 /// @param min_value minimum value to advance to
-template<typename C, typename It, typename V = typename C::value_type, typename Comp = std::less<std::remove_reference_t<std::remove_cv_t<V>>>>
-inline auto advance_to_at_least(
-  C& container, It it, V&& min_value, Comp&& comp = {}
-) -> It {
+/// @returns An iterator `>= it` to the first position at `min_value` (if `min_value` is in
+/// `container`) or the first position after `min_value` in the direction that `it` advances (if
+/// `min_value` is not in `container`).
+template<
+  typename C,
+  typename It,
+  typename V = typename C::value_type,
+  typename Comp = std::less<std::remove_reference_t<std::remove_cv_t<V>>>
+>
+inline auto advance_to_at_least(C& container, It it, V&& min_value, Comp&& comp = {}) -> It {
   if constexpr (is_reverse_iterator_v<It> && is_const_iterator_v<It>) {
-    return std::reverse_iterator(std::upper_bound(container.cbegin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
+    return std::reverse_iterator(
+      std::upper_bound(
+        container.cbegin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)
+      )
+    );
   } else if constexpr (is_reverse_iterator_v<It>) {
-    return std::reverse_iterator(std::upper_bound(container.begin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)));
+    return std::reverse_iterator(
+      std::upper_bound(
+        container.begin(), it.base(), std::forward<V>(min_value), std::forward<Comp>(comp)
+      )
+    );
   } else if constexpr (is_const_iterator_v<It>) {
-    return std::lower_bound(it, container.cend(), std::forward<V>(min_value), std::forward<Comp>(comp));
+    return std::lower_bound(
+      it, container.cend(), std::forward<V>(min_value), std::forward<Comp>(comp)
+    );
   } else {
-    return std::lower_bound(it, container.end(), std::forward<V>(min_value), std::forward<Comp>(comp));
+    return std::lower_bound(
+      it, container.end(), std::forward<V>(min_value), std::forward<Comp>(comp)
+    );
   }
 }
 
@@ -194,14 +207,14 @@ inline auto advance_to_at_least(
 /// @param lo iterator to lower limit of interval on a container of sorted values.
 /// @param hi iterator to upper limit of interval on a container of sorted values.
 /// Must have `hi > lo` (i.e. the sequence must have length >= 1).
-/// @param f function to be minimized, taking values from the container `lo` and `hi`
+/// @param f function to be minimized, taking values of the type pointed to by `lo` and `hi`
 /// @returns `{m, it}` a pair containing:
 ///  - `m = f(*it)`: The minimum value of `f`
 ///  - `it`: An iterator pointing to the location of the minimum value of `f` in the interval
 template<typename It, typename F>
 inline auto unimodal_min(It lo, It hi, const F f) -> std::pair<decltype(f(*lo)), It> {
   assert(hi > lo);
-  if (*lo == *(hi - 1_z)) return {f(*lo), lo}; // f is constant or n = 1
+  if (*lo == *(hi - 1_z)) return {f(*lo), lo};  // f is constant or n = 1
 
   // Initialize probe points
   // At this point we know that n is >= 2. We initialize as follows:

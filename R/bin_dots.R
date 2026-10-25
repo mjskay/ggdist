@@ -716,14 +716,14 @@ wilkinson_smooth = function(x, b, binwidth, span = 0) {
 
 # stackable swarm -------------------------------------------------------------
 
-#' Stackable swarm layout using a either the grid swarm or compact swarm algorithm.
+#' Stackable swarm layout using a either the stratified swarm or compact swarm algorithm.
 #' @param xs <[list] of [numeric]> groups of sorted x values
 #' @param y <[numeric]> y values (should be constant)
 #' @param xsize <scalar [numeric]> horizontal spacing between dots
 #' @param ysize <scalar [numeric]> vertical spacing between dots
 #' @param side <scalar [integer]> which side to place dots on: 0 = both, 1 = above, -1 = below
-#' @param strata <scalar [integer]> \eqn{\ge 1} number of fractional rows in the grid used to place dots.
-#' May be `Inf`, in which case a non-stratified compact swarm layout is used.
+#' @param strata <scalar [integer]> \eqn{\ge 1} number of fractional rows in the grid used to place
+#' dots. May be `Inf`, in which case a non-stratified compact swarm layout is used.
 #' @param cohesion <scalar [numeric]> between 0 and 1: proportion of a row used as a penalty
 #' for keeping groups together in stacked compact swarm layouts. 1 keeps groups together but
 #' may leave whitespace, 0 does not keep groups together but will be a more compact layout.
@@ -733,7 +733,7 @@ stackable_swarm = function(xs, y, xsize, ysize = xsize, side = 1, strata = Inf, 
   if (strata == Inf) {
     dots = compact_swarm_(xs, xsize, ysize, side, group_penalty = cohesion)
   } else {
-    dots = grid_swarm_(xs, xsize, ysize, side, strata)
+    dots = stratified_swarm_(xs, xsize, ysize, side, strata)
   }
   dots = dots[order(dots$x), ]
   dots$y = dots$y + y

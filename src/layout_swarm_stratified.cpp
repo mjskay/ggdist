@@ -1,11 +1,11 @@
-#include "layout_grid_swarm.h"
+#include "layout_swarm_stratified.h"
 #include "util.h"
 
 #include <Rcpp.h>
 
-// grid swarm layout --------------------------------------------------------------
+// stratified swarm layout --------------------------------------------------------------
 
-//' Fractional grid swarm layout
+//' Stratified swarm layout
 //' @param xs_list <list of [numeric]> list of vectors of sorted x values
 //' @param xsize <positive scalar [numeric]> horizontal spacing between dots
 //' @param ysize <positive scalar [numeric]> vertical spacing between dots
@@ -18,14 +18,14 @@
 //' @returns <[data.frame]> data frame with columns x and y giving the new positions
 //' @noRd
 // [[Rcpp::export(rng = false)]]
-SEXP grid_swarm_(
+SEXP stratified_swarm_(
   const std::vector<Rcpp::NumericVector>& xs_list,
   const double xsize,
   const double ysize,
   const int signed_side,
   const std::ptrdiff_t strata
 ) {
-  auto [x, y] = GridSwarm<Rcpp::NumericVector>{
+  auto [x, y] = StratifiedSwarm{
     xs_list,
     xsize,
     ysize,
@@ -57,9 +57,9 @@ SEXP recenter_swarm_clusters_(
 ) {
   const auto n = ssize_(x_vec);
 
-  const auto* x = x_vec.cbegin();
+  auto* const x = x_vec.cbegin();
   auto y_out = Rcpp::clone(y_vec);
-  auto* y = y_out.begin();
+  auto* const y = y_out.begin();
 
   auto bin_sum = 0.0;
   auto bin_start = 0_z;

@@ -1,4 +1,4 @@
-#include "layout_compact_swarm.h"
+#include "layout_swarm_compact.h"
 
 #include <Rcpp.h>
 
@@ -20,7 +20,7 @@ SEXP compact_swarm_(
   const int signed_side,
   const double group_penalty
 ) {
-  auto [x, y] = CompactSwarm<Rcpp::NumericVector>{
+  auto [x, y] = CompactSwarm{
     xs_list,
     xsize,
     ysize,

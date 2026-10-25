@@ -10,23 +10,23 @@
 #include <set>
 #include <vector>
 
-// grid swarm layout --------------------------------------------------------------
+// stratified swarm layout --------------------------------------------------------------
 
 /// Stratified variation of compact swarm layout
 ///
-/// Alternative to compact swarm layout that places dots in alternating left/right sweeps along
-/// grid lines, greedily placing the next-closest placeable dot (in x position) to the most
-/// recently-placed dot in the same row.
+/// Alternative to compact swarm layout that places dots in alternating left/right sweeps along grid
+/// lines, greedily placing the next-closest placeable dot (in x position) to the most
+/// recently-placed dot in the same row.///
 ///
 /// The distance between grid lines (`row_height`) is `ysize/strata`, where `strata` is a positive
-/// integer. During placement, already-placed values in each row are stored in a set
-/// to allow efficient searching for collisions within a row.
+/// integer. During placement, already-placed values in each row are stored in a set to allow
+/// efficient searching for collisions within a row.
 /// @tparam Doubles Input and output datatype for vectors of `double`s. Must be a contiguous
 /// container (in the STL sense) of `double`s and must have a constructor that takes a single
 /// integer and yields a container of that size. Examples include `std::vector<double>` and
 /// `Rcpp::NumericVector`.
 template<typename Doubles>
-class GridSwarm {
+class StratifiedSwarm {
   // TYPES ---------------------------------------------------------------------------------------
   /// Direction of iteration when placing dots in a row.
   enum Direction : bool {
@@ -46,8 +46,8 @@ class GridSwarm {
 
   // CONSTRUCTORS --------------------------------------------------------------------------------
  public:
-  /// Initialize the grid swarm algorithm.
-  GridSwarm(
+  /// Initialize the stratified swarm algorithm.
+  StratifiedSwarm(
     const std::vector<Doubles>& xs_list,
     const double xsize,
     const double ysize,
@@ -250,7 +250,7 @@ class GridSwarm {
 
   // PUBLIC METHODS ------------------------------------------------------------------------------
  public:
-  /// Run the grid swarm algorithm.
+  /// Run the stratified swarm algorithm.
   auto place_dots() -> std::pair<Doubles, Doubles> {
     for (const auto& xs : xs_list) {
       row_num = 0_z;

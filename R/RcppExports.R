@@ -19,7 +19,7 @@ compact_swarm_ <- function(xs_list, xsize, ysize, signed_side, group_penalty) {
     .Call(`_ggdist_compact_swarm_`, xs_list, xsize, ysize, signed_side, group_penalty)
 }
 
-#' Fractional grid swarm layout
+#' Stratified swarm layout
 #' @param xs_list <list of [numeric]> list of vectors of sorted x values
 #' @param xsize <positive scalar [numeric]> horizontal spacing between dots
 #' @param ysize <positive scalar [numeric]> vertical spacing between dots
@@ -31,8 +31,8 @@ compact_swarm_ <- function(xs_list, xsize, ysize, signed_side, group_penalty) {
 #' rows above or below this row that could overlap with dots in this row).
 #' @returns <[data.frame]> data frame with columns x and y giving the new positions
 #' @noRd
-grid_swarm_ <- function(xs_list, xsize, ysize, signed_side, strata) {
-    .Call(`_ggdist_grid_swarm_`, xs_list, xsize, ysize, signed_side, strata)
+stratified_swarm_ <- function(xs_list, xsize, ysize, signed_side, strata) {
+    .Call(`_ggdist_stratified_swarm_`, xs_list, xsize, ysize, signed_side, strata)
 }
 
 #' Re-center contiguous clusters around their mean y position so that
