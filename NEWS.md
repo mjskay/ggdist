@@ -166,6 +166,9 @@ to the old behavior by setting `density = density_unbounded(bandwidth = "nrd0")`
   it, as they should drastically improve the accuracy of density estimates, 
   especially on bounded data, and should have little noticeable impact on densities 
   on unbounded data.
+* `density_auto()` was removed. Use `density_unbounded(bandwidth = "nrd0")`
+  for the former untrimmed behavior, or `density_bounded()` for
+  bounded density estimation (#239).
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
   `bounder_cdf()`, `bounder_cooke()`) for more on bounds estimation.
