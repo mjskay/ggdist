@@ -18,6 +18,9 @@ Internal changes:
 
 Bug fixes:
 
+* `density_histogram()` now accepts and ignores `n`, avoiding partial
+  matching to `na.rm` when computing slab histograms (#237).
+
 * `geom_lineribbon()` draw order now uses `median()` instead of `mean()` to
   determine order from the `order` aesthetic to be robust to infinities 
   (#255; thanks @damonbayer).

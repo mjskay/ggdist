@@ -14,7 +14,8 @@ density_histogram(
   outermost_closed = TRUE,
   na.rm = FALSE,
   ...,
-  range_only = FALSE
+  range_only = FALSE,
+  n = NULL
 )
 }
 \arguments{
@@ -79,6 +80,8 @@ Equivalent to the \code{include.lowest} argument of \code{\link[=hist]{hist()}} 
 is computed and is returned in the \verb{$x} element of the result, and \code{c(NA, NA)}
 is returned in \verb{$y}. This gives a faster way to determine the range of the output
 than \code{density_XXX(n = 2)}.}
+
+\item{n}{Ignored. Histogram resolution is controlled by \code{breaks}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
