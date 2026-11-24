@@ -54,6 +54,32 @@ test_that("density_bounded(range_only = TRUE) works", {
   )
 })
 
+test_that("histogram density accepts n without changing the histogram", {
+  withr::local_options(list(warnPartialMatchArgs = TRUE))
+  x = 1:10
+  expected = density_histogram(x, breaks = 5)
+
+  expect_warning({
+    actual = density_histogram(x, breaks = 5, n = 2)
+  }, NA)
+  expect_equal(drop_call(actual), drop_call(expected))
+  expect_error(density_histogram(c(x, NA), n = 2), "must not contain missing")
+  expect_equal(
+    drop_call(density_histogram(c(x, NA), breaks = 5, n = 2, na.rm = TRUE)),
+    drop_call(expected)
+  )
+})
+
+test_that("slab histograms build without a partial argument match", {
+  withr::local_options(list(warnPartialMatchArgs = TRUE))
+  p = ggplot(faithful, aes(x = eruptions)) + stat_slab(density = "histogram")
+
+  expect_warning({
+    built = ggplot_build(p)
+  }, NA)
+  expect_gt(nrow(built$data[[1]]), 0)
+})
+
 
 # bandwidth ---------------------------------------------------------------
 

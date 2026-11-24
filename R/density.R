@@ -280,6 +280,7 @@ density_bounded = auto_partial(name = "density_bounded", function(
 #' or the last edge (when `right_closed = FALSE`) is treated as closed.
 #'
 #' Equivalent to the `include.lowest` argument of [hist()] or the `rightmost.closed` argument of [findInterval()].
+#' @param n Ignored. Histogram resolution is controlled by `breaks`.
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -320,7 +321,8 @@ density_histogram = auto_partial(name = "density_histogram", function(
   outermost_closed = TRUE,
   na.rm = FALSE,
   ...,
-  range_only = FALSE
+  range_only = FALSE,
+  n = NULL
 ) {
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
