@@ -73,6 +73,24 @@ test_that("parse_dist works on brmsprior objects", {
   expect_equal(parse_dist(brmsprior), ref)
 })
 
+test_that("brms Cholesky LKJ priors can be marginalized", {
+  prior = structure(
+    data.frame(prior = c("lkj(3)", "lkj_corr_cholesky(3)", "normal(0, 1)")),
+    class = c("brmsprior", "data.frame")
+  )
+  parsed = parse_dist(prior)
+  expect_equal(parsed$.dist, c("lkjcorr", "lkjcorr", "norm"))
+  expect_equal(parse_dist(prior, to_r_names = FALSE)$.dist,
+    c("lkj", "lkj_corr_cholesky", "normal"))
+
+  marginal = marginalize_lkjcorr(parsed, K = 2)
+  expect_equal(marginal$.dist, c("lkjcorr_marginal", "lkjcorr_marginal", "norm"))
+  expect_equal(marginal$.args[[2]], marginal$.args[[1]])
+  p = c(0.05, 0.5, 0.95)
+  expect_equal(as.numeric(quantile(marginal$.dist_obj[2], p)[[1]]),
+    qlkjcorr_marginal(p, K = 2, eta = 3))
+})
+
 test_that("parse_dist + marginalize_lkjcorr produces correct results", {
   skip_if_no_vdiffr()
 

@@ -256,7 +256,8 @@ r_dist_lookup = c(
   negativebinomial = "nbinom",
   poisson = "pois",
   weibull = "weibull",
-  lkj = "lkjcorr"
+  lkj = "lkjcorr",
+  lkjcorrcholesky = "lkjcorr"
 )
 
 #' @rdname parse_dist
